@@ -16,7 +16,7 @@ public class firstClass
 	 */
 	public static void main(String [ ] args) {
 		for(int i = 0; i < upperBound; i++) {
-			System.out.println(i);
+			System.out.println("Starting DB feature");
 		}
 	}
 }

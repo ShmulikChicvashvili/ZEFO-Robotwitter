@@ -67,21 +67,20 @@ public class MySqlDatabaseUser extends MySqlDatabase
 			e.printStackTrace();
 		}
 	}
-	
-	
-	/* (non-Javadoc) @see
-	 * Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
-	@Override
+
+
+
+	/* (non-Javadoc) @see Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
 	public void insert(DatabaseTypes obj) throws Exception
 	{
 		User u = (User) obj;
 		this.preparedStatement =
-			this.connect.prepareStatement("INSERT INTO ? VALUES ?, ?, ?"); //$NON-NLS-1$
+		this.connect.prepareStatement("INSERT INTO ? VALUES ?, ?, ?"); //$NON-NLS-1$
 		this.preparedStatement.setString(1, this.table);
 		this.preparedStatement.setString(2, u.getUserName());
 		this.preparedStatement.setString(3, u.geteMail());
 		this.preparedStatement.setString(4, u.getPassword());
-		this.preparedStatement.execute();
+		this.preparedStatement.execute();		
 	}
 	
 }

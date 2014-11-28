@@ -9,7 +9,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 
 
@@ -19,27 +18,58 @@ import java.sql.Statement;
  * @author Shmulik
  *
  */
-public class MySqlDatabase implements IDatabase
+public abstract class MySqlDatabase implements IDatabase
 {
-	private Connection connect = null;
+	/**
+	 * connection handler
+	 */
+	protected Connection connect = null;
+	
+	/**
+	 * statement handler
+	 */
+	protected Statement statement = null;
+	
+	/**
+	 * preparedStatement handler
+	 */
+	protected PreparedStatement preparedStatement = null;
+	
+	/**
+	 * resultSet handler
+	 */
+	protected ResultSet resultSet = null;
+	
+	/**
+	 * The database name
+	 */
+	protected final String schema = "yearly_proj_db"; //$NON-NLS-1$
+	
+	/**
+	 * Creating the database statement
+	 */
+	final private String createSchemaStatement = "CREATE SCHEMA IF NOT EXISTS " //$NON-NLS-1$
+		+ this.schema;
 	
 	
 	
-	/* (non-Javadoc) @see Database.IDatabase#connect() */
-	@Override
-	public void connect() throws Exception
+	/**
+	 * C'tor of general settings
+	 */
+	public MySqlDatabase()
 	{
 		try
 		{
-			// this will load the MySQL driver
 			Class.forName("com.mysql.jdbc.Driver"); //$NON-NLS-1$
 			this.connect =
-				DriverManager.getConnection("jdbc:mysql://localhost/feedback?" //$NON-NLS-1$
-					+ "user=sqluser&password=sqluserpw"); //$NON-NLS-1$
+				DriverManager.getConnection("jdbc:mysql://localhost/yearly_proj_db?" //$NON-NLS-1$
+					+ "user=root&password=root"); //$NON-NLS-1$
+			this.statement = this.connect.createStatement();
+			this.statement.executeQuery(this.createSchemaStatement);
 		} catch (Exception e)
 		{
-			throw e;
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
-	
 }

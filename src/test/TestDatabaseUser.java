@@ -21,7 +21,7 @@ public class TestDatabaseUser
 	 * Testing the user database table features
 	 */
 	@Test
-	public static void test()
+	public void test()
 	{
 		try
 		{

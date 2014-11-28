@@ -52,35 +52,33 @@ public class MySqlDatabaseUser extends MySqlDatabase
 		super();
 		try
 		{
-			this.preparedStatement =
-				this.connect
-					.prepareStatement("CREATE TABLE IF NOT EXISTS" //$NON-NLS-1$
-						+ " ? (? STRING NOT NULL, ? STRING NOT NULL, ? STRING NOT NULL)"); //$NON-NLS-1$
-			this.preparedStatement.setString(1, this.table);
-			this.preparedStatement.setString(2, this.usernameColumn);
-			this.preparedStatement.setString(3, this.eMailColumn);
-			this.preparedStatement.setString(4, this.passwordColumn);
-			this.preparedStatement.execute();
+			String statementCreate =
+				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`user` (" //$NON-NLS-1$
+					+ "`username` VARCHAR(45) NOT NULL," //$NON-NLS-1$
+					+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
+					+ "`password` VARCHAR(45) NOT NULL);"; //$NON-NLS-1$
+			this.statement
+				.execute(statementCreate);
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
-
-
-	/* (non-Javadoc) @see Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
+	
+	
+	/* (non-Javadoc) @see
+	 * Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
 	public void insert(DatabaseTypes obj) throws Exception
 	{
 		User u = (User) obj;
 		this.preparedStatement =
-		this.connect.prepareStatement("INSERT INTO ? VALUES ?, ?, ?"); //$NON-NLS-1$
+			this.connect.prepareStatement("INSERT INTO ? VALUES ?, ?, ?"); //$NON-NLS-1$
 		this.preparedStatement.setString(1, this.table);
 		this.preparedStatement.setString(2, u.getUserName());
 		this.preparedStatement.setString(3, u.geteMail());
 		this.preparedStatement.setString(4, u.getPassword());
-		this.preparedStatement.execute();		
+		this.preparedStatement.execute();
 	}
 	
 }

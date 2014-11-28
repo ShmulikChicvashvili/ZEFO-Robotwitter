@@ -43,7 +43,7 @@ public abstract class MySqlDatabase implements IDatabase
 	/**
 	 * The database name
 	 */
-	protected final String schema = "yearly_proj_db"; //$NON-NLS-1$
+	protected final String schema = "yearlyproj_db"; //$NON-NLS-1$
 	
 	/**
 	 * Creating the database statement
@@ -62,10 +62,10 @@ public abstract class MySqlDatabase implements IDatabase
 		{
 			Class.forName("com.mysql.jdbc.Driver"); //$NON-NLS-1$
 			this.connect =
-				DriverManager.getConnection("jdbc:mysql://localhost/yearly_proj_db?" //$NON-NLS-1$
+				DriverManager.getConnection("jdbc:mysql://localhost/yearlyproj_db?" //$NON-NLS-1$
 					+ "user=root&password=root"); //$NON-NLS-1$
 			this.statement = this.connect.createStatement();
-			this.statement.executeQuery(this.createSchemaStatement);
+			this.statement.executeUpdate(this.createSchemaStatement);
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block

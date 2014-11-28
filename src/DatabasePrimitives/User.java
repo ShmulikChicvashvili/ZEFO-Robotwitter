@@ -12,17 +12,24 @@ public class User extends DatabaseTypes
 {	
 	
 	/**
+	 * The email of the user
+	 */
+	String eMail;
+	
+	/**
 	 * The password of the user
 	 */
 	String password;
 	
 	/**
 	 * @param userName The user name of the user
+	 * @param eMail The email of the user
 	 * @param password The password of the user
 	 */
-	public User(String userName, String password)
+	public User(String userName, String eMail, String password)
 	{
 		super(userName);
+		this.eMail = eMail;
 		this.password = password;
 	}
 	
@@ -41,6 +48,20 @@ public class User extends DatabaseTypes
 	{
 		this.password = password;
 	}
-	
-	
+
+	/**
+	 * @return the eMail
+	 */
+	public String geteMail()
+	{
+		return this.eMail;
+	}
+
+	/**
+	 * @param eMail the eMail to set
+	 */
+	public void seteMail(String eMail)
+	{
+		this.eMail = eMail;
+	}	
 }

@@ -68,7 +68,7 @@ public class TestDatabaseUser
 		{
 			Injector injector = Guice.createInjector(new MySQLDBUserModule());
 			IDatabase db = injector.getInstance(MySqlDatabaseUser.class);
-			db.insert(new DBUser("shmulik", "shulikjkech@gmail.com", "sh"));
+			db.insert(new DBUser("shmulik", "shmulikjkech@gmail.com", "sh"));
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block

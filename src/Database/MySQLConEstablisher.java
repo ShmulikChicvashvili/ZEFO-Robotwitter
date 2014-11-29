@@ -72,7 +72,8 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 		
 		// Create the schema if it doesn't exist
 		java.sql.Statement statement = con.createStatement();
-		statement.executeUpdate(createSchemaStatement + this.schema);
+		statement.executeUpdate(this.createSchemaStatement + this.schema);
+		statement.close();
 		
 		return con;
 		

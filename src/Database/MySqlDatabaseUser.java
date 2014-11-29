@@ -62,7 +62,7 @@ public class MySqlDatabaseUser extends MySqlDatabase
 				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`users` (" //$NON-NLS-1$
 					+ "`username` VARCHAR(45) NOT NULL," //$NON-NLS-1$
 					+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-					+ "`password` VARCHAR(45) NOT NULL,"
+					+ "`password` VARCHAR(45) NOT NULL," //$NON-NLS-1$
 					+ "PRIMARY KEY (`username`));"; //$NON-NLS-1$
 			this.statement.execute(statementCreate);
 		} catch (Exception e)

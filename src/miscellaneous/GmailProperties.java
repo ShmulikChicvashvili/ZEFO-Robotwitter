@@ -1,7 +1,7 @@
 /**
  * 
  */
-package management;
+package miscellaneous;
 
 import java.util.Properties;
 

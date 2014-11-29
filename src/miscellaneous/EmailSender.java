@@ -2,7 +2,7 @@
  * 
  */
 
-package management;
+package miscellaneous;
 
 
 import javax.mail.*;
@@ -18,7 +18,7 @@ public class EmailSender implements IEmailSender
 	
 	
 	/* (non-Javadoc) @see management.IEmailSender#sendEmail(management.Email) */
-	public void sendEmail(Email mail) throws MessagingException
+	public void sendEmail(EmailMessage mail) throws MessagingException
 	{
 		
 		Message message = new MimeMessage(this.session);

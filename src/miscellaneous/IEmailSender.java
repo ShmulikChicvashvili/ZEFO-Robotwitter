@@ -1,7 +1,7 @@
 /**
  * 
  */
-package management;
+package miscellaneous;
 
 import javax.mail.MessagingException;
 
@@ -13,5 +13,5 @@ public interface IEmailSender
 {	
 	public void startSession(IEmailSession session);
 	
-	public void sendEmail(Email mail) throws MessagingException;
+	public void sendEmail(EmailMessage mail) throws MessagingException;
 }

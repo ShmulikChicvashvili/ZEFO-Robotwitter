@@ -57,7 +57,7 @@ public class TwitterAttacher implements ITwitterAttacher
 		{
 			RequestToken requestToken = twitter.getOAuthRequestToken();
 			AccessToken accessToken =
-				twitter.getOAuthAccessToken(requestToken, pin);
+				twitter.getOAuthAccessToken(requestToken, pin); 
 			account.setAttached(true);
 		} catch (TwitterException e)
 		{

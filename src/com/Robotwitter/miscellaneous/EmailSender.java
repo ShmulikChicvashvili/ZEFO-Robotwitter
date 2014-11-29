@@ -2,7 +2,7 @@
  * 
  */
 
-package miscellaneous;
+package com.Robotwitter.miscellaneous;
 
 
 import javax.mail.*;

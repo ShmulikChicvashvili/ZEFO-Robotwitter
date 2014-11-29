@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.Robotwitter.management;
+package com.Robotwitter.miscellaneous;
 
 import java.util.Properties;
 

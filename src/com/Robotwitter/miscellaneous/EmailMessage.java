@@ -2,14 +2,14 @@
  * 
  */
 
-package com.Robotwitter.management;
+package com.Robotwitter.miscellaneous;
 
 
 /**
  * @author Itay
  *
  */
-public class Email
+public class EmailMessage
 {
 	String emailAddressFrom;
 	
@@ -21,7 +21,7 @@ public class Email
 	
 	
 	
-	public Email(String from, String to)
+	public EmailMessage(String from, String to)
 	{
 		this.emailAddressFrom = from;
 		this.emailAddressTo = to;

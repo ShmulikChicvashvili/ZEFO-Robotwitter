@@ -19,7 +19,7 @@ public class TwitterAccount
 	
 	public TwitterAccount(TwitterFactory tf) {
 		this.twitter = tf.getInstance();
-		isAttached = false;
+		this.isAttached = false;
 	}
 	
 	/**
@@ -27,7 +27,7 @@ public class TwitterAccount
 	 */
  	public Twitter getTwitter()
 	{
-		return twitter;
+		return this.twitter;
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class TwitterAccount
 	 */
 	public void setAttached(boolean b)
 	{
-		isAttached = b;
+		this.isAttached = b;
 		
 	}	
 

@@ -5,7 +5,6 @@
 package twitter;
 
 
-import twitter4j.Twitter;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 

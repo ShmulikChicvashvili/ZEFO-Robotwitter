@@ -2,13 +2,14 @@
  * 
  */
 
-package test;
+package com.Robotwitter.test;
 
 
 import org.junit.Before;
 import org.junit.Test;
 
-import twitter.TwitterAttacher;
+import com.Robotwitter.twitter.TwitterAttacher;
+
 import twitter4j.TwitterException;
 
 

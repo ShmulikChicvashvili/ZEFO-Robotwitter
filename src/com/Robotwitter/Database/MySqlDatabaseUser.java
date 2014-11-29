@@ -2,12 +2,11 @@
  * 
  */
 
-package Database;
+package com.Robotwitter.Database;
 
 
-import DatabasePrimitives.DBUser;
-import DatabasePrimitives.DatabaseType;
-
+import com.Robotwitter.DatabasePrimitives.DBUser;
+import com.Robotwitter.DatabasePrimitives.DatabaseType;
 import com.google.inject.Inject;
 
 

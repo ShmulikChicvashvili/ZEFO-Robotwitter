@@ -2,19 +2,18 @@
  * 
  */
 
-package test;
+package com.Robotwitter.test;
 
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import Database.ConnectionEstablisher;
-import Database.IDatabase;
-import Database.MySQLConEstablisher;
-import Database.MySqlDatabaseUser;
-import DatabasePrimitives.DBUser;
-
+import com.Robotwitter.Database.ConnectionEstablisher;
+import com.Robotwitter.Database.IDatabase;
+import com.Robotwitter.Database.MySQLConEstablisher;
+import com.Robotwitter.Database.MySqlDatabaseUser;
+import com.Robotwitter.DatabasePrimitives.DBUser;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;

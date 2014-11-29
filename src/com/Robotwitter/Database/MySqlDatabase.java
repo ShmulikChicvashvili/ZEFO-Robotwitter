@@ -2,7 +2,7 @@
  * 
  */
 
-package Database;
+package com.Robotwitter.Database;
 
 
 import java.sql.Connection;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package management;
+package com.Robotwitter.management;
 
 /**
  * @author Itay

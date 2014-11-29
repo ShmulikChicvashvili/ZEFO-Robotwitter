@@ -1,7 +1,7 @@
 /**
  * 
  */
-package twitter;
+package com.Robotwitter.twitter;
 
 /**
  * @author Itay

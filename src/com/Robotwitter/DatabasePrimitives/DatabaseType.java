@@ -1,7 +1,7 @@
 /**
  * 
  */
-package DatabasePrimitives;
+package com.Robotwitter.DatabasePrimitives;
 
 /**
  * @author Shmulik

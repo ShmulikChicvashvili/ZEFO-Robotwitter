@@ -2,7 +2,7 @@
  * 
  */
 
-package management;
+package com.Robotwitter.management;
 
 
 import javax.mail.*;

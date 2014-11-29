@@ -1,5 +1,5 @@
 
-package twitter;
+package com.Robotwitter.twitter;
 
 
 import twitter4j.Twitter;

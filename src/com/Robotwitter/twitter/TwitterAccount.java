@@ -1,7 +1,7 @@
 /**
  * 
  */
-package twitter;
+package com.Robotwitter.twitter;
 
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;

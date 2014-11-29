@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Mail>
+	Oops, forgot your password?
+	Don't worry, we got you covered!
+
+	Your password is: <Password>XXX</Password>
+	
+	Have a pleasant day,
+		Robotwitter.
+</Mail>

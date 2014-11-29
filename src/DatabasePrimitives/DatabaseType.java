@@ -14,30 +14,45 @@ public class DatabaseType
 	/**
 	 * The user name of the user
 	 */
-	String userName;
+	String eMail;
 
 	/**
-	 * @param userName The user name of the user
+	 * @param email The email of the user
 	 */
-	public DatabaseType(String userName)
+	public DatabaseType(String email)
 	{
-		this.userName = userName;
+		this.eMail = email;
 	}
 
 	/**
-	 * @return the userName
+	 * @return the email
 	 */
-	public String getUserName()
+	public String getEMail()
 	{
-		return this.userName;
+		return this.eMail;
 	}
 
 	/**
-	 * @param userName the userName to set
+	 * @param email the Email to set
 	 */
-	public void setUserName(String userName)
+	public void setEMail(String email)
 	{
-		this.userName = userName;
+		this.eMail = email;
+	}
+
+	/* (non-Javadoc) @see java.lang.Object#equals(java.lang.Object) */
+	@SuppressWarnings("cast")
+	@Override
+	public boolean equals(Object obj)
+	{
+		return this.equals((String) obj);
+	}
+
+	/* (non-Javadoc) @see java.lang.Object#toString() */
+	@Override
+	public String toString()
+	{
+		return this.eMail;
 	}
 	
 	

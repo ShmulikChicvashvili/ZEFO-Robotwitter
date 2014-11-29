@@ -5,6 +5,8 @@
 package test;
 
 
+import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 import Database.ConnectionEstablisher;
@@ -68,7 +70,18 @@ public class TestDatabaseUser
 		{
 			Injector injector = Guice.createInjector(new MySQLDBUserModule());
 			IDatabase db = injector.getInstance(MySqlDatabaseUser.class);
-			db.insert(new DBUser("shmulik", "shmulikjkech@gmail.com", "sh"));
+			DBUser shmulikTheMan = new DBUser("shmulikjkech@gmail.com", "sh");
+			if (!db.isExists("shmulikjkech@gmail.com"))
+			{
+				db.insert(shmulikTheMan);
+			}
+			assertTrue(db.isExists("shmulikjkech@gmail.com"));
+			assertFalse(db.isExists("notanexistingemail@gmail.com"));
+			assertFalse(db.isExists(null));
+			assertEquals(shmulikTheMan, db.get("shmulikjkech@gmail.com"));
+			assertNotEquals(shmulikTheMan, db.get(""));
+			assertEquals(null, db.get(""));
+			assertNotEquals(null, db.get("Shmulikjkech@gmail.com"));
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block

@@ -1,37 +1,37 @@
 /**
  * 
  */
+
 package DatabasePrimitives;
+
 
 /**
  * @author Shmulik
  * 
- * User primitive type
+ *         User primitive type
  */
 public class DBUser extends DatabaseType
-{	
-	
-	/**
-	 * The email of the user
-	 */
-	String email;
+{
 	
 	/**
 	 * The password of the user
 	 */
 	String password;
 	
+	
+	
 	/**
-	 * @param userName The user name of the user
-	 * @param email The email of the user
-	 * @param password The password of the user
+	 * @param email
+	 *            The email of the user
+	 * @param password
+	 *            The password of the user
 	 */
-	public DBUser(String userName, String email, String password)
+	public DBUser(String email, String password)
 	{
-		super(userName);
-		this.email = email;
+		super(email);
 		this.password = password;
 	}
+	
 	
 	/**
 	 * @return the password
@@ -40,28 +40,39 @@ public class DBUser extends DatabaseType
 	{
 		return this.password;
 	}
-
+	
+	
 	/**
-	 * @param password the password to set
+	 * @param password
+	 *            the password to set
 	 */
 	public void setPassword(String password)
 	{
 		this.password = password;
 	}
-
-	/**
-	 * @return the eMail
-	 */
-	public String getEmail()
+	
+	
+	/* (non-Javadoc) @see
+	 * DatabasePrimitives.DatabaseType#equals(java.lang.Object) */
+	@Override
+	public boolean equals(Object obj)
 	{
-		return this.email;
+		if (obj != null)
+		{
+			DBUser u = (DBUser) obj;
+			return (this.eMail.equals(u.getEMail()) && this.password.equals(u
+				.getPassword()));
+		}
+		return false;
 	}
-
-	/**
-	 * @param eMail the eMail to set
-	 */
-	public void setEmail(String eMail)
+	
+	
+	/* (non-Javadoc) @see DatabasePrimitives.DatabaseType#toString() */
+	@SuppressWarnings("nls")
+	@Override
+	public String toString()
 	{
-		this.email = eMail;
-	}	
+		return super.toString() + " " + this.password;
+	}
+	
 }

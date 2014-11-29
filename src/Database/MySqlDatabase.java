@@ -44,6 +44,11 @@ public abstract class MySqlDatabase implements IDatabase
 	 */
 	protected final String schema;
 	
+	/**
+	 * The connection establisher with the database
+	 */
+	protected final ConnectionEstablisher connectionEstablisher;
+	
 	
 	
 	/**
@@ -52,15 +57,7 @@ public abstract class MySqlDatabase implements IDatabase
 	 */
 	public MySqlDatabase(ConnectionEstablisher conEstablisher)
 	{
-		this.schema = conEstablisher.getSchema();
-		try
-		{
-			this.con = conEstablisher.getConnection();
-			this.statement = this.con.createStatement();
-		} catch (Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.connectionEstablisher = conEstablisher;
+		this.schema = this.connectionEstablisher.getSchema();
 	}
 }

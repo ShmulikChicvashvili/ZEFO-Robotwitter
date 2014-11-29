@@ -17,12 +17,19 @@ public interface IDatabase
 	 * @param obj The object to insert
 	 * @throws Exception e
 	 */
-	public void insert(DatabaseType obj) throws Exception;
-
+	public void insert(DatabaseType obj);
 	
-//	/**
-//	 * @return The query result
-//	 * @throws Exception SqlExpression
-//	 */
-//	public DatabaseTypes get() throws Exception;
+	/**
+	 * @param eMail The email which you check whether exists or not
+	 * @return If exists true else false
+	 * @throws Exception e
+	 */
+	public boolean isExists(String eMail);
+	
+	/**
+	 * @param eMail The email which you want to get is DatabaseType
+	 * @return The query result
+	 * @throws Exception SqlExpression
+	 */
+	public DatabaseType get(String eMail);
 }

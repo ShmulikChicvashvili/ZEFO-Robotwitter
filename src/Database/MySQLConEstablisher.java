@@ -63,7 +63,7 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 		ClassNotFoundException
 	{
 		Class.forName("com.mysql.jdbc.Driver");
-		Connection con =
+		Connection $ =
 			DriverManager.getConnection("jdbc:mysql://"
 				+ this.serverName
 				+ "/"
@@ -71,11 +71,11 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 				+ "?user=root&password=root");
 		
 		// Create the schema if it doesn't exist
-		java.sql.Statement statement = con.createStatement();
+		java.sql.Statement statement = $.createStatement();
 		statement.executeUpdate(this.createSchemaStatement + this.schema);
 		statement.close();
 		
-		return con;
+		return $;
 		
 	}
 	

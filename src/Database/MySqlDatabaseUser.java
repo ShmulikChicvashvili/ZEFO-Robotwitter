@@ -23,7 +23,7 @@ public class MySqlDatabaseUser extends MySqlDatabase
 	/**
 	 * The table name
 	 */
-	final private String table = this.schema + "." + "user"; //$NON-NLS-1$ //$NON-NLS-2$
+	final private String table = this.schema + "." + "users"; //$NON-NLS-1$ //$NON-NLS-2$
 	
 	/**
 	 * username column
@@ -48,20 +48,22 @@ public class MySqlDatabaseUser extends MySqlDatabase
 	
 	/**
 	 * C'tor for MySql db of users
-	 * @param conEstablisher A connection establisher for the database
+	 * 
+	 * @param conEstablisher
+	 *            A connection establisher for the database
 	 */
 	@Inject
-	public MySqlDatabaseUser(
-		ConnectionEstablisher conEstablisher)
+	public MySqlDatabaseUser(ConnectionEstablisher conEstablisher)
 	{
 		super(conEstablisher);
 		try
 		{
 			String statementCreate =
-				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`user` (" //$NON-NLS-1$
+				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`users` (" //$NON-NLS-1$
 					+ "`username` VARCHAR(45) NOT NULL," //$NON-NLS-1$
 					+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-					+ "`password` VARCHAR(45) NOT NULL);"; //$NON-NLS-1$
+					+ "`password` VARCHAR(45) NOT NULL,"
+					+ "PRIMARY KEY (`username`));"; //$NON-NLS-1$
 			this.statement.execute(statementCreate);
 		} catch (Exception e)
 		{
@@ -73,20 +75,23 @@ public class MySqlDatabaseUser extends MySqlDatabase
 	
 	/* (non-Javadoc) @see
 	 * Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
+	@SuppressWarnings("nls")
 	public void insert(DatabaseType obj) throws Exception
 	{
 		DBUser u = (DBUser) obj;
 		this.preparedStatement =
-			this.con
-				.prepareStatement("insert into ? ( ?, ?, ? ) values ( ?, ?, ? );"); //$NON-NLS-1$
-		this.preparedStatement.setString(1, this.table);
-		this.preparedStatement.setString(2, this.usernameColumn);
-		this.preparedStatement.setString(3, this.eMailColumn);
-		this.preparedStatement.setString(4, this.passwordColumn);
-		this.preparedStatement.setString(5, u.getUserName());
-		this.preparedStatement.setString(6, u.getEmail());
-		this.preparedStatement.setString(7, u.getPassword());
+			this.con.prepareStatement("INSERT INTO "
+				+ this.table
+				+ " ("
+				+ this.usernameColumn
+				+ ","
+				+ this.eMailColumn
+				+ ","
+				+ this.passwordColumn
+				+ ") VALUES ( ?, ?, ? );"); 
+		this.preparedStatement.setString(1, u.getUserName());
+		this.preparedStatement.setString(2, u.getEmail());
+		this.preparedStatement.setString(3, u.getPassword());
 		this.preparedStatement.executeUpdate();
 	}
-	
 }

@@ -10,8 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import com.google.inject.Inject;
-
 
 
 
@@ -52,7 +50,6 @@ public abstract class MySqlDatabase implements IDatabase
 	 * C'tor of general settings
 	 * @param conEstablisher A connection establisher for the database
 	 */
-	@Inject
 	public MySqlDatabase(ConnectionEstablisher conEstablisher)
 	{
 		this.schema = conEstablisher.getSchema();

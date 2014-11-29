@@ -3,8 +3,7 @@
  */
 package Database;
 
-import DatabasePrimitives.DatabaseTypes;
-import DatabasePrimitives.User;
+import DatabasePrimitives.DatabaseType;
 
 
 /**
@@ -18,7 +17,7 @@ public interface IDatabase
 	 * @param obj The object to insert
 	 * @throws Exception e
 	 */
-	public void insert(DatabaseTypes obj) throws Exception;
+	public void insert(DatabaseType obj) throws Exception;
 
 	
 //	/**

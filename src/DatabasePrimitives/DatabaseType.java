@@ -9,7 +9,7 @@ package DatabasePrimitives;
  * Everything that's going to be kept on the database will be kept
  * for certain user
  */
-public class DatabaseTypes
+public class DatabaseType
 {	
 	/**
 	 * The user name of the user
@@ -19,7 +19,7 @@ public class DatabaseTypes
 	/**
 	 * @param userName The user name of the user
 	 */
-	public DatabaseTypes(String userName)
+	public DatabaseType(String userName)
 	{
 		this.userName = userName;
 	}

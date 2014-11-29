@@ -6,10 +6,11 @@ package Database;
 
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
+import com.google.inject.Inject;
 
 
 
@@ -23,7 +24,7 @@ public abstract class MySqlDatabase implements IDatabase
 	/**
 	 * connection handler
 	 */
-	protected Connection connect = null;
+	protected Connection con = null;
 	
 	/**
 	 * statement handler
@@ -43,29 +44,22 @@ public abstract class MySqlDatabase implements IDatabase
 	/**
 	 * The database name
 	 */
-	protected final String schema = "yearlyproj_db"; //$NON-NLS-1$
-	
-	/**
-	 * Creating the database statement
-	 */
-	final private String createSchemaStatement = "CREATE SCHEMA IF NOT EXISTS " //$NON-NLS-1$
-		+ this.schema;
+	protected final String schema;
 	
 	
 	
 	/**
 	 * C'tor of general settings
+	 * @param conEstablisher A connection establisher for the database
 	 */
-	public MySqlDatabase()
+	@Inject
+	public MySqlDatabase(ConnectionEstablisher conEstablisher)
 	{
+		this.schema = conEstablisher.getSchema();
 		try
 		{
-			Class.forName("com.mysql.jdbc.Driver"); //$NON-NLS-1$
-			this.connect =
-				DriverManager.getConnection("jdbc:mysql://localhost/yearlyproj_db?" //$NON-NLS-1$
-					+ "user=root&password=root"); //$NON-NLS-1$
-			this.statement = this.connect.createStatement();
-			this.statement.executeUpdate(this.createSchemaStatement);
+			this.con = conEstablisher.getConnection();
+			this.statement = this.con.createStatement();
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block

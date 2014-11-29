@@ -8,13 +8,13 @@ package DatabasePrimitives;
  * 
  * User primitive type
  */
-public class User extends DatabaseTypes
+public class DBUser extends DatabaseType
 {	
 	
 	/**
 	 * The email of the user
 	 */
-	String eMail;
+	String email;
 	
 	/**
 	 * The password of the user
@@ -23,13 +23,13 @@ public class User extends DatabaseTypes
 	
 	/**
 	 * @param userName The user name of the user
-	 * @param eMail The email of the user
+	 * @param email The email of the user
 	 * @param password The password of the user
 	 */
-	public User(String userName, String eMail, String password)
+	public DBUser(String userName, String email, String password)
 	{
 		super(userName);
-		this.eMail = eMail;
+		this.email = email;
 		this.password = password;
 	}
 	
@@ -52,16 +52,16 @@ public class User extends DatabaseTypes
 	/**
 	 * @return the eMail
 	 */
-	public String geteMail()
+	public String getEmail()
 	{
-		return this.eMail;
+		return this.email;
 	}
 
 	/**
 	 * @param eMail the eMail to set
 	 */
-	public void seteMail(String eMail)
+	public void setEmail(String eMail)
 	{
-		this.eMail = eMail;
+		this.email = eMail;
 	}	
 }

@@ -5,8 +5,10 @@
 package Database;
 
 
-import DatabasePrimitives.DatabaseTypes;
-import DatabasePrimitives.User;
+import DatabasePrimitives.DBUser;
+import DatabasePrimitives.DatabaseType;
+
+import com.google.inject.Inject;
 
 
 
@@ -46,10 +48,13 @@ public class MySqlDatabaseUser extends MySqlDatabase
 	
 	/**
 	 * C'tor for MySql db of users
+	 * @param conEstablisher A connection establisher for the database
 	 */
-	public MySqlDatabaseUser()
+	@Inject
+	public MySqlDatabaseUser(
+		ConnectionEstablisher conEstablisher)
 	{
-		super();
+		super(conEstablisher);
 		try
 		{
 			String statementCreate =
@@ -57,8 +62,7 @@ public class MySqlDatabaseUser extends MySqlDatabase
 					+ "`username` VARCHAR(45) NOT NULL," //$NON-NLS-1$
 					+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
 					+ "`password` VARCHAR(45) NOT NULL);"; //$NON-NLS-1$
-			this.statement
-				.execute(statementCreate);
+			this.statement.execute(statementCreate);
 		} catch (Exception e)
 		{
 			// TODO Auto-generated catch block
@@ -69,17 +73,18 @@ public class MySqlDatabaseUser extends MySqlDatabase
 	
 	/* (non-Javadoc) @see
 	 * Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
-	public void insert(DatabaseTypes obj) throws Exception
+	public void insert(DatabaseType obj) throws Exception
 	{
-		User u = (User) obj;
+		DBUser u = (DBUser) obj;
 		this.preparedStatement =
-			this.connect.prepareStatement("insert into ? ( ?, ?, ? ) values ( ?, ?, ? );"); //$NON-NLS-1$
+			this.con
+				.prepareStatement("insert into ? ( ?, ?, ? ) values ( ?, ?, ? );"); //$NON-NLS-1$
 		this.preparedStatement.setString(1, this.table);
 		this.preparedStatement.setString(2, this.usernameColumn);
 		this.preparedStatement.setString(3, this.eMailColumn);
 		this.preparedStatement.setString(4, this.passwordColumn);
 		this.preparedStatement.setString(5, u.getUserName());
-		this.preparedStatement.setString(6, u.geteMail());
+		this.preparedStatement.setString(6, u.getEmail());
 		this.preparedStatement.setString(7, u.getPassword());
 		this.preparedStatement.executeUpdate();
 	}

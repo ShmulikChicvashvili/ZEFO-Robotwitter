@@ -30,7 +30,7 @@ public interface IDatabase
 	 * @param eMail The email which you check whether exists or not
 	 * @return If exists true else false
 	 */
-	public boolean isExists(String eMail);
+	public boolean isExists(DatabaseType obj);
 	
 	/**
 	 * @param eMail The email which you want to get is DatabaseType

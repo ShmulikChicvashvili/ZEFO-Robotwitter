@@ -72,7 +72,7 @@ public class DBUser extends DatabaseType
 	@Override
 	public String toString()
 	{
-		return super.toString() + " " + this.password;
+		return "Email: " + this.getEMail() + " Password: " + this.getPassword();
 	}
 	
 }

@@ -7,9 +7,10 @@ package com.Robotwitter.Database;
 
 import java.util.ArrayList;
 
+import com.Robotwitter.DatabasePrimitives.DBTwitterAccount;
 import com.Robotwitter.DatabasePrimitives.DBUser;
 import com.Robotwitter.DatabasePrimitives.DatabaseType;
-import com.google.inject.Inject;
+import com.Robotwitter.twitter.TwitterAccount;
 
 
 
@@ -17,40 +18,32 @@ import com.google.inject.Inject;
 /**
  * @author Shmulik
  *
- * The database that handles registring a user and fetching a user
+ *         The database handles saving twitter account connection details
  */
-public class MySqlDatabaseUser extends MySqlDatabase
+public class MySqlDatabaseTwitterAcounts extends MySqlDatabase
 {
 	
-	/**
-	 * The table name
-	 */
-	final private String table = this.schema + "." + "users"; //$NON-NLS-1$ //$NON-NLS-2$
+	@SuppressWarnings("nls")
+	final private String table = this.schema + "." + "user_twitter_accounts"; //$NON-NLS-1$ //$NON-NLS-2$
 	
-	/**
-	 * Email column
-	 */
+	final private String userIdColumn = "user_id"; //$NON-NLS-1$
+	
+	@SuppressWarnings("nls")
 	final private String eMailColumn = "email"; //$NON-NLS-1$
 	
-	/**
-	 * Password column
-	 */
-	final private String passwordColumn = "password"; //$NON-NLS-1$
+	@SuppressWarnings("nls")
+	final private String tokenColumn = "token"; //$NON-NLS-1$
+	
+	@SuppressWarnings("nls")
+	final private String privateTokenColumn = "private_token"; //$NON-NLS-1$
 	
 	
 	
 	/**
-	 * Create table of users statement
-	 */
-	
-	/**
-	 * C'tor For MySql db of users
-	 * 
 	 * @param conEstablisher
-	 *            A connection establisher for the database
+	 *            The connection handler
 	 */
-	@Inject
-	public MySqlDatabaseUser(ConnectionEstablisher conEstablisher)
+	public MySqlDatabaseTwitterAcounts(ConnectionEstablisher conEstablisher)
 	{
 		super(conEstablisher);
 		try
@@ -58,10 +51,12 @@ public class MySqlDatabaseUser extends MySqlDatabase
 			this.con = this.connectionEstablisher.getConnection();
 			this.statement = this.con.createStatement();
 			String statementCreate =
-				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`users` (" //$NON-NLS-1$
+				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`user_twitter_accounts` (" //$NON-NLS-1$
+					+ "`user_id` SIGNED BIGINT," //$NON-NLS-1$
 					+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-					+ "`password` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-					+ "PRIMARY KEY (`email`));"; //$NON-NLS-1$
+					+ "`token` VARCHAR(45) NOT NULL," //$NON-NLS-1$
+					+ "`private_token` VARCHAR(45) NOT NULL," //$NON-NLS-1$
+					+ "PRIMARY KEY (`user_id`));"; //$NON-NLS-1$
 			this.statement.execute(statementCreate);
 		} catch (Exception e)
 		{
@@ -83,25 +78,33 @@ public class MySqlDatabaseUser extends MySqlDatabase
 	
 	
 	/* (non-Javadoc) @see
-	 * Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
-	@SuppressWarnings("nls")
+	 * com.Robotwitter.Database.IDatabase#insert(com.Robotwitter
+	 * .DatabasePrimitives.DatabaseType) */
+	@SuppressWarnings({ "nls", "boxing" })
 	public void insert(DatabaseType obj)
 	{
-		DBUser u = (DBUser) obj;
+		DBTwitterAccount twitterAccount = (DBTwitterAccount) obj;
 		try
 		{
 			this.con = this.connectionEstablisher.getConnection();
 			
-			this.preparedStatement =
-				this.con.prepareStatement("INSERT INTO "
-					+ this.table
-					+ " ("
-					+ this.eMailColumn
-					+ ","
-					+ this.passwordColumn
-					+ ") VALUES ( ?, ? );");
-			this.preparedStatement.setString(1, u.getEMail());
-			this.preparedStatement.setString(2, u.getPassword());
+			this.preparedStatement = this.con.prepareStatement("INSERT INTO " //$NON-NLS-1$
+				+ this.table
+				+ " (" //$NON-NLS-1$
+				+ this.userIdColumn
+				+ "," //$NON-NLS-1$
+				+ this.eMailColumn
+				+ "," //$NON-NLS-1$
+				+ this.tokenColumn
+				+ "," //$NON-NLS-1$
+				+ this.privateTokenColumn
+				+ ") VALUES ( ?, ?, ? );"); //$NON-NLS-1$
+			this.preparedStatement.setLong(1, twitterAccount.getUserId());
+			this.preparedStatement.setString(2, twitterAccount.getEMail());
+			this.preparedStatement.setString(3, twitterAccount.getToken());
+			this.preparedStatement.setString(
+				4,
+				twitterAccount.getPrivateToken());
 			this.preparedStatement.executeUpdate();
 			
 		} catch (Exception e)
@@ -119,16 +122,16 @@ public class MySqlDatabaseUser extends MySqlDatabase
 				// undefined behaviour.
 			}
 		}
-		
 	}
 	
 	
-	/* (non-Javadoc) @see Database.IDatabase#isExists(java.lang.String) */
-	@SuppressWarnings("nls")
+	/* (non-Javadoc) @see
+	 * com.Robotwitter.Database.IDatabase#isExists(java.lang.String) */
+	@SuppressWarnings({ "nls", "boxing" })
 	public boolean isExists(DatabaseType obj)
 	{
-		DBUser temp = (DBUser) obj;
-		String eMail = temp.getEMail();
+		DBTwitterAccount temp = (DBTwitterAccount) obj;
+		Long userId = temp.getUserId();
 		boolean $ = false;
 		try
 		{
@@ -138,9 +141,9 @@ public class MySqlDatabaseUser extends MySqlDatabase
 					+ "SELECT * FROM "
 					+ this.table
 					+ " WHERE "
-					+ this.eMailColumn
+					+ this.userIdColumn
 					+ "=?;");
-			this.preparedStatement.setString(1, eMail);
+			this.preparedStatement.setLong(1, userId);
 			this.resultSet = this.preparedStatement.executeQuery();
 			if (this.resultSet.first())
 			{
@@ -166,8 +169,9 @@ public class MySqlDatabaseUser extends MySqlDatabase
 	}
 	
 	
-	/* (non-Javadoc) @see Database.IDatabase#get(java.lang.String) */
-	@SuppressWarnings("nls")
+	/* (non-Javadoc) @see
+	 * com.Robotwitter.Database.IDatabase#get(java.lang.String) */
+	@SuppressWarnings({ "boxing", "nls" })
 	public ArrayList<DatabaseType> get(String eMail)
 	{
 		ArrayList<DatabaseType> $ = null;
@@ -186,11 +190,13 @@ public class MySqlDatabaseUser extends MySqlDatabase
 			if (this.resultSet.next())
 			{
 				$ = new ArrayList<DatabaseType>();
-				DBUser u =
-					new DBUser(
+				DBTwitterAccount twitterAccount =
+					new DBTwitterAccount(
 						this.resultSet.getString(this.eMailColumn),
-						this.resultSet.getString(this.passwordColumn));
-				$.add(u);
+						this.resultSet.getString(this.tokenColumn),
+						this.resultSet.getString(this.privateTokenColumn),
+						this.resultSet.getLong(this.userIdColumn));
+				$.add(twitterAccount);
 			}
 		} catch (Exception e)
 		{

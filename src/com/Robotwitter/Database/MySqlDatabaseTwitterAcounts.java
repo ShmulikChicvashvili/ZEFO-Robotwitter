@@ -11,6 +11,7 @@ import com.Robotwitter.DatabasePrimitives.DBTwitterAccount;
 import com.Robotwitter.DatabasePrimitives.DBUser;
 import com.Robotwitter.DatabasePrimitives.DatabaseType;
 import com.Robotwitter.twitter.TwitterAccount;
+import com.google.inject.Inject;
 
 
 
@@ -43,6 +44,7 @@ public class MySqlDatabaseTwitterAcounts extends MySqlDatabase
 	 * @param conEstablisher
 	 *            The connection handler
 	 */
+	@Inject
 	public MySqlDatabaseTwitterAcounts(ConnectionEstablisher conEstablisher)
 	{
 		super(conEstablisher);
@@ -52,7 +54,7 @@ public class MySqlDatabaseTwitterAcounts extends MySqlDatabase
 			this.statement = this.con.createStatement();
 			String statementCreate =
 				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`user_twitter_accounts` (" //$NON-NLS-1$
-					+ "`user_id` SIGNED BIGINT," //$NON-NLS-1$
+					+ "`user_id` BIGINT NOT NULL," //$NON-NLS-1$
 					+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
 					+ "`token` VARCHAR(45) NOT NULL," //$NON-NLS-1$
 					+ "`private_token` VARCHAR(45) NOT NULL," //$NON-NLS-1$
@@ -98,7 +100,7 @@ public class MySqlDatabaseTwitterAcounts extends MySqlDatabase
 				+ this.tokenColumn
 				+ "," //$NON-NLS-1$
 				+ this.privateTokenColumn
-				+ ") VALUES ( ?, ?, ? );"); //$NON-NLS-1$
+				+ ") VALUES ( ?, ?, ?, ? );"); //$NON-NLS-1$
 			this.preparedStatement.setLong(1, twitterAccount.getUserId());
 			this.preparedStatement.setString(2, twitterAccount.getEMail());
 			this.preparedStatement.setString(3, twitterAccount.getToken());

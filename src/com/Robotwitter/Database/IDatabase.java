@@ -3,6 +3,8 @@
  */
 package com.Robotwitter.Database;
 
+import java.util.ArrayList;
+
 import com.Robotwitter.DatabasePrimitives.DatabaseType;
 
 
@@ -28,5 +30,5 @@ public interface IDatabase
 	 * @param eMail The email which you want to get is DatabaseType
 	 * @return The query result
 	 */
-	public DatabaseType get(String eMail);
+	public ArrayList<DatabaseType> get(String eMail);
 }

@@ -77,7 +77,8 @@ public class TestDatabaseUser
 			assertTrue(db.isExists("shmulikjkech@gmail.com"));
 			assertFalse(db.isExists("notanexistingemail@gmail.com"));
 			assertFalse(db.isExists(null));
-			assertEquals(shmulikTheMan, db.get("shmulikjkech@gmail.com"));
+			assertEquals(db.get("shmulikjkech@gmail.com").size(), 1);
+			assertEquals(shmulikTheMan, (db.get("shmulikjkech@gmail.com")).get(0));
 			assertNotEquals(shmulikTheMan, db.get(""));
 			assertEquals(null, db.get(""));
 			assertNotEquals(null, db.get("Shmulikjkech@gmail.com"));

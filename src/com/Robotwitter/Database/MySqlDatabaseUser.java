@@ -5,9 +5,12 @@
 package com.Robotwitter.Database;
 
 
+import java.util.ArrayList;
+
 import com.Robotwitter.DatabasePrimitives.DBUser;
 import com.Robotwitter.DatabasePrimitives.DatabaseType;
 import com.google.inject.Inject;
+import com.mysql.fabric.xmlrpc.base.Array;
 
 
 
@@ -163,9 +166,9 @@ public class MySqlDatabaseUser extends MySqlDatabase
 	
 	/* (non-Javadoc) @see Database.IDatabase#get(java.lang.String) */
 	@SuppressWarnings("nls")
-	public DatabaseType get(String eMail)
+	public ArrayList<DatabaseType> get(String eMail)
 	{
-		DatabaseType $ = null;
+		ArrayList<DatabaseType> $ = null;
 		try
 		{
 			this.con = this.connectionEstablisher.getConnection();
@@ -180,10 +183,12 @@ public class MySqlDatabaseUser extends MySqlDatabase
 			this.resultSet = this.preparedStatement.executeQuery();
 			if (this.resultSet.next())
 			{
-				$ =
+				$ = new ArrayList<DatabaseType>();
+				DBUser u =
 					new DBUser(
 						this.resultSet.getString(this.eMailColumn),
 						this.resultSet.getString(this.passwordColumn));
+				$.add(u);
 			}
 		} catch (Exception e)
 		{

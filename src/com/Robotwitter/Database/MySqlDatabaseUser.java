@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import com.Robotwitter.DatabasePrimitives.DBUser;
 import com.Robotwitter.DatabasePrimitives.DatabaseType;
 import com.google.inject.Inject;
-import com.mysql.fabric.xmlrpc.base.Array;
 
 
 
@@ -72,7 +71,7 @@ public class MySqlDatabaseUser extends MySqlDatabase
 		{
 			try
 			{
-				this.preparedStatement.close();
+				this.statement.close();
 				this.con.close();
 			} catch (Exception e)
 			{
@@ -126,8 +125,10 @@ public class MySqlDatabaseUser extends MySqlDatabase
 	
 	/* (non-Javadoc) @see Database.IDatabase#isExists(java.lang.String) */
 	@SuppressWarnings("nls")
-	public boolean isExists(String eMail)
+	public boolean isExists(DatabaseType obj)
 	{
+		DBUser temp = (DBUser) obj;
+		String eMail = temp.getEMail();
 		boolean $ = false;
 		try
 		{

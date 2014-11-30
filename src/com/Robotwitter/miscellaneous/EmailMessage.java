@@ -21,6 +21,28 @@ public class EmailMessage
 	
 	
 	
+	/**
+	 * @param emailAddressFrom the emailAddressFrom to set
+	 */
+	public void setFrom(String from)
+	{
+		this.emailAddressFrom = from;
+	}
+
+
+	/**
+	 * @param emailAddressTo the emailAddressTo to set
+	 */
+	public void setTo(String to)
+	{
+		this.emailAddressTo = to;
+	}
+
+
+	/**
+	 * @param from
+	 * @param to
+	 */
 	public EmailMessage(String from, String to)
 	{
 		this.emailAddressFrom = from;
@@ -28,18 +50,24 @@ public class EmailMessage
 	}
 	
 	
+	/**
+	 * @param subject
+	 */
 	public void setSubject(String subject)
 	{
 		if (null == subject) { throw new NullPointerException(
-			"the subject of the mail cant be null!"); }
+			"the subject of the mail cant be null!"); } //$NON-NLS-1$
 		this.msgSubject = subject;
 	}
 	
 	
+	/**
+	 * @param text
+	 */
 	public void setText(String text)
 	{
 		if (null == text) { throw new NullPointerException(
-			"the content of the mail cant be null!"); }
+			"the content of the mail cant be null!"); } //$NON-NLS-1$
 		this.msgText = text;
 	}
 	
@@ -49,7 +77,7 @@ public class EmailMessage
 	 */
 	public String getEmailAddressFrom()
 	{
-		return emailAddressFrom;
+		return this.emailAddressFrom;
 	}
 	
 	
@@ -58,7 +86,7 @@ public class EmailMessage
 	 */
 	public String getEmailAddressTo()
 	{
-		return emailAddressTo;
+		return this.emailAddressTo;
 	}
 	
 	
@@ -67,7 +95,7 @@ public class EmailMessage
 	 */
 	public String getMsgSubject()
 	{
-		return msgSubject;
+		return this.msgSubject;
 	}
 	
 	
@@ -76,6 +104,6 @@ public class EmailMessage
 	 */
 	public String getMsgText()
 	{
-		return msgText;
+		return this.msgText;
 	}
 }

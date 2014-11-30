@@ -48,14 +48,14 @@ public class TwitterAttacher implements ITwitterAttacher
 	public void attachAccount(TwitterAccount account, String pin) throws IllegalPinException
 	{
 		if(pin.length() != CORRECT_PIN_LENGTH) {
-			throw new IllegalPinException("The Pin "+pin+" is illegal!");
+			throw new IllegalPinException("The Pin "+pin+" is illegal!"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		Twitter twitter = account.getTwitter();
 		try
 		{
-			RequestToken requestToken = twitter.getOAuthRequestToken();
 			AccessToken accessToken =
-				twitter.getOAuthAccessToken(requestToken, pin); 
+				twitter.getOAuthAccessToken(pin); 
+			//FIXME: save the AccessToken in the database.
 			account.setAttached(true);
 		} catch (TwitterException e)
 		{

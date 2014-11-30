@@ -15,6 +15,7 @@ public class TwitterAccount
 
 	//TODO: find something more elegant then this composition.
 	Twitter twitter;
+	
 	Boolean isAttached;
 	
 	public TwitterAccount(TwitterFactory tf) {

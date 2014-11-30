@@ -11,7 +11,5 @@ import javax.mail.MessagingException;
  */
 public interface IEmailSender
 {	
-	public void startSession(IEmailSession session);
-	
 	public void sendEmail(EmailMessage mail) throws MessagingException;
 }

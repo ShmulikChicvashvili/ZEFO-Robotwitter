@@ -1,0 +1,47 @@
+/* Based on Vaadin's valo theme. Below are settings overriding its defaults. */
+/*----------------------------------------------------------------------------*/
+@import "config";
+
+
+/* Base colours */
+@if $robotwitter-style == light {
+	$v-app-background-color: hsl(hue($robotwitter-main-color), 0%, 98%);
+} @else if $robotwitter-style == dark {
+	$v-app-background-color: hsl(hue($robotwitter-main-color), 0%, 12%);
+}
+
+
+/* Sizing and spacing */
+$v-font-size: $robotwitter-font-size;
+
+
+/* Component Features */
+$v-border-radius: 1px;
+$v-gradient: 0%;
+
+
+/* Miscellaneous */
+$v-app-loading-text: "Robotwitter is loading...";
+
+
+/*----------------------------------------------------------------------------*/
+@import "../valo/valo";
+/*----------------------------------------------------------------------------*/
+
+@import "login/LoginView";
+@import "login/PasswordRetrievalView";
+@import "internal/VerticalForm";
+
+/*----------------------------------------------------------------------------*/
+
+
+@mixin robotwitter {
+	@include valo;
+	
+	/* internal */
+	@include VerticalForm;
+	
+	/* login */
+	@include LoginView;
+	@include PasswordRetrievalView;
+}

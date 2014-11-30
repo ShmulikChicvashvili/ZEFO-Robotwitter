@@ -1,0 +1,29 @@
+/* Internal details of the robotwitter theme. */
+/*----------------------------------------------------------------------------*/
+
+
+@if $robotwitter-style == light {
+	$robotwitter-luminance: $robotwitter-highest-luminace;
+	$robotwitter-2nd-luminance: $robotwitter-lowest-luminace;
+} @else if $robotwitter-style == dark {
+	$robotwitter-luminance: $robotwitter-lowest-luminace;
+	$robotwitter-2nd-luminance: $robotwitter-highest-luminace;
+} @else {
+	@error "$robotwitter-style must be light or dark";
+}
+	
+	
+$robotwitter-neutral-color: hsl(hue($robotwitter-main-color), 2%, $robotwitter-luminance);
+$robotwitter-2nd-neutral-color: hsl(hue($robotwitter-sub-color), 2%, $robotwitter-2nd-luminance);
+
+
+@mixin robotwitter-logo($width) {
+	width: $width;
+	height: 71px / 360px * $width;
+	
+	@if $robotwitter-style == light {
+		background-image: url("../img/robotwitter-logo-light.png");
+	} @else if $robotwitter-style == dark {
+		background-image: url("../img/robotwitter-logo-dark.png");
+	}
+}

@@ -22,8 +22,7 @@ public class RetrievelMailBuilder
 	}
 	
 	public EmailMessage buildRetrievalEmail(String systemEmail,String userEmail,String password) {
-		TemplateMailReader reader = new TemplateMailReader(); //TODO: fix this new with factory
-		TemplateMail mail = reader.ReadTemplateMail(this.templatePath);
+		TemplateMail mail = this.templateReader.ReadTemplateMail(this.templatePath);
 		mail.setProperty("password",password);
 		EmailMessage $ = new EmailMessage(systemEmail,userEmail);
 		$.setSubject(mail.getSubject());

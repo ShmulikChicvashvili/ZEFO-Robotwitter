@@ -25,7 +25,7 @@ public class EmailSender implements IEmailSender
 		Session mailSession = this.session.getSession();
 		Message message = new MimeMessage(mailSession);
 		message.setFrom(new InternetAddress(mail.getEmailAddressFrom()));
-		message.setContent(mail.getMsgText(), "text/html"); //$NON-NLS-1$
+		message.setText(mail.getMsgText()); //$NON-NLS-1$
 		message.setRecipients(
 			Message.RecipientType.TO,
 			InternetAddress.parse(mail.getEmailAddressTo()));

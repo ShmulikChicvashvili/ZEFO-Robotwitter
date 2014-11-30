@@ -9,16 +9,12 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.Robotwitter.Database.ConnectionEstablisher;
 import com.Robotwitter.Database.IDatabase;
-import com.Robotwitter.Database.MySQLConEstablisher;
 import com.Robotwitter.Database.MySQLDBUserModule;
 import com.Robotwitter.Database.MySqlDatabaseUser;
 import com.Robotwitter.DatabasePrimitives.DBUser;
-import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.name.Names;
 
 
 

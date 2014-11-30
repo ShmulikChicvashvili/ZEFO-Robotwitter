@@ -8,9 +8,7 @@ package com.Robotwitter.Database;
 import java.util.ArrayList;
 
 import com.Robotwitter.DatabasePrimitives.DBTwitterAccount;
-import com.Robotwitter.DatabasePrimitives.DBUser;
 import com.Robotwitter.DatabasePrimitives.DatabaseType;
-import com.Robotwitter.twitter.TwitterAccount;
 import com.google.inject.Inject;
 
 
@@ -21,7 +19,7 @@ import com.google.inject.Inject;
  *
  *         The database handles saving twitter account connection details
  */
-public class MySqlDatabaseTwitterAcounts extends MySqlDatabase
+public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 {
 	
 	@SuppressWarnings("nls")
@@ -45,7 +43,7 @@ public class MySqlDatabaseTwitterAcounts extends MySqlDatabase
 	 *            The connection handler
 	 */
 	@Inject
-	public MySqlDatabaseTwitterAcounts(ConnectionEstablisher conEstablisher)
+	public MySqlDatabaseTwitterAccounts(ConnectionEstablisher conEstablisher)
 	{
 		super(conEstablisher);
 		try

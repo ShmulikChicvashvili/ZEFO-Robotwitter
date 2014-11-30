@@ -5,7 +5,6 @@
 package com.Robotwitter.miscellaneous;
 
 
-import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
 

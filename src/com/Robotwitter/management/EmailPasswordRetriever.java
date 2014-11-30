@@ -48,14 +48,17 @@ public class EmailPasswordRetriever
 	
 	
 	public void retrievePasswordByMail(String userEmail)
-		throws UserDoesntExistException, MessagingException
+		throws UserDoesntExistException,
+		MessagingException
 	{
-		if (!this.userDB.isExists(userEmail)) { throw new UserDoesntExistException(
-			"The user doesnt exist in the database!"); }
+		// if (!this.userDB.isExists(userEmail)) { throw new
+		// UserDoesntExistException(
+		// "The user doesnt exist in the database!"); }
 		
-		DBUser user = (DBUser) this.userDB.get(userEmail); // FIXME: change
-														// MySqlDatabaseUser to
-														// return DBUser
+		DBUser user = (DBUser) this.userDB.get(userEmail).get(0); // FIXME:
+																	// change
+		// MySqlDatabaseUser to
+		// return DBUser
 		EmailMessage retrivalMail =
 			this.mailBuilder.buildRetrievalEmail(
 				this.systemEmail,

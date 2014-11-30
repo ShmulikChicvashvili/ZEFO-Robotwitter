@@ -5,14 +5,11 @@
 package com.Robotwitter.test;
 
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
 import com.Robotwitter.Database.IDatabase;
 import com.Robotwitter.Database.MySQLDBUserModule;
-import com.Robotwitter.Database.MySqlDatabaseTwitterAcounts;
-import com.Robotwitter.Database.MySqlDatabaseUser;
+import com.Robotwitter.Database.MySqlDatabaseTwitterAccounts;
 import com.Robotwitter.DatabasePrimitives.DBTwitterAccount;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -35,7 +32,7 @@ public class TestDatabaseTwitterAccounts
 		{
 			Injector injector = Guice.createInjector(new MySQLDBUserModule());
 			IDatabase db =
-				injector.getInstance(MySqlDatabaseTwitterAcounts.class);
+				injector.getInstance(MySqlDatabaseTwitterAccounts.class);
 			DBTwitterAccount shmulikAccount =
 				new DBTwitterAccount(
 					"Shmulik@gmail.com",

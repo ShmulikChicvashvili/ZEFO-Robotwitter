@@ -5,24 +5,23 @@
 package com.Robotwitter.test;
 
 
+import java.util.ArrayList;
+
 import javax.mail.MessagingException;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.Robotwitter.Database.ConnectionEstablisher;
-import com.Robotwitter.Database.MySQLConEstablisher;
 import com.Robotwitter.Database.MySqlDatabaseUser;
 import com.Robotwitter.DatabasePrimitives.DBUser;
+import com.Robotwitter.DatabasePrimitives.DatabaseType;
 import com.Robotwitter.management.EmailPasswordRetriever;
 import com.Robotwitter.management.RetrievelMailBuilder;
 import com.Robotwitter.management.UserDoesntExistException;
 import com.Robotwitter.miscellaneous.EmailMessage;
 import com.Robotwitter.miscellaneous.EmailSender;
 import com.Robotwitter.miscellaneous.GmailSession;
-import com.google.inject.AbstractModule;
-import com.google.inject.name.Names;
 
 
 
@@ -56,9 +55,11 @@ public class EmailPasswordRetrieverTest
 			"your_password123")).thenReturn(email); //$NON-NLS-1$
 		
 		MySqlDatabaseUser db = Mockito.mock(MySqlDatabaseUser.class);
-		Mockito.when(db.isExists("itaykhazon@gmail.com")).thenReturn(true);
-		Mockito.when(db.get("itaykhazon@gmail.com")).thenReturn(
-			new DBUser("itaykhazon@gmail.com", "your_password123"));
+//		Mockito.when(db.isExists("itaykhazon@gmail.com")).thenReturn(true);
+		DBUser user = new DBUser("itaykhazon@gmail.com", "your_password123");
+		ArrayList<DatabaseType> arr = new ArrayList<DatabaseType>();
+		arr.add(user);
+		Mockito.when(db.get("itaykhazon@gmail.com")).thenReturn(arr);
 		
 		this.retriever =
 			new EmailPasswordRetriever("robotwitter.app@gmail.com", //$NON-NLS-1$

@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.Robotwitter.Database.MySqlDatabaseTwitterAccounts;
 import com.Robotwitter.twitter.IllegalPinException;
 import com.Robotwitter.twitter.TwitterAccount;
 import com.Robotwitter.twitter.TwitterAppConfiguration;
@@ -64,7 +65,7 @@ public class TwitterAttacherTest // TODO: think how to test this...
 		
 		try
 		{
-			this.attacher.attachAccount("itaykhazon@gmail.com",this.account, br.readLine());
+			this.attacher.attachAccount("itaykhazon@gmail.com",this.account, br.readLine()); //$NON-NLS-1$
 			System.out.println("Successfully attached this account!"); //$NON-NLS-1$
 			
 			System.out.print("As proof, choose a tweet to post: "); //$NON-NLS-1$

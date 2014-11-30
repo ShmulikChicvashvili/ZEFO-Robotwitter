@@ -7,6 +7,9 @@ import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
+import com.Robotwitter.Database.MySqlDatabaseTwitterAccounts;
+import com.Robotwitter.DatabasePrimitives.DBTwitterAccount;
+
 
 
 
@@ -66,14 +69,14 @@ public class TwitterAttacher implements ITwitterAttacher
 		try
 		{
 			AccessToken accessToken = twitter.getOAuthAccessToken(pin);
-			DBTwitterAccount account =
+			DBTwitterAccount dbAccount =
 				new DBTwitterAccount(
 					userEmail,
 					accessToken.getToken(),
 					accessToken.getTokenSecret(),
 					twitter.getId());
-			if(!twitterDB.isExists(account)) {
-				twitterDB.insert(account);
+			if(!this.twitterDB.isExists(dbAccount)) {
+				this.twitterDB.insert(dbAccount);
 			}
 			account.setAttached(true);
 		} catch (TwitterException e)

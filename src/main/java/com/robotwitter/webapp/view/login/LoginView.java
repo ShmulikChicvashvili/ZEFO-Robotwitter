@@ -16,11 +16,10 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
-
+import com.robotwitter.webapp.control.login.EmailPasswordRetrievalController;
 import com.robotwitter.webapp.control.login.LoginController;
 import com.robotwitter.webapp.control.login.LoginControllerImpl;
 import com.robotwitter.webapp.control.login.PasswordRetrievalController;
-import com.robotwitter.webapp.control.login.PasswordRetrievalControllerImpl;
 
 
 
@@ -34,10 +33,10 @@ public class LoginView extends UI
 	/** Initialise the forgot password button. */
 	private void initialiseForgotPassword()
 	{
-		forgotPassword =
+		this.forgotPassword =
 			new Button(
 				Messages.get("LoginView.button.forgot-password"), event -> openPasswordRetrievalWindow()); //$NON-NLS-1$
-		forgotPassword.setStyleName(ValoTheme.BUTTON_LINK);
+		this.forgotPassword.setStyleName(ValoTheme.BUTTON_LINK);
 	}
 
 
@@ -45,62 +44,62 @@ public class LoginView extends UI
 	private void initialiseLayouts()
 	{
 		// Horizontal layout for "remember user" and "forgot password"
-		rememberAndForgot = new HorizontalLayout(rememberUser, forgotPassword);
-		rememberAndForgot.setSizeFull();
-		rememberAndForgot.setComponentAlignment(
-			forgotPassword,
+		this.rememberAndForgot = new HorizontalLayout(this.rememberUser, this.forgotPassword);
+		this.rememberAndForgot.setSizeFull();
+		this.rememberAndForgot.setComponentAlignment(
+			this.forgotPassword,
 			Alignment.TOP_RIGHT);
 		
 		// Vertical layout for the login form and the above horizontal
-		content = new VerticalLayout(loginForm, rememberAndForgot);
-		content.setSpacing(true);
+		this.content = new VerticalLayout(this.loginForm, this.rememberAndForgot);
+		this.content.setSpacing(true);
 
 		// Initialise the password retrieval form
-		retrievalForm =
+		this.retrievalForm =
 			new PasswordRetrievalForm(
-				retrievalController::authenticate,
-				retrievalController::retrieve);
+				this.retrievalController::authenticate,
+				this.retrievalController::retrieve);
 		
 		// The view's title
-		title = new Label(Messages.get("LoginView.label.title")); //$NON-NLS-1$
+		this.title = new Label(Messages.get("LoginView.label.title")); //$NON-NLS-1$
 
 		// Set style names for SCSS
-		content.addStyleName(LOGIN_STYLENAME);
-		retrievalForm.addStyleName(PASSWORD_RETRIEVAL_STYLENAME);
+		this.content.addStyleName(LOGIN_STYLENAME);
+		this.retrievalForm.addStyleName(PASSWORD_RETRIEVAL_STYLENAME);
 		addStyleName(UI_STYLENAME);
-		title.addStyleName(TITLE_STYLENAME);
+		this.title.addStyleName(TITLE_STYLENAME);
 
 		// Wrapper of the title and the rest of the content
-		wrapper = new VerticalLayout(title, content);
-		setContent(wrapper);
+		this.wrapper = new VerticalLayout(this.title, this.content);
+		setContent(this.wrapper);
 	}
 	
 	
 	/** Initialise the login form. */
 	private void initialiseLoginForm()
 	{
-		loginForm =
-			new LoginForm(loginController::authenticate, (u, p) -> {/* NULL */});
+		this.loginForm =
+			new LoginForm(this.loginController::authenticate, (u, p) -> {/* NULL */});
 	}
 
 
 	/** Initialise the remember user checkbox. */
 	private void initialiseRememberUser()
 	{
-		rememberUser =
+		this.rememberUser =
 			new CheckBox(
 				Messages.get("LoginView.checkbox.stay-signed-in"), true); //$NON-NLS-1$
-		rememberUser.setDescription(Messages
+		this.rememberUser.setDescription(Messages
 			.get("LoginView.tooltip.stay-signed-in")); //$NON-NLS-1$
-		rememberUser.setEnabled(false);
+		this.rememberUser.setEnabled(false);
 	}
 
 
 	@Override
 	protected void init(final VaadinRequest request)
 	{
-		loginController = new LoginControllerImpl();
-		retrievalController = new PasswordRetrievalControllerImpl();
+		this.loginController = new LoginControllerImpl();
+		this.retrievalController = new EmailPasswordRetrievalController();
 		initialiseLoginForm();
 		initialiseRememberUser();
 		initialiseForgotPassword();
@@ -115,7 +114,7 @@ public class LoginView extends UI
 	{
 		final Window window =
 			new Window(
-				Messages.get("PasswordRetrieval.window.caption"), retrievalForm); //$NON-NLS-1$
+				Messages.get("PasswordRetrieval.window.caption"), this.retrievalForm); //$NON-NLS-1$
 		window.setModal(true);
 		window.setCloseShortcut(KeyCode.ESCAPE, null);
 		window.setResizable(false);

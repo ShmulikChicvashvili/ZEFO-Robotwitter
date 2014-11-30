@@ -27,6 +27,10 @@ public class GmailSession implements IEmailSession
 	
 	
 	
+	/**
+	 * @param username
+	 * @param password
+	 */
 	public GmailSession(String username, String password)
 	{
 		this.username = username;
@@ -39,14 +43,14 @@ public class GmailSession implements IEmailSession
 	{
 		this.session =
 			Session.getInstance(
-				props.getGmailProperties(),
+				this.props.getGmailProperties(),
 				new GmailAuthenticator(this.username, this.password));
 	}
 	
 	public Session getSession() {
-		if (null == session) {
+		if (null == this.session) {
 			initSession();
 		}
-		return session;
+		return this.session;
 	}
 }

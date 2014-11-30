@@ -15,10 +15,10 @@ public class GmailProperties
 	
 	public Properties getGmailProperties() {
 		 Properties $ = new Properties();
-	     $.put("mail.smtp.auth", "true");
-	     $.put("mail.smtp.starttls.enable", "true");
-	     $.put("mail.smtp.host", "smtp.gmail.com");
-	     $.put("mail.smtp.port", "587");
+	     $.put("mail.smtp.auth", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+	     $.put("mail.smtp.starttls.enable", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+	     $.put("mail.smtp.host", "smtp.gmail.com"); //$NON-NLS-1$ //$NON-NLS-2$
+	     $.put("mail.smtp.port", "587"); //$NON-NLS-1$ //$NON-NLS-2$
 	     return $;
 	}
 }

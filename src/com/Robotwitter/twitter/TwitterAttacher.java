@@ -18,8 +18,17 @@ public class TwitterAttacher implements ITwitterAttacher
 {
 	
 	private static final int CORRECT_PIN_LENGTH = 7;
-
-
+	
+	MySqlDatabaseTwitterAccounts twitterDB;
+	
+	
+	
+	public TwitterAttacher(MySqlDatabaseTwitterAccounts db)
+	{
+		this.twitterDB = db;
+	}
+	
+	
 	/* (non-Javadoc) @see
 	 * twitter.ITwitterAttacher#getAuthorizationURL(twitter.TwitterAccount) */
 	public String getAuthorizationURL(TwitterAccount account)
@@ -45,17 +54,27 @@ public class TwitterAttacher implements ITwitterAttacher
 	/* (non-Javadoc) @see
 	 * twitter.ITwitterAttacher#attachAccount(twitter.TwitterAccount,
 	 * java.lang.String) */
-	public void attachAccount(TwitterAccount account, String pin) throws IllegalPinException
+	public void attachAccount(
+		String userEmail,
+		TwitterAccount account,
+		String pin) throws IllegalPinException
 	{
-		if(pin.length() != CORRECT_PIN_LENGTH) {
-			throw new IllegalPinException("The Pin "+pin+" is illegal!");
+		if (pin.length() != CORRECT_PIN_LENGTH) { throw new IllegalPinException(
+			"The Pin " + pin + " is illegal!"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		Twitter twitter = account.getTwitter();
 		try
 		{
-			RequestToken requestToken = twitter.getOAuthRequestToken();
-			AccessToken accessToken =
-				twitter.getOAuthAccessToken(requestToken, pin); 
+			AccessToken accessToken = twitter.getOAuthAccessToken(pin);
+			DBTwitterAccount account =
+				new DBTwitterAccount(
+					userEmail,
+					accessToken.getToken(),
+					accessToken.getTokenSecret(),
+					twitter.getId());
+			if(!twitterDB.isExists(account)) {
+				twitterDB.insert(account);
+			}
 			account.setAttached(true);
 		} catch (TwitterException e)
 		{

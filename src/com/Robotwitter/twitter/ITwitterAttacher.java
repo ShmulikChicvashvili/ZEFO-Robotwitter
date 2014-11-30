@@ -20,5 +20,5 @@ public interface ITwitterAttacher
 	 * @param pin
 	 * @throws IllegalPinException
 	 */
-	void attachAccount(TwitterAccount account, String pin) throws IllegalPinException;
+	void attachAccount(String userEmail,TwitterAccount account, String pin) throws IllegalPinException;
 }

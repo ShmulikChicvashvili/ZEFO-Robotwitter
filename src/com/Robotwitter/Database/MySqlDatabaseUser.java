@@ -18,6 +18,7 @@ import com.mysql.fabric.xmlrpc.base.Array;
 /**
  * @author Shmulik
  *
+ * The database that handles registring a user and fetching a user
  */
 public class MySqlDatabaseUser extends MySqlDatabase
 {

@@ -40,8 +40,8 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`user_twitter_accounts` (" //$NON-NLS-1$
 				+ "`user_id` BIGINT NOT NULL," //$NON-NLS-1$
 				+ "`email` VARCHAR(255) NOT NULL," //$NON-NLS-1$
-				+ "`token` LONGTEXT NOT NULL," //$NON-NLS-1$
-				+ "`private_token` LONGTEXT NOT NULL," //$NON-NLS-1$
+				+ "`token` VARCHAR(255) NOT NULL," //$NON-NLS-1$
+				+ "`private_token` VARCHAR(255) NOT NULL," //$NON-NLS-1$
 				+ "PRIMARY KEY (`user_id`)) DEFAULT CHARSET=utf8;"; //$NON-NLS-1$
 			this.statement.execute(statementCreate);
 		} catch (final Exception e)

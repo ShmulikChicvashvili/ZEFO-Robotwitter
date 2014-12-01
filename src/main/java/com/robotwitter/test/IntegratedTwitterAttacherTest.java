@@ -81,7 +81,7 @@ public class IntegratedTwitterAttacherTest
 				br.readLine());
 			System.out.println("Attached account!");
 			
-			ArrayList<DatabaseType> twitterAccounts =
+			ArrayList<DBTwitterAccount> twitterAccounts =
 				this.db.get("shmulikjkech@gmail.com");
 			assertTrue(twitterAccounts.size() == 1);
 			DBTwitterAccount shmulikAccount =

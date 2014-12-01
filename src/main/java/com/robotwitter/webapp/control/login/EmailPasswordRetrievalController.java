@@ -8,10 +8,9 @@ import org.mockito.Mockito;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import com.robotwitter.database.IDatabase;
 import com.robotwitter.database.MySQLDBUserModule;
 import com.robotwitter.database.MySqlDatabaseUser;
+import com.robotwitter.database.interfaces.IDatabaseUsers;
 import com.robotwitter.database.primitives.DBUser;
 import com.robotwitter.management.EmailPasswordRetriever;
 import com.robotwitter.management.RetrievelMailBuilder;
@@ -32,9 +31,9 @@ public class EmailPasswordRetrievalController
 	public boolean authenticate(final String email)
 	{
 		final Injector injector = Guice.createInjector(new MySQLDBUserModule());
-		final IDatabase db = injector.getInstance(MySqlDatabaseUser.class);
+		final IDatabaseUsers db = injector.getInstance(MySqlDatabaseUser.class);
 		
-		return db.isExists(new DBUser(email, "dummy"));
+		return db.isExists(email);
 	}
 	
 	
@@ -42,7 +41,7 @@ public class EmailPasswordRetrievalController
 	public void retrieve(final String email)
 	{
 		final Injector injector = Guice.createInjector(new MySQLDBUserModule());
-		final IDatabase db = injector.getInstance(MySqlDatabaseUser.class);
+		final IDatabaseUsers db = injector.getInstance(MySqlDatabaseUser.class);
 
 		final EmailMessage mailToSend =
 			new EmailMessage("robotwitter.app@gmail.com", //$NON-NLS-1$

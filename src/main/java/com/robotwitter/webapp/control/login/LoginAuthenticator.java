@@ -4,10 +4,9 @@ package com.robotwitter.webapp.control.login;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import com.robotwitter.database.IDatabase;
 import com.robotwitter.database.MySQLDBUserModule;
 import com.robotwitter.database.MySqlDatabaseUser;
+import com.robotwitter.database.interfaces.IDatabaseUsers;
 import com.robotwitter.database.primitives.DBUser;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
@@ -25,8 +24,8 @@ public class LoginAuthenticator implements ILoginAuthenticator
 	public boolean authenticate(final String email, final String password)
 	{
 		final Injector injector = Guice.createInjector(new MySQLDBUserModule());
-		final IDatabase db = injector.getInstance(MySqlDatabaseUser.class);
-		if ((DBUser)db.get(email).get(0)!= null)
+		final IDatabaseUsers db = injector.getInstance(MySqlDatabaseUser.class);
+		if (db.get(email)!= null)
 		{
 			final Notification notification =
 					new Notification(

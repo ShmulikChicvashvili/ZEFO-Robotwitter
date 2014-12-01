@@ -56,9 +56,7 @@ public class EmailPasswordRetrieverTest
 		// Mockito.when(db.isExists("itaykhazon@gmail.com")).thenReturn(true);
 		final DBUser user =
 			new DBUser("itaykhazon@gmail.com", "your_password123");
-		final ArrayList<DatabaseType> arr = new ArrayList<DatabaseType>();
-		arr.add(user);
-		Mockito.when(db.get("itaykhazon@gmail.com")).thenReturn(arr);
+		Mockito.when(db.get("itaykhazon@gmail.com")).thenReturn(user);
 
 		retriever = new EmailPasswordRetriever("robotwitter.app@gmail.com", //$NON-NLS-1$
 			builder,

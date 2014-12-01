@@ -45,7 +45,7 @@ public class EmailPasswordRetriever
 		// UserDoesntExistException(
 		// "The user doesnt exist in the database!"); }
 
-		final DBUser user = (DBUser) userDB.get(userEmail).get(0); // FIXME:
+		final DBUser user = (DBUser) userDB.get(userEmail); // FIXME:
 		// change
 		// MySqlDatabaseUser to
 		// return DBUser

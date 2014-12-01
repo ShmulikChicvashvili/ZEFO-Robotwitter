@@ -8,7 +8,8 @@ package com.robotwitter.database;
 import java.util.ArrayList;
 
 import com.google.inject.Inject;
-
+import com.robotwitter.database.interfaces.ConnectionEstablisher;
+import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.database.primitives.DatabaseType;
 
@@ -20,7 +21,7 @@ import com.robotwitter.database.primitives.DatabaseType;
  *
  *         The database handles saving twitter account connection details
  */
-public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
+public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IDatabaseTwitterAccounts
 {
 
 	/**
@@ -67,9 +68,9 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	 * com.Robotwitter.Database.IDatabase#get(java.lang.String) */
 	@Override
 	@SuppressWarnings({ "boxing", "nls" })
-	public ArrayList<DatabaseType> get(final String eMail)
+	public ArrayList<DBTwitterAccount> get(String eMail)
 	{
-		ArrayList<DatabaseType> $ = null;
+		ArrayList<DBTwitterAccount> $ = null;
 		try
 		{
 			this.con = this.connectionEstablisher.getConnection();
@@ -84,7 +85,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 			this.resultSet = this.preparedStatement.executeQuery();
 			if (this.resultSet.next())
 			{
-				$ = new ArrayList<DatabaseType>();
+				$ = new ArrayList<DBTwitterAccount>();
 				final DBTwitterAccount twitterAccount =
 					new DBTwitterAccount(
 						this.resultSet.getString(this.eMailColumn),
@@ -117,9 +118,8 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	 * com.Robotwitter.Database.IDatabase#insert(com.Robotwitter
 	 * .DatabasePrimitives.DatabaseType) */
 	@SuppressWarnings({ "nls", "boxing" })
-	public void insert(final DatabaseType obj)
+	public void insert(final DBTwitterAccount twitterAccount)
 	{
-		final DBTwitterAccount twitterAccount = (DBTwitterAccount) obj;
 		try
 		{
 			this.con = this.connectionEstablisher.getConnection();
@@ -162,10 +162,8 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#isExists(java.lang.String) */
 	@SuppressWarnings({ "nls", "boxing" })
-	public boolean isExists(final DatabaseType obj)
+	public boolean isExists(final Long userId)
 	{
-		final DBTwitterAccount temp = (DBTwitterAccount) obj;
-		final Long userId = temp.getUserId();
 		boolean $ = false;
 		try
 		{

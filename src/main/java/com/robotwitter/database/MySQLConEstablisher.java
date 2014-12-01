@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.robotwitter.database.interfaces.ConnectionEstablisher;
 
 
 

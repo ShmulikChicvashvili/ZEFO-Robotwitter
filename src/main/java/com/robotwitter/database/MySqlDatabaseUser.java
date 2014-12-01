@@ -8,7 +8,8 @@ package com.robotwitter.database;
 import java.util.ArrayList;
 
 import com.google.inject.Inject;
-
+import com.robotwitter.database.interfaces.ConnectionEstablisher;
+import com.robotwitter.database.interfaces.IDatabaseUsers;
 import com.robotwitter.database.primitives.DBUser;
 import com.robotwitter.database.primitives.DatabaseType;
 
@@ -20,9 +21,9 @@ import com.robotwitter.database.primitives.DatabaseType;
  *
  *         The database that handles registring a user and fetching a user
  */
-public class MySqlDatabaseUser extends MySqlDatabase
+public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 {
-
+	
 	/**
 	 * C'tor For MySql db of users
 	 *
@@ -39,9 +40,9 @@ public class MySqlDatabaseUser extends MySqlDatabase
 			statement = con.createStatement();
 			final String statementCreate =
 				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`users` (" //$NON-NLS-1$
-				+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-				+ "`password` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-				+ "PRIMARY KEY (`email`));"; //$NON-NLS-1$
+					+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
+					+ "`password` VARCHAR(45) NOT NULL," //$NON-NLS-1$
+					+ "PRIMARY KEY (`email`));"; //$NON-NLS-1$
 			statement.execute(statementCreate);
 		} catch (final Exception e)
 		{
@@ -65,9 +66,9 @@ public class MySqlDatabaseUser extends MySqlDatabase
 	/* (non-Javadoc) @see Database.IDatabase#get(java.lang.String) */
 	@Override
 	@SuppressWarnings("nls")
-	public ArrayList<DatabaseType> get(final String eMail)
+	public DBUser get(final String eMail)
 	{
-		ArrayList<DatabaseType> $ = null;
+		DBUser $ = null;
 		try
 		{
 			con = connectionEstablisher.getConnection();
@@ -82,12 +83,10 @@ public class MySqlDatabaseUser extends MySqlDatabase
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next())
 			{
-				$ = new ArrayList<DatabaseType>();
-				final DBUser u =
+				$ =
 					new DBUser(
 						resultSet.getString(eMailColumn),
 						resultSet.getString(passwordColumn));
-				$.add(u);
 			}
 		} catch (final Exception e)
 		{
@@ -112,13 +111,12 @@ public class MySqlDatabaseUser extends MySqlDatabase
 	/* (non-Javadoc) @see
 	 * Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
 	@SuppressWarnings("nls")
-	public void insert(final DatabaseType obj)
+	public void insert(DBUser user)
 	{
-		final DBUser u = (DBUser) obj;
 		try
 		{
 			con = connectionEstablisher.getConnection();
-
+			
 			preparedStatement =
 				con.prepareStatement("INSERT INTO "
 					+ table
@@ -127,10 +125,10 @@ public class MySqlDatabaseUser extends MySqlDatabase
 					+ ","
 					+ passwordColumn
 					+ ") VALUES ( ?, ? );");
-			preparedStatement.setString(1, u.getEMail());
-			preparedStatement.setString(2, u.getPassword());
+			preparedStatement.setString(1, user.getEMail());
+			preparedStatement.setString(2, user.getPassword());
 			preparedStatement.executeUpdate();
-
+			
 		} catch (final Exception e)
 		{
 			e.printStackTrace();
@@ -146,20 +144,18 @@ public class MySqlDatabaseUser extends MySqlDatabase
 				// undefined behaviour.
 			}
 		}
-
+		
 	}
 	
 	
 	/**
 	 * Create table of users statement
 	 */
-
+	
 	/* (non-Javadoc) @see Database.IDatabase#isExists(java.lang.String) */
 	@SuppressWarnings("nls")
-	public boolean isExists(final DatabaseType obj)
+	public boolean isExists(String eMail)
 	{
-		final DBUser temp = (DBUser) obj;
-		final String eMail = temp.getEMail();
 		boolean $ = false;
 		try
 		{

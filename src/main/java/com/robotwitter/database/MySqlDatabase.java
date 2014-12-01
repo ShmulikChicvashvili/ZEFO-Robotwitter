@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import com.robotwitter.database.interfaces.ConnectionEstablisher;
+
 
 
 
@@ -17,7 +19,7 @@ import java.sql.Statement;
  * @author Shmulik
  *
  */
-public abstract class MySqlDatabase implements IDatabase
+public abstract class MySqlDatabase
 {
 	/**
 	 * C'tor of general settings

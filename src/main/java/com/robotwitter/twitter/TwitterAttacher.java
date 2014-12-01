@@ -48,7 +48,7 @@ public class TwitterAttacher implements ITwitterAttacher
 					accessToken.getToken(),
 					accessToken.getTokenSecret(),
 					twitter.getId());
-			if (!twitterDB.isExists(dbAccount))
+			if (!twitterDB.isExists(twitter.getId()))
 			{
 				twitterDB.insert(dbAccount);
 			}

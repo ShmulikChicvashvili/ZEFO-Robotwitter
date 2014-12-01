@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.robotwitter.database.IDatabase;
 import com.robotwitter.database.MySQLDBUserModule;
 import com.robotwitter.database.MySqlDatabaseUser;
 import com.robotwitter.database.primitives.DBUser;

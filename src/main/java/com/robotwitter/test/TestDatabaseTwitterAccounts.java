@@ -9,10 +9,9 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
-import com.robotwitter.database.IDatabase;
 import com.robotwitter.database.MySQLDBUserModule;
 import com.robotwitter.database.MySqlDatabaseTwitterAccounts;
+import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 
 
@@ -33,7 +32,7 @@ public class TestDatabaseTwitterAccounts
 		{
 			final Injector injector =
 				Guice.createInjector(new MySQLDBUserModule());
-			final IDatabase db =
+			final IDatabaseTwitterAccounts db =
 				injector.getInstance(MySqlDatabaseTwitterAccounts.class);
 			final DBTwitterAccount shmulikAccount =
 				new DBTwitterAccount(
@@ -41,7 +40,7 @@ public class TestDatabaseTwitterAccounts
 					"tokenblalblala",
 					"tokenSecret",
 					(long) 123456789);
-			if (!db.isExists(shmulikAccount))
+			if (!db.isExists((long) 123456789))
 			{
 				db.insert(shmulikAccount);
 			}

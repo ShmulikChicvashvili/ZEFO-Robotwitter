@@ -17,8 +17,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 import com.robotwitter.webapp.control.login.EmailPasswordRetrievalController;
-import com.robotwitter.webapp.control.login.LoginController;
-import com.robotwitter.webapp.control.login.LoginControllerImpl;
+import com.robotwitter.webapp.control.login.ILoginAuthenticator;
+import com.robotwitter.webapp.control.login.LoginAuthenticator;
 import com.robotwitter.webapp.control.login.PasswordRetrievalController;
 
 
@@ -79,7 +79,7 @@ public class LoginView extends UI
 	private void initialiseLoginForm()
 	{
 		this.loginForm =
-			new LoginForm(this.loginController::authenticate, (u, p) -> {/* NULL */});
+			new LoginForm(this.ILoginAuthenticator::authenticate, (u, p) -> {/* NULL */});
 	}
 
 
@@ -98,7 +98,7 @@ public class LoginView extends UI
 	@Override
 	protected void init(final VaadinRequest request)
 	{
-		this.loginController = new LoginControllerImpl();
+		this.ILoginAuthenticator = new LoginAuthenticator();
 		this.retrievalController = new EmailPasswordRetrievalController();
 		initialiseLoginForm();
 		initialiseRememberUser();
@@ -166,7 +166,7 @@ public class LoginView extends UI
 	private VerticalLayout wrapper;
 
 	/** The login view's controller. */
-	private LoginController loginController;
+	private ILoginAuthenticator ILoginAuthenticator;
 
 	/** The password retrieval view's controller. */
 	private PasswordRetrievalController retrievalController;

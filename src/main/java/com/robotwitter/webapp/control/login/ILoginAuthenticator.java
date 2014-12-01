@@ -3,7 +3,7 @@ package com.robotwitter.webapp.control.login;
 
 
 /** Login user interface controller. */
-public interface LoginController
+public interface ILoginAuthenticator
 {
 	/**
 	 * @param email

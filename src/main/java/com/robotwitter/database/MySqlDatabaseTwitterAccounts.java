@@ -34,16 +34,16 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		super(conEstablisher);
 		try
 		{
-			con = connectionEstablisher.getConnection();
-			statement = con.createStatement();
+			this.con = this.connectionEstablisher.getConnection();
+			this.statement = this.con.createStatement();
 			final String statementCreate =
 				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`user_twitter_accounts` (" //$NON-NLS-1$
 				+ "`user_id` BIGINT NOT NULL," //$NON-NLS-1$
-				+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-				+ "`token` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-				+ "`private_token` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-				+ "PRIMARY KEY (`user_id`));"; //$NON-NLS-1$
-			statement.execute(statementCreate);
+				+ "`email` VARCHAR(255) NOT NULL," //$NON-NLS-1$
+				+ "`token` LONGTEXT NOT NULL," //$NON-NLS-1$
+				+ "`private_token` LONGTEXT NOT NULL," //$NON-NLS-1$
+				+ "PRIMARY KEY (`user_id`)) DEFAULT CHARSET=utf8;"; //$NON-NLS-1$
+			this.statement.execute(statementCreate);
 		} catch (final Exception e)
 		{
 			// TODO Auto-generated catch block
@@ -52,8 +52,8 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		{
 			try
 			{
-				statement.close();
-				con.close();
+				this.statement.close();
+				this.con.close();
 			} catch (final Exception e)
 			{
 				// DO NOTHING! Throwing something can make close get into
@@ -72,25 +72,25 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		ArrayList<DatabaseType> $ = null;
 		try
 		{
-			con = connectionEstablisher.getConnection();
-			preparedStatement =
-				con.prepareStatement(""
+			this.con = this.connectionEstablisher.getConnection();
+			this.preparedStatement =
+				this.con.prepareStatement(""
 					+ "SELECT * FROM "
-					+ table
+					+ this.table
 					+ " WHERE "
-					+ eMailColumn
+					+ this.eMailColumn
 					+ "=?;");
-			preparedStatement.setString(1, eMail);
-			resultSet = preparedStatement.executeQuery();
-			if (resultSet.next())
+			this.preparedStatement.setString(1, eMail);
+			this.resultSet = this.preparedStatement.executeQuery();
+			if (this.resultSet.next())
 			{
 				$ = new ArrayList<DatabaseType>();
 				final DBTwitterAccount twitterAccount =
 					new DBTwitterAccount(
-						resultSet.getString(eMailColumn),
-						resultSet.getString(tokenColumn),
-						resultSet.getString(privateTokenColumn),
-						resultSet.getLong(userIdColumn));
+						this.resultSet.getString(this.eMailColumn),
+						this.resultSet.getString(this.tokenColumn),
+						this.resultSet.getString(this.privateTokenColumn),
+						this.resultSet.getLong(this.userIdColumn));
 				$.add(twitterAccount);
 			}
 		} catch (final Exception e)
@@ -100,9 +100,9 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		{
 			try
 			{
-				resultSet.close();
-				preparedStatement.close();
-				con.close();
+				this.resultSet.close();
+				this.preparedStatement.close();
+				this.con.close();
 			} catch (final Exception e)
 			{
 				// DO NOTHING! Throwing something can make close get into
@@ -122,24 +122,24 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		final DBTwitterAccount twitterAccount = (DBTwitterAccount) obj;
 		try
 		{
-			con = connectionEstablisher.getConnection();
+			this.con = this.connectionEstablisher.getConnection();
 
-			preparedStatement = con.prepareStatement("INSERT INTO " //$NON-NLS-1$
-				+ table
+			this.preparedStatement = this.con.prepareStatement("INSERT INTO " //$NON-NLS-1$
+				+ this.table
 				+ " (" //$NON-NLS-1$
-				+ userIdColumn
+				+ this.userIdColumn
 				+ "," //$NON-NLS-1$
-				+ eMailColumn
+				+ this.eMailColumn
 				+ "," //$NON-NLS-1$
-				+ tokenColumn
+				+ this.tokenColumn
 				+ "," //$NON-NLS-1$
-				+ privateTokenColumn
+				+ this.privateTokenColumn
 				+ ") VALUES ( ?, ?, ?, ? );"); //$NON-NLS-1$
-			preparedStatement.setLong(1, twitterAccount.getUserId());
-			preparedStatement.setString(2, twitterAccount.getEMail());
-			preparedStatement.setString(3, twitterAccount.getToken());
-			preparedStatement.setString(4, twitterAccount.getPrivateToken());
-			preparedStatement.executeUpdate();
+			this.preparedStatement.setLong(1, twitterAccount.getUserId());
+			this.preparedStatement.setString(2, twitterAccount.getEMail());
+			this.preparedStatement.setString(3, twitterAccount.getToken());
+			this.preparedStatement.setString(4, twitterAccount.getPrivateToken());
+			this.preparedStatement.executeUpdate();
 
 		} catch (final Exception e)
 		{
@@ -148,8 +148,8 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		{
 			try
 			{
-				preparedStatement.close();
-				con.close();
+				this.preparedStatement.close();
+				this.con.close();
 			} catch (final Exception e)
 			{
 				// DO NOTHING! Throwing something can make close get into
@@ -169,17 +169,17 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		boolean $ = false;
 		try
 		{
-			con = connectionEstablisher.getConnection();
-			preparedStatement =
-				con.prepareStatement(""
+			this.con = this.connectionEstablisher.getConnection();
+			this.preparedStatement =
+				this.con.prepareStatement(""
 					+ "SELECT * FROM "
-					+ table
+					+ this.table
 					+ " WHERE "
-					+ userIdColumn
+					+ this.userIdColumn
 					+ "=?;");
-			preparedStatement.setLong(1, userId);
-			resultSet = preparedStatement.executeQuery();
-			if (resultSet.first())
+			this.preparedStatement.setLong(1, userId);
+			this.resultSet = this.preparedStatement.executeQuery();
+			if (this.resultSet.first())
 			{
 				$ = true;
 			}
@@ -190,9 +190,9 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		{
 			try
 			{
-				resultSet.close();
-				preparedStatement.close();
-				con.close();
+				this.resultSet.close();
+				this.preparedStatement.close();
+				this.con.close();
 			} catch (final Exception e)
 			{
 				// DO NOTHING! Throwing something can make close get into
@@ -205,7 +205,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	
 	
 	@SuppressWarnings("nls")
-	final private String table = schema + "." + "user_twitter_accounts"; //$NON-NLS-1$ //$NON-NLS-2$
+	final private String table = this.schema + "." + "user_twitter_accounts"; //$NON-NLS-1$ //$NON-NLS-2$
 	
 	final private String userIdColumn = "user_id"; //$NON-NLS-1$
 	

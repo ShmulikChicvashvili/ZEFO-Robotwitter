@@ -33,7 +33,7 @@ public class EmailPasswordRetriever
 		this.systemEmail = systemEmail;
 		this.mailBuilder = mailBuilder;
 		this.mailSender = mailSender;
-		userDB = db;
+		this.userDB = db;
 	}
 	
 	

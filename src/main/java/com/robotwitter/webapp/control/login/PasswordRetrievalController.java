@@ -12,5 +12,5 @@ public interface PasswordRetrievalController
 	 *            The user's email address
 	 * @return true if password has been retrieved, false otherwise.
 	 */
-	boolean retrieve(String email);
+	boolean retrieve(final String email);
 }

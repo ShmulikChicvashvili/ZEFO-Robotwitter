@@ -67,18 +67,9 @@ public class EmailPasswordRetrievalController
 				sender,
 				(MySqlDatabaseUser) db);
 		
-		try
-		{
-			retriever.retrievePasswordByMail(email);
-		} catch (final UserDoesntExistException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (final MessagingException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		retriever.retrievePasswordByMail(email);
+
 	}
 
 }

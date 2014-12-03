@@ -5,6 +5,8 @@
 package com.robotwitter.test;
 
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 
 import javax.mail.MessagingException;
@@ -22,6 +24,7 @@ import com.robotwitter.management.UserDoesntExistException;
 import com.robotwitter.miscellaneous.EmailMessage;
 import com.robotwitter.miscellaneous.EmailSender;
 import com.robotwitter.miscellaneous.GmailSession;
+import com.robotwitter.miscellaneous.ReturnStatus;
 
 
 
@@ -68,22 +71,13 @@ public class EmailPasswordRetrieverTest
 	
 	
 	@Test
-	public void test()
+	public void testMSS()
 	{
-		try
-		{
-			retriever.retrievePasswordByMail("itaykhazon@gmail.com");
-		} catch (final UserDoesntExistException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (final MessagingException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		ReturnStatus status = retriever.retrievePasswordByMail("itaykhazon@gmail.com");
+		if(!status.isSuccess()) {
+			fail(status.getMessage());
 		}
 	}
-	
 	
 	
 	EmailPasswordRetriever retriever;

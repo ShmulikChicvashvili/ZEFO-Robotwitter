@@ -1,0 +1,21 @@
+/* Configurate the robotwitter theme here. */
+/*----------------------------------------------------------------------------*/
+
+
+/* Colour palette */
+$robotwitter-style: light;		/* light or dark */
+$robotwitter-main-color: #5ea9dd;
+$robotwitter-sub-color: #a3dd5e;
+
+
+/* Shading */
+$robotwitter-highest-luminace: 93%;
+$robotwitter-lowest-luminace: 15%;
+
+
+/* Sizing and spacing */
+$robotwitter-font-size: 14px;
+
+
+/*----------------------------------------------------------------------------*/
+@import "internal/config_internal";

@@ -1,0 +1,19 @@
+/* Common, userful SCSS definitions. */
+/*----------------------------------------------------------------------------*/
+
+
+/* Cross-platform border-radius. */
+@mixin robotwitter-border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+          border-radius: $radius;
+}
+
+
+/* Cross-platform box-shadow. */
+@mixin robotwitter-box-shadow($box-shadow) {
+  -webkit-box-shadow: $box-shadow;
+     -moz-box-shadow: $box-shadow;
+          box-shadow: $box-shadow;
+}

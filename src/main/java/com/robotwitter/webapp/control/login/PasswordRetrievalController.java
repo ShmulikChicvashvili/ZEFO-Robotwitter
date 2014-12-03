@@ -6,16 +6,11 @@ package com.robotwitter.webapp.control.login;
 public interface PasswordRetrievalController
 {
 	/**
+	 * Retrieve a user's password.
+	 *
 	 * @param email
 	 *            The user's email address
-	 * @return true if email exists in DB, false otherwise
+	 * @return true if password has been retrieved, false otherwise.
 	 */
-	boolean authenticate(String email);
-	
-	
-	/**
-	 * @param email
-	 *            The user's email address
-	 */
-	void retrieve(String email);
+	boolean retrieve(String email);
 }

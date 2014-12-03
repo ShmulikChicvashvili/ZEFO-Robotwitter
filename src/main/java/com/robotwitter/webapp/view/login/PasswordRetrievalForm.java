@@ -14,6 +14,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+import com.robotwitter.webapp.control.login.PasswordRetrievalController;
+
 
 
 
@@ -22,48 +24,15 @@ public class PasswordRetrievalForm extends CustomComponent
 	implements
 		Button.ClickListener
 {
-
-	/** An email authenticator. */
-	interface Authenticator
-	{
-		/**
-		 * @param email
-		 *            The user's email address
-		 * @return true if email is authentic, false otherwise
-		 */
-		boolean authenticate(String email);
-	}
-
-
-
-	/** A password retrieval handler that retrieves a user's password. */
-	interface RetrievalHandler
-	{
-		/**
-		 * Retrieve the user's password (for example, by sending an email).
-		 *
-		 * @param email
-		 *            The user's email address
-		 */
-		void retrieve(String email);
-	}
-	
-	
-	
 	/**
 	 * Construct a password retrieval component.
 	 *
-	 * @param authenticator
-	 *            The user's authenticator
-	 * @param handler
-	 *            The successful retrieval handler
+	 * @param retriever
+	 *            The password retrieval controller
 	 */
-	public PasswordRetrievalForm(
-		final Authenticator authenticator,
-		final RetrievalHandler handler)
+	public PasswordRetrievalForm(final PasswordRetrievalController retriever)
 	{
-		this.authenticator = authenticator;
-		this.handler = handler;
+		this.retriever = retriever;
 		
 		initialiseInstructions();
 		initialiseEmail();
@@ -83,29 +52,11 @@ public class PasswordRetrievalForm extends CustomComponent
 		// Validate
 		if (!validateEmail()) { return; }
 
-		// Authenticate
-		if (!authenticate()) { return; }
+		// Attempt to retrieve
+		if (!retrieve()) { return; }
 
 		// Handle successful retrieval attempt
 		clearErrorMessage();
-		handler.retrieve(email.getValue());
-	}
-	
-	
-	/** @return true if the given user input is authentic. */
-	private boolean authenticate()
-	{
-		final boolean isAuthentic =
-			authenticator.authenticate(email.getValue());
-		if (!isAuthentic)
-		{
-			setErrorMessage(
-				Messages.get("PasswordRetrievalView.error.email-incorrect"), //$NON-NLS-1$
-				email);
-			return false;
-		}
-		
-		return true;
 	}
 	
 	
@@ -118,8 +69,8 @@ public class PasswordRetrievalForm extends CustomComponent
 		
 		email.setValidationVisible(false);
 	}
-
-
+	
+	
 	/** Enable submission of the password retrieval form upon ENTER key click. */
 	private void enableSubmissionOnEnter()
 	{
@@ -158,8 +109,8 @@ public class PasswordRetrievalForm extends CustomComponent
 				Messages.get("PasswordRetrievalView.button.confirm"), this); //$NON-NLS-1$
 		confirm.setSizeFull();
 	}
-	
-	
+
+
 	/** Initialise the email address field. */
 	private void initialiseEmail()
 	{
@@ -170,8 +121,8 @@ public class PasswordRetrievalForm extends CustomComponent
 		email.setSizeFull();
 		email.setStyleName(FIELD_STYLENAME);
 	}
-
-
+	
+	
 	/** Initialise the error message displayed upon failed retrieval. */
 	private void initialiseErrorMessage()
 	{
@@ -179,8 +130,8 @@ public class PasswordRetrievalForm extends CustomComponent
 		errorMessage.setVisible(false);
 		errorMessage.setStyleName(ERROR_MESSAGE_STYLENAME);
 	}
-	
-	
+
+
 	/** Initialise the instructions label. */
 	private void initialiseInstructions()
 	{
@@ -204,6 +155,21 @@ public class PasswordRetrievalForm extends CustomComponent
 				confirm);
 		form.setSpacing(true);
 		setCompositionRoot(form);
+	}
+	
+	
+	/** @return true if the given user input is authentic. */
+	private boolean retrieve()
+	{
+		if (!retriever.retrieve(email.getValue()))
+		{
+			setErrorMessage(
+				Messages.get("PasswordRetrievalView.error.email-incorrect"), //$NON-NLS-1$
+				email);
+			return false;
+		}
+		
+		return true;
 	}
 
 
@@ -239,14 +205,14 @@ public class PasswordRetrievalForm extends CustomComponent
 	{
 		if (email.getValue().isEmpty())
 		{
-			setErrorMessage(Messages.get("LoginView.error.email-empty"), email); //$NON-NLS-1$
+			setErrorMessage(Messages.get("LoginForm.error.email-empty"), email); //$NON-NLS-1$
 			return false;
 		}
 		
 		if (!email.isValid())
 		{
 			setErrorMessage(
-				Messages.get("LoginView.error.email-invalid"), email); //$NON-NLS-1$
+				Messages.get("LoginForm.error.email-invalid"), email); //$NON-NLS-1$
 			return false;
 		}
 		
@@ -279,12 +245,9 @@ public class PasswordRetrievalForm extends CustomComponent
 	
 	/** The error message of a failed password retrieval attempt. */
 	Label errorMessage;
-
-	/** The user's authenticator. */
-	Authenticator authenticator;
 	
 	/** The password retriever. */
-	RetrievalHandler handler;
+	PasswordRetrievalController retriever;
 	
 	/** The instructions next to the icon. */
 	private HorizontalLayout iconAndInstructions;

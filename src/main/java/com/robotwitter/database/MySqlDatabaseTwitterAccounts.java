@@ -51,15 +51,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IData
 			e.printStackTrace();
 		} finally
 		{
-			try
-			{
-				this.statement.close();
-				this.con.close();
-			} catch (final Exception e)
-			{
-				// DO NOTHING! Throwing something can make close get into
-				// undefined behaviour.
-			}
+			CloseConnection();
 		}
 	}
 	
@@ -99,16 +91,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IData
 			e.printStackTrace();
 		} finally
 		{
-			try
-			{
-				this.resultSet.close();
-				this.preparedStatement.close();
-				this.con.close();
-			} catch (final Exception e)
-			{
-				// DO NOTHING! Throwing something can make close get into
-				// undefined behaviour.
-			}
+			CloseConnection();
 		}
 		return $;
 	}
@@ -146,15 +129,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IData
 			e.printStackTrace();
 		} finally
 		{
-			try
-			{
-				this.preparedStatement.close();
-				this.con.close();
-			} catch (final Exception e)
-			{
-				// DO NOTHING! Throwing something can make close get into
-				// undefined behaviour.
-			}
+			CloseConnection();
 		}
 	}
 	
@@ -186,16 +161,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IData
 			e.printStackTrace();
 		} finally
 		{
-			try
-			{
-				this.resultSet.close();
-				this.preparedStatement.close();
-				this.con.close();
-			} catch (final Exception e)
-			{
-				// DO NOTHING! Throwing something can make close get into
-				// undefined behaviour.
-			}
+			CloseConnection();
 		}
 		return $;
 	}

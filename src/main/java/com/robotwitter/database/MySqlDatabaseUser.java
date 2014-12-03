@@ -5,6 +5,7 @@
 package com.robotwitter.database;
 
 
+import java.io.File;
 import java.util.ArrayList;
 
 import com.google.inject.Inject;
@@ -36,29 +37,21 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 		super(conEstablisher);
 		try
 		{
-			con = connectionEstablisher.getConnection();
-			statement = con.createStatement();
-			final String statementCreate =
-				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`users` (" //$NON-NLS-1$
-					+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-					+ "`password` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-					+ "PRIMARY KEY (`email`));"; //$NON-NLS-1$
-			statement.execute(statementCreate);
+			this.con = this.connectionEstablisher.getConnection();
+			this.statement = this.con.createStatement();
+				final String statementCreate = 
+					"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`users` (" //$NON-NLS-1$
+						+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
+						+ "`password` VARCHAR(45) NOT NULL," //$NON-NLS-1$
+						+ "PRIMARY KEY (`email`));"; //$NON-NLS-1$
+				this.statement.execute(statementCreate);
 		} catch (final Exception e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally
-		{
-			try
-			{
-				statement.close();
-				con.close();
-			} catch (final Exception e)
-			{
-				// DO NOTHING! Throwing something can make close get into
-				// undefined behaviour.
-			}
+		} 
+		finally {
+			CloseConnection();
 		}
 	}
 	
@@ -71,38 +64,29 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 		DBUser $ = null;
 		try
 		{
-			con = connectionEstablisher.getConnection();
-			preparedStatement =
-				con.prepareStatement(""
+			this.con = this.connectionEstablisher.getConnection();
+			this.preparedStatement =
+				this.con.prepareStatement(""
 					+ "SELECT * FROM "
-					+ table
+					+ this.table
 					+ " WHERE "
-					+ eMailColumn
+					+ this.eMailColumn
 					+ "=?;");
-			preparedStatement.setString(1, eMail);
-			resultSet = preparedStatement.executeQuery();
-			if (resultSet.next())
+			this.preparedStatement.setString(1, eMail);
+			this.resultSet = this.preparedStatement.executeQuery();
+			if (this.resultSet.next())
 			{
 				$ =
 					new DBUser(
-						resultSet.getString(eMailColumn),
-						resultSet.getString(passwordColumn));
+						this.resultSet.getString(this.eMailColumn),
+						this.resultSet.getString(this.passwordColumn));
 			}
 		} catch (final Exception e)
 		{
 			e.printStackTrace();
 		} finally
 		{
-			try
-			{
-				resultSet.close();
-				preparedStatement.close();
-				con.close();
-			} catch (final Exception e)
-			{
-				// DO NOTHING! Throwing something can make close get into
-				// undefined behaviour.
-			}
+			CloseConnection();
 		}
 		return $;
 	}
@@ -115,34 +99,26 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	{
 		try
 		{
-			con = connectionEstablisher.getConnection();
+			this.con = this.connectionEstablisher.getConnection();
 			
-			preparedStatement =
-				con.prepareStatement("INSERT INTO "
-					+ table
+			this.preparedStatement =
+				this.con.prepareStatement("INSERT INTO "
+					+ this.table
 					+ " ("
-					+ eMailColumn
+					+ this.eMailColumn
 					+ ","
-					+ passwordColumn
+					+ this.passwordColumn
 					+ ") VALUES ( ?, ? );");
-			preparedStatement.setString(1, user.getEMail());
-			preparedStatement.setString(2, user.getPassword());
-			preparedStatement.executeUpdate();
+			this.preparedStatement.setString(1, user.getEMail());
+			this.preparedStatement.setString(2, user.getPassword());
+			this.preparedStatement.executeUpdate();
 			
 		} catch (final Exception e)
 		{
 			e.printStackTrace();
 		} finally
 		{
-			try
-			{
-				preparedStatement.close();
-				con.close();
-			} catch (final Exception e)
-			{
-				// DO NOTHING! Throwing something can make close get into
-				// undefined behaviour.
-			}
+			CloseConnection();
 		}
 		
 	}
@@ -159,17 +135,17 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 		boolean $ = false;
 		try
 		{
-			con = connectionEstablisher.getConnection();
-			preparedStatement =
-				con.prepareStatement(""
+			this.con = this.connectionEstablisher.getConnection();
+			this.preparedStatement =
+				this.con.prepareStatement(""
 					+ "SELECT * FROM "
-					+ table
+					+ this.table
 					+ " WHERE "
-					+ eMailColumn
+					+ this.eMailColumn
 					+ "=?;");
-			preparedStatement.setString(1, eMail);
-			resultSet = preparedStatement.executeQuery();
-			if (resultSet.first())
+			this.preparedStatement.setString(1, eMail);
+			this.resultSet = this.preparedStatement.executeQuery();
+			if (this.resultSet.first())
 			{
 				$ = true;
 			}
@@ -178,16 +154,7 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 			e.printStackTrace();
 		} finally
 		{
-			try
-			{
-				resultSet.close();
-				preparedStatement.close();
-				con.close();
-			} catch (final Exception e)
-			{
-				// DO NOTHING! Throwing something can make close get into
-				// undefined behaviour.
-			}
+			CloseConnection();
 		}
 		return $;
 	}
@@ -197,7 +164,7 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	/**
 	 * The table name
 	 */
-	final private String table = schema + "." + "users"; //$NON-NLS-1$ //$NON-NLS-2$
+	final private String table = this.schema + "." + "users"; //$NON-NLS-1$ //$NON-NLS-2$
 	
 	/**
 	 * Email column

@@ -8,6 +8,7 @@ package com.robotwitter.database;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
@@ -29,8 +30,8 @@ public abstract class MySqlDatabase
 	 */
 	public MySqlDatabase(final ConnectionEstablisher conEstablisher)
 	{
-		connectionEstablisher = conEstablisher;
-		schema = connectionEstablisher.getSchema();
+		this.connectionEstablisher = conEstablisher;
+		this.schema = this.connectionEstablisher.getSchema();
 	}
 	
 	
@@ -64,4 +65,52 @@ public abstract class MySqlDatabase
 	 * The connection establisher with the database
 	 */
 	protected final ConnectionEstablisher connectionEstablisher;
+	
+	/**
+	 * Added in 3.12.14 By Shmulik
+	 * 
+	 * Will close the whole connection to the database
+	 */
+	protected void CloseConnection() {
+		if(this.con != null) {
+			try
+			{
+				this.con.close();
+			} catch (SQLException e)
+			{
+				// DO NOTHING! Throwing something can make close get into
+				// undefined behaviour.
+			}
+		}
+		if(this.statement != null) {
+			try
+			{
+				this.statement.close();
+			} catch (SQLException e)
+			{
+				// DO NOTHING! Throwing something can make close get into
+				// undefined behaviour.
+			}
+		}
+		if(this.preparedStatement != null) {
+			try
+			{
+				this.preparedStatement.close();
+			} catch (SQLException e)
+			{
+				// DO NOTHING! Throwing something can make close get into
+				// undefined behaviour.
+			}
+		}
+		if(this.resultSet != null) {
+			try
+			{
+				this.resultSet.close();
+			} catch (SQLException e)
+			{
+				// DO NOTHING! Throwing something can make close get into
+				// undefined behaviour.
+			}
+		}
+	}
 }

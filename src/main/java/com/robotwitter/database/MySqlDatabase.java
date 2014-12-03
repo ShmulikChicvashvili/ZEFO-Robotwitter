@@ -20,7 +20,7 @@ import com.robotwitter.database.interfaces.ConnectionEstablisher;
  * @author Shmulik
  *
  */
-public abstract class MySqlDatabase
+public abstract class MySqlDatabase implements AutoCloseable
 {
 	/**
 	 * C'tor of general settings
@@ -113,4 +113,51 @@ public abstract class MySqlDatabase
 			}
 		}
 	}
+
+	/* (non-Javadoc) @see java.lang.AutoCloseable#close() */
+	@Override
+	public void close() throws Exception
+	{
+		if(this.con != null) {
+			try
+			{
+				this.con.close();
+			} catch (SQLException e)
+			{
+				// DO NOTHING! Throwing something can make close get into
+				// undefined behaviour.
+			}
+		}
+		if(this.statement != null) {
+			try
+			{
+				this.statement.close();
+			} catch (SQLException e)
+			{
+				// DO NOTHING! Throwing something can make close get into
+				// undefined behaviour.
+			}
+		}
+		if(this.preparedStatement != null) {
+			try
+			{
+				this.preparedStatement.close();
+			} catch (SQLException e)
+			{
+				// DO NOTHING! Throwing something can make close get into
+				// undefined behaviour.
+			}
+		}
+		if(this.resultSet != null) {
+			try
+			{
+				this.resultSet.close();
+			} catch (SQLException e)
+			{
+				// DO NOTHING! Throwing something can make close get into
+				// undefined behaviour.
+			}
+		}
+	}
+	
 }

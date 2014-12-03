@@ -12,11 +12,14 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.google.inject.Inject;
+
 
 
 
 public class EmailSender implements IEmailSender
 {
+	@Inject
 	public EmailSender(final IEmailSession session)
 	{
 		this.session = session;

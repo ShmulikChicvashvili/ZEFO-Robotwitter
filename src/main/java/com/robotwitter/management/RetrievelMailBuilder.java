@@ -5,6 +5,7 @@
 package com.robotwitter.management;
 
 
+import com.google.inject.Inject;
 import com.robotwitter.miscellaneous.EmailMessage;
 import com.robotwitter.miscellaneous.TemplateMail;
 import com.robotwitter.miscellaneous.TemplateMailReader;
@@ -18,6 +19,7 @@ import com.robotwitter.miscellaneous.TemplateMailReader;
  */
 public class RetrievelMailBuilder
 {
+	@Inject
 	public RetrievelMailBuilder(
 		final String templatePath,
 		final TemplateMailReader reader)

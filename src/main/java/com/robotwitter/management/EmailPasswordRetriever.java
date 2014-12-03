@@ -7,7 +7,9 @@ package com.robotwitter.management;
 
 import javax.mail.MessagingException;
 
-import com.robotwitter.database.MySqlDatabaseUser;
+import com.google.inject.Inject;
+import com.google.inject.assistedinject.Assisted;
+import com.robotwitter.database.interfaces.IDatabaseUsers;
 import com.robotwitter.database.primitives.DBUser;
 import com.robotwitter.miscellaneous.EmailMessage;
 import com.robotwitter.miscellaneous.IEmailSender;
@@ -24,11 +26,12 @@ public class EmailPasswordRetriever
 	/**
 	 *
 	 */
+	@Inject	
 	public EmailPasswordRetriever(
-		final String systemEmail,
+		@Assisted final String systemEmail,
 		final RetrievelMailBuilder mailBuilder,
 		final IEmailSender mailSender,
-		final MySqlDatabaseUser db)
+		final IDatabaseUsers db)
 	{
 		this.systemEmail = systemEmail;
 		this.mailBuilder = mailBuilder;
@@ -45,17 +48,17 @@ public class EmailPasswordRetriever
 		// UserDoesntExistException(
 		// "The user doesnt exist in the database!"); }
 
-		final DBUser user = (DBUser) userDB.get(userEmail); // FIXME:
+		final DBUser user = this.userDB.get(userEmail); 
 		// change
 		// MySqlDatabaseUser to
 		// return DBUser
 		final EmailMessage retrivalMail =
-			mailBuilder.buildRetrievalEmail(
-				systemEmail,
+			this.mailBuilder.buildRetrievalEmail(
+				this.systemEmail,
 				user.getEMail(),
 				user.getPassword());
 
-		mailSender.sendEmail(retrivalMail);
+		this.mailSender.sendEmail(retrivalMail);
 	}
 	
 	
@@ -64,7 +67,7 @@ public class EmailPasswordRetriever
 
 	IEmailSender mailSender;
 	
-	MySqlDatabaseUser userDB;
+	IDatabaseUsers userDB;
 	
 	String systemEmail;
 }

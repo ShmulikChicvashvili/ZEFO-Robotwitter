@@ -14,6 +14,9 @@ public interface PasswordRetrievalController
 	
 	
 	/**
+	 * Retrieves the password of the user whose mail is email. Assumes the user
+	 * exists in the system (checked my the function authenticate)
+	 * 
 	 * @param email
 	 *            The user's email address
 	 */

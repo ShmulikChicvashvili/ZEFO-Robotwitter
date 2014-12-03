@@ -8,6 +8,8 @@ import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import com.robotwitter.database.MySQLDBUserModule;
+import com.robotwitter.database.MySqlDatabaseUser;
+import com.robotwitter.database.interfaces.IDatabaseUsers;
 import com.robotwitter.management.EmailPasswordRetriever;
 import com.robotwitter.management.EmailPasswordRetrieverModule;
 import com.robotwitter.miscellaneous.GmailSenderModule;
@@ -107,10 +109,12 @@ public class LoginView extends UI
 	@Override
 	protected void init(final VaadinRequest request)
 	{
-		this.loginController = new LoginControllerImpl();
-		//FIXME: get rid of ths injector shit
 		Injector injector = Guice.createInjector(new MySQLDBUserModule(),new GmailSenderModule(),new EmailPasswordRetrieverModule());
 		EmailPasswordRetriever retriever = injector.getInstance(EmailPasswordRetriever.class);
+		IDatabaseUsers userDB = injector.getInstance(MySqlDatabaseUser.class);
+		
+		this.loginController = new LoginControllerImpl(userDB);
+		//FIXME: get rid of ths injector shit
 		
 		this.retrievalController = new EmailPasswordRetrievalController(retriever);
 		initialiseLoginForm();

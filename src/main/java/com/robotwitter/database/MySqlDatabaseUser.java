@@ -6,6 +6,7 @@ package com.robotwitter.database;
 
 
 import java.io.File;
+import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.google.inject.Inject;
@@ -35,10 +36,9 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	public MySqlDatabaseUser(final ConnectionEstablisher conEstablisher)
 	{
 		super(conEstablisher);
-		try
+		try(Connection con = this.connectionEstablisher.getConnection())
 		{
-			this.con = this.connectionEstablisher.getConnection();
-			this.statement = this.con.createStatement();
+			this.statement = con.createStatement();
 				final String statementCreate = 
 					"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`users` (" //$NON-NLS-1$
 						+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
@@ -50,23 +50,20 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		finally {
-			CloseConnection();
-		}
 	}
 	
 	
 	/* (non-Javadoc) @see Database.IDatabase#get(java.lang.String) */
 	@Override
 	@SuppressWarnings("nls")
-	public DBUser get(final String eMail)
+	public DBUser get(final String eMailUser)
 	{
+		String eMail = eMailUser.toLowerCase();
 		DBUser $ = null;
-		try
+		try(Connection con = this.connectionEstablisher.getConnection())
 		{
-			this.con = this.connectionEstablisher.getConnection();
 			this.preparedStatement =
-				this.con.prepareStatement(""
+				con.prepareStatement(""
 					+ "SELECT * FROM "
 					+ this.table
 					+ " WHERE "
@@ -84,9 +81,6 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 		} catch (final Exception e)
 		{
 			e.printStackTrace();
-		} finally
-		{
-			CloseConnection();
 		}
 		return $;
 	}
@@ -97,30 +91,24 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	@SuppressWarnings("nls")
 	public void insert(DBUser user)
 	{
-		try
+		try(Connection con = this.connectionEstablisher.getConnection())
 		{
-			this.con = this.connectionEstablisher.getConnection();
-			
 			this.preparedStatement =
-				this.con.prepareStatement("INSERT INTO "
+				con.prepareStatement("INSERT INTO "
 					+ this.table
 					+ " ("
 					+ this.eMailColumn
 					+ ","
 					+ this.passwordColumn
 					+ ") VALUES ( ?, ? );");
-			this.preparedStatement.setString(1, user.getEMail());
+			this.preparedStatement.setString(1, user.getEMail().toLowerCase());
 			this.preparedStatement.setString(2, user.getPassword());
 			this.preparedStatement.executeUpdate();
 			
 		} catch (final Exception e)
 		{
 			e.printStackTrace();
-		} finally
-		{
-			CloseConnection();
-		}
-		
+		} 		
 	}
 	
 	
@@ -130,14 +118,14 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	
 	/* (non-Javadoc) @see Database.IDatabase#isExists(java.lang.String) */
 	@SuppressWarnings("nls")
-	public boolean isExists(String eMail)
+	public boolean isExists(String eMailUser)
 	{
+		String eMail = eMailUser.toLowerCase();
 		boolean $ = false;
-		try
+		try(Connection con = this.connectionEstablisher.getConnection())
 		{
-			this.con = this.connectionEstablisher.getConnection();
 			this.preparedStatement =
-				this.con.prepareStatement(""
+				con.prepareStatement(""
 					+ "SELECT * FROM "
 					+ this.table
 					+ " WHERE "
@@ -152,10 +140,7 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 		} catch (final Exception e)
 		{
 			e.printStackTrace();
-		} finally
-		{
-			CloseConnection();
-		}
+		} 
 		return $;
 	}
 	

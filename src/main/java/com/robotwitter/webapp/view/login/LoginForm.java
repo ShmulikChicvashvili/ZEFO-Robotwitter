@@ -79,7 +79,7 @@ public class LoginForm extends VerticalForm
 
 		// Handle successful login
 		clearErrorMessage();
-		handler.login(getField(0).getValue(), getField(1).getValue());
+		this.handler.login(getField(0).getValue(), getField(1).getValue());
 	}
 
 
@@ -87,7 +87,7 @@ public class LoginForm extends VerticalForm
 	private boolean authenticate()
 	{
 		final boolean isAuthentic =
-			authenticator.authenticate(getField(0).getValue(), getField(1)
+			this.authenticator.authenticate(getField(0).getValue(), getField(1)
 				.getValue());
 		if (!isAuthentic)
 		{

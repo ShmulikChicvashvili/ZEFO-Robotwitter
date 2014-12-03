@@ -38,7 +38,7 @@ public class EmailPasswordRetrievalController
 	
 	
 	@Override
-	public boolean retrieve(final String email)
+	public ReturnStatus retrieve(final String email)
 	{
 		try
 		{
@@ -47,7 +47,6 @@ public class EmailPasswordRetrievalController
 		{	
 			// Empty block
 		}
-		return false;
 	}
 	
 }

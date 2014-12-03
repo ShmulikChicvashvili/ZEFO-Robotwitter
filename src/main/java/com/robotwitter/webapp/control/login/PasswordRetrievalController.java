@@ -16,7 +16,10 @@ public interface PasswordRetrievalController
 		USER_DOESNT_EXIST,
 		
 		/** A communication error has occurred while trying to send the email. */
-		ERROR_SENDING_EMAIL
+		ERROR_SENDING_EMAIL,
+		
+		/** An unknown failure occurred . */
+		FAILURE
 	}
 
 

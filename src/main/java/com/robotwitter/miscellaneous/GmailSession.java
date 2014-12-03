@@ -7,6 +7,9 @@ package com.robotwitter.miscellaneous;
 
 import javax.mail.Session;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 
 
 
@@ -20,7 +23,8 @@ public class GmailSession implements IEmailSession
 	 * @param username
 	 * @param password
 	 */
-	public GmailSession(final String username, final String password)
+	@Inject
+	public GmailSession(@Named("System Email Username") final String username, @Named("System Email Password") final String password)
 	{
 		this.username = username;
 		this.password = password;

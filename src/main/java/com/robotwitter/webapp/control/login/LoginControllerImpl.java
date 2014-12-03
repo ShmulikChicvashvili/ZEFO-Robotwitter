@@ -17,7 +17,7 @@ import com.vaadin.ui.themes.ValoTheme;
  */
 
 /** Simple implementation of a login controller. */
-public class LoginAuthenticator implements ILoginAuthenticator
+public class LoginControllerImpl implements LoginController
 {
 
 	@Override

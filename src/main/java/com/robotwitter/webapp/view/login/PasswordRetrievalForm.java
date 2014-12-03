@@ -56,6 +56,7 @@ Button.ClickListener
 		if (!retrieve()) { return; }
 		
 		// Handle successful retrieval attempt
+		//FIXME: add a success status to the view
 		clearErrorMessage();
 	}
 

@@ -6,6 +6,7 @@ package com.robotwitter.miscellaneous;
 
 
 import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 
 
 
@@ -16,5 +17,5 @@ import javax.mail.MessagingException;
  */
 public interface IEmailSender
 {
-	public void sendEmail(EmailMessage mail) throws MessagingException;
+	public void sendEmail(EmailMessage mail) throws MessagingException, AddressException;
 }

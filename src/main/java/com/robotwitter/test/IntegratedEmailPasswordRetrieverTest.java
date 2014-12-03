@@ -92,7 +92,12 @@ public class IntegratedEmailPasswordRetrieverTest
 		
 		RetrievelMailBuilder builder = new RetrievelMailBuilderMock(null, null);
 		
-		this.pwRetriever = new EmailPasswordRetriever("robotwitter.app@gmail.com", builder, sender, (MySqlDatabaseUser) db);
+		this.pwRetriever =
+			new EmailPasswordRetriever(
+				"robotwitter.app@gmail.com",
+				builder,
+				sender,
+				(MySqlDatabaseUser) db);
 		
 	}
 	
@@ -100,18 +105,8 @@ public class IntegratedEmailPasswordRetrieverTest
 	@Test
 	public void test()
 	{
-		try
-		{
-			this.pwRetriever.retrievePasswordByMail("shmulikjkech@gmail.com");
-		} catch (UserDoesntExistException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MessagingException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		this.pwRetriever.retrievePasswordByMail("shmulikjkech@gmail.com");
 	}
 	
 }

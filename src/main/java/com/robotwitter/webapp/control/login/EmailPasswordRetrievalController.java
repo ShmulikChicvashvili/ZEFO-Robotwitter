@@ -40,13 +40,19 @@ public class EmailPasswordRetrievalController
 	@Override
 	public ReturnStatus retrieve(final String email)
 	{
-		try
-		{
+		EmailPasswordRetriever.ReturnStatus result =
 			this.emailRetriever.retrievePasswordByMail(email);
-		} catch (Exception e)
-		{	
-			// Empty block
+		switch (result)
+		{
+			case SUCCESS:
+				return ReturnStatus.SUCCESS;
+			case ERROR_SENDING_EMAIL:
+				return ReturnStatus.ERROR_SENDING_EMAIL;
+			case USER_DOESNT_EXIST:
+				return ReturnStatus.USER_DOESNT_EXIST;
+			default:
+				return ReturnStatus.FAILURE;
 		}
+		
 	}
-	
 }

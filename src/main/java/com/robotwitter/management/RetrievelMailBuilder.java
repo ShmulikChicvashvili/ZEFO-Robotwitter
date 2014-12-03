@@ -17,7 +17,7 @@ import com.robotwitter.miscellaneous.TemplateMailReader;
  * @author Itay
  *
  */
-public class RetrievelMailBuilder
+public class RetrievelMailBuilder implements IRetrievalMailBuilder
 {
 	@Inject
 	public RetrievelMailBuilder(

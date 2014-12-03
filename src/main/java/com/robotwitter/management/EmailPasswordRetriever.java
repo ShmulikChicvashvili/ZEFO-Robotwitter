@@ -6,8 +6,11 @@ package com.robotwitter.management;
 
 
 import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 
-import com.robotwitter.database.MySqlDatabaseUser;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import com.robotwitter.database.interfaces.IDatabaseUsers;
 import com.robotwitter.database.primitives.DBUser;
 import com.robotwitter.miscellaneous.EmailMessage;
 import com.robotwitter.miscellaneous.IEmailSender;
@@ -19,10 +22,10 @@ import com.robotwitter.miscellaneous.IEmailSender;
  * @author Itay
  *
  */
-public class EmailPasswordRetriever
+public class EmailPasswordRetriever implements IEmailPasswordRetriever
 {
 	/** Status codes returned by this class. */
-	enum ReturnStatus
+	public enum ReturnStatus
 	{
 		/** Operation succeeded. */
 		SUCCESS,
@@ -42,11 +45,12 @@ public class EmailPasswordRetriever
 	/**
 	 *
 	 */
+	@Inject
 	public EmailPasswordRetriever(
-		final String systemEmail,
-		final RetrievelMailBuilder mailBuilder,
+		@Named("System Email") final String systemEmail,
+		final IRetrievalMailBuilder mailBuilder,
 		final IEmailSender mailSender,
-		final MySqlDatabaseUser db)
+		final IDatabaseUsers db)
 	{
 		this.systemEmail = systemEmail;
 		this.mailBuilder = mailBuilder;
@@ -55,34 +59,40 @@ public class EmailPasswordRetriever
 	}
 
 
-	public void retrievePasswordByMail(final String userEmail)
-		throws UserDoesntExistException,
-		MessagingException
+	@Override
+	public ReturnStatus retrievePasswordByMail(final String userEmail)
 	{
-		// if (!this.userDB.isExists(userEmail)) { throw new
-		// UserDoesntExistException(
-		// "The user doesnt exist in the database!"); }
-		
-		final DBUser user = (DBUser) userDB.get(userEmail).get(0); // FIXME:
-		// change
-		// MySqlDatabaseUser to
-		// return DBUser
+		final DBUser user = userDB.get(userEmail);
+		if(user == null) {
+			return ReturnStatus.USER_DOESNT_EXIST;
+		}
 		final EmailMessage retrivalMail =
 			mailBuilder.buildRetrievalEmail(
 				systemEmail,
 				user.getEMail(),
 				user.getPassword());
 		
-		mailSender.sendEmail(retrivalMail);
+		try
+		{
+			mailSender.sendEmail(retrivalMail);
+		} catch (AddressException e)
+		{
+			return ReturnStatus.INVALID_EMAIL;
+		} catch (MessagingException e)
+		{
+			return ReturnStatus.ERROR_SENDING_EMAIL;
+		}
+		
+		return ReturnStatus.SUCCESS;
 	}
 
 
 
-	RetrievelMailBuilder mailBuilder;
+	IRetrievalMailBuilder mailBuilder;
 	
 	IEmailSender mailSender;
 
-	MySqlDatabaseUser userDB;
+	IDatabaseUsers userDB;
 
 	String systemEmail;
 }

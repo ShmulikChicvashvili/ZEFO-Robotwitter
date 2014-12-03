@@ -9,15 +9,7 @@ import org.mockito.Mockito;
 import com.google.inject.Guice;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
-import com.robotwitter.database.MySQLDBUserModule;
-import com.robotwitter.database.MySqlDatabaseUser;
-import com.robotwitter.database.interfaces.IDatabaseUsers;
 import com.robotwitter.management.EmailPasswordRetriever;
-import com.robotwitter.management.RetrievelMailBuilder;
-import com.robotwitter.management.UserDoesntExistException;
-import com.robotwitter.miscellaneous.EmailMessage;
-import com.robotwitter.miscellaneous.EmailSender;
-import com.robotwitter.miscellaneous.GmailSession;
 
 
 
@@ -37,16 +29,25 @@ public class EmailPasswordRetrievalController
 	 *            The EmailRetriever class which handles the password retrieval
 	 *            service
 	 */
+	@Inject
 	public EmailPasswordRetrievalController(
 		EmailPasswordRetriever emailRetriever)
 	{
 		this.emailRetriever = emailRetriever;
-	}	
+	}
+	
 	
 	@Override
-	public void retrieve(final String email)
+	public boolean retrieve(final String email)
 	{
-		emailRetriever.retrievePasswordByMail(email);
+		try
+		{
+			this.emailRetriever.retrievePasswordByMail(email);
+		} catch (Exception e)
+		{	
+			// Empty block
+		}
+		return false;
 	}
 	
 }

@@ -2,6 +2,8 @@
 package com.robotwitter.webapp.view.login;
 
 
+import java.io.File;
+
 import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.UserError;
@@ -13,8 +15,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-
 import com.robotwitter.webapp.control.login.PasswordRetrievalController;
+import com.robotwitter.webapp.control.login.PasswordRetrievalController.ReturnStatus;
 
 
 
@@ -42,7 +44,7 @@ Button.ClickListener
 		
 		enableSubmissionOnEnter();
 		
-		email.focus();
+		this.email.focus();
 	}
 
 
@@ -57,18 +59,18 @@ Button.ClickListener
 		
 		// Handle successful retrieval attempt
 		//FIXME: add a success status to the view
-		clearErrorMessage();
+		//clearErrorMessage();
 	}
 
 
 	/** Clear any displayed error message on the password retrieval form. */
 	private void clearErrorMessage()
 	{
-		errorMessage.setVisible(false);
+		this.errorMessage.setVisible(false);
 
-		email.setComponentError(null);
+		this.email.setComponentError(null);
 
-		email.setValidationVisible(false);
+		this.email.setValidationVisible(false);
 	}
 
 
@@ -79,16 +81,16 @@ Button.ClickListener
 		{
 			public EnterListener()
 			{
-				super(confirm, KeyCode.ENTER);
+				super(PasswordRetrievalForm.this.confirm, KeyCode.ENTER);
 			}
 
 
 			@Override
 			public void handleAction(final Object sender, final Object target)
 			{
-				if (target == email)
+				if (target == PasswordRetrievalForm.this.email)
 				{
-					button.click();
+					this.button.click();
 				}
 			}
 
@@ -98,47 +100,47 @@ Button.ClickListener
 			private static final long serialVersionUID = 1L;
 		}
 
-		confirm.addShortcutListener(new EnterListener());
+		this.confirm.addShortcutListener(new EnterListener());
 	}
 	
 	
 	/** Initialise the confirm button. */
 	private void initialiseConfirmButton()
 	{
-		confirm =
+		this.confirm =
 			new Button(
 				Messages.get("PasswordRetrievalView.button.confirm"), this); //$NON-NLS-1$
-		confirm.setSizeFull();
+		this.confirm.setSizeFull();
 	}
 	
 	
 	/** Initialise the email address field. */
 	private void initialiseEmail()
 	{
-		email =
+		this.email =
 			new TextField(Messages.get("PasswordRetrievalView.label.email")); //$NON-NLS-1$
-		email.addValidator(new EmailValidator("")); //$NON-NLS-1$
-		email.setValidationVisible(false);
-		email.setSizeFull();
-		email.setStyleName(FIELD_STYLENAME);
+		this.email.addValidator(new EmailValidator("")); //$NON-NLS-1$
+		this.email.setValidationVisible(false);
+		this.email.setSizeFull();
+		this.email.setStyleName(FIELD_STYLENAME);
 	}
 
 
 	/** Initialise the error message displayed upon failed retrieval. */
 	private void initialiseErrorMessage()
 	{
-		errorMessage = new Label();
-		errorMessage.setVisible(false);
-		errorMessage.setStyleName(ERROR_MESSAGE_STYLENAME);
+		this.errorMessage = new Label();
+		this.errorMessage.setVisible(false);
+		this.errorMessage.setStyleName(ERROR_MESSAGE_STYLENAME);
 	}
 	
 	
 	/** Initialise the instructions label. */
 	private void initialiseInstructions()
 	{
-		icon = new Label();
-		icon.setIcon(FontAwesome.ENVELOPE);
-		instructions =
+		this.icon = new Label();
+		this.icon.setIcon(FontAwesome.ENVELOPE);
+		this.instructions =
 			new Label(Messages.get("PasswordRetrievalView.instructions")); //$NON-NLS-1$
 	}
 
@@ -146,30 +148,37 @@ Button.ClickListener
 	/** Initialise the form's layout. */
 	private void initialiseLayout()
 	{
-		iconAndInstructions = new HorizontalLayout(icon, instructions);
-		iconAndInstructions.setSizeFull();
-		form =
+		this.iconAndInstructions = new HorizontalLayout(this.icon, this.instructions);
+		this.iconAndInstructions.setSizeFull();
+		this.form =
 			new VerticalLayout(
-				iconAndInstructions,
-				email,
-				errorMessage,
-				confirm);
-		form.setSpacing(true);
-		setCompositionRoot(form);
+				this.iconAndInstructions,
+				this.email,
+				this.errorMessage,
+				this.confirm);
+		this.form.setSpacing(true);
+		setCompositionRoot(this.form);
 	}
 
 
 	/** @return true if the given user input is authentic. */
 	private boolean retrieve()
 	{
-		if (retriever.retrieve(email.getValue()) != PasswordRetrievalController.ReturnStatus.SUCCESS)
-		{
-			setErrorMessage(
-				Messages.get("PasswordRetrievalView.error.email-incorrect"), //$NON-NLS-1$
-				email);
-			return false;
+		setErrorMessage((new File("").getAbsolutePath()),this.email);
+		ReturnStatus result = this.retriever.retrieve(this.email.getValue());
+		switch(result) {
+			case SUCCESS:
+				setErrorMessage("Email Sent!",this.email);
+				return true;
+			case ERROR_SENDING_EMAIL:
+				setErrorMessage("There was an error sending or building the mail",this.email);
+				return false;
+			case USER_DOESNT_EXIST:
+				setErrorMessage("coulden't find user in DB",this.email);
+				return false;
+			default:
+//				setErrorMessage(result.toString(),this.email);
 		}
-
 		return true;
 	}
 	
@@ -189,8 +198,8 @@ Button.ClickListener
 	{
 		clearErrorMessage();
 		
-		errorMessage.setVisible(true);
-		errorMessage.setValue(message);
+		this.errorMessage.setVisible(true);
+		this.errorMessage.setValue(message);
 		
 		if (field != null)
 		{
@@ -204,16 +213,16 @@ Button.ClickListener
 	/** @return true, if the given user email address is valid. */
 	private boolean validateEmail()
 	{
-		if (email.getValue().isEmpty())
+		if (this.email.getValue().isEmpty())
 		{
-			setErrorMessage(Messages.get("LoginForm.error.email-empty"), email); //$NON-NLS-1$
+			setErrorMessage(Messages.get("LoginForm.error.email-empty"), this.email); //$NON-NLS-1$
 			return false;
 		}
 
-		if (!email.isValid())
+		if (!this.email.isValid())
 		{
 			setErrorMessage(
-				Messages.get("LoginForm.error.email-invalid"), email); //$NON-NLS-1$
+				Messages.get("LoginForm.error.email-invalid"), this.email); //$NON-NLS-1$
 			return false;
 		}
 

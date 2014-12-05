@@ -25,7 +25,8 @@ public class LoginControllerImpl implements LoginController
 	{
 		final Injector injector = Guice.createInjector(new MySQLDBUserModule());
 		final IDatabaseUsers db = injector.getInstance(MySqlDatabaseUser.class);
-		if (db.get(email)!= null)
+		DBUser user = db.get(email);
+		if (user != null && user.getPassword().equals(password))
 		{
 			final Notification notification =
 					new Notification(
@@ -39,7 +40,7 @@ public class LoginControllerImpl implements LoginController
 		{
 			final Notification notification =
 					new Notification(
-						"User does not exist!"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+						"Password or email are incorrect"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 				notification.setStyleName(ValoTheme.NOTIFICATION_SUCCESS);
 				notification.setDelayMsec(-1);
 				notification.show(Page.getCurrent());

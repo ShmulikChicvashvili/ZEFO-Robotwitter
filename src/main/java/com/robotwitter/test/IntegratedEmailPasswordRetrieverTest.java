@@ -7,8 +7,6 @@ package com.robotwitter.test;
 
 import static org.junit.Assert.*;
 
-import javax.mail.MessagingException;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,13 +17,14 @@ import com.robotwitter.database.MySqlDatabaseUser;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
 import com.robotwitter.database.primitives.DBUser;
 import com.robotwitter.management.EmailPasswordRetriever;
-import com.robotwitter.management.RetrievelMailBuilder;
-import com.robotwitter.management.UserDoesntExistException;
+import com.robotwitter.management.EmailPasswordRetriever.ReturnStatus;
+import com.robotwitter.management.EmailPasswordRetrieverModule;
+import com.robotwitter.management.RetrievalMailBuilder;
+import com.robotwitter.management.RetrievalMailBuilderModule;
 import com.robotwitter.miscellaneous.EmailMessage;
 import com.robotwitter.miscellaneous.EmailSender;
+import com.robotwitter.miscellaneous.GmailSenderModule;
 import com.robotwitter.miscellaneous.GmailSession;
-import com.robotwitter.miscellaneous.TemplateMail;
-import com.robotwitter.miscellaneous.TemplateMailReader;
 
 
 
@@ -40,18 +39,16 @@ public class IntegratedEmailPasswordRetrieverTest
 	
 	
 	
-	private class RetrievelMailBuilderMock extends RetrievelMailBuilder
+	private class RetrievelMailBuilderMock extends RetrievalMailBuilder
 	{
 		
 		/**
 		 * @param templatePath
 		 * @param reader
 		 */
-		public RetrievelMailBuilderMock(
-			String templatePath,
-			TemplateMailReader reader)
+		public RetrievelMailBuilderMock(String templatePath)
 		{
-			super(templatePath, reader);
+			super(templatePath);
 			// TODO Auto-generated constructor stub
 		}
 		
@@ -78,26 +75,13 @@ public class IntegratedEmailPasswordRetrieverTest
 	@Before
 	public void before()
 	{
-		final Injector injector = Guice.createInjector(new MySQLDBUserModule());
-		final IDatabaseUsers db = injector.getInstance(MySqlDatabaseUser.class);
-		final DBUser shmulikTheMan = new DBUser("shmulikjkech@gmail.com", "sh");
-		if (!db.isExists("shmulikjkech@gmail.com"))
-		{
-			db.insert(shmulikTheMan);
-		}
-		
-		final GmailSession gSession =
-			new GmailSession("robotwitter.app", "robotwitter123"); //$NON-NLS-1$ //$NON-NLS-2$
-		final EmailSender sender = new EmailSender(gSession);
-		
-		RetrievelMailBuilder builder = new RetrievelMailBuilderMock(null, null);
-		
-		this.pwRetriever =
-			new EmailPasswordRetriever(
-				"robotwitter.app@gmail.com",
-				builder,
-				sender,
-				(MySqlDatabaseUser) db);
+		final Injector injector =
+			Guice.createInjector(
+				new MySQLDBUserModule(),
+				new RetrievalMailBuilderModule(),
+				new EmailPasswordRetrieverModule(),
+				new GmailSenderModule());
+		this.pwRetriever = injector.getInstance(EmailPasswordRetriever.class);
 		
 	}
 	
@@ -106,7 +90,7 @@ public class IntegratedEmailPasswordRetrieverTest
 	public void test()
 	{
 		
-		this.pwRetriever.retrievePasswordByMail("shmulikjkech@gmail.com");
+		assertEquals(ReturnStatus.SUCCESS,this.pwRetriever.retrievePasswordByMail("itaykhazon@gmail.com"));
 	}
 	
 }

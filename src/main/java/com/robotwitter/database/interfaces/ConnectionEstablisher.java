@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 
 /**
- * @author Eyal
+ * @author Eyal and Shmulik
  *
  */
 public interface ConnectionEstablisher

@@ -9,16 +9,17 @@ import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.google.inject.Inject;
+
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
+import com.robotwitter.database.interfaces.returnValues.InsertError;
 import com.robotwitter.database.primitives.DBTwitterAccount;
-import com.robotwitter.database.primitives.DatabaseType;
 
 
 
 
 /**
- * @author Shmulik
+ * @author Shmulik and Eyal
  *
  *         The database handles saving twitter account connection details
  */
@@ -36,17 +37,17 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		final ConnectionEstablisher conEstablisher)
 	{
 		super(conEstablisher);
-		try (Connection con = this.connectionEstablisher.getConnection())
+		try (Connection con = connectionEstablisher.getConnection())
 		{
-			this.statement = con.createStatement();
+			statement = con.createStatement();
 			final String statementCreate =
-				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`user_twitter_accounts` (" //$NON-NLS-1$
+				"CREATE TABLE IF NOT EXISTS " + table + "(" //$NON-NLS-1$ //$NON-NLS-2$
 					+ "`user_id` BIGINT NOT NULL," //$NON-NLS-1$
 					+ "`email` VARCHAR(255) NOT NULL," //$NON-NLS-1$
 					+ "`token` VARCHAR(255) NOT NULL," //$NON-NLS-1$
 					+ "`private_token` VARCHAR(255) NOT NULL," //$NON-NLS-1$
 					+ "PRIMARY KEY (`user_id`)) DEFAULT CHARSET=utf8;"; //$NON-NLS-1$
-			this.statement.execute(statementCreate);
+			statement.execute(statementCreate);
 		} catch (final Exception e)
 		{
 			// TODO Auto-generated catch block
@@ -61,27 +62,28 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	@SuppressWarnings({ "boxing", "nls" })
 	public ArrayList<DBTwitterAccount> get(String eMail)
 	{
+		if (eMail == null) { return null; }
 		ArrayList<DBTwitterAccount> $ = null;
-		try (Connection con = this.connectionEstablisher.getConnection())
+		try (Connection con = connectionEstablisher.getConnection())
 		{
-			this.preparedStatement =
+			preparedStatement =
 				con.prepareStatement(""
 					+ "SELECT * FROM "
-					+ this.table
+					+ table
 					+ " WHERE "
-					+ this.eMailColumn
+					+ eMailColumn
 					+ "=?;");
-			this.preparedStatement.setString(1, eMail);
-			this.resultSet = this.preparedStatement.executeQuery();
-			if (this.resultSet.next())
+			preparedStatement.setString(1, eMail);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next())
 			{
 				$ = new ArrayList<DBTwitterAccount>();
 				final DBTwitterAccount twitterAccount =
 					new DBTwitterAccount(
-						this.resultSet.getString(this.eMailColumn),
-						this.resultSet.getString(this.tokenColumn),
-						this.resultSet.getString(this.privateTokenColumn),
-						this.resultSet.getLong(this.userIdColumn));
+						resultSet.getString(eMailColumn),
+						resultSet.getString(tokenColumn),
+						resultSet.getString(privateTokenColumn),
+						resultSet.getLong(userIdColumn));
 				$.add(twitterAccount);
 			}
 		} catch (final Exception e)
@@ -96,34 +98,36 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	 * com.Robotwitter.Database.IDatabase#insert(com.Robotwitter
 	 * .DatabasePrimitives.DatabaseType) */
 	@SuppressWarnings({ "nls", "boxing" })
-	public void insert(final DBTwitterAccount twitterAccount)
+	public InsertError insert(final DBTwitterAccount twitterAccount)
 	{
-		try (Connection con = this.connectionEstablisher.getConnection())
+		if(twitterAccount == null) {
+			return InsertError.INVALID_PARAMS;
+		}
+		try (Connection con = connectionEstablisher.getConnection())
 		{
 			
-			this.preparedStatement = con.prepareStatement("INSERT INTO " //$NON-NLS-1$
-				+ this.table
+			preparedStatement = con.prepareStatement("INSERT INTO " //$NON-NLS-1$
+				+ table
 				+ " (" //$NON-NLS-1$
-				+ this.userIdColumn
+				+ userIdColumn
 				+ "," //$NON-NLS-1$
-				+ this.eMailColumn
+				+ eMailColumn
 				+ "," //$NON-NLS-1$
-				+ this.tokenColumn
+				+ tokenColumn
 				+ "," //$NON-NLS-1$
-				+ this.privateTokenColumn
+				+ privateTokenColumn
 				+ ") VALUES ( ?, ?, ?, ? );"); //$NON-NLS-1$
-			this.preparedStatement.setLong(1, twitterAccount.getUserId());
-			this.preparedStatement.setString(2, twitterAccount.getEMail());
-			this.preparedStatement.setString(3, twitterAccount.getToken());
-			this.preparedStatement.setString(
-				4,
-				twitterAccount.getPrivateToken());
-			this.preparedStatement.executeUpdate();
+			preparedStatement.setLong(1, twitterAccount.getUserId());
+			preparedStatement.setString(2, twitterAccount.getEMail());
+			preparedStatement.setString(3, twitterAccount.getToken());
+			preparedStatement.setString(4, twitterAccount.getPrivateToken());
+			preparedStatement.executeUpdate();
 			
 		} catch (final Exception e)
 		{
 			e.printStackTrace();
 		}
+		return InsertError.SUCCESS;
 	}
 	
 	
@@ -132,19 +136,22 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	@SuppressWarnings({ "nls", "boxing" })
 	public boolean isExists(final Long userId)
 	{
+		if(userId == null) {
+			return false;
+		}
 		boolean $ = false;
-		try (Connection con = this.connectionEstablisher.getConnection())
+		try (Connection con = connectionEstablisher.getConnection())
 		{
-			this.preparedStatement =
+			preparedStatement =
 				con.prepareStatement(""
 					+ "SELECT * FROM "
-					+ this.table
+					+ table
 					+ " WHERE "
-					+ this.userIdColumn
+					+ userIdColumn
 					+ "=?;");
-			this.preparedStatement.setLong(1, userId);
-			this.resultSet = this.preparedStatement.executeQuery();
-			if (this.resultSet.first())
+			preparedStatement.setLong(1, userId);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.first())
 			{
 				$ = true;
 			}
@@ -158,7 +165,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	
 	
 	@SuppressWarnings("nls")
-	final private String table = this.schema + "." + "user_twitter_accounts"; //$NON-NLS-1$ //$NON-NLS-2$
+	final private String table = schema + "." + "`user_twitter_accounts`"; //$NON-NLS-1$ //$NON-NLS-2$
 	
 	final private String userIdColumn = "user_id"; //$NON-NLS-1$
 	

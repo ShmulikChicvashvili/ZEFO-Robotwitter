@@ -17,7 +17,7 @@ import com.robotwitter.database.interfaces.ConnectionEstablisher;
 
 
 /**
- * @author Eyal
+ * @author Shmulik and Eyal
  *
  */
 public class MySQLConEstablisher implements ConnectionEstablisher

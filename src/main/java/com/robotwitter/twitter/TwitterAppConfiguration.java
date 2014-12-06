@@ -5,6 +5,9 @@
 package com.robotwitter.twitter;
 
 
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.OAuth2Token;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -19,21 +22,37 @@ public class TwitterAppConfiguration
 {
 	public TwitterAppConfiguration()
 	{
-		final ConfigurationBuilder cb = new ConfigurationBuilder(); // TODO:
-																	// what to
-		// do with this
-		// "new"?
+		//FIXME: fix this baaaah code
+		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true);
-		cb.setOAuthConsumerKey(consumerKey);
-		cb.setOAuthConsumerSecret(consumerSecret);
-		conf = cb.build();
-		conf.getOAuthRequestTokenURL();
+		cb.setOAuthConsumerKey(this.consumerKey);
+		cb.setOAuthConsumerSecret(this.consumerSecret);
+		cb.setApplicationOnlyAuthEnabled(true);
+		OAuth2Token token = null;
+		try
+		{
+			token =
+				new TwitterFactory(cb.build()).getInstance().getOAuth2Token();
+		} catch (TwitterException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		cb = new ConfigurationBuilder();
+		cb.setDebugEnabled(true);
+		cb.setOAuthConsumerKey(this.consumerKey);
+		cb.setOAuthConsumerSecret(this.consumerSecret);
+		cb.setApplicationOnlyAuthEnabled(true);
+		cb.setOAuth2TokenType(token.getTokenType());
+		cb.setOAuth2AccessToken(token.getAccessToken());
+		
+		this.conf = cb.build();
 	}
 	
 	
 	public Configuration getConfiguration()
 	{
-		return conf;
+		return this.conf;
 	}
 	
 	

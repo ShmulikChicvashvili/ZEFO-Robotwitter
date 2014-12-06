@@ -24,14 +24,14 @@ public class DBUser extends DatabaseType
 		super(email);
 		this.password = password;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * DatabasePrimitives.DatabaseType#equals(java.lang.Object) */
 	@Override
 	public boolean equals(final Object obj)
 	{
-		if (obj != null)
+		if (obj != null && obj instanceof DBUser)
 		{
 			final DBUser u = (DBUser) obj;
 			return eMail.equals(u.getEMail())
@@ -67,9 +67,9 @@ public class DBUser extends DatabaseType
 	{
 		return "Email: " + getEMail() + " Password: " + getPassword();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * The password of the user
 	 */

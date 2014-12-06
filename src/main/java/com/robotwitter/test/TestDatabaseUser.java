@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
 import com.robotwitter.database.MySQLDBUserModule;
 import com.robotwitter.database.MySqlDatabaseUser;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
@@ -39,7 +40,8 @@ public class TestDatabaseUser
 		{
 			final Injector injector =
 				Guice.createInjector(new MySQLDBUserModule());
-			final IDatabaseUsers db = injector.getInstance(MySqlDatabaseUser.class);
+			final IDatabaseUsers db =
+				injector.getInstance(MySqlDatabaseUser.class);
 			final DBUser shmulikTheMan =
 				new DBUser("shmulikjkech@gmail.com", "sh");
 			if (!db.isExists("shmulikjkech@gmail.com"))
@@ -47,7 +49,7 @@ public class TestDatabaseUser
 				db.insert(shmulikTheMan);
 			}
 			assertTrue(db.isExists("shmulikjkech@gmail.com"));
-			// assertFalse(db.isExists("notanexistingemail@gmail.com"));
+			assertFalse(db.isExists("notanexistingemail@gmail.com"));
 			assertFalse(db.isExists(null));
 			assertEquals(shmulikTheMan, db.get("shmulikjkech@gmail.com"));
 			assertNotEquals(shmulikTheMan, db.get(""));
@@ -55,8 +57,9 @@ public class TestDatabaseUser
 			assertNotEquals(null, db.get("Shmulikjkech@gmail.com"));
 		} catch (final Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			throw e;
 		}
 	}
 

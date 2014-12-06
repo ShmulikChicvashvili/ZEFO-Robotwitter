@@ -1,33 +1,36 @@
 /**
- * 
+ *
  */
+
 package com.robotwitter.database.interfaces;
 
-import java.util.ArrayList;
 
+import com.robotwitter.database.interfaces.ReturnValues.InsertErrors;
 import com.robotwitter.database.primitives.DBUser;
-import com.robotwitter.database.primitives.DatabaseType;
+
+
+
 
 /**
  * @author Shmulik
  *
- * The interface for users DB
- * 
- * Created at : 12:53 AM, 2.12.14
+ *         The interface for users DB
+ *
+ *         Created at : 12:53 AM, 2.12.14
  */
 public interface IDatabaseUsers
-{	
+{
 	/**
 	 * @param eMail
 	 *            The email which you want to get is associated user
 	 * @return The user associated with the specific email
 	 */
 	public DBUser get(String eMail);
-	
-	
+
+
 	/**
 	 * Controls connection to DB
-	 * 
+	 *
 	 * @param user
 	 *            The user to insert
 	 *
@@ -37,9 +40,9 @@ public interface IDatabaseUsers
 	 *            contain the result of the insert action. INSERT_SUCCESS,
 	 *            INSERT_ALREADY_EXISTS, INSERT_INVALID_PARAMETERS
 	 */
-	public void insert(DBUser user);
-	
-	
+	public InsertErrors insert(DBUser user);
+
+
 	/**
 	 * @param eMail
 	 *            The email which you check whether exists or not

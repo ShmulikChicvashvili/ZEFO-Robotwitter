@@ -5,6 +5,7 @@
 package com.robotwitter.database;
 
 
+import java.sql.Connection;
 import java.util.ArrayList;
 
 import com.google.inject.Inject;
@@ -21,9 +22,11 @@ import com.robotwitter.database.primitives.DatabaseType;
  *
  *         The database handles saving twitter account connection details
  */
-public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IDatabaseTwitterAccounts
+public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
+	implements
+		IDatabaseTwitterAccounts
 {
-
+	
 	/**
 	 * @param conEstablisher
 	 *            The connection handler
@@ -33,25 +36,21 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IData
 		final ConnectionEstablisher conEstablisher)
 	{
 		super(conEstablisher);
-		try
+		try (Connection con = this.connectionEstablisher.getConnection())
 		{
-			this.con = this.connectionEstablisher.getConnection();
-			this.statement = this.con.createStatement();
+			this.statement = con.createStatement();
 			final String statementCreate =
 				"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`user_twitter_accounts` (" //$NON-NLS-1$
-				+ "`user_id` BIGINT NOT NULL," //$NON-NLS-1$
-				+ "`email` VARCHAR(255) NOT NULL," //$NON-NLS-1$
-				+ "`token` VARCHAR(255) NOT NULL," //$NON-NLS-1$
-				+ "`private_token` VARCHAR(255) NOT NULL," //$NON-NLS-1$
-				+ "PRIMARY KEY (`user_id`)) DEFAULT CHARSET=utf8;"; //$NON-NLS-1$
+					+ "`user_id` BIGINT NOT NULL," //$NON-NLS-1$
+					+ "`email` VARCHAR(255) NOT NULL," //$NON-NLS-1$
+					+ "`token` VARCHAR(255) NOT NULL," //$NON-NLS-1$
+					+ "`private_token` VARCHAR(255) NOT NULL," //$NON-NLS-1$
+					+ "PRIMARY KEY (`user_id`)) DEFAULT CHARSET=utf8;"; //$NON-NLS-1$
 			this.statement.execute(statementCreate);
 		} catch (final Exception e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} finally
-		{
-			CloseConnection();
 		}
 	}
 	
@@ -63,11 +62,10 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IData
 	public ArrayList<DBTwitterAccount> get(String eMail)
 	{
 		ArrayList<DBTwitterAccount> $ = null;
-		try
+		try (Connection con = this.connectionEstablisher.getConnection())
 		{
-			this.con = this.connectionEstablisher.getConnection();
 			this.preparedStatement =
-				this.con.prepareStatement(""
+				con.prepareStatement(""
 					+ "SELECT * FROM "
 					+ this.table
 					+ " WHERE "
@@ -89,9 +87,6 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IData
 		} catch (final Exception e)
 		{
 			e.printStackTrace();
-		} finally
-		{
-			CloseConnection();
 		}
 		return $;
 	}
@@ -103,11 +98,10 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IData
 	@SuppressWarnings({ "nls", "boxing" })
 	public void insert(final DBTwitterAccount twitterAccount)
 	{
-		try
+		try (Connection con = this.connectionEstablisher.getConnection())
 		{
-			this.con = this.connectionEstablisher.getConnection();
-
-			this.preparedStatement = this.con.prepareStatement("INSERT INTO " //$NON-NLS-1$
+			
+			this.preparedStatement = con.prepareStatement("INSERT INTO " //$NON-NLS-1$
 				+ this.table
 				+ " (" //$NON-NLS-1$
 				+ this.userIdColumn
@@ -121,15 +115,14 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IData
 			this.preparedStatement.setLong(1, twitterAccount.getUserId());
 			this.preparedStatement.setString(2, twitterAccount.getEMail());
 			this.preparedStatement.setString(3, twitterAccount.getToken());
-			this.preparedStatement.setString(4, twitterAccount.getPrivateToken());
+			this.preparedStatement.setString(
+				4,
+				twitterAccount.getPrivateToken());
 			this.preparedStatement.executeUpdate();
-
+			
 		} catch (final Exception e)
 		{
 			e.printStackTrace();
-		} finally
-		{
-			CloseConnection();
 		}
 	}
 	
@@ -140,11 +133,10 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IData
 	public boolean isExists(final Long userId)
 	{
 		boolean $ = false;
-		try
+		try (Connection con = this.connectionEstablisher.getConnection())
 		{
-			this.con = this.connectionEstablisher.getConnection();
 			this.preparedStatement =
-				this.con.prepareStatement(""
+				con.prepareStatement(""
 					+ "SELECT * FROM "
 					+ this.table
 					+ " WHERE "
@@ -159,9 +151,6 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase implements IData
 		} catch (final Exception e)
 		{
 			e.printStackTrace();
-		} finally
-		{
-			CloseConnection();
 		}
 		return $;
 	}

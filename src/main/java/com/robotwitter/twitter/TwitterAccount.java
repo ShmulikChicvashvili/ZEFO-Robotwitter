@@ -20,7 +20,7 @@ public class TwitterAccount
 	
 	public TwitterAccount(final TwitterFactory tf)
 	{
-		this.twitter = tf.getInstance();
+		this.twitterConnector = tf.getInstance();
 		this.attached = false;
 	}
 	
@@ -30,7 +30,7 @@ public class TwitterAccount
 	 */
 	public Twitter getTwitter()
 	{
-		return this.twitter;
+		return this.twitterConnector;
 	}
 	
 	
@@ -53,7 +53,7 @@ public class TwitterAccount
 	
 	
 	// TODO: find something more elegant then this composition.
-	Twitter twitter;
+	Twitter twitterConnector;
 	
 	Boolean attached;
 	

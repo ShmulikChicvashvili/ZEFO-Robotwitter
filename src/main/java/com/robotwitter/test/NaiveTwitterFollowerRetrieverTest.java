@@ -53,6 +53,7 @@ public class NaiveTwitterFollowerRetrieverTest
 	}
 	
 	
+	@SuppressWarnings("javadoc")
 	@Test
 	public void testExistingUser()
 	{
@@ -64,6 +65,7 @@ public class NaiveTwitterFollowerRetrieverTest
 	}
 	
 	
+	@SuppressWarnings("javadoc")
 	@Test
 	public void testNonExistingUser()
 	{

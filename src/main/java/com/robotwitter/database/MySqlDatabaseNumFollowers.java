@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.inject.Inject;
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
@@ -21,6 +23,8 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
 
 
 /**
+ * Handles the connection to number followers table.
+ * 
  * @author Eyal
  *
  */
@@ -28,25 +32,48 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 	implements
 		IDatabaseNumFollowers
 {
+	/**
+	 * The columns for the table.
+	 * 
+	 * @author Eyal
+	 *
+	 */
 	private enum Columns
 	{
+		/**
+		 * Twitter account id.
+		 */
 		TWITTER_ID,
+		/**
+		 * The date for the statistic.
+		 */
 		DATE,
+		/**
+		 * Number of followers.
+		 */
 		NUM_FOLLOWERS
 	}
 	
 	
 	
 	/**
+	 * C'tor for MySqlDB for the number followers table.
 	 * 
+	 * @param conEsatblisher
+	 *            An object to create connections to the database.
+	 * @throws SQLException
+	 *             Could not create the table.
 	 */
 	@Inject
 	public MySqlDatabaseNumFollowers(ConnectionEstablisher conEsatblisher)
+		throws SQLException
 	{
 		super(conEsatblisher);
-		try (Connection con = connectionEstablisher.getConnection())
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			Statement statement = (Statement) con.createStatement())
 		{
-			statement = con.createStatement();
+			
 			final String statementCreate =
 				String.format("CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$ 
 					+ "`%s` BIGINT NOT NULL," //$NON-NLS-1$
@@ -61,10 +88,6 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 					Columns.DATE.toString().toLowerCase());
 			
 			statement.execute(statementCreate);
-		} catch (final Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
@@ -72,26 +95,27 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 	/* (non-Javadoc) @see
 	 * com.robotwitter.database.interfaces.IDatabaseNumFollowers
 	 * #get(java.lang.String) */
-	@SuppressWarnings("boxing")
+	@SuppressWarnings({ "boxing", "nls" })
 	@Override
 	public List<DBFollowersNumber> get(Long twitterId)
 	{
 		if (twitterId == null) { return null; }
 		ArrayList<DBFollowersNumber> $ = null;
-		try (Connection con = connectionEstablisher.getConnection())
-		{
-			preparedStatement =
-				con.prepareStatement(""
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			PreparedStatement preparedStatement =
+				(PreparedStatement) con.prepareStatement(""
 					+ "SELECT * FROM "
 					+ table
 					+ " WHERE "
 					+ Columns.TWITTER_ID.name().toLowerCase()
-					+ "=?;");
+					+ "=?;"))
+		{
 			preparedStatement.setLong(1, twitterId);
 			resultSet = preparedStatement.executeQuery();
-			if (resultSet.next())
+			$ = new ArrayList<>();
+			while (resultSet.next())
 			{
-				$ = new ArrayList<>();
 				final DBFollowersNumber statistic =
 					new DBFollowersNumber(resultSet.getLong(Columns.TWITTER_ID
 						.name()
@@ -102,11 +126,13 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 						.toLowerCase()));
 				$.add(statistic);
 			}
+			resultSet.close();
 		} catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		if ($ == null || $.isEmpty()) { return null; }
 		return $;
 	}
 	
@@ -123,6 +149,9 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 	
 	
 	
+	/**
+	 * The table name.
+	 */
 	private final String table = schema + ".`followers_number`"; //$NON-NLS-1$
 	
 }

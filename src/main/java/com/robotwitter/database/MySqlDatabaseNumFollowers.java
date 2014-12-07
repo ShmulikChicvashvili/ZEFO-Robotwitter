@@ -161,6 +161,7 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 			preparedStatement.setLong(1, statistic.getTwitterId());
 			preparedStatement.setTimestamp(2, statistic.getDate());
 			preparedStatement.setInt(3, statistic.getNumFollowers());
+			preparedStatement.executeUpdate();
 		} catch (SQLException e)
 		{
 			if (e.getErrorCode() == insertAlreadyExists) { return InsertError.ALREADY_EXIST; }

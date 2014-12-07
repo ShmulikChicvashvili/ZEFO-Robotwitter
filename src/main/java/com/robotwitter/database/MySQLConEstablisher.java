@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
+import com.mysql.jdbc.Statement;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 
@@ -40,14 +41,7 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 		this.serverName = serverName;
 		this.schema = schema;
 		
-		try (
-			Connection con = getConnection();
-			java.sql.Statement statement = con.createStatement())
-		{
-			// Create the schema if it doesn't exist
-			statement.executeUpdate("CREATE SCHEMA IF NOT EXISTS " + schema); //$NON-NLS-1$
-			statement.close();
-		}
+		createSchema();
 	}
 	
 	
@@ -82,6 +76,30 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 	public final String getSchema()
 	{
 		return schema;
+	}
+	
+	
+	private void createSchema() throws SQLException
+	{
+		try
+		{
+			Class.forName("com.mysql.jdbc.Driver");
+		} catch (ClassNotFoundException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException("Can't create mysql.jdbc driver");
+		}
+		
+		try (
+			Connection con =
+				DriverManager.getConnection("jdbc:mysql://"
+					+ serverName
+					+ "/"
+					+ "?user=root&password=root");
+			Statement statement = (Statement) con.createStatement())
+		{
+			statement.executeUpdate("CREATE SCHEMA IF NOT EXISTS " + schema); //$NON-NLS-1$
+		}
 	}
 	
 	

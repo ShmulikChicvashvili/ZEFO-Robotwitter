@@ -2,13 +2,7 @@
 package com.robotwitter.webapp.control.login;
 
 
-import javax.mail.MessagingException;
-
-import org.mockito.Mockito;
-
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
 import com.robotwitter.management.EmailPasswordRetriever;
 
 

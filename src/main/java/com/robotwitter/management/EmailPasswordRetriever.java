@@ -37,12 +37,19 @@ public class EmailPasswordRetriever implements IEmailPasswordRetriever
 		USER_DOESNT_EXIST,
 		
 		/** A communication error has occurred while trying to send the email. */
-		ERROR_SENDING_EMAIL
+		ERROR_SENDING_EMAIL,
+		
+		/** Could not build the retrieval mail, something is wrong with the system */
+		ERROR_BUILDING_EMAIL
 	}
 	
 	
 	
 	/**
+	 * @param systemEmail 
+	 * @param mailBuilder 
+	 * @param mailSender 
+	 * @param db 
 	 *
 	 */
 	@Inject
@@ -55,26 +62,30 @@ public class EmailPasswordRetriever implements IEmailPasswordRetriever
 		this.systemEmail = systemEmail;
 		this.mailBuilder = mailBuilder;
 		this.mailSender = mailSender;
-		userDB = db;
+		this.userDB = db;
 	}
 
 
 	@Override
 	public ReturnStatus retrievePasswordByMail(final String userEmail)
 	{
-		final DBUser user = userDB.get(userEmail);
+		final DBUser user = this.userDB.get(userEmail);
 		if(user == null) {
 			return ReturnStatus.USER_DOESNT_EXIST;
 		}
 		final EmailMessage retrivalMail =
-			mailBuilder.buildRetrievalEmail(
-				systemEmail,
+			this.mailBuilder.buildRetrievalEmail(
+				this.systemEmail,
 				user.getEMail(),
 				user.getPassword());
 		
+		if(retrivalMail == null) {
+			return ReturnStatus.ERROR_BUILDING_EMAIL;
+		}
+		
 		try
 		{
-			mailSender.sendEmail(retrivalMail);
+			this.mailSender.sendEmail(retrivalMail);
 		} catch (AddressException e)
 		{
 			return ReturnStatus.INVALID_EMAIL;
@@ -88,11 +99,11 @@ public class EmailPasswordRetriever implements IEmailPasswordRetriever
 
 
 
-	IRetrievalMailBuilder mailBuilder;
+	private IRetrievalMailBuilder mailBuilder;
 	
-	IEmailSender mailSender;
+	private IEmailSender mailSender;
 
-	IDatabaseUsers userDB;
+	private IDatabaseUsers userDB;
 
-	String systemEmail;
+	private String systemEmail;
 }

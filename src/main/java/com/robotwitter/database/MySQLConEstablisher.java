@@ -60,10 +60,8 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 		}
 		
 		final Connection $ =
-			DriverManager.getConnection("jdbc:mysql://"
-				+ serverName
-				+ "/"
-				+ schema
+			DriverManager.getConnection("jdbc:mysql://" + serverName + "/"
+			// + schema
 				+ "?user=root&password=root");
 		
 		return $;
@@ -81,21 +79,8 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 	
 	private void createSchema() throws SQLException
 	{
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-			throw new RuntimeException("Can't create mysql.jdbc driver");
-		}
-		
 		try (
-			Connection con =
-				DriverManager.getConnection("jdbc:mysql://"
-					+ serverName
-					+ "/"
-					+ "?user=root&password=root");
+			Connection con = getConnection();
 			Statement statement = (Statement) con.createStatement())
 		{
 			statement.executeUpdate("CREATE SCHEMA IF NOT EXISTS " + schema); //$NON-NLS-1$

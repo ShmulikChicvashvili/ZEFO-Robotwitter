@@ -26,8 +26,8 @@ public interface ConnectionEstablisher
 	 *             found
 	 */
 	Connection getConnection() throws SQLException;
-
-
+	
+	
 	/**
 	 * @return the schema the connection is connected to
 	 */

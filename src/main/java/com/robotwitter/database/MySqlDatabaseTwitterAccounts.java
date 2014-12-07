@@ -22,20 +22,36 @@ import com.robotwitter.database.primitives.DBTwitterAccount;
 
 
 /**
+ * The database handles saving twitter account connection details.
+ *
  * @author Shmulik and Eyal
  *
- *         The database handles saving twitter account connection details
  */
 public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	implements
 		IDatabaseTwitterAccounts
 {
 	
+	/**
+	 * @author Shmulik An enum for the columns of the table.
+	 */
 	private enum Columns
 	{
+		/**
+		 * User id column.
+		 */
 		USER_ID,
+		/**
+		 * Email column.
+		 */
 		EMAIL,
+		/**
+		 * Token column.
+		 */
 		TOKEN,
+		/**
+		 * Private token column.
+		 */
 		PRIVATE_TOKEN
 	}
 	
@@ -45,6 +61,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	 * @param conEstablisher
 	 *            The connection handler
 	 * @throws SQLException
+	 *             exception
 	 */
 	@Inject
 	public MySqlDatabaseTwitterAccounts(
@@ -77,7 +94,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	 * com.Robotwitter.Database.IDatabase#get(java.lang.String) */
 	@Override
 	@SuppressWarnings({ "boxing", "nls" })
-	public ArrayList<DBTwitterAccount> get(String eMail)
+	public final ArrayList<DBTwitterAccount> get(String eMail)
 	{
 		if (eMail == null) { return null; }
 		ArrayList<DBTwitterAccount> $ = null;
@@ -126,7 +143,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	 * .DatabasePrimitives.DatabaseType) */
 	@Override
 	@SuppressWarnings({ "boxing" })
-	public InsertError insert(final DBTwitterAccount twitterAccount)
+	public final InsertError insert(final DBTwitterAccount twitterAccount)
 	{
 		if (twitterAccount == null) { return InsertError.INVALID_PARAMS; }
 		try (
@@ -163,7 +180,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	 * com.Robotwitter.Database.IDatabase#isExists(java.lang.String) */
 	@Override
 	@SuppressWarnings({ "nls", "boxing" })
-	public boolean isExists(final Long userId)
+	public final boolean isExists(final Long userId)
 	{
 		if (userId == null) { return false; }
 		boolean $ = false;
@@ -192,6 +209,9 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	
 	
 	
+	/**
+	 * The table's name
+	 */
 	@SuppressWarnings("nls")
 	final private String table = schema + "." + "`user_twitter_accounts`"; //$NON-NLS-1$ //$NON-NLS-2$
 	

@@ -63,11 +63,11 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 					+ "`%s` VARCHAR(255) NOT NULL," //$NON-NLS-1$
 					+ "PRIMARY KEY (`%s`)) DEFAULT CHARSET=utf8;", //$NON-NLS-1$
 					table,
-					Columns.USER_ID.name().toLowerCase(),
-					Columns.EMAIL.name().toLowerCase(),
-					Columns.TOKEN.name().toLowerCase(),
-					Columns.PRIVATE_TOKEN.name().toLowerCase(),
-					Columns.USER_ID.name().toLowerCase());
+					Columns.USER_ID.toString().toLowerCase(),
+					Columns.EMAIL.toString().toLowerCase(),
+					Columns.TOKEN.toString().toLowerCase(),
+					Columns.PRIVATE_TOKEN.toString().toLowerCase(),
+					Columns.USER_ID.toString().toLowerCase());
 			statement.execute(statementCreate);
 		}
 	}
@@ -88,7 +88,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 					+ "SELECT * FROM "
 					+ table
 					+ " WHERE "
-					+ Columns.EMAIL.name().toLowerCase()
+					+ Columns.EMAIL.toString().toLowerCase()
 					+ "=?;"))
 		{
 			preparedStatement.setString(1, eMail);
@@ -98,12 +98,17 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 				$ = new ArrayList<>();
 				final DBTwitterAccount twitterAccount =
 					new DBTwitterAccount(
-						resultSet.getString(Columns.EMAIL.name().toLowerCase()),
-						resultSet.getString(Columns.TOKEN.name().toLowerCase()),
+						resultSet.getString(Columns.EMAIL
+							.toString()
+							.toLowerCase()),
+						resultSet.getString(Columns.TOKEN
+							.toString()
+							.toLowerCase()),
 						resultSet.getString(Columns.PRIVATE_TOKEN
-							.name()
-							.toLowerCase()), resultSet.getLong(Columns.USER_ID
-							.name()
+							.toString()
+							.toLowerCase()),
+						resultSet.getLong(Columns.USER_ID
+							.toString()
 							.toLowerCase()));
 				$.add(twitterAccount);
 			}
@@ -131,13 +136,13 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 				(PreparedStatement) con.prepareStatement("INSERT INTO " //$NON-NLS-1$
 					+ table
 					+ " (" //$NON-NLS-1$
-					+ Columns.USER_ID.name().toLowerCase()
+					+ Columns.USER_ID.toString().toLowerCase()
 					+ "," //$NON-NLS-1$
-					+ Columns.EMAIL.name().toLowerCase()
+					+ Columns.EMAIL.toString().toLowerCase()
 					+ "," //$NON-NLS-1$
-					+ Columns.TOKEN.name().toLowerCase()
+					+ Columns.TOKEN.toString().toLowerCase()
 					+ "," //$NON-NLS-1$
-					+ Columns.PRIVATE_TOKEN.name().toLowerCase()
+					+ Columns.PRIVATE_TOKEN.toString().toLowerCase()
 					+ ") VALUES ( ?, ?, ?, ? );")) //$NON-NLS-1$
 		{
 			preparedStatement.setLong(1, twitterAccount.getUserId());
@@ -168,7 +173,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 					+ "SELECT * FROM "
 					+ table
 					+ " WHERE "
-					+ Columns.USER_ID.name().toLowerCase()
+					+ Columns.USER_ID.toString().toLowerCase()
 					+ "=?;"))
 		{
 			preparedStatement.setLong(1, userId);

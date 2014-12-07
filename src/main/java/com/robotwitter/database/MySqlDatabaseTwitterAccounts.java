@@ -31,7 +31,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	implements
 		IDatabaseTwitterAccounts
 {
-	
+
 	/**
 	 * @author Shmulik An enum for the columns of the table.
 	 */
@@ -54,9 +54,9 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		 */
 		PRIVATE_TOKEN
 	}
-	
-	
-	
+
+
+
 	/**
 	 * @param conEstablisher
 	 *            The connection handler
@@ -88,8 +88,8 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 			statement.execute(statementCreate);
 		}
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#get(java.lang.String) */
 	@Override
@@ -132,13 +132,14 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 			resultSet.close();
 		} catch (final Exception e)
 		{
+			// TODO understand what the hell we should do?!
 			e.printStackTrace();
 		}
 		if ($ == null || $.isEmpty()) { return null; }
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#insert(com.Robotwitter
 	 * .DatabasePrimitives.DatabaseType) */
@@ -149,7 +150,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		if (twitterAccount == null) { return InsertError.INVALID_PARAMS; }
 		try (
 			Connection con = connectionEstablisher.getConnection();
-			
+
 			PreparedStatement preparedStatement =
 				(PreparedStatement) con.prepareStatement("INSERT INTO " //$NON-NLS-1$
 					+ table
@@ -175,8 +176,8 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		}
 		return InsertError.SUCCESS;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#isExists(java.lang.String) */
 	@Override
@@ -203,17 +204,18 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 			}
 		} catch (final Exception e)
 		{
+			// TODO understand what the hell we should do?!
 			e.printStackTrace();
 		}
 		return $;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * The table's name
 	 */
 	@SuppressWarnings("nls")
 	final private String table = schema + "." + "`user_twitter_accounts`"; //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 }

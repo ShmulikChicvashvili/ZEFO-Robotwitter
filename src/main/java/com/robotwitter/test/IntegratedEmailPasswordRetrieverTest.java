@@ -40,6 +40,7 @@ public class IntegratedEmailPasswordRetrieverTest
 	
 	
 	
+	@SuppressWarnings("javadoc")
 	private class RetrievelMailBuilderMock extends RetrievelMailBuilder
 	{
 		
@@ -75,6 +76,7 @@ public class IntegratedEmailPasswordRetrieverTest
 	
 	
 	
+	@SuppressWarnings("javadoc")
 	@Before
 	public void before()
 	{
@@ -102,6 +104,7 @@ public class IntegratedEmailPasswordRetrieverTest
 	}
 	
 	
+	@SuppressWarnings("javadoc")
 	@Test
 	public void test()
 	{

@@ -5,7 +5,7 @@
 package com.robotwitter.database.primitives;
 
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 
 
@@ -16,10 +16,10 @@ import java.sql.Date;
  */
 public class DBFollowersNumber
 {
-	public DBFollowersNumber(Long twitterId, Date date, int numFollowers)
+	public DBFollowersNumber(Long twitterId, Timestamp date, int numFollowers)
 	{
 		this.twitterId = twitterId;
-		this.date = (Date) date.clone();
+		this.date = (Timestamp) date.clone();
 		this.numFollowers = numFollowers;
 	}
 	
@@ -40,7 +40,7 @@ public class DBFollowersNumber
 	/**
 	 * @return the date
 	 */
-	public Date getDate()
+	public Timestamp getDate()
 	{
 		return date;
 	}
@@ -68,9 +68,9 @@ public class DBFollowersNumber
 	 * @param date
 	 *            the date to set
 	 */
-	public void setDate(Date date)
+	public void setDate(Timestamp date)
 	{
-		this.date = (Date) date.clone();
+		this.date = (Timestamp) date.clone();
 	}
 	
 	
@@ -107,7 +107,7 @@ public class DBFollowersNumber
 	
 	
 	
-	private Date date;
+	private Timestamp date;
 	
 	private int numFollowers;
 	

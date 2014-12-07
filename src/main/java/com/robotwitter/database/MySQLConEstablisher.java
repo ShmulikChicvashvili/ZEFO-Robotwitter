@@ -37,6 +37,18 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 	{
 		this.serverName = serverName;
 		this.schema = schema;
+		
+		try (Connection con = getConnection())
+		{
+			// Create the schema if it doesn't exist
+			final java.sql.Statement statement = con.createStatement();
+			statement.executeUpdate(createSchemaStatement + schema);
+			statement.close();
+		} catch (SQLException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException("Can't create schema " + schema); //$NON-NLS-1$
+		}
 	}
 	
 	
@@ -53,17 +65,13 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 			e.printStackTrace();
 			throw new RuntimeException("Can't create mysql.jdbc driver");
 		}
+		
 		final Connection $ =
 			DriverManager.getConnection("jdbc:mysql://"
 				+ serverName
 				+ "/"
 				+ schema
 				+ "?user=root&password=root");
-		
-		// Create the schema if it doesn't exist
-		final java.sql.Statement statement = $.createStatement();
-		statement.executeUpdate(createSchemaStatement + schema);
-		statement.close();
 		
 		return $;
 		

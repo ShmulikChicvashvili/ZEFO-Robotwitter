@@ -102,7 +102,7 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 						.toLowerCase()));
 				$.add(statistic);
 			}
-		} catch (ClassNotFoundException | SQLException e)
+		} catch (SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();

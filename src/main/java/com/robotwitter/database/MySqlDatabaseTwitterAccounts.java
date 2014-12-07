@@ -110,9 +110,9 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		{
 			preparedStatement.setString(1, eMail);
 			resultSet = preparedStatement.executeQuery();
-			if (resultSet.next())
+			$ = new ArrayList<>();
+			while (resultSet.next())
 			{
-				$ = new ArrayList<>();
 				final DBTwitterAccount twitterAccount =
 					new DBTwitterAccount(
 						resultSet.getString(Columns.EMAIL
@@ -134,6 +134,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		{
 			e.printStackTrace();
 		}
+		if ($ == null || $.isEmpty()) { return null; }
 		return $;
 	}
 	

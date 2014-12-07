@@ -128,14 +128,15 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 		if (user == null) { return InsertError.INVALID_PARAMS; }
 		try (
 			Connection con = connectionEstablisher.getConnection();
+			@SuppressWarnings("nls")
 			PreparedStatement preparedStatement =
-				(PreparedStatement) con.prepareStatement("INSERT INTO " //$NON-NLS-1$
+				(PreparedStatement) con.prepareStatement("INSERT INTO "
 					+ table
-					+ " (" //$NON-NLS-1$
+					+ " ("
 					+ Columns.EMAIL.toString().toLowerCase()
-					+ "," //$NON-NLS-1$
+					+ ","
 					+ Columns.PASSWORD.toString().toLowerCase()
-					+ ") VALUES ( ?, ? );")) //$NON-NLS-1$
+					+ ") VALUES ( ?, ? );"))
 		{
 			preparedStatement.setString(1, user.getEMail().toLowerCase());
 			preparedStatement.setString(2, user.getPassword());

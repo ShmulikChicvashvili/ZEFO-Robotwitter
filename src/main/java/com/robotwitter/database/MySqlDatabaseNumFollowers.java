@@ -118,11 +118,11 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 			{
 				final DBFollowersNumber statistic =
 					new DBFollowersNumber(resultSet.getLong(Columns.TWITTER_ID
-						.name()
-						.toLowerCase()), resultSet.getDate(Columns.DATE
-						.name()
+						.toString()
+						.toLowerCase()), resultSet.getTimestamp(Columns.DATE
+						.toString()
 						.toLowerCase()), resultSet.getInt(Columns.NUM_FOLLOWERS
-						.name()
+						.toString()
 						.toLowerCase()));
 				$.add(statistic);
 			}
@@ -140,11 +140,34 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 	/* (non-Javadoc) @see
 	 * com.robotwitter.database.interfaces.IDatabaseNumFollowers
 	 * #insert(com.robotwitter.database.primitives.DBFollowersNumber) */
+	@SuppressWarnings({ "boxing", "nls" })
 	@Override
 	public InsertError insert(DBFollowersNumber statistic)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		if (statistic == null) { return InsertError.INVALID_PARAMS; }
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			PreparedStatement preparedStatement =
+				(PreparedStatement) con.prepareStatement("INSERT INTO "
+					+ table
+					+ " ("
+					+ Columns.TWITTER_ID.toString().toLowerCase()
+					+ ","
+					+ Columns.DATE.toString().toLowerCase()
+					+ ","
+					+ Columns.NUM_FOLLOWERS.toString().toLowerCase()
+					+ ") VALUES (?,?,?);"))
+		{
+			preparedStatement.setLong(1, statistic.getTwitterId());
+			preparedStatement.setTimestamp(2, statistic.getDate());
+			preparedStatement.setInt(3, statistic.getNumFollowers());
+		} catch (SQLException e)
+		{
+			if (e.getErrorCode() == insertAlreadyExists) { return InsertError.ALREADY_EXIST; }
+			// TODO what to do if not this error code
+			e.printStackTrace();
+		}
+		return InsertError.SUCCESS;
 	}
 	
 	

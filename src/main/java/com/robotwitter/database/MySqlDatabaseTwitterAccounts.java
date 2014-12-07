@@ -30,7 +30,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	implements
 		IDatabaseTwitterAccounts
 {
-
+	
 	private enum Columns
 	{
 		USER_ID,
@@ -38,9 +38,9 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		TOKEN,
 		PRIVATE_TOKEN
 	}
-
-
-
+	
+	
+	
 	/**
 	 * @param conEstablisher
 	 *            The connection handler
@@ -71,8 +71,8 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 			statement.execute(statementCreate);
 		}
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#get(java.lang.String) */
 	@Override
@@ -119,8 +119,8 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		}
 		return $;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#insert(com.Robotwitter
 	 * .DatabasePrimitives.DatabaseType) */
@@ -131,7 +131,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		if (twitterAccount == null) { return InsertError.INVALID_PARAMS; }
 		try (
 			Connection con = connectionEstablisher.getConnection();
-
+			
 			PreparedStatement preparedStatement =
 				(PreparedStatement) con.prepareStatement("INSERT INTO " //$NON-NLS-1$
 					+ table
@@ -152,12 +152,12 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 			preparedStatement.executeUpdate();
 		} catch (final SQLException e)
 		{
-			if (e.getErrorCode() == insertErrorCode) { return InsertError.ALREADY_EXIST; }
+			if (e.getErrorCode() == insertAlreadyExists) { return InsertError.ALREADY_EXIST; }
 		}
 		return InsertError.SUCCESS;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#isExists(java.lang.String) */
 	@Override
@@ -188,10 +188,10 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		}
 		return $;
 	}
-
-
-
+	
+	
+	
 	@SuppressWarnings("nls")
 	final private String table = schema + "." + "`user_twitter_accounts`"; //$NON-NLS-1$ //$NON-NLS-2$
-
+	
 }

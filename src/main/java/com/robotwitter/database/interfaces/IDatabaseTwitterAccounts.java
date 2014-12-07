@@ -5,11 +5,11 @@ package com.robotwitter.database.interfaces;
 
 import java.util.ArrayList;
 
+import com.robotwitter.database.interfaces.returnValues.InsertError;
 import com.robotwitter.database.primitives.DBTwitterAccount;
-import com.robotwitter.database.primitives.DatabaseType;
 
 /**
- * @author Shmulik
+ * @author Shmulik and Eyal
  * 
  * The interface for the DB of twitter accounts
  * 
@@ -37,7 +37,7 @@ public interface IDatabaseTwitterAccounts
 	 *            contain the result of the insert action. INSERT_SUCCESS,
 	 *            INSERT_ALREADY_EXISTS, INSERT_INVALID_PARAMETERS
 	 */
-	public void insert(DBTwitterAccount twitterAccount);
+	public InsertError insert(DBTwitterAccount twitterAccount);
 	
 	
 	/**

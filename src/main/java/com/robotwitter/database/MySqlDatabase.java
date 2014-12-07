@@ -5,11 +5,7 @@
 package com.robotwitter.database;
 
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 
@@ -17,32 +13,30 @@ import com.robotwitter.database.interfaces.ConnectionEstablisher;
 
 
 /**
- * @author Shmulik
+ * @author Shmulik and Eyal
  *
  */
 public abstract class MySqlDatabase
 {
 	/**
 	 * C'tor of general settings
-	 * 
+	 *
 	 * @param conEstablisher
 	 *            A connection establisher for the database
 	 */
 	public MySqlDatabase(final ConnectionEstablisher conEstablisher)
 	{
-		this.connectionEstablisher = conEstablisher;
-		this.schema = this.connectionEstablisher.getSchema();
+		connectionEstablisher = conEstablisher;
+		if (connectionEstablisher.getSchema().startsWith("`")) //$NON-NLS-1$
+		{
+			schema = conEstablisher.getSchema();
+		} else
+		{
+			schema = "`" + connectionEstablisher.getSchema() + "`"; //$NON-NLS-1$ //$NON-NLS-2$
+		}
 	}
 
-	/**
-	 * statement handler
-	 */
-	protected Statement statement = null;
 
-	/**
-	 * preparedStatement handler
-	 */
-	protected PreparedStatement preparedStatement = null;
 
 	/**
 	 * resultSet handler
@@ -53,10 +47,13 @@ public abstract class MySqlDatabase
 	 * The database name
 	 */
 	protected final String schema;
-	
+
 	/**
 	 * The connection establisher with the database
 	 */
 	protected final ConnectionEstablisher connectionEstablisher;
-	
+
+	@SuppressWarnings("boxing")
+	protected final Integer insertAlreadyExists = 1062;
+
 }

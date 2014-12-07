@@ -13,7 +13,7 @@ import com.robotwitter.database.interfaces.ConnectionEstablisher;
 
 
 /**
- * @author Shmulik
+ * @author Shmulik and Eyal
  *
  *         The class handles the default configuration for the factory of
  *         IDatabase

@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 
 /**
- * @author Eyal
+ * @author Eyal and Shmulik
  *
  */
 public interface ConnectionEstablisher
@@ -25,9 +25,9 @@ public interface ConnectionEstablisher
 	 *             Indicating the JDBC driver for the connection could not be
 	 *             found
 	 */
-	Connection getConnection() throws SQLException, ClassNotFoundException;
-
-
+	Connection getConnection() throws SQLException;
+	
+	
 	/**
 	 * @return the schema the connection is connected to
 	 */

@@ -35,29 +35,22 @@ public class TestDatabaseUser
 	@Test
 	public void test()
 	{
-		try
+		
+		final Injector injector = Guice.createInjector(new MySQLDBUserModule());
+		final IDatabaseUsers db = injector.getInstance(MySqlDatabaseUser.class);
+		final DBUser shmulikTheMan = new DBUser("shmulikjkech@gmail.com", "sh");
+		if (!db.isExists("shmulikjkech@gmail.com"))
 		{
-			final Injector injector =
-				Guice.createInjector(new MySQLDBUserModule());
-			final IDatabaseUsers db = injector.getInstance(MySqlDatabaseUser.class);
-			final DBUser shmulikTheMan =
-				new DBUser("shmulikjkech@gmail.com", "sh");
-			if (!db.isExists("shmulikjkech@gmail.com"))
-			{
-				db.insert(shmulikTheMan);
-			}
-			assertTrue(db.isExists("shmulikjkech@gmail.com"));
-			// assertFalse(db.isExists("notanexistingemail@gmail.com"));
-			assertFalse(db.isExists(null));
-			assertEquals(shmulikTheMan, db.get("shmulikjkech@gmail.com"));
-			assertNotEquals(shmulikTheMan, db.get(""));
-			assertEquals(null, db.get(""));
-			assertNotEquals(null, db.get("Shmulikjkech@gmail.com"));
-		} catch (final Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			db.insert(shmulikTheMan);
 		}
+		assertTrue(db.isExists("shmulikjkech@gmail.com"));
+		assertFalse(db.isExists("notanexistingemail@gmail.com"));
+		assertFalse(db.isExists(null));
+		assertEquals(shmulikTheMan, db.get("shmulikjkech@gmail.com"));
+		assertNotEquals(shmulikTheMan, db.get(""));
+		assertEquals(null, db.get(""));
+		assertNotEquals(null, db.get("Shmulikjkech@gmail.com"));
+		
 	}
-
+	
 }

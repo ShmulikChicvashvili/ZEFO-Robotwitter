@@ -25,7 +25,7 @@ public interface ConnectionEstablisher
 	 *             Indicating the JDBC driver for the connection could not be
 	 *             found
 	 */
-	Connection getConnection() throws SQLException, ClassNotFoundException;
+	Connection getConnection() throws SQLException;
 
 
 	/**

@@ -48,12 +48,12 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 		{
 			statement = con.createStatement();
 			final String statementCreate =
-				String.format(
-					"CREATE TABLE IF NOT EXISTS " + table + "(" //$NON-NLS-1$ //$NON-NLS-2$
-						+ "`%s` BIGINT NOT NULL," //$NON-NLS-1$
-						+ "`%s` TIMESTAMP NOT NULL," //$NON-NLS-1$
-						+ "`%s` INT NOT NULL," //$NON-NLS-1$
-						+ "PRIMARY KEY (`%s`, `%s`))", //$NON-NLS-1$
+				String.format("CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$ 
+					+ "`%s` BIGINT NOT NULL," //$NON-NLS-1$
+					+ "`%s` TIMESTAMP NOT NULL," //$NON-NLS-1$
+					+ "`%s` INT NOT NULL," //$NON-NLS-1$
+					+ "PRIMARY KEY (`%s`, `%s`))", //$NON-NLS-1$
+					table,
 					Columns.TWITTER_ID.toString().toLowerCase(),
 					Columns.DATE.toString().toLowerCase(),
 					Columns.NUM_FOLLOWERS.toString().toLowerCase(),

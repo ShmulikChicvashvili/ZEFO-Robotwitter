@@ -1,4 +1,5 @@
 /**
+ * 
  *
  */
 
@@ -9,6 +10,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import com.google.inject.Inject;
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
+
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
 import com.robotwitter.database.interfaces.returnValues.InsertError;
@@ -18,33 +22,50 @@ import com.robotwitter.database.primitives.DBUser;
 
 
 /**
+ * Here we maintain functions over the users database.
+ * 
  * @author Shmulik and Eyal
  *
  *         The database that handles registring a user and fetching a user
  */
 public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 {
+	/**
+	 * The columns this table has.
+	 * 
+	 * @author Eyal
+	 */
 	private enum Columns
 	{
+		/**
+		 * Email column.
+		 */
 		EMAIL,
+		/**
+		 * Password column.
+		 */
 		PASSWORD
 	}
 	
 	
 	
 	/**
-	 * C'tor For MySql db of users
+	 * C'tor For MySql db of users.
 	 *
 	 * @param conEstablisher
 	 *            A connection establisher for the database
+	 * @throws SQLException
+	 *             Could not create the table
 	 */
 	@Inject
 	public MySqlDatabaseUser(final ConnectionEstablisher conEstablisher)
+		throws SQLException
 	{
 		super(conEstablisher);
-		try (Connection con = connectionEstablisher.getConnection())
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			Statement statement = (Statement) con.createStatement())
 		{
-			statement = con.createStatement();
 			final String statementCreate =
 				String.format("CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$
 					+ "`%s` VARCHAR(45) NOT NULL," //$NON-NLS-1$
@@ -55,41 +76,43 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 					Columns.PASSWORD.toString().toLowerCase(),
 					Columns.EMAIL.toString().toLowerCase());
 			statement.execute(statementCreate);
-		} catch (SQLException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 	
 	
 	/* (non-Javadoc) @see Database.IDatabase#get(java.lang.String) */
 	@Override
-	@SuppressWarnings("nls")
-	public DBUser get(final String eMailUser)
+	public final DBUser get(final String eMailUser)
 	{
 		if (eMailUser == null) { return null; }
-		String eMail = eMailUser.toLowerCase();
+		final String eMail = eMailUser.toLowerCase();
 		DBUser $ = null;
-		try (Connection con = connectionEstablisher.getConnection())
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			PreparedStatement preparedStatement =
+				(PreparedStatement) con.prepareStatement("SELECT * FROM " //$NON-NLS-1$
+					+ table
+					+ " WHERE " //$NON-NLS-1$
+					+ Columns.EMAIL.toString().toLowerCase()
+					+ "=?;")) //$NON-NLS-1$)
+		
 		{
-			preparedStatement = con.prepareStatement("" //$NON-NLS-1$
-				+ "SELECT * FROM " //$NON-NLS-1$
-				+ table
-				+ " WHERE " //$NON-NLS-1$
-				+ eMailColumn
-				+ "=?;"); //$NON-NLS-1$
+			
 			preparedStatement.setString(1, eMail);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next())
 			{
 				$ =
-					new DBUser(
-						resultSet.getString(eMailColumn),
-						resultSet.getString(passwordColumn));
+					new DBUser(resultSet.getString(Columns.EMAIL
+						.toString()
+						.toLowerCase()), resultSet.getString(Columns.PASSWORD
+						.toString()
+						.toLowerCase()));
 			}
-		} catch (final Exception e)
+			resultSet.close();
+		} catch (SQLException e)
 		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return $;
@@ -98,27 +121,30 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	
 	/* (non-Javadoc) @see
 	 * Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
+	@SuppressWarnings("boxing")
 	@Override
-	@SuppressWarnings("nls")
-	public InsertError insert(DBUser user)
+	public final InsertError insert(DBUser user)
 	{
 		if (user == null) { return InsertError.INVALID_PARAMS; }
-		try (Connection con = connectionEstablisher.getConnection())
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			PreparedStatement preparedStatement =
+				(PreparedStatement) con.prepareStatement("INSERT INTO " //$NON-NLS-1$
+					+ table
+					+ " (" //$NON-NLS-1$
+					+ Columns.EMAIL.toString().toLowerCase()
+					+ "," //$NON-NLS-1$
+					+ Columns.PASSWORD.toString().toLowerCase()
+					+ ") VALUES ( ?, ? );")) //$NON-NLS-1$
 		{
-			preparedStatement = con.prepareStatement("INSERT INTO " //$NON-NLS-1$
-				+ table
-				+ " (" //$NON-NLS-1$
-				+ eMailColumn
-				+ "," //$NON-NLS-1$
-				+ passwordColumn
-				+ ") VALUES ( ?, ? );"); //$NON-NLS-1$
 			preparedStatement.setString(1, user.getEMail().toLowerCase());
 			preparedStatement.setString(2, user.getPassword());
 			preparedStatement.executeUpdate();
 			
 		} catch (SQLException e)
 		{
-			// TODO Auto-generated catch block
+			if (e.getErrorCode() == insertAlreadyExists) { return InsertError.ALREADY_EXIST; }
+			// TODO what to do if not this error code
 			e.printStackTrace();
 		}
 		return InsertError.SUCCESS;
@@ -126,33 +152,37 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	
 	
 	/**
-	 * Create table of users statement
+	 * Create table of users statement.
 	 */
 	
 	@Override
 	/* (non-Javadoc) @see Database.IDatabase#isExists(java.lang.String) */
 	@SuppressWarnings("nls")
-	public boolean isExists(String eMailUser)
+	public final boolean isExists(String eMailUser)
 	{
 		if (eMailUser == null) { return false; }
-		String eMail = eMailUser.toLowerCase();
+		final String eMail = eMailUser.toLowerCase();
 		boolean $ = false;
-		try (Connection con = connectionEstablisher.getConnection())
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			PreparedStatement preparedStatement =
+				(PreparedStatement) con.prepareStatement("" //$NON-NLS-1$
+					+ "SELECT * FROM " //$NON-NLS-1$
+					+ table
+					+ " WHERE " //$NON-NLS-1$
+					+ Columns.EMAIL.toString().toLowerCase()
+					+ "=?;"))
 		{
-			preparedStatement = con.prepareStatement("" //$NON-NLS-1$
-				+ "SELECT * FROM " //$NON-NLS-1$
-				+ table
-				+ " WHERE " //$NON-NLS-1$
-				+ eMailColumn
-				+ "=?;"); //$NON-NLS-1$
 			preparedStatement.setString(1, eMail);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.first())
 			{
 				$ = true;
 			}
-		} catch (final Exception e)
+			resultSet.close();
+		} catch (SQLException e)
 		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return $;
@@ -161,17 +191,7 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	
 	
 	/**
-	 * The table name
+	 * The table name.
 	 */
-	final private String table = schema + "." + "`users`"; //$NON-NLS-1$ //$NON-NLS-2$ 
-	
-	/**
-	 * Email column
-	 */
-	final private String eMailColumn = "email"; //$NON-NLS-1$
-	
-	/**
-	 * Password column
-	 */
-	final private String passwordColumn = "password"; //$NON-NLS-1$
+	private final String table = schema + "." + "`users`"; //$NON-NLS-1$ //$NON-NLS-2$ 
 }

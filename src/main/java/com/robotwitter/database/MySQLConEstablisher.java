@@ -25,29 +25,28 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 {
 	/**
 	 * @param serverName
-	 *            the server we should connect to
+	 *            The server we should connect to
 	 * @param schema
-	 *            the schema on the DB server
+	 *            The schema on the DB server
+	 * @throws SQLException
+	 *             There was a problem creating the schema.
 	 *
 	 */
 	@Inject
 	public MySQLConEstablisher(
 		@Named("DB Server") final String serverName,
-		@Named("DB Schema") final String schema)
+		@Named("DB Schema") final String schema) throws SQLException
 	{
 		this.serverName = serverName;
 		this.schema = schema;
 		
-		try (Connection con = getConnection())
+		try (
+			Connection con = getConnection();
+			java.sql.Statement statement = con.createStatement())
 		{
 			// Create the schema if it doesn't exist
-			final java.sql.Statement statement = con.createStatement();
-			statement.executeUpdate(createSchemaStatement + schema);
+			statement.executeUpdate("CREATE SCHEMA IF NOT EXISTS " + schema); //$NON-NLS-1$
 			statement.close();
-		} catch (SQLException e)
-		{
-			e.printStackTrace();
-			throw new RuntimeException("Can't create schema " + schema); //$NON-NLS-1$
 		}
 	}
 	
@@ -55,7 +54,7 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 	/* (non-Javadoc) @see Database.ConnectionEstablisher#getConnection() */
 	@Override
 	@SuppressWarnings("nls")
-	public Connection getConnection() throws SQLException
+	public final Connection getConnection() throws SQLException
 	{
 		try
 		{
@@ -80,7 +79,7 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 	
 	/* (non-Javadoc) @see Database.ConnectionEstablisher#getSchema() */
 	@Override
-	public String getSchema()
+	public final String getSchema()
 	{
 		return schema;
 	}
@@ -88,19 +87,13 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 	
 	
 	/**
-	 *
+	 * The server name.
 	 */
 	private final String serverName;
 	
 	/**
-	 *
+	 * The name of the schema.
 	 */
 	private final String schema;
-	
-	/**
-	 *
-	 */
-	@SuppressWarnings("nls")
-	final private String createSchemaStatement = "CREATE SCHEMA IF NOT EXISTS ";
 	
 }

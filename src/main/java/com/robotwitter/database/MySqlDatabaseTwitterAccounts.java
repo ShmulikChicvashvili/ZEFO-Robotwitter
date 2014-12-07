@@ -153,6 +153,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		} catch (final SQLException e)
 		{
 			if (e.getErrorCode() == insertAlreadyExists) { return InsertError.ALREADY_EXIST; }
+			e.printStackTrace();
 		}
 		return InsertError.SUCCESS;
 	}

@@ -2,54 +2,53 @@
 package com.robotwitter.webapp.view.login;
 
 
-import com.vaadin.data.validator.AbstractStringValidator;
+import com.robotwitter.webapp.messages.IMessagesContainer;
+import com.robotwitter.webapp.util.AbstractTextFieldValidator;
 
 
 
 
 /** Validator of a user's password. */
-public class PasswordValidator extends AbstractStringValidator
+public class PasswordValidator extends AbstractTextFieldValidator
 {
-
-	/** Construct a password validator. */
-	public PasswordValidator()
+	
+	/**
+	 * Instantiates a new password validator.
+	 *
+	 * @param messages
+	 *            the container of messages to display
+	 */
+	public PasswordValidator(IMessagesContainer messages)
 	{
-		super(null);
+		setMinLength(
+			MIN_VALID_LENGTH,
+			messages.get("PasswordValidator.error.must-be-longer-than")); //$NON-NLS-1$
+		
+		setMaxLength(
+			MAX_VALID_LENGTH,
+			messages.get("PasswordValidator.error.must-be-shorter-than")); //$NON-NLS-1$
+		
+		addConstraint(".*[0-9].*", //$NON-NLS-1$
+			messages.get("PasswordValidator.error.must-contain-digit")); //$NON-NLS-1$
+		
+		addConstraint(".*[a-z].*", //$NON-NLS-1$
+			messages
+			.get("PasswordValidator.error.must-contain-lowercase-letter")); //$NON-NLS-1$
+		
+		addConstraint(".*[A-Z].*", //$NON-NLS-1$
+			messages
+			.get("PasswordValidator.error.must-contain-uppercase-letter")); //$NON-NLS-1$
 	}
 	
 	
-	@Override
-	protected boolean isValidValue(final String password)
-	{
-		if (password.isEmpty()) { return true; }
-
-		if (password.length() < 8)
-		{
-			setErrorMessage(Messages.get("LoginView.error.password-must-be-longer-than-8")); //$NON-NLS-1$
-			return false;
-		} else if (password.length() > 20)
-		{
-			setErrorMessage(Messages.get("LoginView.error.password-must-be-shorter-than-20")); //$NON-NLS-1$
-			return false;
-		} else if (!password.matches(".*[0-9].*")) //$NON-NLS-1$
-		{
-			setErrorMessage(Messages.get("LoginView.error.password-must-contain-digit")); //$NON-NLS-1$
-			return false;
-		} else if (!password.matches(".*[a-z].*")) //$NON-NLS-1$
-		{
-			setErrorMessage(Messages.get("LoginView.error.password-must-contain-lowercase-letter")); //$NON-NLS-1$
-			return false;
-		} else if (!password.matches(".*[A-Z].*")) //$NON-NLS-1$
-		{
-			setErrorMessage(Messages.get("LoginView.error.password-must-contain-uppercase-letter")); //$NON-NLS-1$
-			return false;
-		}
-		return true;
-	}
-
-
+	
+	/** The minimal valid password length. */
+	private static final int MIN_VALID_LENGTH = 8;
+	
+	/** The maximal valid password length. */
+	private static final int MAX_VALID_LENGTH = 20;
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 }

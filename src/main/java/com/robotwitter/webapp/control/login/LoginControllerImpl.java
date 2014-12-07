@@ -10,11 +10,11 @@ import com.vaadin.ui.themes.ValoTheme;
 
 
 /** Simple implementation of a login controller. */
-public class LoginControllerImpl implements LoginController
+public class LoginControllerImpl implements ILoginController
 {
 
 	@Override
-	public boolean authenticate(final String email, final String password)
+	public final Status authenticate(final String email, final String password)
 	{
 		final Notification notification =
 			new Notification(
@@ -22,7 +22,7 @@ public class LoginControllerImpl implements LoginController
 		notification.setStyleName(ValoTheme.NOTIFICATION_SUCCESS);
 		notification.setDelayMsec(-1);
 		notification.show(Page.getCurrent());
-		return true;
+		return Status.AUTHENTICATION_FAILURE;
 	}
 
 }

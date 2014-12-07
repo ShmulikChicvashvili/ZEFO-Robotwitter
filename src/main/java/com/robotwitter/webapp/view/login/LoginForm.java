@@ -2,38 +2,32 @@
 package com.robotwitter.webapp.view.login;
 
 
+import java.io.Serializable;
+
+import com.vaadin.data.validator.AbstractStringValidator;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Button.ClickEvent;
 
-import com.robotwitter.webapp.view.VerticalForm;
+import com.robotwitter.webapp.control.login.ILoginController;
+import com.robotwitter.webapp.control.login.ILoginController.Status;
+import com.robotwitter.webapp.messages.IMessagesContainer;
+import com.robotwitter.webapp.util.AbstractFormComponent;
 
 
 
 
-/** Login form component. */
-public class LoginForm extends VerticalForm
+/**
+ * Represents a login form component.
+ *
+ * @author Hagai Akibayov
+ */
+public class LoginForm extends AbstractFormComponent
 {
 	
-	/** A user authenticator. */
-	interface Authenticator
-	{
-		/**
-		 * @param email
-		 *            The user's email address
-		 * @param password
-		 *            The user's password
-		 * @return true if authentic, false otherwise
-		 */
-		boolean authenticate(String email, String password);
-	}
-	
-	
-	
 	/** A user login handler. */
-	interface LoginHandler
+	interface LoginHandler extends Serializable
 	{
 		/**
-		 * Handle a successful user login.
+		 * Handles a successful user login.
 		 *
 		 * @param email
 		 *            The user's email address
@@ -42,91 +36,94 @@ public class LoginForm extends VerticalForm
 		 */
 		void login(String email, String password);
 	}
-
-
-
+	
+	
+	
 	/**
-	 * Construct a new login form.
+	 * Instantiates a new login form.
 	 *
-	 * @param authenticator
-	 *            The user's authenticator
+	 * @param messages
+	 *            the container of messages to display
+	 * @param loginController
+	 *            the login controller
 	 * @param handler
-	 *            The successful login handler
+	 *            the successful login handler
+	 * @param passwordValidator
+	 *            the user's password validator
 	 */
 	public LoginForm(
-		final Authenticator authenticator,
-		final LoginHandler handler)
+		IMessagesContainer messages,
+		ILoginController loginController,
+		LoginHandler handler,
+		AbstractStringValidator passwordValidator)
 	{
-		super(Messages.get("LoginForm.button.sign-in"), //$NON-NLS-1$
+		super(messages.get("LoginForm.button.sign-in"), //$NON-NLS-1$
 			FontAwesome.ARROW_CIRCLE_RIGHT);
-
-		this.authenticator = authenticator;
+		
+		this.loginController = loginController;
 		this.handler = handler;
-
+		this.messages = messages;
+		this.passwordValidator = passwordValidator;
+		
 		initialiseEmail();
 		initialisePassword();
 	}
-
-
+	
+	
 	@Override
-	public void buttonClick(final ClickEvent event)
+	public final void submit()
 	{
-		// Validate
-		if (!validateAllFields()) { return; }
-		
-		// Authenticate
-		if (!authenticate()) { return; }
-
-		// Handle successful login
-		clearErrorMessage();
 		handler.login(getField(0).getValue(), getField(1).getValue());
 	}
-
-
-	/** @return true if the given user input is authentic, false otherwise. */
-	private boolean authenticate()
-	{
-		final boolean isAuthentic =
-			authenticator.authenticate(getField(0).getValue(), getField(1)
-				.getValue());
-		if (!isAuthentic)
-		{
-			setErrorMessage(
-				Messages.get("LoginForm.error.email-or-password-incorrect"), //$NON-NLS-1$
-				getField(1));
-			return false;
-		}
-
-		return true;
-	}
-
-
-	/** Initialise the email address field. */
+	
+	
+	/** Initialises the email address field. */
 	private void initialiseEmail()
 	{
-		addEmailField(null, Messages.get("LoginForm.label.email"), //$NON-NLS-1$
-			Messages.get("LoginForm.error.email-empty"), //$NON-NLS-1$
-			Messages.get("LoginForm.error.email-invalid")); //$NON-NLS-1$
+		addEmailField(null, messages.get("LoginForm.label.email"), //$NON-NLS-1$
+			messages.get("LoginForm.error.email-empty"), //$NON-NLS-1$
+			messages.get("LoginForm.error.email-invalid")); //$NON-NLS-1$
 	}
-
-
-	/** Initialise the password field. */
+	
+	
+	/** Initialises the password field. */
 	private void initialisePassword()
 	{
-		addPasswordField(null, Messages.get("LoginForm.label.password"), //$NON-NLS-1$
-			Messages.get("LoginForm.error.password-empty"), //$NON-NLS-1$
-			new PasswordValidator());
+		addPasswordField(null, messages.get("LoginForm.label.password"), //$NON-NLS-1$
+			messages.get("LoginForm.error.password-empty"), //$NON-NLS-1$
+			new PasswordValidator(messages));
+	}
+	
+	
+	@Override
+	protected final Error validate()
+	{
+		final ILoginController.Status isAuthentic =
+			loginController.authenticate(getField(0).getValue(), getField(1)
+				.getValue());
+		if (isAuthentic != Status.SUCCESS) { return new Error(
+			getField(1),
+			messages.get("LoginForm.error.email-or-password-incorrect")); //$NON-NLS-1$
+		}
+
+		return null;
 	}
 	
 	
 	
+	/** The displayed messages. */
+	IMessagesContainer messages;
+	
 	/** The user's authenticator. */
-	Authenticator authenticator;
+	ILoginController loginController;
 
 	/** The user's authenticator. */
 	LoginHandler handler;
 
+	/** The user's password validator. */
+	AbstractStringValidator passwordValidator;
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 }

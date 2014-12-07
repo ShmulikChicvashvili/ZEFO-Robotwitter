@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Mail>
-	<subject>Your Robotwitter account password</subject>
-	<body>
-	Oops, forgot your password?
-	Don't worry, we got you covered!
 
-	Your password is: <password>XXX</password>
-	
-	Have a pleasant day,
-		Robotwitter.
-	</body>
-</Mail>
+<body>
+<subject>Your Robotwitter account password</subject>
+<mail>
+Oops, forgot your password?<pre>
+</pre>
+Don't worry, we got you covered!<pre>
+
+</pre>
+Your password is:<pre>	</pre><password>XXX</password>
+<pre>
+
+</pre>
+Have a pleasant day,<pre>
+	</pre>Robotwitter.
+</mail>
+</body>

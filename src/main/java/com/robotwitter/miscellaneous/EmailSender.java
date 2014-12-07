@@ -31,7 +31,7 @@ public class EmailSender implements IEmailSender
 	@Override
 	public void sendEmail(final EmailMessage mail) throws MessagingException, AddressException
 	{
-		final Session mailSession = session.getSession();
+		final Session mailSession = this.session.getSession();
 		final Message message = new MimeMessage(mailSession);
 		message.setFrom(new InternetAddress(mail.getEmailAddressFrom()));
 		message.setText(mail.getMsgText());

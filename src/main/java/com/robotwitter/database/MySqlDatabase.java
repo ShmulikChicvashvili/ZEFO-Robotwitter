@@ -22,7 +22,7 @@ public abstract class MySqlDatabase
 {
 	/**
 	 * C'tor of general settings
-	 * 
+	 *
 	 * @param conEstablisher
 	 *            A connection establisher for the database
 	 */
@@ -37,32 +37,35 @@ public abstract class MySqlDatabase
 			schema = "`" + connectionEstablisher.getSchema() + "`"; //$NON-NLS-1$ //$NON-NLS-2$
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * statement handler
 	 */
 	protected Statement statement = null;
-	
+
 	/**
 	 * preparedStatement handler
 	 */
 	protected PreparedStatement preparedStatement = null;
-	
+
 	/**
 	 * resultSet handler
 	 */
 	protected ResultSet resultSet = null;
-	
+
 	/**
 	 * The database name
 	 */
 	protected final String schema;
-	
+
 	/**
 	 * The connection establisher with the database
 	 */
 	protected final ConnectionEstablisher connectionEstablisher;
-	
+
+	@SuppressWarnings("boxing")
+	protected final Integer insertErrorCode = 1062;
+
 }

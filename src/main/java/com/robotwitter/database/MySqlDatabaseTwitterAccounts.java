@@ -6,6 +6,7 @@ package com.robotwitter.database;
 
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import com.google.inject.Inject;
@@ -27,35 +28,46 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	implements
 		IDatabaseTwitterAccounts
 {
-	
+
+	private enum Columns
+	{
+		USER_ID,
+		EMAIL,
+		TOKEN,
+		PRIVATE_TOKEN
+	}
+
+
+
 	/**
 	 * @param conEstablisher
 	 *            The connection handler
+	 * @throws SQLException
 	 */
 	@Inject
 	public MySqlDatabaseTwitterAccounts(
-		final ConnectionEstablisher conEstablisher)
+		final ConnectionEstablisher conEstablisher) throws SQLException
 	{
 		super(conEstablisher);
-		try (Connection con = connectionEstablisher.getConnection())
-		{
-			statement = con.createStatement();
-			final String statementCreate =
-				"CREATE TABLE IF NOT EXISTS " + table + "(" //$NON-NLS-1$ //$NON-NLS-2$
-					+ "`user_id` BIGINT NOT NULL," //$NON-NLS-1$
-					+ "`email` VARCHAR(255) NOT NULL," //$NON-NLS-1$
-					+ "`token` VARCHAR(255) NOT NULL," //$NON-NLS-1$
-					+ "`private_token` VARCHAR(255) NOT NULL," //$NON-NLS-1$
-					+ "PRIMARY KEY (`user_id`)) DEFAULT CHARSET=utf8;"; //$NON-NLS-1$
-			statement.execute(statementCreate);
-		} catch (final Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		final Connection con = connectionEstablisher.getConnection();
+		statement = con.createStatement();
+		final String statementCreate =
+			String.format("CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$
+				+ "`%s` BIGINT NOT NULL," //$NON-NLS-1$
+				+ "`%s` VARCHAR(255) NOT NULL," //$NON-NLS-1$
+				+ "`%s` VARCHAR(255) NOT NULL," //$NON-NLS-1$
+				+ "`%s` VARCHAR(255) NOT NULL," //$NON-NLS-1$
+				+ "PRIMARY KEY (`%s`)) DEFAULT CHARSET=utf8;", //$NON-NLS-1$
+				table,
+				Columns.USER_ID.name().toLowerCase(),
+				Columns.EMAIL.name().toLowerCase(),
+				Columns.TOKEN.name().toLowerCase(),
+				Columns.PRIVATE_TOKEN.name().toLowerCase(),
+				Columns.USER_ID.name().toLowerCase());
+		statement.execute(statementCreate);
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#get(java.lang.String) */
 	@Override
@@ -71,19 +83,22 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 					+ "SELECT * FROM "
 					+ table
 					+ " WHERE "
-					+ eMailColumn
+					+ Columns.EMAIL.name().toLowerCase()
 					+ "=?;");
 			preparedStatement.setString(1, eMail);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next())
 			{
-				$ = new ArrayList<DBTwitterAccount>();
+				$ = new ArrayList<>();
 				final DBTwitterAccount twitterAccount =
 					new DBTwitterAccount(
-						resultSet.getString(eMailColumn),
-						resultSet.getString(tokenColumn),
-						resultSet.getString(privateTokenColumn),
-						resultSet.getLong(userIdColumn));
+						resultSet.getString(Columns.EMAIL.name().toLowerCase()),
+						resultSet.getString(Columns.TOKEN.name().toLowerCase()),
+						resultSet.getString(Columns.PRIVATE_TOKEN
+							.name()
+							.toLowerCase()), resultSet.getLong(Columns.USER_ID
+							.name()
+							.toLowerCase()));
 				$.add(twitterAccount);
 			}
 		} catch (final Exception e)
@@ -92,53 +107,51 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		}
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#insert(com.Robotwitter
 	 * .DatabasePrimitives.DatabaseType) */
-	@SuppressWarnings({ "nls", "boxing" })
+	@Override
+	@SuppressWarnings({ "boxing" })
 	public InsertError insert(final DBTwitterAccount twitterAccount)
 	{
-		if(twitterAccount == null) {
-			return InsertError.INVALID_PARAMS;
-		}
+		if (twitterAccount == null) { return InsertError.INVALID_PARAMS; }
 		try (Connection con = connectionEstablisher.getConnection())
 		{
-			
+
 			preparedStatement = con.prepareStatement("INSERT INTO " //$NON-NLS-1$
 				+ table
 				+ " (" //$NON-NLS-1$
-				+ userIdColumn
+				+ Columns.USER_ID.name().toLowerCase()
 				+ "," //$NON-NLS-1$
-				+ eMailColumn
+				+ Columns.EMAIL.name().toLowerCase()
 				+ "," //$NON-NLS-1$
-				+ tokenColumn
+				+ Columns.TOKEN.name().toLowerCase()
 				+ "," //$NON-NLS-1$
-				+ privateTokenColumn
+				+ Columns.PRIVATE_TOKEN.name().toLowerCase()
 				+ ") VALUES ( ?, ?, ?, ? );"); //$NON-NLS-1$
 			preparedStatement.setLong(1, twitterAccount.getUserId());
 			preparedStatement.setString(2, twitterAccount.getEMail());
 			preparedStatement.setString(3, twitterAccount.getToken());
 			preparedStatement.setString(4, twitterAccount.getPrivateToken());
 			preparedStatement.executeUpdate();
-			
-		} catch (final Exception e)
+
+		} catch (final SQLException e)
 		{
-			e.printStackTrace();
+			if (e.getErrorCode() == insertErrorCode) { return InsertError.ALREADY_EXIST; }
 		}
 		return InsertError.SUCCESS;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#isExists(java.lang.String) */
+	@Override
 	@SuppressWarnings({ "nls", "boxing" })
 	public boolean isExists(final Long userId)
 	{
-		if(userId == null) {
-			return false;
-		}
+		if (userId == null) { return false; }
 		boolean $ = false;
 		try (Connection con = connectionEstablisher.getConnection())
 		{
@@ -147,7 +160,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 					+ "SELECT * FROM "
 					+ table
 					+ " WHERE "
-					+ userIdColumn
+					+ Columns.USER_ID.name().toLowerCase()
 					+ "=?;");
 			preparedStatement.setLong(1, userId);
 			resultSet = preparedStatement.executeQuery();
@@ -161,20 +174,10 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		}
 		return $;
 	}
-	
-	
-	
+
+
+
 	@SuppressWarnings("nls")
 	final private String table = schema + "." + "`user_twitter_accounts`"; //$NON-NLS-1$ //$NON-NLS-2$
-	
-	final private String userIdColumn = "user_id"; //$NON-NLS-1$
-	
-	@SuppressWarnings("nls")
-	final private String eMailColumn = "email"; //$NON-NLS-1$
-	
-	@SuppressWarnings("nls")
-	final private String tokenColumn = "token"; //$NON-NLS-1$
-	
-	@SuppressWarnings("nls")
-	final private String privateTokenColumn = "private_token"; //$NON-NLS-1$
+
 }

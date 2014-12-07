@@ -73,7 +73,19 @@ public class DatabaseFollowersTest
 
 	@SuppressWarnings("boxing")
 	@Test
-	public void test()
+	public void testGet()
+	{
+		assertEquals(3, db.get((long) 987654321).get(1));
+		assertEquals(2, db.get((long) 123456789).get(1));
+		assertEquals(0, db.get((long) 987654321).get(0));
+		assertEquals(0, db.get((long) 123456789).get(0));
+		assertEquals(null, db.get(null));
+	}
+
+
+	@SuppressWarnings("boxing")
+	@Test
+	public void testInsert()
 	{
 		assertEquals(InsertError.INVALID_PARAMS, db.insert(null));
 		assertEquals(null, db.get(null));
@@ -93,12 +105,6 @@ public class DatabaseFollowersTest
 		dbTest.setNumFollowers(3);
 		assertEquals(InsertError.SUCCESS, db.insert(dbTest));
 		assertEquals(InsertError.ALREADY_EXIST, db.insert(dbTest));
-
-		assertEquals(3, db.get((long) 987654321).get(1));
-		assertEquals(2, db.get((long) 123456789).get(1));
-		assertEquals(0, db.get((long) 987654321).get(0));
-		assertEquals(0, db.get((long) 123456789).get(0));
-		assertEquals(null, db.get(null));
 	}
 
 

@@ -36,14 +36,14 @@ public class DatabaseFollowersTest
 {
 	public class MockDatabase extends AbstractModule
 	{
-
+		
 		/**
 		 *
 		 */
 		public MockDatabase()
 		{}
-
-
+		
+		
 		/* (non-Javadoc) @see com.google.inject.AbstractModule#configure() */
 		@SuppressWarnings("nls")
 		@Override
@@ -55,37 +55,25 @@ public class DatabaseFollowersTest
 			bind(String.class)
 				.annotatedWith(Names.named("DB Schema"))
 				.toInstance("test");
-
+			
 			bind(ConnectionEstablisher.class).to(MySQLConEstablisher.class);
 		}
-
+		
 	}
-
-
-
+	
+	
+	
 	@Before
 	public void Before()
 	{
 		final Injector injector = Guice.createInjector(new MockDatabase());
 		db = injector.getInstance(MySqlDatabaseNumFollowers.class);
 	}
-
-
+	
+	
 	@SuppressWarnings("boxing")
 	@Test
-	public void testGet()
-	{
-		assertEquals(3, db.get((long) 987654321).get(1));
-		assertEquals(2, db.get((long) 123456789).get(1));
-		assertEquals(0, db.get((long) 987654321).get(0));
-		assertEquals(0, db.get((long) 123456789).get(0));
-		assertEquals(null, db.get(null));
-	}
-
-
-	@SuppressWarnings("boxing")
-	@Test
-	public void testInsert()
+	public void test()
 	{
 		assertEquals(InsertError.INVALID_PARAMS, db.insert(null));
 		assertEquals(null, db.get(null));
@@ -105,10 +93,15 @@ public class DatabaseFollowersTest
 		dbTest.setNumFollowers(3);
 		assertEquals(InsertError.SUCCESS, db.insert(dbTest));
 		assertEquals(InsertError.ALREADY_EXIST, db.insert(dbTest));
+		assertEquals(3, db.get((long) 987654321).get(1));
+		assertEquals(2, db.get((long) 123456789).get(1));
+		assertEquals(0, db.get((long) 987654321).get(0));
+		assertEquals(0, db.get((long) 123456789).get(0));
+		assertEquals(null, db.get(null));
 	}
-
-
-
-	IDatabaseNumFollowers db;
 	
+	
+	
+	IDatabaseNumFollowers db;
+
 }

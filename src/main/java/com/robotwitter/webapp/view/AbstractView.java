@@ -12,8 +12,9 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
 
 
 /**
- * Represents an abstract view of the web-application. Inheriting classes should
- * implement the {@link #getName} and {@link #initialise} methods.
+ * Represents an abstract view of the web-application.
+ * <p>
+ * Inheriting classes should implement the {@link #initialise} methods.
  *
  * @author Hagai Akibayov
  */
@@ -43,16 +44,20 @@ public abstract class AbstractView extends CustomComponent implements View
 	}
 	
 	
-	/**
-	 * Gets the name of the view.
-	 *
-	 * @return the name of the view
-	 */
-	public abstract String getName();
-	
-	
 	/** Initialises the view. */
 	protected abstract void initialise();
+	
+	
+	/**
+	 * Navigates to the given view name.
+	 *
+	 * @param name
+	 *            the view's name
+	 */
+	protected final void navigate(String name)
+	{
+		getUI().getNavigator().navigateTo(name);
+	}
 	
 	
 	/**

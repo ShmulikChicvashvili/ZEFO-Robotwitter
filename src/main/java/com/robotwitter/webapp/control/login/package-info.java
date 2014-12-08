@@ -1,5 +1,5 @@
 /**
- * Controls the behaviour of the login-view UI elements.
+ * Controls the behaviour of the login-view.
  *
  * @see com.robotwitter.webapp.view.login
  */

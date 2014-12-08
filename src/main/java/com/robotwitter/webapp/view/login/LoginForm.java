@@ -10,13 +10,15 @@ import com.vaadin.server.FontAwesome;
 import com.robotwitter.webapp.control.login.ILoginController;
 import com.robotwitter.webapp.control.login.ILoginController.Status;
 import com.robotwitter.webapp.messages.IMessagesContainer;
-import com.robotwitter.webapp.util.AbstractFormComponent;
+import com.robotwitter.webapp.view.util.AbstractFormComponent;
 
 
 
 
 /**
- * Represents a login form component.
+ * Represents a login form.
+ * <p>
+ * The login form consists of an email field and a password field.
  *
  * @author Hagai Akibayov
  */

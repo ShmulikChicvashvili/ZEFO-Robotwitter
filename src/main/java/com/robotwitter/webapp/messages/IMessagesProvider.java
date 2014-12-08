@@ -8,25 +8,27 @@ import java.util.Locale;
 
 
 /**
- * A provider of {@link IMessagesContainer} instances. This interface all allows
- * controlling the provided messages container's locale.
+ * A provider of {@link IMessagesContainer} instances.
+ * <p>
+ * This interface all allows controlling the provided messages container's
+ * locale using {@link #set}.
  *
  * @author Hagai Akibayov
  */
 public interface IMessagesProvider
 {
-	
+
 	/**
-	 * Gets a messages container given its ID.
+	 * Gets a messages container given its name.
 	 *
-	 * @param id
-	 *            the ID of the desired messages container
+	 * @param name
+	 *            the name of the desired messages container
 	 *
 	 * @return the messages container mapped to the given ID
 	 */
-	IMessagesContainer get(MessagesContainerID id);
-	
-	
+	IMessagesContainer get(String name);
+
+
 	/**
 	 * Sets the locale of all messages containers.
 	 *

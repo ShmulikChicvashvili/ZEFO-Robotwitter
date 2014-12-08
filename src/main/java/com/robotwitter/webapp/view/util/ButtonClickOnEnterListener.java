@@ -1,5 +1,5 @@
 
-package com.robotwitter.webapp.util;
+package com.robotwitter.webapp.view.util;
 
 
 import java.util.Collection;
@@ -11,7 +11,11 @@ import com.vaadin.ui.Button;
 
 
 /**
- * Listener of Enter shortcut keyboard press.
+ * Listener of Enter shortcut keyboard press that activates a button click.
+ * <p>
+ * Used primarily by forms to allow submission on Enter. This listener works by
+ * firing the button click if and only if one of the given components (fields,
+ * in the case of a form) are focused during an Enter key-press.
  *
  * @author Hagai Akibayov
  */

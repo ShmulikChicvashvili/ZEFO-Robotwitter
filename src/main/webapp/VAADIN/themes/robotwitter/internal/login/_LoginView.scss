@@ -1,5 +1,5 @@
-@import "../internal/common";
-@import "../config";
+@import "../common";
+@import "../../config";
 /*----------------------------------------------------------------------------*/
 
 
@@ -24,6 +24,11 @@
 		margin-bottom: 20px;
 		
 		@include robotwitter-logo($login-width);
+	}
+	
+	/* ui */
+	.LoginView-ui {
+		overflow: visible;
 	}
 	
 	/* Title */

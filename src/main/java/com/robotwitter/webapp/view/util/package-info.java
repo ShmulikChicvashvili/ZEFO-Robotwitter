@@ -3,6 +3,6 @@
  * {@link com.robotwitter.webapp.view} package.
  */
 
-package com.robotwitter.webapp.util;
+package com.robotwitter.webapp.view.util;
 
 

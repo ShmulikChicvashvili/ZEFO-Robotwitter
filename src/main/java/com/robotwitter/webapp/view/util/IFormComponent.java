@@ -1,5 +1,5 @@
 
-package com.robotwitter.webapp.util;
+package com.robotwitter.webapp.view.util;
 
 
 import com.vaadin.data.validator.AbstractStringValidator;
@@ -9,8 +9,9 @@ import com.vaadin.ui.AbstractTextField;
 
 
 /**
- * Represents a generic customisable form component. A form consists of input
- * fields that may be submitted by a user.
+ * Represents a generic customisable form.
+ * <p>
+ * A form consists of input fields that can be submitted by a client.
  *
  * @author Hagai Akibayov
  */

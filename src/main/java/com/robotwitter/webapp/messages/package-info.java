@@ -1,6 +1,6 @@
 /**
  * Provides natural language messages that are displayed by the application's
- * user interface.
+ * views.
  *
  * @see com.robotwitter.webapp.view
  */

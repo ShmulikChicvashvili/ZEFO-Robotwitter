@@ -1,5 +1,5 @@
 
-package com.robotwitter.webapp.util;
+package com.robotwitter.webapp.view.util;
 
 
 import java.util.LinkedHashMap;
@@ -11,12 +11,15 @@ import com.vaadin.data.validator.AbstractStringValidator;
 
 
 
-/** Represents an abstract text-field validator. */
+/**
+ * Represents an abstract text-field validator, configured using
+ * regular-expression constraints.
+ */
 public abstract class AbstractTextFieldValidator
-extends
-AbstractStringValidator
+	extends
+		AbstractStringValidator
 {
-	
+
 	/** Instantiates a new abstract text-field validator. */
 	public AbstractTextFieldValidator()
 	{
@@ -25,8 +28,8 @@ AbstractStringValidator
 		setMinLength(Integer.MAX_VALUE, null);
 		constraints = new LinkedHashMap<>();
 	}
-
-
+	
+	
 	/**
 	 * Adds a regular-expression validity constraint on the input.
 	 *
@@ -40,8 +43,8 @@ AbstractStringValidator
 	{
 		constraints.put(Pattern.compile(constraint), error);
 	}
-
-
+	
+	
 	/**
 	 * Sets the maximal valid input length.
 	 *
@@ -56,8 +59,8 @@ AbstractStringValidator
 		maxLength = length;
 		tooLongError = error;
 	}
-
-
+	
+	
 	/**
 	 * Sets the minimal valid input length.
 	 *
@@ -72,27 +75,27 @@ AbstractStringValidator
 		minLength = length;
 		tooShortError = error;
 	}
-
-
+	
+	
 	@Override
 	protected final boolean isValidValue(final String input)
 	{
 		if (input.isEmpty()) { return true; }
-		
+
 		// Validate minimal length
 		if (input.length() < minLength)
 		{
 			setErrorMessage(tooShortError);
 			return false;
 		}
-		
+
 		// Validate maximal length
 		if (input.length() > maxLength)
 		{
 			setErrorMessage(tooLongError);
 			return false;
 		}
-
+		
 		// Validate regular-expression constraints
 		for (final Map.Entry<Pattern, String> entry : constraints.entrySet())
 		{
@@ -104,31 +107,31 @@ AbstractStringValidator
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
-
-
-
+	
+	
+	
 	/** The minimal valid input length. */
 	int minLength;
-	
+
 	/** The maximal valid input length. */
 	int maxLength;
-	
+
 	/** The error message when the input is shorter than {@link #minLength}. */
 	String tooShortError;
-
+	
 	/** The error message when the input is longer than {@link #maxLength}. */
 	String tooLongError;
-	
+
 	/**
 	 * A mapping from regular-expressions which act as validity constraints on
 	 * the input to their error messages.
 	 */
 	Map<Pattern, String> constraints;
-
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 }

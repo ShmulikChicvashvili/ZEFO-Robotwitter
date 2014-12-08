@@ -17,10 +17,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import com.robotwitter.webapp.control.login.EmailPasswordRetrievalController;
 import com.robotwitter.webapp.control.login.ILoginController;
 import com.robotwitter.webapp.control.login.IPasswordRetrievalController;
-import com.robotwitter.webapp.control.login.LoginControllerImpl;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.AbstractView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
@@ -40,12 +38,15 @@ public class LoginView extends AbstractView
 	 *            the container of messages to display
 	 */
 	@Inject
-	public LoginView(@Named(NAME) IMessagesContainer messages)
+	public LoginView(
+		@Named(NAME) IMessagesContainer messages,
+		IPasswordRetrievalController retriever,
+		ILoginController authenticator)
 	{
 		super(messages, messages.get("LoginView.page.title")); //$NON-NLS-1$
 		
-		loginController = new LoginControllerImpl();
-		retrievalController = new EmailPasswordRetrievalController();
+		loginController = authenticator;
+		retrievalController = retriever;
 	}
 	
 	
@@ -72,26 +73,26 @@ public class LoginView extends AbstractView
 		// Vertical layout for the login form and the above horizontal
 		content = new VerticalLayout(loginForm, rememberAndForgot);
 		content.setSpacing(true);
-
+		
 		// Initialise the password retrieval form
 		retrievalForm =
 			new PasswordRetrievalForm(messages, retrievalController::retrieve);
 		
 		// The view's title
 		title = new Label(messages.get("LoginView.label.title")); //$NON-NLS-1$
-
+		
 		// Set style names for SCSS
 		content.addStyleName(LOGIN_STYLENAME);
 		retrievalForm.addStyleName(PASSWORD_RETRIEVAL_STYLENAME);
 		addStyleName(UI_STYLENAME);
 		title.addStyleName(TITLE_STYLENAME);
-
+		
 		// Wrapper of the title and the rest of the content
 		wrapper = new VerticalLayout(title, content);
 		setCompositionRoot(wrapper);
 	}
-
-
+	
+	
 	/** Initialise the login form. */
 	private void initialiseLoginForm()
 	{
@@ -104,8 +105,8 @@ public class LoginView extends AbstractView
 				},
 				new PasswordValidator(messages));
 	}
-
-
+	
+	
 	/** Initialise the remember user checkbox. */
 	private void initialiseRememberUser()
 	{
@@ -116,8 +117,8 @@ public class LoginView extends AbstractView
 			.get("LoginView.tooltip.stay-signed-in")); //$NON-NLS-1$
 		rememberUser.setEnabled(false);
 	}
-
-
+	
+	
 	@Override
 	protected final void initialise()
 	{
@@ -132,7 +133,7 @@ public class LoginView extends AbstractView
 	final void openPasswordRetrievalWindow()
 	{
 		final WindowWithDescription window = new WindowWithDescription();
-
+		
 		window.setCaption(messages.get("PasswordRetrieval.window.caption")); //$NON-NLS-1$
 		window.setDescription(messages
 			.get("PasswordRetrievalView.instructions")); //$NON-NLS-1$
@@ -158,37 +159,37 @@ public class LoginView extends AbstractView
 	/** The CSS class name to apply to the password retrieval form component. */
 	private static final String PASSWORD_RETRIEVAL_STYLENAME =
 		"PasswordRetrievalView-component"; //$NON-NLS-1$
-
+	
 	/** The CSS class name to apply to the login form component. */
 	private static final String UI_STYLENAME = "LoginView-ui"; //$NON-NLS-1$
-
+	
 	/** The CSS class name to apply to the login form's title. */
 	private static final String TITLE_STYLENAME = "LoginView-title"; //$NON-NLS-1$
-
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 	/** The login form's title. */
 	private Label title;
-
+	
 	/** The login form. */
 	private LoginForm loginForm;
-
+	
 	/** The login form. */
 	private PasswordRetrievalForm retrievalForm;
-
+	
 	/** The login form. */
 	private CheckBox rememberUser;
-
+	
 	/** The login form TODO change. */
 	private Button forgotPassword;
 	
 	/** The login view's laid-out remember user and forgot password buttons. */
 	private HorizontalLayout rememberAndForgot;
-
+	
 	/** The login view's laid-out content. */
 	private VerticalLayout content;
-
+	
 	/** The login view's laid-out content. */
 	private VerticalLayout wrapper;
 	
@@ -197,5 +198,5 @@ public class LoginView extends AbstractView
 	
 	/** The password retrieval view's controller. */
 	private final IPasswordRetrievalController retrievalController;
-
+	
 }

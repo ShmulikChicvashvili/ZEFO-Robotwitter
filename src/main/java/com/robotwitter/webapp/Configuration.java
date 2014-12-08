@@ -10,6 +10,10 @@ import javax.servlet.annotation.WebListener;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import com.robotwitter.database.MySQLDBUserModule;
+import com.robotwitter.management.EmailPasswordRetrieverModule;
+import com.robotwitter.management.RetrievalMailBuilderModule;
+import com.robotwitter.miscellaneous.GmailSenderModule;
 import com.robotwitter.webapp.messages.MessagesProvider;
 import com.robotwitter.webapp.view.GuiceViewFactory;
 
@@ -69,8 +73,17 @@ public class Configuration implements ServletContextListener
 	/** Initialises the view factory. */
 	private void initialiseViewFactory()
 	{
-		ViewsModule viewsModule = new ViewsModule(views, messagesProvider);
-		Injector injector = Guice.createInjector(viewsModule);
+		final ViewsModule viewsModule =
+			new ViewsModule(views, messagesProvider);
+		// FIXME: merge all these modules into a single module... apparently
+		// thats a good idea...
+		final Injector injector =
+			Guice.createInjector(
+				viewsModule,
+				new GmailSenderModule(),
+				new EmailPasswordRetrieverModule(),
+				new RetrievalMailBuilderModule(),
+				new MySQLDBUserModule());
 		viewFactory = new GuiceViewFactory(views, injector);
 	}
 	

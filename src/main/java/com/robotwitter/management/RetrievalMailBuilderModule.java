@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.management;
@@ -17,7 +17,7 @@ import com.google.inject.name.Names;
  */
 public class RetrievalMailBuilderModule extends AbstractModule
 {
-	
+
 	/* (non-Javadoc) @see com.google.inject.AbstractModule#configure() */
 	@Override
 	protected void configure()
@@ -28,8 +28,8 @@ public class RetrievalMailBuilderModule extends AbstractModule
 		// research!
 		bind(IRetrievalMailBuilder.class).to(RetrievalMailBuilder.class);
 		bind(String.class)
-			.annotatedWith(Names.named("Retrieval Template")).toInstance("C:\\Users\\Itay\\Desktop\\TechnionDocs\\Semester7\\YearlyProject\\ProjectRepo\\5775-234311-2-t09\\src\\main\\java\\com\\robotwitter\\management\\RetrievalMailTemplate.xml"); //$NON-NLS-1$ //$NON-NLS-2$
-		
+			.annotatedWith(Names.named("Retrieval Template")).toInstance("C:\\RetrievalMailTemplate.xml"); //$NON-NLS-1$ //$NON-NLS-2$
+
 	}
-	
+
 }

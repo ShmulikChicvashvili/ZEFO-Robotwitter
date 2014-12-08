@@ -3,7 +3,9 @@ package com.robotwitter.webapp.control.login;
 
 
 import com.google.inject.Inject;
+
 import com.robotwitter.management.EmailPasswordRetriever;
+import com.robotwitter.management.IEmailPasswordRetriever;
 
 
 
@@ -11,12 +13,8 @@ import com.robotwitter.management.EmailPasswordRetriever;
 /** Simple implementation of a password retrieval controller. */
 public class EmailPasswordRetrievalController
 	implements
-		PasswordRetrievalController
+		IPasswordRetrievalController
 {
-	
-	private EmailPasswordRetriever emailRetriever;
-	
-	
 	
 	/**
 	 * @param emailRetriever
@@ -25,28 +23,32 @@ public class EmailPasswordRetrievalController
 	 */
 	@Inject
 	public EmailPasswordRetrievalController(
-		EmailPasswordRetriever emailRetriever)
+		IEmailPasswordRetriever emailRetriever)
 	{
 		this.emailRetriever = emailRetriever;
 	}
-	
-	
+
+
 	@Override
-	public ReturnStatus retrieve(final String email)
+	public Status retrieve(final String email)
 	{
-		EmailPasswordRetriever.ReturnStatus result =
-			this.emailRetriever.retrievePasswordByMail(email);
+		final EmailPasswordRetriever.ReturnStatus result =
+			emailRetriever.retrievePasswordByMail(email);
 		switch (result)
 		{
 			case SUCCESS:
-				return ReturnStatus.SUCCESS;
+				return Status.SUCCESS;
 			case ERROR_SENDING_EMAIL:
-				return ReturnStatus.ERROR_SENDING_EMAIL;
+				return Status.ERROR_SENDING_EMAIL;
 			case USER_DOESNT_EXIST:
-				return ReturnStatus.USER_DOESNT_EXIST;
+				return Status.USER_DOESNT_EXIST;
 			default:
-				return ReturnStatus.FAILURE;
+				return Status.FAILURE;
 		}
 		
 	}
+
+
+
+	private final IEmailPasswordRetriever emailRetriever;
 }

@@ -5,6 +5,10 @@ package com.robotwitter.webapp;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
+import com.robotwitter.webapp.control.login.EmailPasswordRetrievalController;
+import com.robotwitter.webapp.control.login.ILoginController;
+import com.robotwitter.webapp.control.login.IPasswordRetrievalController;
+import com.robotwitter.webapp.control.login.LoginControllerImpl;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.messages.IMessagesProvider;
 
@@ -18,7 +22,7 @@ import com.robotwitter.webapp.messages.IMessagesProvider;
  */
 public class ViewsModule extends AbstractModule
 {
-	
+
 	/**
 	 * Instantiates a new views module.
 	 *
@@ -32,8 +36,8 @@ public class ViewsModule extends AbstractModule
 		this.views = views;
 		this.messagesProvider = messagesProvider;
 	}
-
-
+	
+	
 	/**
 	 * Binds an instance of {@link IMessagesContainer} to instances of a given
 	 * {@link com.vaadin.navigator.View} given their name.
@@ -51,21 +55,27 @@ public class ViewsModule extends AbstractModule
 			.annotatedWith(Names.named(name))
 			.toInstance(messagesProvider.get(name));
 	}
-	
-	
+
+
 	@Override
 	protected final void configure()
 	{
 		// Bind message containers
 		views.keySet().forEach(name -> bindMessagesContainer(name));
+
+		// Bind all non-generic dependencies
+		bind(IPasswordRetrievalController.class).to(
+			EmailPasswordRetrievalController.class);
+		bind(ILoginController.class).to(LoginControllerImpl.class);
+		
 	}
-	
-	
-	
+
+
+
 	/** A mapping of all accessible views. */
 	private final ViewMap views;
-	
+
 	/** Provides messages containers for the views. */
 	IMessagesProvider messagesProvider;
-	
+
 }

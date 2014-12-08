@@ -18,9 +18,9 @@ import com.robotwitter.database.primitives.DBUser;
  */
 
 /** Simple implementation of a login controller. */
-public class LoginControllerImpl implements ILoginController
+public class LoginController implements ILoginController
 {
-
+	
 	@Override
 	public Status authenticate(final String email, final String password)
 	{
@@ -34,7 +34,7 @@ public class LoginControllerImpl implements ILoginController
 		}
 		return Status.USER_DOESNT_EXIST;
 	}
-
+	
 	/**
 	 * final Notification notification = new Notification( "Login Attempt",
 	 * "With email \"" + email + "\" and password \"" + password + "\".");

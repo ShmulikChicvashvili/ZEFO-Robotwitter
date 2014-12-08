@@ -25,7 +25,6 @@ import com.google.inject.Injector;
 import com.robotwitter.database.MySQLDBUserModule;
 import com.robotwitter.database.MySqlDatabaseTwitterAccounts;
 import com.robotwitter.database.primitives.DBTwitterAccount;
-import com.robotwitter.database.primitives.DatabaseType;
 import com.robotwitter.twitter.IllegalPinException;
 import com.robotwitter.twitter.TwitterAccount;
 import com.robotwitter.twitter.TwitterAppConfiguration;

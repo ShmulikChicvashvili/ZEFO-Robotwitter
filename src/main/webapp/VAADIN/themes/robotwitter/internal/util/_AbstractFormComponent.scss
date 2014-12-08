@@ -1,0 +1,25 @@
+@import "../common";
+@import "../../config";
+/*----------------------------------------------------------------------------*/
+
+
+@mixin AbstractFormComponent { .AbstractFormComponent {
+	
+	/* Error message */
+	.AbstractFormComponent-error {
+		color: $v-error-indicator-color;
+		font-weight: bold;
+		font-size: 0.85em;
+	}
+	
+	/* Hide error indicator on caption-less fields */
+	.v-slot-AbstractFormComponent-field .v-caption-on-right .v-errorindicator {
+		display: none;
+	}
+	
+	/* Fix textfield focus glow effect color on fields with errors. */
+	.v-textfield-error.v-textfield:focus {
+		@include box-shadow(0 0 0 2px rgba($v-error-indicator-color, 0.25));
+	}
+	
+} }

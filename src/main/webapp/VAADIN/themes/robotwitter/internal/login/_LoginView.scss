@@ -1,5 +1,5 @@
-@import "../internal/common";
-@import "../config";
+@import "../common";
+@import "../../config";
 /*----------------------------------------------------------------------------*/
 
 
@@ -24,6 +24,11 @@
 		margin-bottom: 20px;
 		
 		@include robotwitter-logo($login-width);
+	}
+	
+	/* ui */
+	.LoginView-ui {
+		overflow: visible;
 	}
 	
 	/* Title */
@@ -77,18 +82,6 @@
 		
 		/* Fix "Forgot password?" link's paddings. */
 		.v-button-link { padding: 0; }
-		
-		/* Error message */
-		.v-label {
-			color: $v-error-indicator-color;
-			font-weight: bold;
-			font-size: 0.85em;
-		}
-		
-		/* Focused field with error shadow colour fix */
-		.v-textfield-error.v-textfield:focus {
-			@include robotwitter-box-shadow(0 0 0 2px rgba($v-error-indicator-color, 0.25));
-		}
 		
 	}
 }

@@ -2,12 +2,17 @@
 package com.robotwitter.webapp.control.login;
 
 
+import java.io.Serializable;
+
+
+
+
 /** Login user interface controller. */
-public interface PasswordRetrievalController
+public interface ILoginController extends Serializable
 {
 
-	/** Status codes returned by this class. */
-	enum ReturnStatus
+	/** Status codes returned by this instance. */
+	enum Status
 	{
 		/** Operation succeeded. */
 		SUCCESS,
@@ -16,20 +21,19 @@ public interface PasswordRetrievalController
 		USER_DOESNT_EXIST,
 		
 		/** A communication error has occurred while trying to send the email. */
-		ERROR_SENDING_EMAIL,
-		
-		/** An unknown failure occurred . */
-		FAILURE
+		AUTHENTICATION_FAILURE
 	}
-
-
-
+	
+	
+	
 	/**
-	 * Retrieve a user's password.
+	 * Authenticates a user's credentials.
 	 *
 	 * @param email
 	 *            The user's email address
-	 * @return status code
+	 * @param password
+	 *            The user's password
+	 * @return true if authentic, false otherwise
 	 */
-	ReturnStatus retrieve(final String email);
+	Status authenticate(String email, String password);
 }

@@ -7,7 +7,7 @@ import com.google.inject.Injector;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewProvider;
 
-import com.robotwitter.webapp.ViewMap;
+import com.robotwitter.webapp.ViewsMap;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -36,7 +36,7 @@ public class GuiceViewFactory implements ViewProvider
 	 *            {@link Injector#getInstance(Class)} should return a <b>new</b>
 	 *            instance of the requested view class
 	 */
-	public GuiceViewFactory(ViewMap views, Injector injector)
+	public GuiceViewFactory(ViewsMap views, Injector injector)
 	{
 		viewInjector = injector;
 		this.views = views;
@@ -75,7 +75,7 @@ public class GuiceViewFactory implements ViewProvider
 	private static final long serialVersionUID = 1L;
 	
 	/** A mapping of all accessible views. */
-	ViewMap views;
+	ViewsMap views;
 
 	/** A Guice injector used to create the view's instances. */
 	@SuppressFBWarnings("SE_BAD_FIELD")

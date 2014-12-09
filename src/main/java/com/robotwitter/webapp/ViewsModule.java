@@ -31,7 +31,7 @@ public class ViewsModule extends AbstractModule
 	 * @param messagesProvider
 	 *            the provider of messages containers for the views
 	 */
-	public ViewsModule(ViewMap views, IMessagesProvider messagesProvider)
+	public ViewsModule(ViewsMap views, IMessagesProvider messagesProvider)
 	{
 		this.views = views;
 		this.messagesProvider = messagesProvider;
@@ -73,7 +73,7 @@ public class ViewsModule extends AbstractModule
 	
 	
 	/** A mapping of all accessible views. */
-	private final ViewMap views;
+	private final ViewsMap views;
 	
 	/** Provides messages containers for the views. */
 	IMessagesProvider messagesProvider;

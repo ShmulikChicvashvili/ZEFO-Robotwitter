@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import com.robotwitter.webapp.ViewMap;
+import com.robotwitter.webapp.ViewsMap;
 
 
 
@@ -26,7 +26,7 @@ public class MessagesProvider implements IMessagesProvider
 	 * @param views
 	 *            a mapping of all accessible views
 	 */
-	public MessagesProvider(ViewMap views)
+	public MessagesProvider(ViewsMap views)
 	{
 		containers = new HashMap<>();
 		views.keySet().forEach(

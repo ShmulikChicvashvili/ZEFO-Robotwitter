@@ -44,10 +44,10 @@ import com.robotwitter.webapp.view.login.LoginView;
  *
  * @author Hagai Akibayov
  */
-public class ViewMap extends HashMap<String, Class<? extends View>>
+public class ViewsMap extends HashMap<String, Class<? extends View>>
 {
 	/** Instantiate a new view map. */
-	public ViewMap()
+	public ViewsMap()
 	{
 		put(LoginView.NAME, LoginView.class);
 		put(DashboardView.NAME, DashboardView.class);

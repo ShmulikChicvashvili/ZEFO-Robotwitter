@@ -1,5 +1,5 @@
 
-package com.robotwitter.webapp.view.util;
+package com.robotwitter.webapp.util;
 
 
 import java.util.HashMap;
@@ -241,7 +241,7 @@ public abstract class AbstractFormComponent extends CustomComponent
 	{
 		
 		submit
-			.addShortcutListener(new com.robotwitter.webapp.view.util.ButtonClickOnEnterListener(
+			.addShortcutListener(new com.robotwitter.webapp.util.ButtonClickOnEnterListener(
 				submit,
 				fields));
 	}

@@ -9,8 +9,9 @@ import com.vaadin.server.FontAwesome;
 
 import com.robotwitter.webapp.control.login.ILoginController;
 import com.robotwitter.webapp.control.login.ILoginController.Status;
+import com.robotwitter.webapp.general.PasswordValidator;
 import com.robotwitter.webapp.messages.IMessagesContainer;
-import com.robotwitter.webapp.view.util.AbstractFormComponent;
+import com.robotwitter.webapp.util.AbstractFormComponent;
 
 
 

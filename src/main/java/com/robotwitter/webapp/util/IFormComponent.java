@@ -1,5 +1,5 @@
 
-package com.robotwitter.webapp.view.util;
+package com.robotwitter.webapp.util;
 
 
 import com.vaadin.data.validator.AbstractStringValidator;

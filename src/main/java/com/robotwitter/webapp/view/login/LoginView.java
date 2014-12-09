@@ -7,6 +7,7 @@ import java.io.Serializable;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import com.vaadin.data.validator.AbstractStringValidator;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
@@ -20,9 +21,9 @@ import com.vaadin.ui.themes.ValoTheme;
 import com.robotwitter.webapp.control.login.ILoginController;
 import com.robotwitter.webapp.control.login.IPasswordRetrievalController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
+import com.robotwitter.webapp.util.WindowWithDescription;
 import com.robotwitter.webapp.view.AbstractView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
-import com.robotwitter.webapp.view.util.WindowWithDescription;
 
 
 
@@ -41,12 +42,14 @@ public class LoginView extends AbstractView
 	public LoginView(
 		@Named(NAME) IMessagesContainer messages,
 		IPasswordRetrievalController retriever,
-		ILoginController authenticator)
+		ILoginController authenticator,
+		@Named("PasswordValidator") AbstractStringValidator passwordValidator)
 	{
 		super(messages, messages.get("LoginView.page.title")); //$NON-NLS-1$
 		
 		loginController = authenticator;
 		retrievalController = retriever;
+		this.passwordValidator = passwordValidator;
 	}
 	
 	
@@ -103,7 +106,7 @@ public class LoginView extends AbstractView
 				(LoginForm.LoginHandler & Serializable) (u, p) -> {
 					navigate(DashboardView.NAME);
 				},
-				new PasswordValidator(messages));
+				passwordValidator);
 	}
 	
 	
@@ -174,6 +177,8 @@ public class LoginView extends AbstractView
 	
 	/** The login form. */
 	private LoginForm loginForm;
+
+	private final AbstractStringValidator passwordValidator;
 	
 	/** The login form. */
 	private PasswordRetrievalForm retrievalForm;

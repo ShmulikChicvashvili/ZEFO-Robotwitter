@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.robotwitter.webapp.ViewsMap;
+import com.robotwitter.webapp.general.General;
 
 
 
@@ -29,8 +30,8 @@ public class MessagesProvider implements IMessagesProvider
 	public MessagesProvider(ViewsMap views)
 	{
 		containers = new HashMap<>();
-		views.keySet().forEach(
-			name -> containers.put(name, new ViewMessagesContainer(name)));
+		add(General.MESSAGES);
+		views.keySet().forEach(name -> add(name));
 	}
 
 
@@ -46,6 +47,18 @@ public class MessagesProvider implements IMessagesProvider
 	{
 		containers.forEach((name, container) -> container.set(locale));
 		
+	}
+
+
+	/**
+	 * Adds a messages container to the provider by name.
+	 *
+	 * @param name
+	 *            the messages container's name
+	 */
+	private void add(String name)
+	{
+		containers.put(name, new ViewMessagesContainer(name));
 	}
 	
 	

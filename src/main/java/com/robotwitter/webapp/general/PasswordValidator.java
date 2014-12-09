@@ -1,9 +1,9 @@
 
-package com.robotwitter.webapp.view.login;
+package com.robotwitter.webapp.general;
 
 
 import com.robotwitter.webapp.messages.IMessagesContainer;
-import com.robotwitter.webapp.view.util.AbstractTextFieldValidator;
+import com.robotwitter.webapp.util.AbstractTextFieldValidator;
 
 
 

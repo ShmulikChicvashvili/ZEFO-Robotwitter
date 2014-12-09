@@ -5,7 +5,7 @@ package com.robotwitter.webapp.view.login;
 import com.robotwitter.webapp.control.login.IPasswordRetrievalController;
 import com.robotwitter.webapp.control.login.IPasswordRetrievalController.Status;
 import com.robotwitter.webapp.messages.IMessagesContainer;
-import com.robotwitter.webapp.view.util.AbstractFormComponent;
+import com.robotwitter.webapp.util.AbstractFormComponent;
 
 
 

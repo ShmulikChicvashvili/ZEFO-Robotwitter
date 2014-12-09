@@ -20,16 +20,19 @@ public interface IFormComponent
 	/**
 	 * Adds an email address field to the form.
 	 *
+	 * @param identifier
+	 *            a unique identifier of the field
 	 * @param caption
-	 *            the email's caption (or null for none)
+	 *            the email's caption (or <code>null</code> for none)
 	 * @param prompt
-	 *            the email's prompt (or null for none)
+	 *            the email's prompt (or <code>null</code> for none)
 	 * @param emptyError
 	 *            the message to display when the email is empty
 	 * @param invalidError
 	 *            the message to display when the email is invalid
 	 */
 	void addEmailField(
+		String identifier,
 		String caption,
 		String prompt,
 		String emptyError,
@@ -39,16 +42,19 @@ public interface IFormComponent
 	/**
 	 * Adds a password field to the form.
 	 *
+	 * @param identifier
+	 *            a unique identifier of the field
 	 * @param caption
-	 *            the password's caption (or null for none)
+	 *            the password's caption (or <code>null</code> for none)
 	 * @param prompt
-	 *            the password's prompt (or null for none)
+	 *            the password's prompt (or <code>null</code> for none)
 	 * @param emptyErrorMessage
 	 *            the message to display when the password is empty
 	 * @param validator
 	 *            the password's validator
 	 */
 	void addPasswordField(
+		String identifier,
 		String caption,
 		String prompt,
 		String emptyErrorMessage,
@@ -58,12 +64,13 @@ public interface IFormComponent
 	/**
 	 * Gets a field.
 	 *
-	 * @param index
-	 *            the field's index
+	 * @param identifier
+	 *            the field's identifier
 	 *
-	 * @return the field respective to the given index, or null if none exists
+	 * @return the field respective to the given <code>identifier</code>, or
+	 *         <code>null</code> if none exists
 	 */
-	AbstractTextField getField(int index);
+	AbstractTextField get(String identifier);
 
 
 	/** Submits the form. */

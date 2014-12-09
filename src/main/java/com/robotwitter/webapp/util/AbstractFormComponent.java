@@ -3,9 +3,8 @@ package com.robotwitter.webapp.util;
 
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Vector;
+import java.util.function.Consumer;
 
 import com.vaadin.data.validator.AbstractStringValidator;
 import com.vaadin.data.validator.EmailValidator;
@@ -36,9 +35,9 @@ import com.vaadin.ui.VerticalLayout;
  * @author Hagai Akibayov
  */
 public abstract class AbstractFormComponent extends CustomComponent
-	implements
-		IFormComponent,
-		Button.ClickListener
+implements
+IFormComponent,
+Button.ClickListener
 {
 	
 	/** Represents a validation error in the form. */
@@ -49,9 +48,9 @@ public abstract class AbstractFormComponent extends CustomComponent
 		 * Instantiates a new error.
 		 *
 		 * @param field
-		 *            the field
+		 *            the field that caused the error
 		 * @param message
-		 *            the message
+		 *            the message describing the error
 		 */
 		public Error(AbstractTextField field, String message)
 		{
@@ -61,7 +60,7 @@ public abstract class AbstractFormComponent extends CustomComponent
 
 
 
-		/** The field responsible for the error, or null if none. */
+		/** The field that caused the error, or null if none. */
 		final AbstractTextField field;
 		
 		/** A message describing the error. */
@@ -111,14 +110,24 @@ public abstract class AbstractFormComponent extends CustomComponent
 	 * @param submitCaption
 	 *            the submit button's caption
 	 * @param submitIcon
-	 *            the submit button's icon (or null for none)
+	 *            the submit button's icon (or <code>null</code> for none)
+	 * @param submitHandler
+	 *            handles a successful submission of the form. Receives a
+	 *            mapping of the fields from their identifiers. If
+	 *            <code>null</code> is received, no operation will be performed
+	 *            on successful submission.
 	 */
-	protected AbstractFormComponent(String submitCaption, FontAwesome submitIcon)
+	protected AbstractFormComponent(
+		String submitCaption,
+		FontAwesome submitIcon,
+		Consumer<Map<String, AbstractTextField>> submitHandler)
 	{
-		// Construct members
-		fields = new Vector<>();
-		fieldEmptyErrorMessages = new HashMap<>();
-		fieldValidators = new HashMap<>();
+		this.submitHandler = submitHandler;
+		
+		// Instantiate mappers
+		fields = new HashMap<>();
+		emptyErrorMessages = new HashMap<>();
+		validators = new HashMap<>();
 		
 		// Initialise components
 		initialiseErrorMessage();
@@ -133,6 +142,7 @@ public abstract class AbstractFormComponent extends CustomComponent
 
 	@Override
 	public final void addEmailField(
+		String identifier,
 		String caption,
 		String prompt,
 		String emptyError,
@@ -140,19 +150,20 @@ public abstract class AbstractFormComponent extends CustomComponent
 	{
 		final TextField email = new TextField();
 		final EmailValidator validator = new EmailValidator(invalidError);
-		addField(email, caption, prompt, emptyError, validator);
+		addField(identifier, email, caption, prompt, emptyError, validator);
 	}
 	
 	
 	@Override
 	public final void addPasswordField(
+		String identifier,
 		String caption,
 		String prompt,
-		String emptyErrorMessage,
+		String emptyError,
 		AbstractStringValidator validator)
 	{
 		final PasswordField password = new PasswordField();
-		addField(password, caption, prompt, emptyErrorMessage, validator);
+		addField(identifier, password, caption, prompt, emptyError, validator);
 	}
 
 
@@ -176,15 +187,27 @@ public abstract class AbstractFormComponent extends CustomComponent
 
 
 	@Override
-	public final AbstractTextField getField(int index)
+	public final AbstractTextField get(String identifier)
 	{
-		return fields.get(index);
+		return fields.get(identifier);
 	}
 	
 	
+	@Override
+	public final void submit()
+	{
+		if (submitHandler != null)
+		{
+			submitHandler.accept(fields);
+		}
+	}
+
+
 	/**
 	 * Adds a field to the form.
 	 *
+	 * @param identifier
+	 *            a unique identifier of the field
 	 * @param field
 	 *            the field to add
 	 * @param caption
@@ -197,6 +220,7 @@ public abstract class AbstractFormComponent extends CustomComponent
 	 *            the field's validator
 	 */
 	private void addField(
+		String identifier,
 		AbstractTextField field,
 		String caption,
 		String prompt,
@@ -212,9 +236,9 @@ public abstract class AbstractFormComponent extends CustomComponent
 		layout.addComponent(field, fieldCount);
 
 		// Add field to internal data structures
-		fields.add(field);
-		fieldEmptyErrorMessages.put(field, emptyErrorMessage);
-		fieldValidators.put(field, validator);
+		fields.put(identifier, field);
+		emptyErrorMessages.put(identifier, emptyErrorMessage);
+		validators.put(identifier, validator);
 
 		// Focus field if it is the first
 		if (fieldCount == 0)
@@ -222,28 +246,26 @@ public abstract class AbstractFormComponent extends CustomComponent
 			field.focus();
 		}
 	}
-
-
+	
+	
 	/** Clears any displayed error message on the form. */
 	private void clearErrorMessage()
 	{
 		errorMessage.setVisible(false);
 
-		fields.forEach(field -> {
+		fields.values().forEach(field -> {
 			field.setComponentError(null);
 			field.setValidationVisible(false);
 		});
 	}
-	
-	
+
+
 	/** Enables submission of the login form upon ENTER key click. */
 	private void enableSubmissionOnEnter()
 	{
-		
-		submit
-			.addShortcutListener(new com.robotwitter.webapp.util.ButtonClickOnEnterListener(
-				submit,
-				fields));
+		submit.addShortcutListener(new ButtonClickOnEnterListener(
+			submit,
+			fields.values()));
 	}
 
 
@@ -254,8 +276,8 @@ public abstract class AbstractFormComponent extends CustomComponent
 		errorMessage.setVisible(false);
 		errorMessage.setStyleName(ERROR_STYLENAME);
 	}
-
-
+	
+	
 	/** Initialises the form's layout. */
 	private void initialiseLayout()
 	{
@@ -267,8 +289,8 @@ public abstract class AbstractFormComponent extends CustomComponent
 		layout.setSpacing(true);
 		setCompositionRoot(layout);
 	}
-	
-	
+
+
 	/**
 	 * Initialises the submit button.
 	 *
@@ -283,14 +305,11 @@ public abstract class AbstractFormComponent extends CustomComponent
 	{
 		submit = new Button(submitCaption, this);
 		submit.setSizeFull();
-		if (submitIcon != null)
-		{
-			submit.setIcon(submitIcon);
-		}
+		submit.setIcon(submitIcon);
 		submit.setStyleName(SUBMIT_STYLENAME);
 	}
-
-
+	
+	
 	/**
 	 * Displays an error message on the login form.
 	 *
@@ -317,8 +336,8 @@ public abstract class AbstractFormComponent extends CustomComponent
 			error.field.setCursorPosition(error.field.getValue().length());
 		}
 	}
-	
-	
+
+
 	/**
 	 * Validates all fields in the form.
 	 *
@@ -326,9 +345,9 @@ public abstract class AbstractFormComponent extends CustomComponent
 	 */
 	private boolean validateAllFields()
 	{
-		for (final AbstractTextField field : fields)
+		for (String identifier : fields.keySet())
 		{
-			if (!validateField(field)) { return false; }
+			if (!validateField(identifier)) { return false; }
 		}
 		return true;
 	}
@@ -337,25 +356,27 @@ public abstract class AbstractFormComponent extends CustomComponent
 	/**
 	 * Validates a field.
 	 *
-	 * @param field
-	 *            the field to validate
+	 * @param identifier
+	 *            a unique identifier of the field
 	 *
 	 * @return true if the given field is valid, false otherwise
 	 */
-	private boolean validateField(final AbstractTextField field)
+	private boolean validateField(String identifier)
 	{
+		AbstractTextField field = fields.get(identifier);
+		
 		// Check emptiness
 		if (field.getValue().isEmpty())
 		{
-			setErrorMessage(new Error(field, fieldEmptyErrorMessages.get(field)));
+			setErrorMessage(new Error(field, emptyErrorMessages.get(identifier)));
 			return false;
 		}
 
 		// Validate
 		if (!field.isValid())
 		{
-			setErrorMessage(new Error(field, fieldValidators
-				.get(field)
+			setErrorMessage(new Error(field, validators
+				.get(identifier)
 				.getErrorMessage()));
 			return false;
 		}
@@ -394,15 +415,18 @@ public abstract class AbstractFormComponent extends CustomComponent
 
 	/** The submission button. */
 	private Button submit;
+
+	/** The successful submission handler. */
+	private final Consumer<Map<String, AbstractTextField>> submitHandler;
 	
-	/** The form's fields. */
-	final List<AbstractTextField> fields;
+	/** A mapping of the fields from their identifiers. */
+	final Map<String, AbstractTextField> fields;
 	
-	/** The error messages displayed when fields are empty. */
-	private final Map<AbstractTextField, String> fieldEmptyErrorMessages;
+	/** A mapping of the error messages displayed when fields are empty. */
+	private final Map<String, String> emptyErrorMessages;
 	
-	/** Custom validator objects of fields. */
-	private final Map<AbstractTextField, AbstractStringValidator> fieldValidators;
+	/** A mapping of field validators. */
+	private final Map<String, AbstractStringValidator> validators;
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

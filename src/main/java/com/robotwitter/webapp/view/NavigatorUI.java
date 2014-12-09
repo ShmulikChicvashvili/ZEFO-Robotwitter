@@ -32,25 +32,25 @@ public class NavigatorUI extends UI
 	protected final void init(VaadinRequest request)
 	{
 		navigator = new Navigator(this, this);
-		
+
 		viewFactory =
 			(ViewProvider) VaadinServlet
-				.getCurrent()
-				.getServletContext()
-				.getAttribute(Configuration.VIEW_FACTORY);
-
+			.getCurrent()
+			.getServletContext()
+			.getAttribute(Configuration.VIEW_FACTORY);
+		
 		navigator.addProvider(viewFactory);
 	}
-
-
-
+	
+	
+	
 	/** The view factory, used for creation of views during this session. */
 	ViewProvider viewFactory;
-	
+
 	/** The navigator that controls view-transition inside the application. */
 	Navigator navigator;
-
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 }

@@ -2,6 +2,8 @@
 package com.robotwitter.webapp.view.login;
 
 
+import java.util.function.Consumer;
+
 import com.robotwitter.webapp.control.login.IPasswordRetrievalController;
 import com.robotwitter.webapp.control.login.IPasswordRetrievalController.Status;
 import com.robotwitter.webapp.messages.IMessagesContainer;
@@ -19,78 +21,85 @@ import com.robotwitter.webapp.util.AbstractFormComponent;
  */
 public class PasswordRetrievalForm extends AbstractFormComponent
 {
-
+	
 	/**
 	 * Instantiates a new password retrieval form.
 	 *
 	 * @param messages
 	 *            the container of messages to display
-	 * @param retriever
+	 * @param retrievalController
 	 *            the password retrieval controller
+	 * @param confirmHandler
+	 *            handles a successful confirmation of the password retrieval
+	 *            form. Receives a the email address the user entered as an
+	 *            argument. If <code>null</code> is received, no operation will
+	 *            be performed on successful submission.
 	 */
 	public PasswordRetrievalForm(
 		IMessagesContainer messages,
-		IPasswordRetrievalController retriever)
+		IPasswordRetrievalController retrievalController,
+		Consumer<String> confirmHandler)
 	{
-		super(messages.get("PasswordRetrievalForm.button.confirm"), null);  //$NON-NLS-1$
-		
+		super(messages.get("PasswordRetrievalForm.button.confirm"), //$NON-NLS-1$
+			null,
+			fields -> confirmHandler.accept(fields.get(EMAIL).getValue()));
+
 		this.messages = messages;
-		this.retriever = retriever;
-		
+		this.retrievalController = retrievalController;
+
 		initialiseEmail();
 	}
-
-
-	@Override
-	public final void submit()
-	{
-		// Do nothing
-	}
-
-
+	
+	
 	/** Initialises the email address field. */
 	private void initialiseEmail()
 	{
-		addEmailField(messages.get("PasswordRetrievalForm.label.email"), //$NON-NLS-1$
+		addEmailField(EMAIL, messages.get("PasswordRetrievalForm.label.email"), //$NON-NLS-1$
 			null,
 			messages.get("PasswordRetrievalForm.error.email-empty"), //$NON-NLS-1$
 			messages.get("PasswordRetrievalForm.error.email-invalid")); //$NON-NLS-1$
 	}
-
-
+	
+	
 	@Override
 	protected final Error validate()
 	{
-		final Status status = retriever.retrieve(getField(0).getValue());
-
+		final Status status =
+			retrievalController.retrieve(get(EMAIL).getValue());
+		
 		switch (status)
 		{
 			case SUCCESS:
 				return null;
-
+				
 			case USER_DOESNT_EXIST:
 				return new Error(
-					getField(0),
+					get(EMAIL),
 					messages
-					.get("PasswordRetrievalForm.error.user-doesnt-exist")); //$NON-NLS-1$
+						.get("PasswordRetrievalForm.error.user-doesnt-exist")); //$NON-NLS-1$
 
-			default:
+			case FAILURE:
 				return new Error(
-					getField(0),
-					messages
-					.get("PasswordRetrievalForm.error.error-sending-email")); //$NON-NLS-1$
+					null,
+					messages.get("PasswordRetrievalForm.error.unknown")); //$NON-NLS-1$
+				
+			default:
+				throw new RuntimeException("Unknown status: " + status); //$NON-NLS-1$
 		}
 	}
 	
 	
 	
+	/** The email field's identifier. */
+	private static final String EMAIL = "email"; //$NON-NLS-1$
+
 	/** The displayed messages. */
 	IMessagesContainer messages;
-
+	
 	/** The password retrieval controller. */
-	IPasswordRetrievalController retriever;
-
+	IPasswordRetrievalController retrievalController;
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 }

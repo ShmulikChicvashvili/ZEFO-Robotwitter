@@ -12,10 +12,10 @@ import com.robotwitter.management.IEmailPasswordRetriever;
 
 /** Simple implementation of a password retrieval controller. */
 public class EmailPasswordRetrievalController
-	implements
-		IPasswordRetrievalController
+implements
+IPasswordRetrievalController
 {
-	
+
 	/**
 	 * @param emailRetriever
 	 *            The EmailRetriever class which handles the password retrieval
@@ -27,8 +27,8 @@ public class EmailPasswordRetrievalController
 	{
 		this.emailRetriever = emailRetriever;
 	}
-
-
+	
+	
 	@Override
 	public Status retrieve(final String email)
 	{
@@ -38,17 +38,15 @@ public class EmailPasswordRetrievalController
 		{
 			case SUCCESS:
 				return Status.SUCCESS;
-			case ERROR_SENDING_EMAIL:
-				return Status.ERROR_SENDING_EMAIL;
 			case USER_DOESNT_EXIST:
 				return Status.USER_DOESNT_EXIST;
 			default:
 				return Status.FAILURE;
 		}
-		
+
 	}
-
-
-
+	
+	
+	
 	private final IEmailPasswordRetriever emailRetriever;
 }

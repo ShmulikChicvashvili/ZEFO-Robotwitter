@@ -49,12 +49,16 @@ public class ViewsMap extends HashMap<String, Class<? extends View>>
 	/** Instantiate a new view map. */
 	public ViewsMap()
 	{
+		// default view
+		put("", LoginView.class); //$NON-NLS-1$
+
+		// other views. Add additional views here
 		put(LoginView.NAME, LoginView.class);
 		put(DashboardView.NAME, DashboardView.class);
 	}
-
-
-
+	
+	
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

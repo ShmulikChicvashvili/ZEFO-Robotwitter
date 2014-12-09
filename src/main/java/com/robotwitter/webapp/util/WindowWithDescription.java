@@ -2,6 +2,7 @@
 package com.robotwitter.webapp.util;
 
 
+import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.server.FontIcon;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Component;
@@ -23,19 +24,14 @@ import com.vaadin.ui.Window;
  */
 public class WindowWithDescription extends Window
 {
-
+	
 	/** Instantiates a new window with description. */
 	public WindowWithDescription()
 	{
 		initialiseIconAndDesc();
-
-		content = new Label();
-		content.setVisible(false);
-		wrapper = new VerticalLayout(iconAndDescWrapper, content);
-		wrapper.setSpacing(true);
-		super.setContent(wrapper);
-
-		wrapper.setStyleName(WRAPPER_STYLENAME);
+		initialiseContentAndWrapper();
+		setDefaults();
+		
 		setStyleName(WINDOW_STYLENAME);
 	}
 	
@@ -49,12 +45,12 @@ public class WindowWithDescription extends Window
 			super.setContent(newContent);
 			return;
 		}
-		
+
 		wrapper.replaceComponent(content, newContent);
 		content = newContent;
 	}
-
-
+	
+	
 	@Override
 	public final void setDescription(String newDescription)
 	{
@@ -74,6 +70,19 @@ public class WindowWithDescription extends Window
 	}
 	
 	
+	/** Initialises the content and the window's wrapper. */
+	private void initialiseContentAndWrapper()
+	{
+		content = new Label();
+		content.setVisible(false);
+		wrapper = new VerticalLayout(iconAndDescWrapper, content);
+		wrapper.setSpacing(true);
+		super.setContent(wrapper);
+
+		wrapper.setStyleName(WRAPPER_STYLENAME);
+	}
+	
+	
 	/** Initialises the description and its icon. */
 	private void initialiseIconAndDesc()
 	{
@@ -81,48 +90,58 @@ public class WindowWithDescription extends Window
 		icon = new Label();
 		icon.setContentMode(ContentMode.HTML);
 		iconAndDescWrapper = new HorizontalLayout(icon, description);
-		
+
 		description.setStyleName(DESCRIPTION_STYLENAME);
 		icon.setStyleName(ICON_STYLENAME);
 		iconAndDescWrapper.setStyleName(ICON_DESC_WRAPPER_STYLENAME);
 	}
-	
-	
-	
+
+
+	/** Set default properties. */
+	private void setDefaults()
+	{
+		setModal(true);
+		setCloseShortcut(KeyCode.ESCAPE, null);
+		setResizable(false);
+		center();
+	}
+
+
+
 	/** The CSS class name to apply to the description label. */
 	private static final String DESCRIPTION_STYLENAME =
 		"WindowWithDescription-description"; //$NON-NLS-1$
-
+	
 	/** The CSS class name to apply to the icon label. */
 	private static final String ICON_STYLENAME = "WindowWithDescription-icon"; //$NON-NLS-1$
-	
+
 	/** The CSS class name to apply to the content component. */
 	private static final String ICON_DESC_WRAPPER_STYLENAME =
 		"WindowWithDescription-icon-desc-wrapper"; //$NON-NLS-1$
-	
+
 	/** The CSS class name to apply to the content component. */
 	private static final String WRAPPER_STYLENAME =
 		"WindowWithDescription-wrapper"; //$NON-NLS-1$
-
+	
 	/** The CSS class name to apply to the window component. */
 	private static final String WINDOW_STYLENAME = "WindowWithDescription"; //$NON-NLS-1$
-	
+
 	/** The description. */
 	Label description;
-	
+
 	/** The icon floating next to the description. */
 	Label icon;
-
+	
 	/** The description's and icon's wrapper. */
 	HorizontalLayout iconAndDescWrapper;
-
+	
 	/** The iconAndDescWrapper's and content's wrapper. */
 	VerticalLayout wrapper;
-
+	
 	/** The content. */
 	Component content;
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 }

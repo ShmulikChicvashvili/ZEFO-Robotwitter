@@ -25,7 +25,7 @@ import com.robotwitter.webapp.view.login.LoginView;
  * satisfied:
  * <ol>
  * <li>The view is put into this map using the {@link #put} method. This should
- * be done in the constructor {@link #ViewMap()}.
+ * be done in the constructor {@link #ViewsMap()}.
  * <li>A <code>name</code>.properties file should exist in
  * {@link com.robotwitter.webapp.messages}, where <code>name</code> is the
  * view's name.
@@ -52,9 +52,9 @@ public class ViewsMap extends HashMap<String, Class<? extends View>>
 		put(LoginView.NAME, LoginView.class);
 		put(DashboardView.NAME, DashboardView.class);
 	}
-	
-	
-	
+
+
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

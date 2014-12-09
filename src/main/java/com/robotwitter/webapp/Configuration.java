@@ -15,7 +15,6 @@ import com.robotwitter.management.EmailPasswordRetrieverModule;
 import com.robotwitter.management.RetrievalMailBuilderModule;
 import com.robotwitter.miscellaneous.GmailSenderModule;
 import com.robotwitter.webapp.messages.MessagesProvider;
-import com.robotwitter.webapp.view.GuiceViewFactory;
 
 
 

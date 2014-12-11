@@ -80,8 +80,7 @@ public class PasswordRetrievalForm extends AbstractFormComponent
 			case FAILURE:
 				return new Error(
 					null,
-					messages.get("PasswordRetrievalForm.error.unknown"), //$NON-NLS-1$
-					true);
+					messages.get("PasswordRetrievalForm.error.unknown"), true); //$NON-NLS-1$
 
 			default:
 				throw new RuntimeException("Unknown status: " + status); //$NON-NLS-1$
@@ -91,15 +90,15 @@ public class PasswordRetrievalForm extends AbstractFormComponent
 	
 	
 	/** The email field's identifier. */
-	private static final String EMAIL = "email"; //$NON-NLS-1$
+	public static final String EMAIL = "email"; //$NON-NLS-1$
 
+	/** Serialisation version unique ID. */
+	private static final long serialVersionUID = 1L;
+	
 	/** The displayed messages. */
 	IMessagesContainer messages;
 	
 	/** The password retrieval controller. */
 	IPasswordRetrievalController retrievalController;
-	
-	/** Serialisation version unique ID. */
-	private static final long serialVersionUID = 1L;
 	
 }

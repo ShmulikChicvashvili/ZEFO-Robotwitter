@@ -17,7 +17,7 @@
 		display: none;
 	}
 	
-	/* Fix textfield focus glow effect color on fields with errors. */
+	/* Fix textfield focus glow effect colour on fields with errors. */
 	.v-textfield-error.v-textfield:focus {
 		@include box-shadow(0 0 0 2px rgba($v-error-indicator-color, 0.25));
 	}

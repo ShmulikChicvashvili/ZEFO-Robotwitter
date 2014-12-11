@@ -20,6 +20,7 @@ $robotwitter-2nd-neutral-color: hsl(hue($robotwitter-sub-color), 2%, $robotwitte
 @mixin robotwitter-logo($width) {
 	width: $width;
 	height: 71px / 360px * $width;
+	background-size: contain;
 	
 	@if $robotwitter-style == light {
 		background-image: url("../img/robotwitter-logo-light.png");

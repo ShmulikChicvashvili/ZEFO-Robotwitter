@@ -24,18 +24,25 @@ import com.vaadin.ui.Window;
  */
 public class WindowWithDescription extends Window
 {
-	
+
 	/** Instantiates a new window with description. */
 	public WindowWithDescription()
 	{
 		initialiseIconAndDesc();
 		initialiseContentAndWrapper();
 		setDefaults();
-		
-		setStyleName(WINDOW_STYLENAME);
+
+		setStyleName(STYLENAME);
 	}
-	
-	
+
+
+	/** Removes the window's content (the description is left unaffected). */
+	public final void removeContent()
+	{
+		wrapper.removeComponent(content);
+	}
+
+
 	@Override
 	public final void setContent(Component newContent)
 	{
@@ -45,19 +52,19 @@ public class WindowWithDescription extends Window
 			super.setContent(newContent);
 			return;
 		}
-
+		
 		wrapper.replaceComponent(content, newContent);
 		content = newContent;
 	}
-	
-	
+
+
 	@Override
 	public final void setDescription(String newDescription)
 	{
 		description.setValue(newDescription);
 	}
-
-
+	
+	
 	/**
 	 * Sets the description's icon.
 	 *
@@ -68,8 +75,8 @@ public class WindowWithDescription extends Window
 	{
 		icon.setValue(newIcon.getHtml());
 	}
-	
-	
+
+
 	/** Initialises the content and the window's wrapper. */
 	private void initialiseContentAndWrapper()
 	{
@@ -78,25 +85,26 @@ public class WindowWithDescription extends Window
 		wrapper = new VerticalLayout(iconAndDescWrapper, content);
 		wrapper.setSpacing(true);
 		super.setContent(wrapper);
-
+		
 		wrapper.setStyleName(WRAPPER_STYLENAME);
 	}
-	
-	
+
+
 	/** Initialises the description and its icon. */
 	private void initialiseIconAndDesc()
 	{
 		description = new Label();
 		icon = new Label();
+		description.setContentMode(ContentMode.HTML);
 		icon.setContentMode(ContentMode.HTML);
 		iconAndDescWrapper = new HorizontalLayout(icon, description);
-
+		
 		description.setStyleName(DESCRIPTION_STYLENAME);
 		icon.setStyleName(ICON_STYLENAME);
 		iconAndDescWrapper.setStyleName(ICON_DESC_WRAPPER_STYLENAME);
 	}
-
-
+	
+	
 	/** Set default properties. */
 	private void setDefaults()
 	{
@@ -105,43 +113,43 @@ public class WindowWithDescription extends Window
 		setResizable(false);
 		center();
 	}
-
-
-
+	
+	
+	
 	/** The CSS class name to apply to the description label. */
 	private static final String DESCRIPTION_STYLENAME =
 		"WindowWithDescription-description"; //$NON-NLS-1$
-	
-	/** The CSS class name to apply to the icon label. */
-	private static final String ICON_STYLENAME = "WindowWithDescription-icon"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to the content component. */
 	private static final String ICON_DESC_WRAPPER_STYLENAME =
 		"WindowWithDescription-icon-desc-wrapper"; //$NON-NLS-1$
+	
+	/** The CSS class name to apply to the icon label. */
+	private static final String ICON_STYLENAME = "WindowWithDescription-icon"; //$NON-NLS-1$
+	
+	/** Serialisation version unique ID. */
+	private static final long serialVersionUID = 1L;
+
+	/** The CSS class name to apply to this component. */
+	private static final String STYLENAME = "WindowWithDescription"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to the content component. */
 	private static final String WRAPPER_STYLENAME =
 		"WindowWithDescription-wrapper"; //$NON-NLS-1$
 	
-	/** The CSS class name to apply to the window component. */
-	private static final String WINDOW_STYLENAME = "WindowWithDescription"; //$NON-NLS-1$
+	/** The content. */
+	Component content;
 
 	/** The description. */
 	Label description;
 
 	/** The icon floating next to the description. */
 	Label icon;
-	
+
 	/** The description's and icon's wrapper. */
 	HorizontalLayout iconAndDescWrapper;
 	
 	/** The iconAndDescWrapper's and content's wrapper. */
 	VerticalLayout wrapper;
 	
-	/** The content. */
-	Component content;
-
-	/** Serialisation version unique ID. */
-	private static final long serialVersionUID = 1L;
-
 }

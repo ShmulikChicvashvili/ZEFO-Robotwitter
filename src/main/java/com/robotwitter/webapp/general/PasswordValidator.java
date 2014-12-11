@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import com.robotwitter.webapp.messages.IMessagesContainer;
-import com.robotwitter.webapp.util.AbstractTextFieldValidator;
+import com.robotwitter.webapp.util.AbstractPasswordValidator;
 
 
 
@@ -18,7 +18,7 @@ import com.robotwitter.webapp.util.AbstractTextFieldValidator;
  * characters, no more than {@link #MAX_VALID_LENGTH} characters, at least on
  * digit, at least one lower case letter, and at least one upper case letter.
  */
-public class PasswordValidator extends AbstractTextFieldValidator
+public class PasswordValidator extends AbstractPasswordValidator
 {
 
 	/**
@@ -53,11 +53,11 @@ public class PasswordValidator extends AbstractTextFieldValidator
 
 
 
-	/** The minimal valid password length. */
-	public static final int MIN_VALID_LENGTH = 8;
-
 	/** The maximal valid password length. */
 	public static final int MAX_VALID_LENGTH = 20;
+
+	/** The minimal valid password length. */
+	public static final int MIN_VALID_LENGTH = 8;
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

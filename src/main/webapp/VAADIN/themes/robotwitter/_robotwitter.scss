@@ -28,22 +28,16 @@ $v-app-loading-text: "Robotwitter is loading...";
 @import "../valo/valo";
 /*----------------------------------------------------------------------------*/
 
-@import "internal/util/AbstractFormComponent";
-@import "internal/util/WindowWithDescription";
-@import "internal/login/LoginView";
-@import "internal/login/PasswordRetrievalView";
+@import "internal/util/util";
+@import "internal/login/login";
 
 /*----------------------------------------------------------------------------*/
 
 
-@mixin robotwitter {
+@mixin robotwitter
+{
 	@include valo;
 	
-	/* util */
-	@include AbstractFormComponent;
-	@include WindowWithDescription;
-	
-	/* login */
-	@include LoginView;
-	@include PasswordRetrievalView;
+	@include util;
+	@include login;
 }

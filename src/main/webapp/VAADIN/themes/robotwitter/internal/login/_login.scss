@@ -1,0 +1,10 @@
+@import "LoginView";
+@import "PasswordRetrievalWindow";
+/*----------------------------------------------------------------------------*/
+
+
+@mixin login
+{
+	@include LoginView;
+	@include PasswordRetrievalWindow;
+}

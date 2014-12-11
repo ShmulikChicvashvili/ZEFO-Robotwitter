@@ -2,196 +2,206 @@
 package com.robotwitter.webapp.view.login;
 
 
-import java.io.Serializable;
-
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import com.vaadin.data.validator.AbstractStringValidator;
+import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import com.robotwitter.webapp.control.login.ILoginController;
 import com.robotwitter.webapp.control.login.IPasswordRetrievalController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
+import com.robotwitter.webapp.util.AbstractPasswordValidator;
 import com.robotwitter.webapp.view.AbstractView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
 
 
 
 
-/** Login user interface view. */
+/**
+ * Represents a login view.
+ * <p>
+ * Note: Shown whenever an unsigned user attempts to do something which requires
+ * a sign in.
+ */
 public class LoginView extends AbstractView
 {
-
+	
 	/**
 	 * Instantiates a new login view.
 	 *
 	 * @param messages
 	 *            the container of messages to display
+	 * @param loginController
+	 *            the login controller
+	 * @param retrievalController
+	 *            the password retrieval controller
+	 * @param passwordValidator
+	 *            the validator of the password field
 	 */
 	@Inject
 	public LoginView(
 		@Named(NAME) IMessagesContainer messages,
-		IPasswordRetrievalController retriever,
-		ILoginController authenticator,
-		@Named("PasswordValidator") AbstractStringValidator passwordValidator)
+		ILoginController loginController,
+		IPasswordRetrievalController retrievalController,
+		AbstractPasswordValidator passwordValidator)
 	{
 		super(messages, messages.get("LoginView.page.title")); //$NON-NLS-1$
-
-		loginController = authenticator;
-		retrievalController = retriever;
+		
+		this.loginController = loginController;
+		this.retrievalController = retrievalController;
 		this.passwordValidator = passwordValidator;
 	}
-
-
-	/** Initialise the forgot password button. */
-	private void initialiseForgotPassword()
+	
+	
+	/**
+	 * Creates a login form.
+	 *
+	 * @return The newly created login form
+	 */
+	private LoginForm createLoginForm()
 	{
-		forgotPassword =
-			new Button(
-				messages.get("LoginView.button.forgot-password"), event -> openPasswordRetrievalWindow()); //$NON-NLS-1$
-		forgotPassword.setStyleName(ValoTheme.BUTTON_LINK);
+		return new LoginForm(
+			messages,
+			loginController,
+			passwordValidator,
+			form -> {
+				navigate(DashboardView.NAME);
+			});
 	}
 
 
-	/** Initialise the layouts. */
-	private void initialiseLayouts()
+	/**
+	 * Creates a registration component consisting of a prompt and a button.
+	 *
+	 * @return the newly created registration component
+	 */
+	private Component createRegistrationComponent()
 	{
-		// Horizontal layout for "remember user" and "forgot password"
-		rememberAndForgot = new HorizontalLayout(rememberUser, forgotPassword);
-		rememberAndForgot.setSizeFull();
-		rememberAndForgot.setComponentAlignment(
-			forgotPassword,
-			Alignment.TOP_RIGHT);
+		// Create prompt and button
+		Label prompt =
+			new Label(messages.get("LoginView.label.register-prompt")); //$NON-NLS-1$
+		Button button = new Button(messages.get("LoginView.button.sign-up")); //$NON-NLS-1$
+		button.addClickListener(event -> Notification
+			.show("Navigate to registration view"));
+		button.setStyleName(ValoTheme.BUTTON_LINK);
 
-		// Vertical layout for the login form and the above horizontal
-		content = new VerticalLayout(loginForm, rememberAndForgot);
-		content.setSpacing(true);
-
-		// Initialise the password retrieval form
-		retrievalForm =
-			new PasswordRetrievalForm(
-				messages,
-				retrievalController::retrieve,
-				null);
-
-		// The view's title
-		title = new Label(messages.get("LoginView.label.title")); //$NON-NLS-1$
-
-		// Set style names for SCSS
-		content.addStyleName(LOGIN_STYLENAME);
-		retrievalForm.addStyleName(PASSWORD_RETRIEVAL_STYLENAME);
-		addStyleName(UI_STYLENAME);
-		title.addStyleName(TITLE_STYLENAME);
-
-		// Wrapper of the title and the rest of the content
-		wrapper = new VerticalLayout(title, content);
-		setCompositionRoot(wrapper);
+		// Initialise their layout
+		HorizontalLayout layout = new HorizontalLayout(prompt, button);
+		layout.setSpacing(true);
+		layout.setStyleName(REGISTER_STYLENAME);
+		return layout;
 	}
-
-
-	/** Initialise the login form. */
-	private void initialiseLoginForm()
+	
+	
+	/**
+	 * Creates a "remember me" and "forgot password" buttons in a layout.
+	 *
+	 * @return a layout containing the buttons
+	 */
+	private AbstractLayout createRememberAndForgotLayout()
 	{
-		loginForm =
-			new LoginForm(
-				messages,
-				(ILoginController & Serializable) loginController::authenticate,
-				passwordValidator,
-				form -> {
-					navigate(DashboardView.NAME);
-				});
-	}
-
-
-	/** Initialise the remember user checkbox. */
-	private void initialiseRememberUser()
-	{
-		rememberUser =
+		// Initialise remember user button
+		CheckBox remember =
 			new CheckBox(
 				messages.get("LoginView.checkbox.stay-signed-in"), true); //$NON-NLS-1$
-		rememberUser.setDescription(messages
+		remember.setDescription(messages
 			.get("LoginView.tooltip.stay-signed-in")); //$NON-NLS-1$
-		rememberUser.setEnabled(false);
+		remember.setEnabled(false);
+
+		// Initialise forgot password button
+		Button forgot =
+			new Button(messages.get("LoginView.button.forgot-password")); //$NON-NLS-1$
+		forgot.addClickListener(event -> getUI().addWindow(
+			passwordRetrievalWindow));
+		forgot.setStyleName(ValoTheme.BUTTON_LINK);
+		
+		// Initialise their layout
+		HorizontalLayout layout = new HorizontalLayout(remember, forgot);
+		layout.setSizeFull();
+		layout.setComponentAlignment(forgot, Alignment.TOP_RIGHT);
+		return layout;
+	}
+	
+	
+	/** Initialises the password retrieval window. */
+	private void initialisePasswordRetrievalWindow()
+	{
+		passwordRetrievalWindow =
+			new PasswordRetrievalWindow(messages, retrievalController);
 	}
 
 
 	@Override
 	protected final void initialise()
 	{
-		initialiseLoginForm();
-		initialiseRememberUser();
-		initialiseForgotPassword();
-		initialiseLayouts();
-	}
-
-
-	/** Open a password retrieval window. */
-	final void openPasswordRetrievalWindow()
-	{
-		final PasswordRetrievalWindow window =
-			new PasswordRetrievalWindow(messages, retrievalController);
+		initialisePasswordRetrievalWindow();
 		
-		getUI().addWindow(window);
+		// The title, above the content
+		Label title = new Label(messages.get("LoginView.label.title")); //$NON-NLS-1$
+		title.setStyleName(TITLE_STYLENAME);
+
+		// Initialise the box (includes form, remember-me, and forgot-password)
+		VerticalLayout box =
+			new VerticalLayout(
+				createLoginForm(),
+				createRememberAndForgotLayout());
+		box.setSpacing(true);
+		box.addStyleName(LOGIN_STYLENAME);
+		
+		// The registration button
+		Component register = createRegistrationComponent();
+
+		// Wrapper of the title and the rest of the content
+		VerticalLayout wrapper = new VerticalLayout(title, box, register);
+		wrapper.setSpacing(true);
+		wrapper.setStyleName(WRAPPER_STYLENAME);
+		
+		addStyleName(STYLENAME);
+		setCompositionRoot(wrapper);
 	}
 
 
 
 	/** The view's name. */
 	public static final String NAME = "login"; //$NON-NLS-1$
+	
+	/** The CSS class name to apply to the box component. */
+	private static final String LOGIN_STYLENAME = "LoginView-box"; //$NON-NLS-1$
+	
+	/** The CSS class name to apply to the registration component. */
+	private static final String REGISTER_STYLENAME = "LoginView-register"; //$NON-NLS-1$
+	
+	/** Serialisation version unique ID. */
+	private static final long serialVersionUID = 1L;
 
-	/** The CSS class name to apply to the login form component. */
-	private static final String LOGIN_STYLENAME = "LoginView-component"; //$NON-NLS-1$
-
-	/** The CSS class name to apply to the password retrieval form component. */
-	private static final String PASSWORD_RETRIEVAL_STYLENAME =
-		"PasswordRetrievalView-component"; //$NON-NLS-1$
-
-	/** The CSS class name to apply to the login form component. */
-	private static final String UI_STYLENAME = "LoginView-ui"; //$NON-NLS-1$
+	/** The CSS class name to apply to this component. */
+	private static final String STYLENAME = "LoginView"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to the login form's title. */
 	private static final String TITLE_STYLENAME = "LoginView-title"; //$NON-NLS-1$
 
-	/** Serialisation version unique ID. */
-	private static final long serialVersionUID = 1L;
-
-	/** The login form's title. */
-	private Label title;
-
-	/** The login form. */
-	private LoginForm loginForm;
+	/** The CSS class name to apply to the wrapper component. */
+	private static final String WRAPPER_STYLENAME = "LoginView-wrapper"; //$NON-NLS-1$
 	
-	private final AbstractStringValidator passwordValidator;
-
-	/** The login form. */
-	private PasswordRetrievalForm retrievalForm;
-
-	/** The login form. */
-	private CheckBox rememberUser;
-
-	/** The login form TODO change. */
-	private Button forgotPassword;
-
-	/** The login view's laid-out remember user and forgot password buttons. */
-	private HorizontalLayout rememberAndForgot;
-
-	/** The login view's laid-out content. */
-	private VerticalLayout content;
-
-	/** The login view's laid-out content. */
-	private VerticalLayout wrapper;
-
 	/** The login view's controller. */
 	private final ILoginController loginController;
-
+	
+	/** The password retrieval window. */
+	private PasswordRetrievalWindow passwordRetrievalWindow;
+	
+	/** The password's validator. */
+	private final AbstractPasswordValidator passwordValidator;
+	
 	/** The password retrieval view's controller. */
 	private final IPasswordRetrievalController retrievalController;
-
+	
 }

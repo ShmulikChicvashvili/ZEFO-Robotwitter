@@ -1,0 +1,10 @@
+@import "AbstractFormComponent";
+@import "WindowWithDescription";
+/*----------------------------------------------------------------------------*/
+
+
+@mixin util
+{
+	@include AbstractFormComponent;
+	@include WindowWithDescription;
+}

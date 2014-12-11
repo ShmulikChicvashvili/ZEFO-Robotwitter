@@ -80,18 +80,18 @@ Button.ClickListener
 
 
 		/**
+		 * <code>true</code> if the error should disable field, false otherwise.
+		 */
+		final boolean disable;
+		
+		/**
 		 * The identifier of the field that caused the error, or
 		 * <code>null</code> if none.
 		 */
 		final String fieldID;
-		
+
 		/** A message describing the error. */
 		final String message;
-
-		/**
-		 * <code>true</code> if the error should disable field, false otherwise.
-		 */
-		final boolean disable;
 	}
 	
 	
@@ -162,7 +162,7 @@ Button.ClickListener
 		
 		enableSubmissionOnEnter();
 
-		setStyleName(FORM_STYLENAME);
+		setStyleName(STYLENAME);
 	}
 	
 	
@@ -231,7 +231,7 @@ Button.ClickListener
 	public final void submit()
 	{
 		if (submitHandler == null) { return; }
-		submitHandler.accept(null);
+		submitHandler.accept(this);
 	}
 
 
@@ -438,40 +438,40 @@ Button.ClickListener
 	
 	
 	
+	/** The CSS class name to apply to the form's error message. */
+	private static final String ERROR_STYLENAME = "AbstractFormComponent-error"; //$NON-NLS-1$
+
 	/** The CSS class name to apply to the form's fields. */
 	private static final String FIELD_STYLENAME = "AbstractFormComponent-field"; //$NON-NLS-1$
 
-	/** The CSS class name to apply to the form's error message. */
-	private static final String ERROR_STYLENAME = "AbstractFormComponent-error"; //$NON-NLS-1$
+	/** Serialisation version unique ID. */
+	private static final long serialVersionUID = 1L;
+
+	/** The CSS class name to apply to this component. */
+	private static final String STYLENAME = "AbstractFormComponent"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to the form's submit button. */
 	private static final String SUBMIT_STYLENAME =
 		"AbstractFormComponent-submit"; //$NON-NLS-1$
 
-	/** The CSS class name to apply to the form component. */
-	private static final String FORM_STYLENAME = "AbstractFormComponent"; //$NON-NLS-1$
-
-	/** The vertically laid-out form. */
-	private VerticalLayout layout;
+	/** A mapping of the error messages displayed when fields are empty. */
+	private final Map<String, String> emptyErrorMessages;
 
 	/** The error message of a failed submission attempt. */
 	private Label errorMessage;
 
+	/** The vertically laid-out form. */
+	private VerticalLayout layout;
+	
 	/** The submission button. */
 	private Button submit;
-
+	
 	/** The successful submission handler. */
 	private final Consumer<IFormComponent> submitHandler;
-	
-	/** A mapping of the fields from their identifiers. */
-	final Map<String, AbstractTextField> fields;
-	
-	/** A mapping of the error messages displayed when fields are empty. */
-	private final Map<String, String> emptyErrorMessages;
 	
 	/** A mapping of field validators. */
 	private final Map<String, AbstractStringValidator> validators;
 	
-	/** Serialisation version unique ID. */
-	private static final long serialVersionUID = 1L;
+	/** A mapping of the fields from their identifiers. */
+	final Map<String, AbstractTextField> fields;
 }

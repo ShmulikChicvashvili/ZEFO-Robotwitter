@@ -3,62 +3,51 @@
 /*----------------------------------------------------------------------------*/
 
 
-@mixin LoginView {
+@mixin LoginView { .LoginView {
 	
 	$login-width: 360px;
 	
-	.v-verticallayout {
-		overflow: visible;
-	}
+	/** Fix the clipping of the shadow of the form's div. */
+	overflow: visible;
 	
-	/* Logo */
-	.LoginView-ui::before {
-		content: "";
-		
-		/* Centre horizontally */
-		display: block;
-		margin: auto;
-		
-		/* Size */
-		margin-top: 40px;
-		margin-bottom: 20px;
-		
-		@include robotwitter-logo($login-width);
-	}
-	
-	/* ui */
-	.LoginView-ui {
-		overflow: visible;
-	}
-	
-	/* Title */
-	.LoginView-title {
-		
+	/* Wrapper */
+	.LoginView-wrapper
+	{
 		/* Centre horizontally */
 		display: block;
 		margin: auto;
 		text-align: center;
 		
 		/* Size */
-		margin-top: 5px;
-		margin-bottom: 10px;
-		font-size: 1.5em;
-		
-		.v-label {
-			display: inline;
-		}
+		width: $login-width !important;
+		margin-top: $login-width / 15;		
 	}
 	
-	/* Login Form */
-	.LoginView-component {
+	/* Robotwitter's logo */
+	.LoginView-title::before
+	{
+		content: "";
+		display: inline-block;
+		margin-bottom: 25px;
+		@include robotwitter-logo($login-width);
+	}
 	
-		/* Centre horizontally */
-		display: block;
-		margin: auto;
+	/* Title */
+	.LoginView-title
+	{
+		display: inline-block;
+		font-size: $login-width / 248px * 1em;
+		font-weight: 500;
+	}
+	
+	/* Login Content */
+	.LoginView-box
+	{
+		display: inline-block;
 		
 		/* Size */
 		width: $login-width !important;
-		padding: 30px;
+		padding: $login-width / 12;
 		
 		/* Colour */
 		background-color: $robotwitter-neutral-color;
@@ -68,20 +57,28 @@
 		@include robotwitter-box-shadow(0px 3px 0 rgba(0, 0, 0, 0.2));
 		
 		/* Button and fields */
-		.v-textfield, .v-button { font-size: 1.2em; }
-		
-		/* Icons */
-		.v-icon { color: $robotwitter-sub-color; }
+		.v-textfield, .AbstractFormComponent-submit { font-size: 1.2em; }
 		
 		/* "Stay signed in" checkbox and "Forgot password?" link */
-		.v-checkbox, .v-button-link {
+		.v-checkbox, .v-button-link
+		{
 			font-weight: bold;
-			font-size: round($robotwitter-font-size * 0.85);
-			height: round($robotwitter-font-size);
+			font-size: round($robotwitter-font-size * 0.85) !important;
+			height: round($robotwitter-font-size * 0.85) !important;
 		}
-		
-		/* Fix "Forgot password?" link's paddings. */
-		.v-button-link { padding: 0; }
-		
+	
+		/* Icons */
+		.v-icon { color: $robotwitter-sub-color; }		
 	}
-}
+	
+	/* Registration component */
+	.LoginView-register
+	{	
+		font-size: 1.2em;
+		font-weight: 500;
+		
+		/* Fix spacing. */
+		.v-spacing { width: 6px; }
+	}
+
+} }

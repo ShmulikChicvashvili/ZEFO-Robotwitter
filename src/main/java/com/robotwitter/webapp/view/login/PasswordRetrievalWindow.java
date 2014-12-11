@@ -21,32 +21,29 @@ import com.robotwitter.webapp.util.WindowWithDescription;
  */
 public class PasswordRetrievalWindow extends WindowWithDescription
 {
-	
+
 	/**
 	 * Initialises a new password retrieval window.
 	 *
 	 * @param messages
 	 *            the container of messages to display
-	 * @param retrievalController
+	 * @param controller
 	 *            the password retrieval controller
 	 */
 	@Inject
 	public PasswordRetrievalWindow(
 		@Named(LoginView.NAME) IMessagesContainer messages,
-		IPasswordRetrievalController retrievalController)
+		IPasswordRetrievalController controller)
 	{
 		setCaption(messages.get("PasswordRetrievalWindow.caption")); //$NON-NLS-1$
 		setDescription(messages.get("PasswordRetrievalWindow.instructions")); //$NON-NLS-1$
 		setIcon(FontAwesome.ENVELOPE);
-		setContent(new PasswordRetrievalForm(
-			messages,
-			retrievalController,
-			null));
+		setContent(new PasswordRetrievalForm(messages, controller, null));
 	}
-
-
-
+	
+	
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 }

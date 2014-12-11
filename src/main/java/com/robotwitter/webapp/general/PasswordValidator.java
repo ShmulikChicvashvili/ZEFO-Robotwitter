@@ -2,6 +2,9 @@
 package com.robotwitter.webapp.general;
 
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.AbstractTextFieldValidator;
 
@@ -24,7 +27,9 @@ public class PasswordValidator extends AbstractTextFieldValidator
 	 * @param messages
 	 *            the container of messages to display
 	 */
-	public PasswordValidator(IMessagesContainer messages)
+	@Inject
+	public PasswordValidator(
+		@Named(General.MESSAGES) IMessagesContainer messages)
 	{
 		setMinLength(
 			MIN_VALID_LENGTH,

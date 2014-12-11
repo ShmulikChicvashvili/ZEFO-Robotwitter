@@ -8,6 +8,7 @@ import com.robotwitter.webapp.control.login.IPasswordRetrievalController;
 import com.robotwitter.webapp.control.login.IPasswordRetrievalController.Status;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.AbstractFormComponent;
+import com.robotwitter.webapp.util.IFormComponent;
 
 
 
@@ -30,19 +31,18 @@ public class PasswordRetrievalForm extends AbstractFormComponent
 	 * @param retrievalController
 	 *            the password retrieval controller
 	 * @param confirmHandler
-	 *            handles a successful confirmation of the password retrieval
-	 *            form. Receives a the email address the user entered as an
-	 *            argument. If <code>null</code> is received, no operation will
-	 *            be performed on successful submission.
+	 *            handles a successful submission of the form. Receives this
+	 *            form as a parameter. If <code>null</code> is received, no
+	 *            operation will be performed on successful submission.
 	 */
 	public PasswordRetrievalForm(
 		IMessagesContainer messages,
 		IPasswordRetrievalController retrievalController,
-		Consumer<String> confirmHandler)
+		Consumer<IFormComponent> confirmHandler)
 	{
 		super(messages.get("PasswordRetrievalForm.button.confirm"), //$NON-NLS-1$
 			null,
-			fields -> confirmHandler.accept(fields.get(EMAIL).getValue()));
+			confirmHandler);
 
 		this.messages = messages;
 		this.retrievalController = retrievalController;
@@ -64,8 +64,7 @@ public class PasswordRetrievalForm extends AbstractFormComponent
 	@Override
 	protected final Error validate()
 	{
-		final Status status =
-			retrievalController.retrieve(get(EMAIL).getValue());
+		final Status status = retrievalController.retrieve(get(EMAIL));
 		
 		switch (status)
 		{
@@ -74,15 +73,16 @@ public class PasswordRetrievalForm extends AbstractFormComponent
 				
 			case USER_DOESNT_EXIST:
 				return new Error(
-					get(EMAIL),
+					EMAIL,
 					messages
 						.get("PasswordRetrievalForm.error.user-doesnt-exist")); //$NON-NLS-1$
 
 			case FAILURE:
 				return new Error(
 					null,
-					messages.get("PasswordRetrievalForm.error.unknown")); //$NON-NLS-1$
-				
+					messages.get("PasswordRetrievalForm.error.unknown"), //$NON-NLS-1$
+					true);
+
 			default:
 				throw new RuntimeException("Unknown status: " + status); //$NON-NLS-1$
 		}

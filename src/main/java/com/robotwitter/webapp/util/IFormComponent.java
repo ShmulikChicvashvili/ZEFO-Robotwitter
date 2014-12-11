@@ -3,7 +3,6 @@ package com.robotwitter.webapp.util;
 
 
 import com.vaadin.data.validator.AbstractStringValidator;
-import com.vaadin.ui.AbstractTextField;
 
 
 
@@ -20,7 +19,7 @@ public interface IFormComponent
 	/**
 	 * Adds an email address field to the form.
 	 *
-	 * @param identifier
+	 * @param id
 	 *            a unique identifier of the field
 	 * @param caption
 	 *            the email's caption (or <code>null</code> for none)
@@ -32,7 +31,7 @@ public interface IFormComponent
 	 *            the message to display when the email is invalid
 	 */
 	void addEmailField(
-		String identifier,
+		String id,
 		String caption,
 		String prompt,
 		String emptyError,
@@ -42,7 +41,7 @@ public interface IFormComponent
 	/**
 	 * Adds a password field to the form.
 	 *
-	 * @param identifier
+	 * @param id
 	 *            a unique identifier of the field
 	 * @param caption
 	 *            the password's caption (or <code>null</code> for none)
@@ -54,23 +53,27 @@ public interface IFormComponent
 	 *            the password's validator
 	 */
 	void addPasswordField(
-		String identifier,
+		String id,
 		String caption,
 		String prompt,
 		String emptyErrorMessage,
 		AbstractStringValidator validator);
 
 
+	/** Disables the form (prohibits further submission of information). */
+	void disable();
+
+
 	/**
-	 * Gets a field.
+	 * Gets a field's value (user's input).
 	 *
-	 * @param identifier
+	 * @param id
 	 *            the field's identifier
 	 *
-	 * @return the field respective to the given <code>identifier</code>, or
-	 *         <code>null</code> if none exists
+	 * @return the field's value respective to the given field's
+	 *         <code>identifier</code>, or <code>null</code> if none exists
 	 */
-	AbstractTextField get(String identifier);
+	String get(String id);
 
 
 	/** Submits the form. */

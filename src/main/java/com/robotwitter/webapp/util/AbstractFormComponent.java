@@ -3,6 +3,7 @@ package com.robotwitter.webapp.util;
 
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -39,7 +40,7 @@ implements
 IFormComponent,
 Button.ClickListener
 {
-	
+
 	/** Represents a validation error in the form. */
 	protected static class Error
 	{
@@ -47,24 +48,50 @@ Button.ClickListener
 		/**
 		 * Instantiates a new error.
 		 *
-		 * @param field
-		 *            the field that caused the error
+		 * @param fieldID
+		 *            the field's identifier
 		 * @param message
 		 *            the message describing the error
 		 */
-		public Error(AbstractTextField field, String message)
+		public Error(String fieldID, String message)
 		{
-			this.field = field;
+			this(fieldID, message, false);
+		}
+
+
+		/**
+		 * Instantiates a new error.
+		 *
+		 * @param fieldID
+		 *            the field's identifier
+		 * @param message
+		 *            the message describing the error
+		 * @param disable
+		 *            <code>true</code> if the error should disable field, false
+		 *            otherwise.
+		 */
+		public Error(String fieldID, String message, boolean disable)
+		{
+			this.fieldID = fieldID;
 			this.message = message;
+			this.disable = disable;
 		}
 
 
 
-		/** The field that caused the error, or null if none. */
-		final AbstractTextField field;
+		/**
+		 * The identifier of the field that caused the error, or
+		 * <code>null</code> if none.
+		 */
+		final String fieldID;
 		
 		/** A message describing the error. */
 		final String message;
+
+		/**
+		 * <code>true</code> if the error should disable field, false otherwise.
+		 */
+		final boolean disable;
 	}
 	
 	
@@ -112,20 +139,19 @@ Button.ClickListener
 	 * @param submitIcon
 	 *            the submit button's icon (or <code>null</code> for none)
 	 * @param submitHandler
-	 *            handles a successful submission of the form. Receives a
-	 *            mapping of the fields from their identifiers. If
-	 *            <code>null</code> is received, no operation will be performed
-	 *            on successful submission.
+	 *            handles a successful submission of the form. Receives this
+	 *            form as a parameter. If <code>null</code> is received, no
+	 *            operation will be performed on successful submission.
 	 */
 	protected AbstractFormComponent(
 		String submitCaption,
 		FontAwesome submitIcon,
-		Consumer<Map<String, AbstractTextField>> submitHandler)
+		Consumer<IFormComponent> submitHandler)
 	{
 		this.submitHandler = submitHandler;
 		
 		// Instantiate mappers
-		fields = new HashMap<>();
+		fields = new LinkedHashMap<>();
 		emptyErrorMessages = new HashMap<>();
 		validators = new HashMap<>();
 		
@@ -138,8 +164,8 @@ Button.ClickListener
 
 		setStyleName(FORM_STYLENAME);
 	}
-
-
+	
+	
 	@Override
 	public final void addEmailField(
 		String identifier,
@@ -152,8 +178,8 @@ Button.ClickListener
 		final EmailValidator validator = new EmailValidator(invalidError);
 		addField(identifier, email, caption, prompt, emptyError, validator);
 	}
-	
-	
+
+
 	@Override
 	public final void addPasswordField(
 		String identifier,
@@ -165,8 +191,8 @@ Button.ClickListener
 		final PasswordField password = new PasswordField();
 		addField(identifier, password, caption, prompt, emptyError, validator);
 	}
-
-
+	
+	
 	@Override
 	public final void buttonClick(ClickEvent event)
 	{
@@ -187,19 +213,25 @@ Button.ClickListener
 
 
 	@Override
-	public final AbstractTextField get(String identifier)
+	public final void disable()
 	{
-		return fields.get(identifier);
+		fields.values().forEach(field -> field.setEnabled(false));
+		submit.setEnabled(false);
+	}
+
+
+	@Override
+	public final String get(String identifier)
+	{
+		return fields.get(identifier).getValue();
 	}
 	
 	
 	@Override
 	public final void submit()
 	{
-		if (submitHandler != null)
-		{
-			submitHandler.accept(fields);
-		}
+		if (submitHandler == null) { return; }
+		submitHandler.accept(null);
 	}
 
 
@@ -316,7 +348,7 @@ Button.ClickListener
 	 * @param error
 	 *            the error
 	 */
-	private void setErrorMessage(final Error error)
+	private void setErrorMessage(Error error)
 	{
 		// Clear any previous error message.
 		clearErrorMessage();
@@ -325,15 +357,25 @@ Button.ClickListener
 		errorMessage.setVisible(true);
 		errorMessage.setValue(error.message);
 
-		if (error.field != null)
+		// Nothing more to do if no causing field supplied
+		if (error.fieldID != null)
 		{
-			// Set the error message on the related field
-			error.field.setValidationVisible(true);
-			if (error.field.getErrorMessage() == null)
+			// Otherwise, get the field
+			AbstractTextField field = fields.get(error.fieldID);
+
+			// Set the error message on the field
+			field.setValidationVisible(true);
+			field.setCursorPosition(field.getValue().length());
+			if (field.getErrorMessage() == null)
 			{
-				error.field.setComponentError(new UserError(error.message));
+				field.setComponentError(new UserError(error.message));
 			}
-			error.field.setCursorPosition(error.field.getValue().length());
+		}
+		
+		// Disable form if needed
+		if (error.disable)
+		{
+			disable();
 		}
 	}
 
@@ -368,14 +410,16 @@ Button.ClickListener
 		// Check emptiness
 		if (field.getValue().isEmpty())
 		{
-			setErrorMessage(new Error(field, emptyErrorMessages.get(identifier)));
+			setErrorMessage(new Error(
+				identifier,
+				emptyErrorMessages.get(identifier)));
 			return false;
 		}
 
 		// Validate
 		if (!field.isValid())
 		{
-			setErrorMessage(new Error(field, validators
+			setErrorMessage(new Error(identifier, validators
 				.get(identifier)
 				.getErrorMessage()));
 			return false;
@@ -417,7 +461,7 @@ Button.ClickListener
 	private Button submit;
 
 	/** The successful submission handler. */
-	private final Consumer<Map<String, AbstractTextField>> submitHandler;
+	private final Consumer<IFormComponent> submitHandler;
 	
 	/** A mapping of the fields from their identifiers. */
 	final Map<String, AbstractTextField> fields;

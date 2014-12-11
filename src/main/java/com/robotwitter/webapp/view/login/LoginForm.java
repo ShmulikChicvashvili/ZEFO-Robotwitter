@@ -2,15 +2,15 @@
 package com.robotwitter.webapp.view.login;
 
 
-import java.io.Serializable;
+import java.util.function.Consumer;
 
 import com.vaadin.data.validator.AbstractStringValidator;
 import com.vaadin.server.FontAwesome;
 
 import com.robotwitter.webapp.control.login.ILoginController;
-import com.robotwitter.webapp.general.PasswordValidator;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.AbstractFormComponent;
+import com.robotwitter.webapp.util.IFormComponent;
 
 
 
@@ -24,23 +24,7 @@ import com.robotwitter.webapp.util.AbstractFormComponent;
  */
 public class LoginForm extends AbstractFormComponent
 {
-
-	/** A user login handler. */
-	interface LoginHandler extends Serializable
-	{
-		/**
-		 * Handles a successful user login.
-		 *
-		 * @param email
-		 *            The user's email address
-		 * @param password
-		 *            The user's password
-		 */
-		void login(String email, String password);
-	}
-
-
-
+	
 	/**
 	 * Instantiates a new login form.
 	 *
@@ -50,23 +34,24 @@ public class LoginForm extends AbstractFormComponent
 	 *            the login controller
 	 * @param passwordValidator
 	 *            the user's password validator
-	 * @param handler
-	 *            the successful login handler
+	 * @param signInHandler
+	 *            handles a successful submission of the form. Receives this
+	 *            form as a parameter. If <code>null</code> is received, no
+	 *            operation will be performed on successful submission.
 	 */
 	public LoginForm(
 		IMessagesContainer messages,
 		ILoginController loginController,
 		AbstractStringValidator passwordValidator,
-		LoginHandler handler)
+		Consumer<IFormComponent> signInHandler)
 	{
 		super(messages.get("LoginForm.button.sign-in"), //$NON-NLS-1$
 			FontAwesome.ARROW_CIRCLE_RIGHT,
-			null);
+			signInHandler);
 
 		this.messages = messages;
 		this.loginController = loginController;
 		this.passwordValidator = passwordValidator;
-		this.handler = handler;
 
 		initialiseEmail();
 		initialisePassword();
@@ -90,16 +75,15 @@ public class LoginForm extends AbstractFormComponent
 			null,
 			messages.get("LoginForm.label.password"), //$NON-NLS-1$
 			messages.get("LoginForm.error.password-empty"), //$NON-NLS-1$
-			new PasswordValidator(messages));
+			passwordValidator);
 	}
-
-
+	
+	
 	@Override
 	protected final Error validate()
 	{
 		final ILoginController.Status status =
-			loginController.authenticate(get(EMAIL).getValue(), get(PASSWORD)
-				.getValue());
+			loginController.authenticate(get(EMAIL), get(PASSWORD));
 
 		switch (status)
 		{
@@ -108,24 +92,25 @@ public class LoginForm extends AbstractFormComponent
 
 			case USER_DOESNT_EXIST:
 				return new Error(
-					get(EMAIL),
+					EMAIL,
 					messages.get("LoginForm.error.user-doesnt-exist")); //$NON-NLS-1$
 
 			case AUTHENTICATION_FAILURE:
 				return new Error(
-					get(PASSWORD),
+					PASSWORD,
 					messages.get("LoginForm.error.password-incorrect"));//$NON-NLS-1$
 				
 			case FAILURE:
-				return new Error(null, messages.get("LoginForm.error.unknown")); //$NON-NLS-1$
+				return new Error(null, messages.get("LoginForm.error.unknown"), //$NON-NLS-1$
+					true);
 
 			default:
 				throw new RuntimeException("Unknown status: " + status); //$NON-NLS-1$
 		}
 	}
-
-
-
+	
+	
+	
 	/** The email field's identifier. */
 	private static final String EMAIL = "email"; //$NON-NLS-1$
 
@@ -134,17 +119,13 @@ public class LoginForm extends AbstractFormComponent
 
 	/** The displayed messages. */
 	IMessagesContainer messages;
-
+	
 	/** The user's authenticator. */
 	ILoginController loginController;
 	
 	/** The user's password validator. */
 	AbstractStringValidator passwordValidator;
 	
-	/** The user's authenticator. */
-	LoginHandler handler;
-
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
 }

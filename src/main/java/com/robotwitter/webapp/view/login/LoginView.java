@@ -62,6 +62,20 @@ public class LoginView extends AbstractView
 	}
 	
 	
+	@Override
+	public final boolean isSignedInProhibited()
+	{
+		return true;
+	}
+
+
+	@Override
+	public final boolean isSignedInRequired()
+	{
+		return false;
+	}
+	
+	
 	/**
 	 * Creates a login form.
 	 *
@@ -74,11 +88,14 @@ public class LoginView extends AbstractView
 			loginController,
 			passwordValidator,
 			form -> {
+				getUserSession().sign(
+					form.get(LoginForm.EMAIL),
+					remember.getValue().booleanValue());
 				navigate(DashboardView.NAME);
 			});
 	}
-
-
+	
+	
 	/**
 	 * Creates a registration component consisting of a prompt and a button.
 	 *
@@ -100,8 +117,8 @@ public class LoginView extends AbstractView
 		layout.setStyleName(REGISTER_STYLENAME);
 		return layout;
 	}
-	
-	
+
+
 	/**
 	 * Creates a "remember me" and "forgot password" buttons in a layout.
 	 *
@@ -110,12 +127,11 @@ public class LoginView extends AbstractView
 	private AbstractLayout createRememberAndForgotLayout()
 	{
 		// Initialise remember user button
-		CheckBox remember =
+		remember =
 			new CheckBox(
 				messages.get("LoginView.checkbox.stay-signed-in"), true); //$NON-NLS-1$
 		remember.setDescription(messages
 			.get("LoginView.tooltip.stay-signed-in")); //$NON-NLS-1$
-		remember.setEnabled(false);
 
 		// Initialise forgot password button
 		Button forgot =
@@ -130,8 +146,8 @@ public class LoginView extends AbstractView
 		layout.setComponentAlignment(forgot, Alignment.TOP_RIGHT);
 		return layout;
 	}
-	
-	
+
+
 	/** Initialises the password retrieval window. */
 	private void initialisePasswordRetrievalWindow()
 	{
@@ -176,19 +192,19 @@ public class LoginView extends AbstractView
 	
 	/** The CSS class name to apply to the box component. */
 	private static final String LOGIN_STYLENAME = "LoginView-box"; //$NON-NLS-1$
-	
+
 	/** The CSS class name to apply to the registration component. */
 	private static final String REGISTER_STYLENAME = "LoginView-register"; //$NON-NLS-1$
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "LoginView"; //$NON-NLS-1$
-
+	
 	/** The CSS class name to apply to the login form's title. */
 	private static final String TITLE_STYLENAME = "LoginView-title"; //$NON-NLS-1$
-
+	
 	/** The CSS class name to apply to the wrapper component. */
 	private static final String WRAPPER_STYLENAME = "LoginView-wrapper"; //$NON-NLS-1$
 	
@@ -197,11 +213,13 @@ public class LoginView extends AbstractView
 	
 	/** The password retrieval window. */
 	private PasswordRetrievalWindow passwordRetrievalWindow;
-	
+
 	/** The password's validator. */
 	private final AbstractPasswordValidator passwordValidator;
-	
+
 	/** The password retrieval view's controller. */
 	private final IPasswordRetrievalController retrievalController;
 	
+	/** The "Stay signed in" checkbox. */
+	CheckBox remember;
 }

@@ -17,7 +17,7 @@ import com.robotwitter.webapp.view.login.LoginView;
 /** Login user interface view. */
 public class DashboardView extends AbstractView
 {
-	
+
 	/**
 	 * Instantiates a new login view.
 	 *
@@ -29,20 +29,36 @@ public class DashboardView extends AbstractView
 	{
 		super(messages, messages.get("DashboardView.page.title")); //$NON-NLS-1$
 	}
-
-
+	
+	
+	@Override
+	public final boolean isSignedInProhibited()
+	{
+		return false;
+	}
+	
+	
+	@Override
+	public final boolean isSignedInRequired()
+	{
+		return true;
+	}
+	
+	
 	@Override
 	protected final void initialise()
 	{
-		setCompositionRoot(new Button(
-			"Logout", event -> navigate(LoginView.NAME))); //$NON-NLS-1$
+		setCompositionRoot(new Button("Logout", event -> {
+			getUserSession().unsign();
+			navigate(LoginView.NAME);
+		}));
 	}
 	
 	
 	
 	/** The view's name. */
 	public static final String NAME = "dashboard"; //$NON-NLS-1$
-
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

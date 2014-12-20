@@ -25,7 +25,7 @@ public class GuiceViewFactory implements ViewProvider
 {
 
 	/**
-	 * Instantiates a new view factory.
+	 * Instantiates a new views factory.
 	 *
 	 * @param views
 	 *            a mapping of all accessible views
@@ -34,9 +34,9 @@ public class GuiceViewFactory implements ViewProvider
 	 *            {@link Injector#getInstance(Class)} should return a <b>new</b>
 	 *            instance of the requested view class
 	 */
-	public GuiceViewFactory(ViewsMap views, Injector injector)
+	public GuiceViewFactory(ViewMap views, Injector injector)
 	{
-		viewInjector = injector;
+		this.injector = injector;
 		this.views = views;
 	}
 
@@ -45,7 +45,7 @@ public class GuiceViewFactory implements ViewProvider
 	public final View getView(String viewName)
 	{
 		Class<? extends View> viewClass = views.get(viewName);
-		return viewInjector.getInstance(viewClass);
+		return injector.getInstance(viewClass);
 	}
 
 
@@ -72,10 +72,10 @@ public class GuiceViewFactory implements ViewProvider
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 
-	/** A mapping of all accessible views. */
-	ViewsMap views;
-	
 	/** A Guice injector used to create the view's instances. */
 	@SuppressFBWarnings("SE_BAD_FIELD")
-	private final Injector viewInjector;
+	private final Injector injector;
+	
+	/** A mapping of all accessible views. */
+	ViewMap views;
 }

@@ -9,16 +9,21 @@ import com.robotwitter.management.IEmailPasswordRetriever;
 
 
 
-/** Simple implementation of a password retrieval controller. */
+/**
+ * Simple implementation of a password retrieval controller.
+ *
+ * @author Amir Drutin
+ */
 public class EmailPasswordRetrievalController
 	implements
 		IPasswordRetrievalController
 {
 	
 	/**
+	 * Instantiates a new email password retrieval controller.
+	 *
 	 * @param emailRetriever
-	 *            The EmailRetriever class which handles the password retrieval
-	 *            service
+	 *            the email password retriever
 	 */
 	@Inject
 	public EmailPasswordRetrievalController(
@@ -29,7 +34,7 @@ public class EmailPasswordRetrievalController
 
 
 	@Override
-	public Status retrieve(final String email)
+	public final Status retrieve(final String email)
 	{
 		return Status.SUCCESS;
 		// final EmailPasswordRetriever.ReturnStatus result =
@@ -47,5 +52,9 @@ public class EmailPasswordRetrievalController
 
 
 
+	/** Serialisation version unique ID. */
+	private static final long serialVersionUID = 1L;
+
+	/** The email password retriever. */
 	private final IEmailPasswordRetriever emailRetriever;
 }

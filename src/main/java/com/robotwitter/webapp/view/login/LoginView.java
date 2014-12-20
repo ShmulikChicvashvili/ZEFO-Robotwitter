@@ -60,15 +60,15 @@ public class LoginView extends AbstractView
 		this.retrievalController = retrievalController;
 		this.passwordValidator = passwordValidator;
 	}
-	
-	
+
+
 	@Override
 	public final boolean isSignedInProhibited()
 	{
 		return true;
 	}
-
-
+	
+	
 	@Override
 	public final boolean isSignedInRequired()
 	{
@@ -94,8 +94,8 @@ public class LoginView extends AbstractView
 				navigate(DashboardView.NAME);
 			});
 	}
-	
-	
+
+
 	/**
 	 * Creates a registration component consisting of a prompt and a button.
 	 *
@@ -189,7 +189,7 @@ public class LoginView extends AbstractView
 
 	/** The view's name. */
 	public static final String NAME = "login"; //$NON-NLS-1$
-	
+
 	/** The CSS class name to apply to the box component. */
 	private static final String LOGIN_STYLENAME = "LoginView-box"; //$NON-NLS-1$
 
@@ -198,7 +198,7 @@ public class LoginView extends AbstractView
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "LoginView"; //$NON-NLS-1$
 	
@@ -210,16 +210,16 @@ public class LoginView extends AbstractView
 	
 	/** The login view's controller. */
 	private final ILoginController loginController;
-	
+
 	/** The password retrieval window. */
 	private PasswordRetrievalWindow passwordRetrievalWindow;
 
 	/** The password's validator. */
 	private final AbstractPasswordValidator passwordValidator;
-
+	
 	/** The password retrieval view's controller. */
 	private final IPasswordRetrievalController retrievalController;
-	
+
 	/** The "Stay signed in" checkbox. */
 	CheckBox remember;
 }

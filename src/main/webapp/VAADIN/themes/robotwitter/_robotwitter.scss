@@ -16,20 +16,28 @@ $v-font-size: $robotwitter-font-size;
 
 
 /* Component Features */
-$v-border-radius: 1px;
+$v-border-radius: 0;
 $v-gradient: 0%;
 
 
 /* Miscellaneous */
 $v-app-loading-text: "Robotwitter is loading...";
 
+/* Fix valo's button link (show underline only while hovering) */
+.v-button-link
+{
+	text-decoration: none !important;
+	&:hover { text-decoration: underline !important; }
+}
+
 
 /*----------------------------------------------------------------------------*/
 @import "../valo/valo";
 /*----------------------------------------------------------------------------*/
 
-@import "internal/util/util";
-@import "internal/login/login";
+@import "internal/util";
+@import "internal/ui";
+@import "internal/view/login";
 
 /*----------------------------------------------------------------------------*/
 
@@ -38,6 +46,9 @@ $v-app-loading-text: "Robotwitter is loading...";
 {
 	@include valo;
 	
-	@include util;
-	@include login;
+	@include robotwitter-util;
+	@include robotwitter-ui;
+	
+	/* Views */
+	@include robotwitter-view-login;
 }

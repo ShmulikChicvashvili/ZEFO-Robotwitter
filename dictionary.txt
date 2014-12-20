@@ -10,3 +10,14 @@ webapp
 scss
 shebang
 mappers
+refractored
+refractoring
+guice
+injector
+nullary
+popup
+drutin
+amir
+screenname
+screennames
+vaadin

@@ -4,9 +4,9 @@ package com.robotwitter.webapp.view;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.CustomComponent;
 
 import com.robotwitter.webapp.messages.IMessagesContainer;
+import com.robotwitter.webapp.util.RobotwitterCustomComponent;
 
 
 
@@ -18,7 +18,9 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
  *
  * @author Hagai Akibayov
  */
-public abstract class AbstractView extends CustomComponent implements View
+public abstract class AbstractView extends RobotwitterCustomComponent
+implements
+View
 {
 
 	/**
@@ -31,7 +33,7 @@ public abstract class AbstractView extends CustomComponent implements View
 	 */
 	public AbstractView(IMessagesContainer messages, String title)
 	{
-		this.messages = messages;
+		super(messages);
 		this.title = title;
 	}
 	
@@ -42,15 +44,8 @@ public abstract class AbstractView extends CustomComponent implements View
 		setTitle(title);
 		initialise();
 	}
-
-
-	/** @return the current user's browsing session. */
-	public final IUserSession getUserSession()
-	{
-		return ((NavigatorUI) getUI()).getUserSession();
-	}
-
-
+	
+	
 	/**
 	 * @return <code>true</code> if the user must be signed <b>off</b> to
 	 *         navigate to this view, and <code>false</code> otherwise.
@@ -67,20 +62,8 @@ public abstract class AbstractView extends CustomComponent implements View
 
 	/** Initialises the view. */
 	protected abstract void initialise();
-
-
-	/**
-	 * Navigates to the given view name.
-	 *
-	 * @param name
-	 *            the view's name
-	 */
-	protected final void navigate(String name)
-	{
-		getUI().getNavigator().navigateTo(name);
-	}
-
-
+	
+	
 	/**
 	 * Sets the title of the view.
 	 *
@@ -99,8 +82,5 @@ public abstract class AbstractView extends CustomComponent implements View
 
 	/** The view's title. */
 	private final String title;
-	
-	/** The messages displayed by this view. */
-	protected IMessagesContainer messages;
 
 }

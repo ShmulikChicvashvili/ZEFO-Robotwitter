@@ -7,7 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinServlet;
 
-import com.robotwitter.webapp.view.NavigatorUI;
+import com.robotwitter.webapp.view.RobotwitterUI;
 
 
 
@@ -19,11 +19,11 @@ import com.robotwitter.webapp.view.NavigatorUI;
  * then becomes available widely throughout the entire application as the
  * application's HTTP request-handler.
  * <p>
- * The initial UI provided to the user is the {@link NavigatorUI}, which
+ * The initial UI provided to the user is the {@link RobotwitterUI}, which
  * manages the view navigation inside the application.
  */
 @WebServlet(value = { "/*" }, asyncSupported = true)
-@VaadinServletConfiguration(productionMode = false, ui = NavigatorUI.class)
+@VaadinServletConfiguration(productionMode = false, ui = RobotwitterUI.class)
 public class Servlet extends VaadinServlet
 {
 	/** Serialisation version unique ID. */

@@ -1,11 +1,11 @@
-@import "../common";
-@import "../../config";
+@import "../../common";
+@import "../../../config";
 /*----------------------------------------------------------------------------*/
 
+/* Size */
+$LoginView-width: 360px;		/* Defined outside mixin for use in robotwitter-keyframes */
 
 @mixin LoginView { .LoginView {
-	
-	$login-width: 360px;
 	
 	/** Fix the clipping of the shadow of the form's div. */
 	overflow: visible;
@@ -19,8 +19,8 @@
 		text-align: center;
 		
 		/* Size */
-		width: $login-width !important;
-		margin-top: $login-width / 15;		
+		width: $LoginView-width !important;
+		margin-top: $LoginView-width / 15;
 	}
 	
 	/* Robotwitter's logo */
@@ -29,14 +29,14 @@
 		content: "";
 		display: inline-block;
 		margin-bottom: 25px;
-		@include robotwitter-logo($login-width);
+		@include robotwitter-logo($LoginView-width);
 	}
 	
 	/* Title */
 	.LoginView-title
 	{
-		display: inline-block;
-		font-size: $login-width / 248px * 1em;
+		display: inline;
+		font-size: $LoginView-width / 248px * 1em;
 		font-weight: 500;
 	}
 	
@@ -46,8 +46,8 @@
 		display: inline-block;
 		
 		/* Size */
-		width: $login-width !important;
-		padding: $login-width / 12;
+		width: $LoginView-width !important;
+		padding: $LoginView-width / 12;
 		
 		/* Colour */
 		background-color: $robotwitter-neutral-color;
@@ -79,6 +79,22 @@
 		
 		/* Fix spacing. */
 		.v-spacing { width: 6px; }
+		
+		/* Fix bottom small overflow clipping */
+		margin-bottom: 10px;
 	}
+	
+	/* Animate login view to fade in */
+	position: relative;
+	@include robotwitter-animation(LoginView-show-animation 2s ease);
+	@include robotwitter-animation-fill-mode(both);
 
 } }
+	
+
+/* robotwitter-animation robotwitter-keyframes */
+@include robotwitter-keyframes(LoginView-show-animation) {
+	from { opacity: 0; }
+	to	 { opacity: 1; }
+}
+

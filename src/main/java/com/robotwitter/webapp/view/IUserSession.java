@@ -4,6 +4,8 @@ package com.robotwitter.webapp.view;
 
 import java.io.Serializable;
 
+import com.robotwitter.webapp.control.account.IAccountController;
+
 
 
 
@@ -12,17 +14,25 @@ import java.io.Serializable;
  * <p>
  * This class handles all user-related session attributes and cookies. For
  * example, calling {@link #sign}, an implementation might set a session
- * attribute and a cookie to store the currently signed in user. This
- * information can be fetched later using {@link #get}.
+ * attribute and a cookie to store the currently signed in user.
  *
  * @author Hagai Akibayov
  *
  */
 public interface IUserSession extends Serializable
 {
-	
-	/** @return the currently signed in user's email address. */
-	String get();
+
+	/**
+	 * Activates a connected Twitter account.
+	 *
+	 * @param screenname
+	 *            the Twitter account's screenname
+	 */
+	void activateTwitterAccount(String screenname);
+
+
+	/** @return the current user's account controller. */
+	IAccountController getAccountController();
 	
 	
 	/**

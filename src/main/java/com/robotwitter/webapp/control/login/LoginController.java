@@ -14,15 +14,15 @@ import com.robotwitter.database.primitives.DBUser;
 
 
 /**
- * @author AmirDrutin
+ * Simple implementation of a login controller.
+ *
+ * @author Amir Drutin
  */
-
-/** Simple implementation of a login controller. */
 public class LoginController implements ILoginController
 {
-	
+
 	@Override
-	public Status authenticate(final String email, final String password)
+	public final Status authenticate(final String email, final String password)
 	{
 		final Injector injector = Guice.createInjector(new MySQLDBUserModule());
 		final IDatabaseUsers db = injector.getInstance(MySqlDatabaseUser.class);
@@ -35,12 +35,8 @@ public class LoginController implements ILoginController
 		return Status.USER_DOESNT_EXIST;
 	}
 	
-	/**
-	 * final Notification notification = new Notification( "Login Attempt",
-	 * "With email \"" + email + "\" and password \"" + password + "\".");
-	 * //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-	 * notification.setStyleName(ValoTheme.NOTIFICATION_SUCCESS);
-	 * notification.setDelayMsec(-1); notification.show(Page.getCurrent());
-	 * return true;
-	 */
+	
+	
+	/** Serialisation version unique ID. */
+	private static final long serialVersionUID = 1L;
 }

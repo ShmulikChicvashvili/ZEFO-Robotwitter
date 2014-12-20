@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import com.robotwitter.webapp.ViewsMap;
+import com.robotwitter.webapp.MenuMap;
+import com.robotwitter.webapp.ViewMap;
 import com.robotwitter.webapp.general.General;
 
 
@@ -24,13 +25,16 @@ public class MessagesProvider implements IMessagesProvider
 	/**
 	 * Instantiates a new messages provider.
 	 *
+	 * @param menus
+	 *            a mapping of all available menus
 	 * @param views
 	 *            a mapping of all accessible views
 	 */
-	public MessagesProvider(ViewsMap views)
+	public MessagesProvider(MenuMap menus, ViewMap views)
 	{
 		containers = new HashMap<>();
 		add(General.MESSAGES);
+		menus.keySet().forEach(name -> add(name));
 		views.keySet().forEach(name -> add(name));
 	}
 

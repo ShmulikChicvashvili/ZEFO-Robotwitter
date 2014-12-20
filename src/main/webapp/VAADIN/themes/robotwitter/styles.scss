@@ -9,8 +9,8 @@
 	/* Fix button-link size. */
 	.v-button-link { padding: 0; height: auto; }
 
-	/* Fix window modality curtain (dimmed background cover) animation. */
+	/* Fix window modality curtain (dimmed background cover) robotwitter-animation. */
 	.v-window-modalitycurtain {
-		@include animation(valo-animate-in-fade 400ms 100ms backwards);
+		@include robotwitter-animation(valo-animate-in-fade 400ms 100ms backwards);
 	}
 }

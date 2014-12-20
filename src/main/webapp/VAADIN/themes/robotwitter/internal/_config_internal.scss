@@ -28,3 +28,11 @@ $robotwitter-2nd-neutral-color: hsl(hue($robotwitter-sub-color), 2%, $robotwitte
 		background-image: url("../img/robotwitter-logo-dark.png");
 	}
 }
+
+
+@mixin robotwitter-icon($height) {
+	width: 124 / 100 * $height;
+	height: $height;
+	background-size: contain;
+	background-image: url("../img/robotwitter-icon.png");
+}

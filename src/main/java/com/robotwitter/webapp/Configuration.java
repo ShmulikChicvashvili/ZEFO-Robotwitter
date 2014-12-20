@@ -31,24 +31,26 @@ import com.robotwitter.webapp.messages.MessagesProvider;
 @WebListener
 public class Configuration implements ServletContextListener
 {
-
+	
 	/** Instantiates a new configuration. */
 	public Configuration()
 	{
-		views = new ViewsMap();
-
+		menus = new MenuMap();
+		views = new ViewMap();
+		
 		initialiseMessagesProvider();
+		initialiseMenuFactory();
 		initialiseViewFactory();
 	}
-
-
+	
+	
 	@Override
 	public final void contextDestroyed(ServletContextEvent event)
 	{
 		// Do nothing
 	}
-
-
+	
+	
 	@Override
 	public final void contextInitialized(ServletContextEvent event)
 	{
@@ -56,47 +58,65 @@ public class Configuration implements ServletContextListener
 		// set a global context attribute. The reason is that the servlet
 		// creates new UIs using only the nullary constructor, which means
 		// dependencies cannot be injected.
-
+		
 		final ServletContext context = event.getServletContext();
+		context.setAttribute(MENU_FACTORY, menuFactory);
 		context.setAttribute(VIEW_FACTORY, viewFactory);
 	}
-
-
+	
+	
+	/** Initialises the menu factory. */
+	private void initialiseMenuFactory()
+	{
+		final MenuModule module = new MenuModule(menus, messagesProvider);
+		final Injector injector = Guice.createInjector(module);
+		menuFactory = new GuiceMenuFactory(menus, injector);
+	}
+	
+	
 	/** Initialises the messages provider. */
 	private void initialiseMessagesProvider()
 	{
-		messagesProvider = new MessagesProvider(views);
+		messagesProvider = new MessagesProvider(menus, views);
 	}
-
-
+	
+	
 	/** Initialises the view factory. */
 	private void initialiseViewFactory()
 	{
-		final ViewsModule viewsModule =
-			new ViewsModule(views, messagesProvider);
-
+		final ViewModule module = new ViewModule(views, messagesProvider);
+		
 		final Injector injector =
 			Guice.createInjector(
-				viewsModule,
+				module,
 				new GmailSenderModule(),
 				new EmailPasswordRetrieverModule(),
 				new RetrievalMailBuilderModule(),
 				new MySQLDBUserModule());
-
+		
 		viewFactory = new GuiceViewFactory(views, injector);
 	}
-
-
-
+	
+	
+	
+	/** The menu factory attribute's name. */
+	public static final String MENU_FACTORY = "MenuFactory"; //$NON-NLS-1$
+	
 	/** The view factory attribute's name. */
 	public static final String VIEW_FACTORY = "ViewFactory"; //$NON-NLS-1$
-
-	/** A mapping of all accessible views. */
-	ViewsMap views;
-
+	
+	/** The menu factory, used for creation of menus during a client session. */
+	GuiceMenuFactory menuFactory;
+	
+	/** A mapping of all available menus. */
+	MenuMap menus;
+	
 	/** Provides messages containers for the views. */
 	MessagesProvider messagesProvider;
-
+	
 	/** The view factory, used for creation of views during a client session. */
 	GuiceViewFactory viewFactory;
+	
+	/** A mapping of all accessible views. */
+	ViewMap views;
 }

@@ -23,18 +23,18 @@ import com.robotwitter.webapp.util.AbstractPasswordValidator;
  *
  * @author Itay Khazon
  */
-public class ViewsModule extends AbstractModule
+public class ViewModule extends AbstractModule
 {
 	
 	/**
-	 * Instantiates a new views module.
+	 * Instantiates a new view module.
 	 *
 	 * @param views
 	 *            a mapping of all accessible views
 	 * @param messagesProvider
 	 *            the provider of messages containers for the views
 	 */
-	public ViewsModule(ViewsMap views, IMessagesProvider messagesProvider)
+	public ViewModule(ViewMap views, IMessagesProvider messagesProvider)
 	{
 		this.views = views;
 		this.messagesProvider = messagesProvider;
@@ -45,7 +45,7 @@ public class ViewsModule extends AbstractModule
 	 * Binds an instance of {@link IMessagesContainer} to instances of a given
 	 * {@link com.vaadin.navigator.View} given their name.
 	 * <p>
-	 * The given view class must contain a named dependency for the messsages
+	 * The given view class must contain a named dependency for the messages
 	 * container with the given name. The messages provider should also be able
 	 * to provide a messages container of the same name.
 	 *
@@ -83,7 +83,7 @@ public class ViewsModule extends AbstractModule
 	
 	
 	/** A mapping of all accessible views. */
-	private final ViewsMap views;
+	private final ViewMap views;
 	
 	/** Provides messages containers for the views. */
 	IMessagesProvider messagesProvider;

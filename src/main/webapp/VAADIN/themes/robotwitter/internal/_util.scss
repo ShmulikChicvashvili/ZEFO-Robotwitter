@@ -1,9 +1,9 @@
-@import "AbstractFormComponent";
-@import "WindowWithDescription";
+@import "util/AbstractFormComponent";
+@import "util/WindowWithDescription";
 /*----------------------------------------------------------------------------*/
 
 
-@mixin util
+@mixin robotwitter-util
 {
 	@include AbstractFormComponent;
 	@include WindowWithDescription;

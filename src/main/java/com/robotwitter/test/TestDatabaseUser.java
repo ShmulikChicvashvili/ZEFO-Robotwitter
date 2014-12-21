@@ -12,6 +12,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,10 +41,38 @@ public class TestDatabaseUser
 {
 
 	/**
+	 * Generate users.
+	 *
+	 * @param num
+	 *            the num
+	 * @param emailPrefix
+	 *            the email prefix
+	 * @param passPrefix
+	 *            the pass prefix
+	 * @return the list
+	 */
+	private static List<DBUser> generateUsers(
+		int num,
+		String emailPrefix,
+		String passPrefix)
+		{
+		List<DBUser> users = new ArrayList<>();
+		for (int i = 0; i < num; ++i)
+		{
+			String email = emailPrefix + i + "@gmail.com";
+			String pass = passPrefix + i;
+			DBUser user = new DBUser(email, pass);
+			users.add(user);
+		}
+		return users;
+		}
+
+
+	/**
 	 * Before.
 	 */
 	@Before
-	public void before()
+	public final void before()
 	{
 		final Injector injector =
 			Guice.createInjector(new DatabaseTestModule());
@@ -66,7 +96,7 @@ public class TestDatabaseUser
 	 * Testing the user database table features
 	 */
 	@Test
-	public void test()
+	public final void test()
 	{
 
 		final DBUser shmulikTheMan = new DBUser("shmulikjkech@gmail.com", "sh");
@@ -89,7 +119,7 @@ public class TestDatabaseUser
 	 * Test insert.
 	 */
 	@Test
-	public void testInsertGet()
+	public final void testInsertGet()
 	{
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(null));
 		DBUser badUser = new DBUser(null, null);
@@ -125,16 +155,78 @@ public class TestDatabaseUser
 
 
 	/**
+	 * Test insert get big data.
+	 */
+	@Test
+	public final void testInsertGetBigData()
+	{
+		List<DBUser> users = generateUsers(100, "email", "pass");
+
+		for (DBUser user : users)
+		{
+			validateUserNotExists(user.getEMail());
+			assertEquals(SqlError.SUCCESS, db.insert(user));
+			validateUser(user.getEMail(), user.getPassword());
+		}
+		validateUser("email50@gmail.com", "pass50");
+
+		DBUser existingUser = new DBUser("EmaIl66@gmail.Com", "notAPassword");
+		assertEquals(SqlError.ALREADY_EXIST, db.insert(existingUser));
+		validateUser("Email66@gmail.com", "pass66");
+	}
+
+
+	/**
 	 * Test is exist.
 	 */
 	@Test
-	public void testIsExist()
+	public final void testIsExist()
 	{
 		assertFalse(db.isExists(null));
 		assertFalse(db.isExists(""));
 		assertFalse(db.isExists("asd"));
 		assertFalse(db.isExists("ASD"));
 		assertFalse(db.isExists("email@gmail.com"));
+	}
+
+
+	/**
+	 * Test update.
+	 */
+	@Test
+	public final void testUpdate()
+	{
+		assertEquals(SqlError.INVALID_PARAMS, db.update(null));
+		assertEquals(SqlError.INVALID_PARAMS, db.update(new DBUser(null, null)));
+		assertEquals(
+			SqlError.INVALID_PARAMS,
+			db.update(new DBUser("email", null)));
+		assertEquals(
+			SqlError.INVALID_PARAMS,
+			db.update(new DBUser(null, "pass")));
+
+		List<DBUser> users = generateUsers(100, "email", "pass");
+		List<DBUser> updatedUsers = generateUsers(50, "email", "newPass");
+
+		for (DBUser updatedUser : updatedUsers)
+		{
+			validateUserNotExists(updatedUser.getEMail());
+			assertEquals(SqlError.DOES_NOT_EXIST, db.update(updatedUser));
+		}
+
+		for (DBUser user : users)
+		{
+			validateUserNotExists(user.getEMail());
+			assertEquals(SqlError.SUCCESS, db.insert(user));
+		}
+
+		for (DBUser updatedUser : updatedUsers)
+		{
+			assertEquals(SqlError.SUCCESS, db.update(updatedUser));
+			validateUser(updatedUser.getEMail(), updatedUser.getPassword());
+		}
+		validateUser("email10@gmail.com", "newPass10");
+		validateUser("email60@gmail.com", "pass60");
 	}
 
 

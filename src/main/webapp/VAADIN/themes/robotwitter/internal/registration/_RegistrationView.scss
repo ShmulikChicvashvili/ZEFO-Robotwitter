@@ -1,0 +1,66 @@
+@import "../common";
+@import "../../config";
+/*----------------------------------------------------------------------------*/
+
+
+@mixin RegistrationView { .RegistrationView {
+	
+	$width: 360px;
+	
+	/** Fix the clipping of the shadow of the form's div. */
+	overflow: visible;
+	
+	/* Wrapper */
+	.RegistrationView-wrapper
+	{
+		/* Centre horizontally */
+		display: block;
+		margin: auto;
+		text-align: center;
+		
+		/* Size */
+		width: $width !important;
+		margin-top: $width / 15;		
+	}
+	
+	/* Robotwitter's logo */
+	.RegistrationView-title::before
+	{
+		content: "";
+		display: inline-block;
+		margin-bottom: 25px;
+		@include robotwitter-logo($width);
+	}
+	
+	/* Title */
+	.RegistrationView-title
+	{
+		display: inline-block;
+		font-size: $width / 248px * 1em;
+		font-weight: 500;
+	}
+	
+	/* Login Content */
+	.RegistrationView-box
+	{
+		display: inline-block;
+		
+		/* Size */
+		width: $width !important;
+		padding: $width / 12;
+		
+		/* Colour */
+		background-color: $robotwitter-neutral-color;
+		
+		/* Features */
+		@include robotwitter-border-radius(4px);
+		@include robotwitter-box-shadow(0px 3px 0 rgba(0, 0, 0, 0.2));
+		
+		/* Button and fields */
+		.v-textfield, .AbstractFormComponent-submit { font-size: 1.2em; }
+	
+		/* Icons */
+		.v-icon { color: $robotwitter-sub-color; }		
+	}
+
+} }

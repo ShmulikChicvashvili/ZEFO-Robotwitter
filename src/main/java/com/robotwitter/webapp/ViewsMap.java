@@ -8,6 +8,7 @@ import com.vaadin.navigator.View;
 
 import com.robotwitter.webapp.view.dashboard.DashboardView;
 import com.robotwitter.webapp.view.login.LoginView;
+import com.robotwitter.webapp.view.registration.RegistrationView;
 
 
 
@@ -54,6 +55,7 @@ public class ViewsMap extends HashMap<String, Class<? extends View>>
 
 		// other views. Add additional views here
 		put(LoginView.NAME, LoginView.class);
+		put(RegistrationView.NAME, RegistrationView.class);
 		put(DashboardView.NAME, DashboardView.class);
 	}
 	

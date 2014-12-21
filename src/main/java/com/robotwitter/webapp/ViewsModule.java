@@ -9,6 +9,8 @@ import com.robotwitter.webapp.control.login.EmailPasswordRetrievalController;
 import com.robotwitter.webapp.control.login.ILoginController;
 import com.robotwitter.webapp.control.login.IPasswordRetrievalController;
 import com.robotwitter.webapp.control.login.LoginController;
+import com.robotwitter.webapp.control.registration.IRegistrationController;
+import com.robotwitter.webapp.control.registration.RegistrationController;
 import com.robotwitter.webapp.general.General;
 import com.robotwitter.webapp.general.PasswordValidator;
 import com.robotwitter.webapp.messages.IMessagesContainer;
@@ -73,11 +75,13 @@ public class ViewsModule extends AbstractModule
 		// Bind all non-generic dependencies
 		bind(IPasswordRetrievalController.class).to(
 			EmailPasswordRetrievalController.class);
-		bind(ILoginController.class).to(LoginController.class);
-		
 		bind(AbstractPasswordValidator.class)
 		.to(PasswordValidator.class)
 		.asEagerSingleton();
+		
+		// Bind controllers
+		bind(ILoginController.class).to(LoginController.class);
+		bind(IRegistrationController.class).to(RegistrationController.class);
 	}
 	
 	

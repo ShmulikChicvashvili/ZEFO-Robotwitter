@@ -30,6 +30,7 @@ $v-app-loading-text: "Robotwitter is loading...";
 
 @import "internal/util/util";
 @import "internal/login/login";
+@import "internal/registration/registration";
 
 /*----------------------------------------------------------------------------*/
 
@@ -40,4 +41,5 @@ $v-app-loading-text: "Robotwitter is loading...";
 	
 	@include util;
 	@include login;
+	@include registration;
 }

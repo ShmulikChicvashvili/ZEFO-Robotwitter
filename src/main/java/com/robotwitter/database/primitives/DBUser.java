@@ -34,7 +34,7 @@ public class DBUser extends DatabaseType
 		if (obj != null)
 		{
 			final DBUser u = (DBUser) obj;
-			return eMail.equals(u.getEMail())
+			return eMail.toLowerCase().equals(u.getEMail().toLowerCase())
 				&& password.equals(u.getPassword());
 		}
 		return false;

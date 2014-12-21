@@ -125,7 +125,9 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	@Override
 	public final SqlError insert(DBUser user)
 	{
-		if (user == null) { return SqlError.INVALID_PARAMS; }
+		if (user == null
+			|| user.getEMail() == null
+			|| user.getPassword() == null) { return SqlError.INVALID_PARAMS; }
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			@SuppressWarnings("nls")
@@ -188,8 +190,8 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 		}
 		return $;
 	}
-
-
+	
+	
 	/**
 	 * @param user
 	 *            User to update
@@ -223,9 +225,9 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 		
 		return SqlError.SUCCESS;
 	}
-
-
-
+	
+	
+	
 	/**
 	 * The table name.
 	 */

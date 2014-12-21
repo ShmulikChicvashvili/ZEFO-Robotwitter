@@ -13,7 +13,7 @@ import com.robotwitter.webapp.view.login.LoginView;
 
 /**
  * Listens to navigation actions (view transitions) and performs operations
- * before and/or after the transition toke place.
+ * before and/or after the transition took place.
  * <p>
  * E.g., this class will deny transitions to certain pages when the user is not
  * logged in.

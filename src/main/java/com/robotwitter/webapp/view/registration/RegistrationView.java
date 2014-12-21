@@ -5,8 +5,12 @@ package com.robotwitter.webapp.view.registration;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 import com.robotwitter.webapp.control.registration.IRegistrationController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
@@ -14,6 +18,7 @@ import com.robotwitter.webapp.util.AbstractPasswordValidator;
 import com.robotwitter.webapp.view.AbstractView;
 import com.robotwitter.webapp.view.IUserSession;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
+import com.robotwitter.webapp.view.login.LoginView;
 
 
 
@@ -65,6 +70,29 @@ public class RegistrationView extends AbstractView
 	
 	
 	/**
+	 * Creates a login component consisting of a prompt and a sign in button.
+	 *
+	 * @return the newly created login component
+	 */
+	private Component createLoginComponent()
+	{
+		// Create prompt and button
+		Label prompt =
+			new Label(messages.get("RegistrationView.label.login-prompt")); //$NON-NLS-1$
+		Button button =
+			new Button(messages.get("RegistrationView.button.sign-in")); //$NON-NLS-1$
+		button.addClickListener(event -> navigate(LoginView.NAME));
+		button.setStyleName(ValoTheme.BUTTON_LINK);
+		
+		// Initialise their layout
+		HorizontalLayout layout = new HorizontalLayout(prompt, button);
+		layout.setSpacing(true);
+		layout.setStyleName(LOGIN_STYLENAME);
+		return layout;
+	}
+	
+	
+	/**
 	 * Creates a registration form.
 	 *
 	 * @return The newly created registration form
@@ -96,8 +124,11 @@ public class RegistrationView extends AbstractView
 		box.setSpacing(true);
 		box.addStyleName(REGISTRATION_STYLENAME);
 		
+		// The login component
+		Component login = createLoginComponent();
+		
 		// Wrapper of the title and the rest of the content
-		VerticalLayout wrapper = new VerticalLayout(title, box);
+		VerticalLayout wrapper = new VerticalLayout(title, box, login);
 		wrapper.setSpacing(true);
 		wrapper.setStyleName(WRAPPER_STYLENAME);
 
@@ -118,6 +149,9 @@ public class RegistrationView extends AbstractView
 
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "RegistrationView"; //$NON-NLS-1$
+
+	/** The CSS class name to apply to the registration component. */
+	private static final String LOGIN_STYLENAME = "RegistrationView-login"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to the registration form's title. */
 	private static final String TITLE_STYLENAME = "RegistrationView-title"; //$NON-NLS-1$

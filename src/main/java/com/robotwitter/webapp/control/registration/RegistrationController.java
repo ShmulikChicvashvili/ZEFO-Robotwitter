@@ -5,7 +5,7 @@ package com.robotwitter.webapp.control.registration;
 import com.google.inject.Inject;
 
 import com.robotwitter.database.interfaces.IDatabaseUsers;
-import com.robotwitter.database.interfaces.returnValues.InsertError;
+import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBUser;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -37,8 +37,8 @@ public class RegistrationController implements IRegistrationController
 	@Override
 	public final Status register(String email, String password)
 	{
-		DBUser user = new DBUser(email, password);
-		InsertError err = dbUsers.insert(user);
+		final DBUser user = new DBUser(email, password);
+		final SqlError err = dbUsers.insert(user);
 
 		switch (err)
 		{

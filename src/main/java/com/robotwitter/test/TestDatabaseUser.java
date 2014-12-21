@@ -100,6 +100,8 @@ public class TestDatabaseUser
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(badUser));
 		
 		assertEquals(null, db.get(null));
+		assertEquals(null, db.get(""));
+		assertEquals(null, db.get("email@gmail.com"));
 		
 		String okMail = "ok@gmail.com";
 		String pass = "pass";
@@ -116,7 +118,7 @@ public class TestDatabaseUser
 		okUser.setPassword("different");
 		assertEquals(SqlError.ALREADY_EXIST, db.insert(okUser));
 		validateUser(okMail, pass);
-
+		
 		DBUser bigOkUser = new DBUser(okMail.toUpperCase(), "bla");
 		assertEquals(SqlError.ALREADY_EXIST, db.insert(bigOkUser));
 	}
@@ -157,7 +159,8 @@ public class TestDatabaseUser
 	/**
 	 * Validate user not exists.
 	 *
-	 * @param email the email
+	 * @param email
+	 *            the email
 	 */
 	private void validateUserNotExists(String email)
 	{

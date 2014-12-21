@@ -42,11 +42,15 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		if (obj != null)
 		{
-			final DBTwitterAccount twitterAccount = (DBTwitterAccount) obj;
-			return getEMail() == twitterAccount.getEMail()
-				&& getToken() == twitterAccount.getToken()
-				&& getPrivateToken() == twitterAccount.getPrivateToken()
-				&& getUserId() == twitterAccount.getUserId();
+			if (obj instanceof DBTwitterAccount)
+			{
+				final DBTwitterAccount twitterAccount = (DBTwitterAccount) obj;
+				return getEMail().equals(twitterAccount.getEMail())
+					&& getToken().equals(twitterAccount.getToken())
+					&& getPrivateToken().equals(
+						twitterAccount.getPrivateToken())
+					&& getUserId().equals(twitterAccount.getUserId());
+			}
 		}
 		return false;
 	}

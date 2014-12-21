@@ -18,6 +18,8 @@ import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 
 
 
@@ -27,11 +29,12 @@ import com.robotwitter.database.primitives.DBTwitterAccount;
  * @author Shmulik and Eyal
  *
  */
+@SuppressWarnings("nls")
 public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
-	implements
-		IDatabaseTwitterAccounts
+implements
+IDatabaseTwitterAccounts
 {
-
+	
 	/**
 	 * @author Shmulik An enum for the columns of the table.
 	 */
@@ -54,10 +57,12 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 		 */
 		PRIVATE_TOKEN
 	}
-
-
-
+	
+	
+	
 	/**
+	 * Instantiates a new my sql database twitter accounts.
+	 *
 	 * @param conEstablisher
 	 *            The connection handler
 	 * @throws SQLException
@@ -71,14 +76,16 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			Statement statement = (Statement) con.createStatement())
-		{
+			{
+			@SuppressFBWarnings("DM_CONVERT_CASE")
 			final String statementCreate =
-				String.format("CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$
-					+ "`%s` BIGINT NOT NULL," //$NON-NLS-1$
-					+ "`%s` VARCHAR(255) NOT NULL," //$NON-NLS-1$
-					+ "`%s` VARCHAR(255) NOT NULL," //$NON-NLS-1$
-					+ "`%s` VARCHAR(255) NOT NULL," //$NON-NLS-1$
-					+ "PRIMARY KEY (`%s`)) DEFAULT CHARSET=utf8;", //$NON-NLS-1$
+			String.format(
+				"CREATE TABLE IF NOT EXISTS %s ("
+					+ "`%s` BIGINT NOT NULL,"
+					+ "`%s` VARCHAR(255) NOT NULL,"
+					+ "`%s` VARCHAR(255) NOT NULL,"
+					+ "`%s` VARCHAR(255) NOT NULL,"
+					+ "PRIMARY KEY (`%s`)) DEFAULT CHARSET=utf8;",
 					table,
 					Columns.USER_ID.toString().toLowerCase(),
 					Columns.EMAIL.toString().toLowerCase(),
@@ -86,17 +93,18 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 					Columns.PRIVATE_TOKEN.toString().toLowerCase(),
 					Columns.USER_ID.toString().toLowerCase());
 			statement.execute(statementCreate);
-		}
+			}
 	}
-
-
-	@SuppressWarnings("nls")
-	public SqlError delete(Long userID)
+	
+	
+	@SuppressWarnings("boxing")
+	@Override
+	public final SqlError delete(Long userID)
 	{
 		if (userID == null) { return SqlError.INVALID_PARAMS; }
-
+		
 		if (!isExists(userID)) { return SqlError.DOES_NOT_EXIST; }
-
+		
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			PreparedStatement preparedStatement =
@@ -106,23 +114,23 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 					+ " WHERE "
 					+ Columns.USER_ID.toString().toLowerCase()
 					+ "=?;"))
-		{
+					{
 			preparedStatement.setLong(1, userID);
 			preparedStatement.executeUpdate();
-		} catch (final SQLException e)
+					} catch (final SQLException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 		}
 		
 		return SqlError.SUCCESS;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#get(java.lang.String) */
 	@Override
-	@SuppressWarnings({ "boxing", "nls" })
+	@SuppressWarnings("boxing")
 	public final ArrayList<DBTwitterAccount> get(String eMail)
 	{
 		if (eMail == null) { return null; }
@@ -136,7 +144,7 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 					+ " WHERE "
 					+ Columns.EMAIL.toString().toLowerCase()
 					+ "=?;"))
-		{
+					{
 			preparedStatement.setString(1, eMail);
 			resultSet = preparedStatement.executeQuery();
 			$ = new ArrayList<>();
@@ -147,28 +155,28 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 						resultSet.getString(Columns.EMAIL
 							.toString()
 							.toLowerCase()),
-						resultSet.getString(Columns.TOKEN
-							.toString()
-							.toLowerCase()),
-						resultSet.getString(Columns.PRIVATE_TOKEN
-							.toString()
-							.toLowerCase()),
-						resultSet.getLong(Columns.USER_ID
-							.toString()
-							.toLowerCase()));
+							resultSet.getString(Columns.TOKEN
+								.toString()
+								.toLowerCase()),
+								resultSet.getString(Columns.PRIVATE_TOKEN
+									.toString()
+									.toLowerCase()),
+									resultSet.getLong(Columns.USER_ID
+										.toString()
+										.toLowerCase()));
 				$.add(twitterAccount);
 			}
 			resultSet.close();
-		} catch (final Exception e)
+					} catch (final Exception e)
 		{
-			// TODO understand what the hell we should do?!
-			e.printStackTrace();
+						// TODO understand what the hell we should do?!
+						e.printStackTrace();
 		}
 		if ($ == null || $.isEmpty()) { return null; }
 		return $;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#insert(com.Robotwitter
 	 * .DatabasePrimitives.DatabaseType) */
@@ -176,37 +184,41 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 	@SuppressWarnings("boxing")
 	public final SqlError insert(final DBTwitterAccount twitterAccount)
 	{
-		if (twitterAccount == null) { return SqlError.INVALID_PARAMS; }
+		if (twitterAccount == null
+			|| twitterAccount.getUserId() == null
+			|| twitterAccount.getEMail() == null
+			|| twitterAccount.getToken() == null
+			|| twitterAccount.getPrivateToken() == null) { return SqlError.INVALID_PARAMS; }
 		try (
 			Connection con = connectionEstablisher.getConnection();
-
+			
 			PreparedStatement preparedStatement =
-				(PreparedStatement) con.prepareStatement("INSERT INTO " //$NON-NLS-1$
+				(PreparedStatement) con.prepareStatement("INSERT INTO "
 					+ table
-					+ " (" //$NON-NLS-1$
+					+ " ("
 					+ Columns.USER_ID.toString().toLowerCase()
-					+ "," //$NON-NLS-1$
+					+ ","
 					+ Columns.EMAIL.toString().toLowerCase()
-					+ "," //$NON-NLS-1$
+					+ ","
 					+ Columns.TOKEN.toString().toLowerCase()
-					+ "," //$NON-NLS-1$
+					+ ","
 					+ Columns.PRIVATE_TOKEN.toString().toLowerCase()
-					+ ") VALUES ( ?, ?, ?, ? );")) //$NON-NLS-1$
-		{
+					+ ") VALUES ( ?, ?, ?, ? );"))
+					{
 			preparedStatement.setLong(1, twitterAccount.getUserId());
 			preparedStatement.setString(2, twitterAccount.getEMail());
 			preparedStatement.setString(3, twitterAccount.getToken());
 			preparedStatement.setString(4, twitterAccount.getPrivateToken());
 			preparedStatement.executeUpdate();
-		} catch (final SQLException e)
+					} catch (final SQLException e)
 		{
-			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
-			e.printStackTrace();
+						if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
+						e.printStackTrace();
 		}
 		return SqlError.SUCCESS;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#isExists(java.lang.String) */
 	@Override
@@ -224,23 +236,25 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 					+ " WHERE "
 					+ Columns.USER_ID.toString().toLowerCase()
 					+ "=?;"))
-		{
+					{
 			preparedStatement.setLong(1, userId);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.first())
 			{
 				$ = true;
 			}
-		} catch (final Exception e)
+					} catch (final Exception e)
 		{
-			// TODO understand what the hell we should do?!
-			e.printStackTrace();
+						// TODO understand what the hell we should do?!
+						e.printStackTrace();
 		}
 		return $;
 	}
 	
 	
-	public SqlError update(DBTwitterAccount twitterAccount)
+	@SuppressWarnings("boxing")
+	@Override
+	public final SqlError update(DBTwitterAccount twitterAccount)
 	{
 		if (twitterAccount == null
 			|| twitterAccount.getUserId() == null
@@ -254,22 +268,22 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 			Connection con = connectionEstablisher.getConnection();
 			@SuppressWarnings("nls")
 			PreparedStatement preparedStatement =
-				(PreparedStatement) con.prepareStatement(String.format(
-					"UPDATE %s SET %s = ?, %s = ?, %s = ? WHERE %s = ?",
-					table,
-					Columns.USER_ID.toString().toLowerCase(),
-					Columns.EMAIL.toString().toLowerCase(),
-					Columns.TOKEN.toString().toLowerCase(),
-					Columns.PRIVATE_TOKEN.toString().toLowerCase())))
-		{
+			(PreparedStatement) con.prepareStatement(String.format(
+				"UPDATE %s SET %s = ?, %s = ?, %s = ? WHERE %s = ?",
+				table,
+				Columns.EMAIL.toString().toLowerCase(),
+				Columns.PRIVATE_TOKEN.toString().toLowerCase(),
+				Columns.TOKEN.toString().toLowerCase(),
+				Columns.USER_ID.toString().toLowerCase())))
+				{
 			preparedStatement.setString(1, twitterAccount.getEMail());
 			preparedStatement.setString(2, twitterAccount.getToken());
 			preparedStatement.setString(3, twitterAccount.getPrivateToken());
 			preparedStatement.setLong(4, twitterAccount.getUserId());
 			preparedStatement.executeUpdate();
-		} catch (final SQLException e)
+				} catch (final SQLException e)
 		{
-			e.printStackTrace();
+					e.printStackTrace();
 		}
 		
 		return SqlError.SUCCESS;
@@ -277,10 +291,7 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 	
 	
 	
-	/**
-	 * The table's name
-	 */
-	@SuppressWarnings("nls")
-	final private String table = schema + "." + "`user_twitter_accounts`"; //$NON-NLS-1$ //$NON-NLS-2$
-
+	/** The table's name. */
+	private final String table = schema + "." + "`user_twitter_accounts`";
+	
 }

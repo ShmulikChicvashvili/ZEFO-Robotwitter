@@ -33,8 +33,8 @@ public class DBTwitterAccount extends DatabaseType
 		this.privateToken = privateToken;
 		this.userId = userId;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.DatabasePrimitives.DatabaseType#equals(java.lang.Object) */
 	@Override
@@ -45,17 +45,18 @@ public class DBTwitterAccount extends DatabaseType
 			if (obj instanceof DBTwitterAccount)
 			{
 				final DBTwitterAccount twitterAccount = (DBTwitterAccount) obj;
-				return getEMail().equals(twitterAccount.getEMail())
+				return getEMail().toLowerCase().equals(
+					twitterAccount.getEMail().toLowerCase())
 					&& getToken().equals(twitterAccount.getToken())
 					&& getPrivateToken().equals(
 						twitterAccount.getPrivateToken())
-					&& getUserId().equals(twitterAccount.getUserId());
+						&& getUserId().equals(twitterAccount.getUserId());
 			}
 		}
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * @return the privateToken
 	 */
@@ -63,8 +64,8 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		return privateToken;
 	}
-	
-	
+
+
 	/**
 	 * @return the token
 	 */
@@ -126,19 +127,19 @@ public class DBTwitterAccount extends DatabaseType
 			+ " Private Token: "
 			+ getPrivateToken();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Argument given by twitter system
 	 */
 	String token;
-	
+
 	/**
 	 * Argument given by twitter system
 	 */
 	String privateToken;
-	
+
 	/**
 	 * The user id
 	 */

@@ -5,6 +5,7 @@ package com.robotwitter.webapp.view;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewChangeListener;
 
+import com.robotwitter.webapp.view.connect_twitter.ConnectTwitterView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
 import com.robotwitter.webapp.view.login.LoginView;
 
@@ -46,6 +47,15 @@ class NavigationListener implements ViewChangeListener
 		if (view.isSignedInProhibited() && userSession.isSigned())
 		{
 			navigator.navigateTo(DashboardView.NAME);
+			return false;
+		}
+		
+		// If the user is signed in but has no connected Twitter accounts
+		if (userSession.isSigned()
+			&& userSession.getAccountController().getActiveTwitterAccount() == null)
+		{
+			if (view instanceof ConnectTwitterView) { return true; }
+			navigator.navigateTo(ConnectTwitterView.NAME);
 			return false;
 		}
 		

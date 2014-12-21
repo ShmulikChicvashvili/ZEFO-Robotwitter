@@ -21,7 +21,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public class PasswordRetrievalWindow extends WindowWithDescription
 {
-	
+
 	/**
 	 * Initialises a new password retrieval window.
 	 *
@@ -35,12 +35,12 @@ public class PasswordRetrievalWindow extends WindowWithDescription
 		IPasswordRetrievalController controller)
 	{
 		this.messages = messages;
-		
-		// Set window properties
-		setCaption(messages.get("PasswordRetrievalWindow.caption")); //$NON-NLS-1$
-		setDescription(messages.get("PasswordRetrievalWindow.instructions")); //$NON-NLS-1$
-		setIcon(FontAwesome.ENVELOPE);
 
+		// Set window properties
+		setCaption(messages.get("PasswordRetrievalWindow.caption")); 
+		setDescription(messages.get("PasswordRetrievalWindow.instructions")); 
+		setIcon(FontAwesome.ENVELOPE);
+		
 		// Initialise the form
 		PasswordRetrievalForm retrievalForm =
 			new PasswordRetrievalForm(
@@ -48,13 +48,13 @@ public class PasswordRetrievalWindow extends WindowWithDescription
 				controller,
 				this::handleSuccessfulRetrieval);
 		setContent(retrievalForm);
-
+		
 		// Set CSS styles
 		retrievalForm.addStyleName(FORM_STYLENAME);
 		addStyleName(STYLENAME);
 	}
-	
-	
+
+
 	/**
 	 * Handles a successful attempt at a password retrieval.
 	 *
@@ -65,32 +65,32 @@ public class PasswordRetrievalWindow extends WindowWithDescription
 	private void handleSuccessfulRetrieval(IFormComponent form)
 	{
 		// Create description
-		String desc = messages.get("PasswordRetrievalWindow.notify.sent-to"); //$NON-NLS-1$
-		desc += " <b>" + form.get(PasswordRetrievalForm.EMAIL) + "</b>. "; //$NON-NLS-1$ //$NON-NLS-2$
-		desc += messages.get("PasswordRetrievalWindow.notify.check-spam"); //$NON-NLS-1$
-
+		String desc = messages.get("PasswordRetrievalWindow.notify.sent-to"); 
+		desc += " <b>" + form.get(PasswordRetrievalForm.EMAIL) + "</b>. ";  
+		desc += messages.get("PasswordRetrievalWindow.notify.check-spam"); 
+		
 		// Set the window's content
-		setCaption(messages.get("PasswordRetrievalWindow.notify.caption")); //$NON-NLS-1$
+		setCaption(messages.get("PasswordRetrievalWindow.notify.caption")); 
 		setDescription(desc);
 		setIcon(FontAwesome.CHECK_CIRCLE);
 		removeContent();
-
+		
 		// Clicking anywhere will close the window
 		addClickListener(event -> close());
 	}
-
-
-
-	/** The CSS class name to apply to the password retrieval form. */
-	private static final String FORM_STYLENAME = "PasswordRetrievalWindow-form"; //$NON-NLS-1$
 	
+	
+	
+	/** The CSS class name to apply to the password retrieval form. */
+	private static final String FORM_STYLENAME = "PasswordRetrievalWindow-form"; 
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
-	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "PasswordRetrievalWindow"; //$NON-NLS-1$
 	
+	/** The CSS class name to apply to this component. */
+	private static final String STYLENAME = "PasswordRetrievalWindow"; 
+
 	/** The messages displayed by this view. */
 	protected IMessagesContainer messages;
-	
+
 }

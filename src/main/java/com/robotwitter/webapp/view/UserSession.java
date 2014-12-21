@@ -45,7 +45,7 @@ public class UserSession implements IUserSession
 		
 		// Check if the user is remembered (using a cookie)
 		Cookie cookie = Cookies.get(EMAIL_COOKIE);
-		if (cookie != null && !"".equals(cookie.getValue())) //$NON-NLS-1$
+		if (cookie != null && !"".equals(cookie.getValue()))
 		{
 			// If the user chose to be remembered, sign the user in again.
 			// this will also refresh the cookie's duration.
@@ -55,10 +55,10 @@ public class UserSession implements IUserSession
 
 
 	@Override
-	public final void activateTwitterAccount(String screenname)
+	public final void activateTwitterAccount(long id)
 	{
 		// Attempt to activate
-		Status status = accountController.activateTwitterAccount(screenname);
+		Status status = accountController.activateTwitterAccount(id);
 		if (status != Status.SUCCESS)
 		{
 			// If the given Twitter account doesn't exist, activate a random one
@@ -103,7 +103,15 @@ public class UserSession implements IUserSession
 		Cookie cookie = Cookies.get(ACTIVE_TWITTER_COOKIE);
 		if (cookie != null)
 		{
-			activateTwitterAccount(cookie.getValue());
+			long id = 0;
+			try
+			{
+				id = Long.parseLong(cookie.getValue());
+			} catch (NumberFormatException e)
+			{
+				activateRandomTwitterAccount();
+			}
+			activateTwitterAccount(id);
 		} else
 		{
 			activateRandomTwitterAccount();
@@ -136,7 +144,7 @@ public class UserSession implements IUserSession
 			accountController.activateTwitterAccount(accountController
 				.getTwitterAccounts()
 				.iterator()
-				.next().screenname);
+				.next().id);
 
 			// Remember the active account with a cookie
 			rememberActiveTwitterAccount();
@@ -152,7 +160,7 @@ public class UserSession implements IUserSession
 		{
 			Cookies.set(
 				ACTIVE_TWITTER_COOKIE,
-				account.screenname,
+				String.valueOf(account.id),
 				REMEMBER_ACTIVE_TWITTER_DURATION);
 		}
 	}
@@ -165,15 +173,15 @@ public class UserSession implements IUserSession
 	 * Contains the user's email address (as {@link String}), or
 	 * <code>null</code> if the user is not signed in.
 	 */
-	private static final String EMAIL_ATTRIBUTE = "UserSession.email"; //$NON-NLS-1$
+	private static final String EMAIL_ATTRIBUTE = "UserSession.email";
 
 	/** The signed in user email address cookie. */
-	private static final String EMAIL_COOKIE = "UserSession.email"; //$NON-NLS-1$
+	private static final String EMAIL_COOKIE = "UserSession.email";
 
 	/** The active Twitter account cookie. */
 	private static final String ACTIVE_TWITTER_COOKIE =
-		"UserSession.active-twitter-account"; //$NON-NLS-1$
-	
+		"UserSession.active-twitter-account";
+
 	/** The default maximum cookie age (time till expiration). */
 	private static final int COOKIE_MAX_AGE = 3600 * 24 * 30; // 30 days
 	

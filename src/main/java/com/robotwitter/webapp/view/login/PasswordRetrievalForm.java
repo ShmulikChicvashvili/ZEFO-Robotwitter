@@ -40,7 +40,7 @@ public class PasswordRetrievalForm extends AbstractFormComponent
 		IPasswordRetrievalController retrievalController,
 		Consumer<IFormComponent> confirmHandler)
 	{
-		super(messages.get("PasswordRetrievalForm.button.confirm"), //$NON-NLS-1$
+		super(messages.get("PasswordRetrievalForm.button.confirm"), 
 			null,
 			confirmHandler);
 
@@ -54,10 +54,10 @@ public class PasswordRetrievalForm extends AbstractFormComponent
 	/** Initialises the email address field. */
 	private void initialiseEmail()
 	{
-		addEmailField(EMAIL, messages.get("PasswordRetrievalForm.label.email"), //$NON-NLS-1$
+		addEmailField(EMAIL, messages.get("PasswordRetrievalForm.label.email"), 
 			null,
-			messages.get("PasswordRetrievalForm.error.email-empty"), //$NON-NLS-1$
-			messages.get("PasswordRetrievalForm.error.email-invalid")); //$NON-NLS-1$
+			messages.get("PasswordRetrievalForm.error.email-empty"), 
+			messages.get("PasswordRetrievalForm.error.email-invalid")); 
 	}
 	
 	
@@ -75,22 +75,22 @@ public class PasswordRetrievalForm extends AbstractFormComponent
 				return new Error(
 					EMAIL,
 					messages
-						.get("PasswordRetrievalForm.error.user-doesnt-exist")); //$NON-NLS-1$
+						.get("PasswordRetrievalForm.error.user-doesnt-exist")); 
 
 			case FAILURE:
 				return new Error(
 					null,
-					messages.get("PasswordRetrievalForm.error.unknown"), true); //$NON-NLS-1$
+					messages.get("PasswordRetrievalForm.error.unknown"), true); 
 
 			default:
-				throw new RuntimeException("Unknown status: " + status); //$NON-NLS-1$
+				throw new RuntimeException("Unknown status: " + status); 
 		}
 	}
 	
 	
 	
 	/** The email field's identifier. */
-	public static final String EMAIL = "email"; //$NON-NLS-1$
+	public static final String EMAIL = "email"; 
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

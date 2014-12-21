@@ -64,6 +64,12 @@
 			cursor: pointer;
 			&:hover { background: hsl(hue($robotwitter-main-color), 2%, 95%); }
 		}
+		
+		/* Account information. */
+		.v-slot-AccountInformationPopup-account-info
+		{
+			width: auto !important;
+		}
 	}
 	
 	/* Small arrow on top */

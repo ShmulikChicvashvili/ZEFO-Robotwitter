@@ -21,27 +21,27 @@ import com.robotwitter.webapp.control.account.IAccountController;
  */
 public interface IUserSession extends Serializable
 {
-
+	
 	/**
 	 * Activates a connected Twitter account.
 	 *
-	 * @param screenname
-	 *            the Twitter account's screenname
+	 * @param id
+	 *            the Twitter account's ID
 	 */
-	void activateTwitterAccount(String screenname);
-
-
+	void activateTwitterAccount(long id);
+	
+	
 	/** @return the current user's account controller. */
 	IAccountController getAccountController();
-	
-	
+
+
 	/**
 	 * @return <code>true</code> if the user is signed in, <code>false</code>
 	 *         otherwise.
 	 */
 	boolean isSigned();
-
-
+	
+	
 	/**
 	 * Keeps a user signing for this session.
 	 * <p>
@@ -55,8 +55,8 @@ public interface IUserSession extends Serializable
 	 *            next session, <code>false</code> otherwise
 	 */
 	void sign(String email, boolean remember);
-	
-	
+
+
 	/** Signs out a currently signed in user. */
 	void unsign();
 }

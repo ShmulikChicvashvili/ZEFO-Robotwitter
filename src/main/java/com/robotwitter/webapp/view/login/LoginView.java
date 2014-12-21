@@ -54,7 +54,7 @@ public class LoginView extends AbstractView
 		IPasswordRetrievalController retrievalController,
 		AbstractPasswordValidator passwordValidator)
 	{
-		super(messages, messages.get("LoginView.page.title")); //$NON-NLS-1$
+		super(messages, messages.get("LoginView.page.title")); 
 		
 		this.loginController = loginController;
 		this.retrievalController = retrievalController;
@@ -105,8 +105,8 @@ public class LoginView extends AbstractView
 	{
 		// Create prompt and button
 		Label prompt =
-			new Label(messages.get("LoginView.label.register-prompt")); //$NON-NLS-1$
-		Button button = new Button(messages.get("LoginView.button.sign-up")); //$NON-NLS-1$
+			new Label(messages.get("LoginView.label.register-prompt")); 
+		Button button = new Button(messages.get("LoginView.button.sign-up")); 
 		button.addClickListener(event -> navigate(RegistrationView.NAME));
 		button.setStyleName(ValoTheme.BUTTON_LINK);
 
@@ -128,13 +128,13 @@ public class LoginView extends AbstractView
 		// Initialise remember user button
 		remember =
 			new CheckBox(
-				messages.get("LoginView.checkbox.stay-signed-in"), true); //$NON-NLS-1$
+				messages.get("LoginView.checkbox.stay-signed-in"), true); 
 		remember.setDescription(messages
-			.get("LoginView.tooltip.stay-signed-in")); //$NON-NLS-1$
+			.get("LoginView.tooltip.stay-signed-in")); 
 
 		// Initialise forgot password button
 		Button forgot =
-			new Button(messages.get("LoginView.button.forgot-password")); //$NON-NLS-1$
+			new Button(messages.get("LoginView.button.forgot-password")); 
 		forgot.addClickListener(event -> getUI().addWindow(
 			passwordRetrievalWindow));
 		forgot.setStyleName(ValoTheme.BUTTON_LINK);
@@ -161,7 +161,7 @@ public class LoginView extends AbstractView
 		initialisePasswordRetrievalWindow();
 		
 		// The title, above the content
-		Label title = new Label(messages.get("LoginView.label.title")); //$NON-NLS-1$
+		Label title = new Label(messages.get("LoginView.label.title")); 
 		title.setStyleName(TITLE_STYLENAME);
 
 		// Initialise the box (includes form, remember-me, and forgot-password)
@@ -187,25 +187,25 @@ public class LoginView extends AbstractView
 
 
 	/** The view's name. */
-	public static final String NAME = "login"; //$NON-NLS-1$
+	public static final String NAME = "login"; 
 
 	/** The CSS class name to apply to the box component. */
-	private static final String LOGIN_STYLENAME = "LoginView-box"; //$NON-NLS-1$
+	private static final String LOGIN_STYLENAME = "LoginView-box"; 
 
 	/** The CSS class name to apply to the registration component. */
-	private static final String REGISTER_STYLENAME = "LoginView-register"; //$NON-NLS-1$
+	private static final String REGISTER_STYLENAME = "LoginView-register"; 
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 	
 	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "LoginView"; //$NON-NLS-1$
+	private static final String STYLENAME = "LoginView"; 
 	
 	/** The CSS class name to apply to the login form's title. */
-	private static final String TITLE_STYLENAME = "LoginView-title"; //$NON-NLS-1$
+	private static final String TITLE_STYLENAME = "LoginView-title"; 
 	
 	/** The CSS class name to apply to the wrapper component. */
-	private static final String WRAPPER_STYLENAME = "LoginView-wrapper"; //$NON-NLS-1$
+	private static final String WRAPPER_STYLENAME = "LoginView-wrapper"; 
 	
 	/** The login view's controller. */
 	private final ILoginController loginController;

@@ -31,7 +31,7 @@ import com.robotwitter.webapp.view.login.LoginView;
  */
 public class RegistrationView extends AbstractView
 {
-
+	
 	/**
 	 * Instantiates a new registration view.
 	 *
@@ -48,8 +48,8 @@ public class RegistrationView extends AbstractView
 		IRegistrationController registrationController,
 		AbstractPasswordValidator passwordValidator)
 	{
-		super(messages, messages.get("RegistrationView.page.title")); //$NON-NLS-1$
-
+		super(messages, messages.get("RegistrationView.page.title")); 
+		
 		this.registrationController = registrationController;
 		this.passwordValidator = passwordValidator;
 	}
@@ -60,15 +60,15 @@ public class RegistrationView extends AbstractView
 	{
 		return true;
 	}
-
-
+	
+	
 	@Override
 	public final boolean isSignedInRequired()
 	{
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * Creates a login component consisting of a prompt and a sign in button.
 	 *
@@ -78,20 +78,20 @@ public class RegistrationView extends AbstractView
 	{
 		// Create prompt and button
 		Label prompt =
-			new Label(messages.get("RegistrationView.label.login-prompt")); //$NON-NLS-1$
+			new Label(messages.get("RegistrationView.label.login-prompt")); 
 		Button button =
-			new Button(messages.get("RegistrationView.button.sign-in")); //$NON-NLS-1$
+			new Button(messages.get("RegistrationView.button.sign-in")); 
 		button.addClickListener(event -> navigate(LoginView.NAME));
 		button.setStyleName(ValoTheme.BUTTON_LINK);
-		
+
 		// Initialise their layout
 		HorizontalLayout layout = new HorizontalLayout(prompt, button);
 		layout.setSpacing(true);
 		layout.setStyleName(LOGIN_STYLENAME);
 		return layout;
 	}
-	
-	
+
+
 	/**
 	 * Creates a registration form.
 	 *
@@ -110,58 +110,58 @@ public class RegistrationView extends AbstractView
 				navigate(DashboardView.NAME);
 			});
 	}
-	
-	
+
+
 	@Override
 	protected final void initialise()
 	{
 		// The title, above the content
-		Label title = new Label(messages.get("RegistrationView.label.title")); //$NON-NLS-1$
+		Label title = new Label(messages.get("RegistrationView.label.title")); 
 		title.setStyleName(TITLE_STYLENAME);
-		
+
 		// Initialise the box (includes form only)
 		VerticalLayout box = new VerticalLayout(createRegistrationForm());
 		box.setSpacing(true);
 		box.addStyleName(REGISTRATION_STYLENAME);
-		
+
 		// The login component
 		Component login = createLoginComponent();
-		
+
 		// Wrapper of the title and the rest of the content
 		VerticalLayout wrapper = new VerticalLayout(title, box, login);
 		wrapper.setSpacing(true);
 		wrapper.setStyleName(WRAPPER_STYLENAME);
-
+		
 		addStyleName(STYLENAME);
 		setCompositionRoot(wrapper);
 	}
-	
-	
-	
+
+
+
 	/** The view's name. */
-	public static final String NAME = "registration"; //$NON-NLS-1$
-	
+	public static final String NAME = "registration"; 
+
 	/** The CSS class name to apply to the box component. */
-	private static final String REGISTRATION_STYLENAME = "RegistrationView-box"; //$NON-NLS-1$
-	
+	private static final String REGISTRATION_STYLENAME = "RegistrationView-box"; 
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "RegistrationView"; //$NON-NLS-1$
-
+	private static final String STYLENAME = "RegistrationView"; 
+	
 	/** The CSS class name to apply to the registration component. */
-	private static final String LOGIN_STYLENAME = "RegistrationView-login"; //$NON-NLS-1$
-
+	private static final String LOGIN_STYLENAME = "RegistrationView-login"; 
+	
 	/** The CSS class name to apply to the registration form's title. */
-	private static final String TITLE_STYLENAME = "RegistrationView-title"; //$NON-NLS-1$
-
+	private static final String TITLE_STYLENAME = "RegistrationView-title"; 
+	
 	/** The CSS class name to apply to the wrapper component. */
-	private static final String WRAPPER_STYLENAME = "RegistrationView-wrapper"; //$NON-NLS-1$
-
+	private static final String WRAPPER_STYLENAME = "RegistrationView-wrapper"; 
+	
 	/** The registration view's controller. */
 	private final IRegistrationController registrationController;
-	
+
 	/** The password's validator. */
 	private final AbstractPasswordValidator passwordValidator;
 }

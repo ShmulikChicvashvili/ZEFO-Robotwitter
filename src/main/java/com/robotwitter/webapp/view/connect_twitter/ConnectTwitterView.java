@@ -1,5 +1,5 @@
 
-package com.robotwitter.webapp.view.dashboard;
+package com.robotwitter.webapp.view.connect_twitter;
 
 
 import com.google.inject.Inject;
@@ -14,20 +14,24 @@ import com.robotwitter.webapp.view.AbstractView;
 
 
 
-/** Dashboard view. */
-public class DashboardView extends AbstractView
+/**
+ * Connect Twitter account view.
+ * <p>
+ * Shown whenever a user is signed in but has no connected Twitter account.
+ */
+public class ConnectTwitterView extends AbstractView
 {
 
 	/**
-	 * Instantiates a new login view.
+	 * Instantiates a new connect Twitter account view.
 	 *
 	 * @param messages
 	 *            the container of messages to display
 	 */
 	@Inject
-	public DashboardView(@Named(NAME) IMessagesContainer messages)
+	public ConnectTwitterView(@Named(NAME) IMessagesContainer messages)
 	{
-		super(messages, messages.get("DashboardView.page.title"));
+		super(messages, messages.get("ConnectTwitterView.page.title"));
 	}
 
 
@@ -50,14 +54,14 @@ public class DashboardView extends AbstractView
 	{
 		VerticalLayout temp = new VerticalLayout();
 		temp.setSizeFull();
-		temp.addComponent(new Label("Nothing to do here..."));
+		temp.addComponent(new Label("CONNECT A TWITTER ACCOUNT!"));
 		setCompositionRoot(temp);
 	}
 	
 	
 	
 	/** The view's name. */
-	public static final String NAME = "dashboard";
+	public static final String NAME = "connect-twitter";
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

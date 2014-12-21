@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -42,18 +43,19 @@ public class DatabaseFollowersTest
 	@Before
 	public final void before()
 	{
-		final Injector injector = Guice.createInjector(new DatabaseTestModule());
+		final Injector injector =
+			Guice.createInjector(new DatabaseTestModule());
 
 		try (
 			Connection con =
-			injector.getInstance(MySQLConEstablisher.class).getConnection();
+				injector.getInstance(MySQLConEstablisher.class).getConnection();
 			Statement statement = (Statement) con.createStatement())
-			{
-			String dropSchema = "DROP DATABASE `test`";
-			statement.executeUpdate(dropSchema);
-			} catch (SQLException e)
 		{
-				System.out.println(e.getErrorCode());
+			final String dropSchema = "DROP DATABASE `test`";
+			statement.executeUpdate(dropSchema);
+		} catch (final SQLException e)
+		{
+			System.out.println(e.getErrorCode());
 		}
 		db = injector.getInstance(MySqlDatabaseNumFollowers.class);
 
@@ -95,9 +97,72 @@ public class DatabaseFollowersTest
 		assertEquals(0, db.get((long) 123456789).get(0).getNumFollowers());
 		assertEquals(null, db.get(null));
 	}
+	
+	
+	@SuppressWarnings("boxing")
+	@Test
+	public void testInsertGet()
+	{
+		assertEquals(SqlError.INVALID_PARAMS, db.insert(null));
+		assertEquals(null, db.get(null));
 
+		c.setTime(new Date());
+		c.set(Calendar.MILLISECOND, 0);
+		
+		DBFollowersNumber badParamaters = new DBFollowersNumber(null, null, -1);
+		
+		assertEquals(SqlError.INVALID_PARAMS, db.insert(null));
+		assertEquals(SqlError.INVALID_PARAMS, db.insert(badParamaters));
+		
+		badParamaters = new DBFollowersNumber((long) 123456, null, -1);
+		assertEquals(SqlError.INVALID_PARAMS, db.insert(badParamaters));
+		
+		badParamaters =
+			new DBFollowersNumber(null, Timestamp.from(c.toInstant()), -1);
+		assertEquals(SqlError.INVALID_PARAMS, db.insert(badParamaters));
+		
+		badParamaters = new DBFollowersNumber(null, null, 1);
+		assertEquals(SqlError.INVALID_PARAMS, db.insert(badParamaters));
 
+		final Long userID = (long) 123456;
+		final Timestamp date = Timestamp.from(c.toInstant());
+		final DBFollowersNumber goodParamaters =
+			new DBFollowersNumber(userID, date, 0);
 
+		assertEquals(SqlError.SUCCESS, db.insert(goodParamaters));
+		List<DBFollowersNumber> getResult = db.get(userID);
+		assertEquals(1, getResult.size());
+		assertEquals(true, getResult.contains(goodParamaters));
+
+		c.set(2014, 8, 12, 20, 01, 0);
+		c.set(Calendar.MILLISECOND, 0);
+		
+		final Timestamp newDate = Timestamp.from(c.toInstant());
+		goodParamaters.setDate(newDate);
+		goodParamaters.setNumFollowers(2);
+		assertEquals(SqlError.SUCCESS, db.insert(goodParamaters));
+		getResult = db.get(userID);
+		assertEquals(2, getResult.size());
+		assertEquals(true, getResult.contains(goodParamaters));
+
+		int numOfFollowers = 0;
+		for (int i = 0; i < 100; i++)
+		{
+			c.set(2014, 9 + i, 12, 20, 01, 0);
+			c.set(Calendar.MILLISECOND, 0);
+
+			numOfFollowers = i;
+			goodParamaters.setTwitterId(userID);
+			goodParamaters.setDate(Timestamp.from(c.toInstant()));
+
+			db.insert(goodParamaters);
+			getResult = db.get(userID);
+			assertEquals(true, getResult.contains(goodParamaters));
+		}
+	}
+	
+	
+	
 	Calendar c;
 
 	IDatabaseNumFollowers db;

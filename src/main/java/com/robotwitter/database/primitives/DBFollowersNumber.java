@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.database.primitives;
@@ -19,7 +19,13 @@ public class DBFollowersNumber
 	public DBFollowersNumber(Long twitterId, Timestamp date, int numFollowers)
 	{
 		this.twitterId = twitterId;
-		this.date = (Timestamp) date.clone();
+		if (date != null)
+		{
+			this.date = (Timestamp) date.clone();
+		} else
+		{
+			this.date = null;
+		}
 		this.numFollowers = numFollowers;
 	}
 	
@@ -30,7 +36,7 @@ public class DBFollowersNumber
 	public boolean equals(Object obj)
 	{
 		if (obj == null || !(obj instanceof DBFollowersNumber)) { return false; }
-		DBFollowersNumber other = (DBFollowersNumber) obj;
+		final DBFollowersNumber other = (DBFollowersNumber) obj;
 		return twitterId.equals(other.twitterId)
 			&& date.equals(other.date)
 			&& numFollowers == other.numFollowers;

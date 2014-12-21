@@ -1,20 +1,25 @@
 /**
- * 
+ *
  */
+
 package com.robotwitter.database.interfaces;
 
-import com.robotwitter.database.interfaces.returnValues.InsertError;
+
+import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBUser;
+
+
+
 
 /**
  * @author Shmulik and Eyal
  *
- * The interface for users DB
- * 
- * Created at : 12:53 AM, 2.12.14
+ *         The interface for users DB
+ *
+ *         Created at : 12:53 AM, 2.12.14
  */
 public interface IDatabaseUsers
-{	
+{
 	/**
 	 * @param eMail
 	 *            The email which you want to get is associated user
@@ -25,7 +30,7 @@ public interface IDatabaseUsers
 	
 	/**
 	 * Controls connection to DB
-	 * 
+	 *
 	 * @param user
 	 *            The user to insert
 	 *
@@ -35,7 +40,7 @@ public interface IDatabaseUsers
 	 *            contain the result of the insert action. INSERT_SUCCESS,
 	 *            INSERT_ALREADY_EXISTS, INSERT_INVALID_PARAMETERS
 	 */
-	public InsertError insert(DBUser user);
+	public SqlError insert(DBUser user);
 	
 	
 	/**
@@ -44,4 +49,13 @@ public interface IDatabaseUsers
 	 * @return If exists true else false
 	 */
 	public boolean isExists(String eMail);
+
+
+	/**
+	 * @param user
+	 *            The user to update
+	 * @return Returns the status code. It could be either SUCCESS,
+	 *         DOES_NOT_EXIST, INVALID_PARAMS
+	 */
+	public SqlError update(DBUser user);
 }

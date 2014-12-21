@@ -16,7 +16,7 @@ import com.mysql.jdbc.Statement;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
-import com.robotwitter.database.interfaces.returnValues.InsertError;
+import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBFollowersNumber;
 
 
@@ -142,9 +142,9 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 	 * #insert(com.robotwitter.database.primitives.DBFollowersNumber) */
 	@SuppressWarnings({ "boxing", "nls" })
 	@Override
-	public InsertError insert(DBFollowersNumber statistic)
+	public SqlError insert(DBFollowersNumber statistic)
 	{
-		if (statistic == null) { return InsertError.INVALID_PARAMS; }
+		if (statistic == null) { return SqlError.INVALID_PARAMS; }
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			PreparedStatement preparedStatement =
@@ -164,11 +164,11 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 			preparedStatement.executeUpdate();
 		} catch (SQLException e)
 		{
-			if (e.getErrorCode() == insertAlreadyExists) { return InsertError.ALREADY_EXIST; }
+			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
 			// TODO what to do if not this error code
 			e.printStackTrace();
 		}
-		return InsertError.SUCCESS;
+		return SqlError.SUCCESS;
 	}
 	
 	

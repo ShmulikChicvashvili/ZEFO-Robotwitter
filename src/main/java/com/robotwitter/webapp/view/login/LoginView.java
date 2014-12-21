@@ -12,7 +12,6 @@ import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -22,6 +21,7 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.AbstractPasswordValidator;
 import com.robotwitter.webapp.view.AbstractView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
+import com.robotwitter.webapp.view.registration.RegistrationView;
 
 
 
@@ -107,8 +107,7 @@ public class LoginView extends AbstractView
 		Label prompt =
 			new Label(messages.get("LoginView.label.register-prompt")); //$NON-NLS-1$
 		Button button = new Button(messages.get("LoginView.button.sign-up")); //$NON-NLS-1$
-		button.addClickListener(event -> Notification
-			.show("Navigate to registration view"));
+		button.addClickListener(event -> navigate(RegistrationView.NAME));
 		button.setStyleName(ValoTheme.BUTTON_LINK);
 
 		// Initialise their layout

@@ -28,7 +28,7 @@ import com.robotwitter.database.primitives.DBUser;
  *
  *         The database that handles registring a user and fetching a user
  */
-public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
+public class MySqlDatabaseUser extends AbstractMySqlDatabase implements IDatabaseUsers
 {
 	/**
 	 * The columns this table has.

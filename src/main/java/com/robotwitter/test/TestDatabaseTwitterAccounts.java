@@ -12,7 +12,7 @@ import org.junit.Test;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import com.robotwitter.database.MySQLDBUserModule;
+import com.robotwitter.database.MySqlDBUserModule;
 import com.robotwitter.database.MySqlDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.returnValues.SqlError;
@@ -32,7 +32,7 @@ public class TestDatabaseTwitterAccounts
 	@Test
 	public void test()
 	{
-		final Injector injector = Guice.createInjector(new MySQLDBUserModule());
+		final Injector injector = Guice.createInjector(new MySqlDBUserModule());
 		final IDatabaseTwitterAccounts db =
 			injector.getInstance(MySqlDatabaseTwitterAccounts.class);
 		final DBTwitterAccount shmulikAccount =

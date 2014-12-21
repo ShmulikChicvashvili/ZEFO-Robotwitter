@@ -28,7 +28,7 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
  * @author Eyal
  *
  */
-public final class MySqlDatabaseNumFollowers extends MySqlDatabase
+public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 	implements
 		IDatabaseNumFollowers
 {

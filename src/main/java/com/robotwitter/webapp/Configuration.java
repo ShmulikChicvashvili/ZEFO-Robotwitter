@@ -10,7 +10,7 @@ import javax.servlet.annotation.WebListener;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import com.robotwitter.database.MySQLDBUserModule;
+import com.robotwitter.database.MySqlDBUserModule;
 import com.robotwitter.management.EmailPasswordRetrieverModule;
 import com.robotwitter.management.RetrievalMailBuilderModule;
 import com.robotwitter.miscellaneous.GmailSenderModule;
@@ -92,7 +92,7 @@ public class Configuration implements ServletContextListener
 				new GmailSenderModule(),
 				new EmailPasswordRetrieverModule(),
 				new RetrievalMailBuilderModule(),
-				new MySQLDBUserModule());
+				new MySqlDBUserModule());
 		
 		viewFactory = new GuiceViewFactory(views, injector);
 	}

@@ -5,7 +5,7 @@
 package com.robotwitter.test;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class EmailPasswordRetrieverTest
 				"itaykhazon@gmail.com"); //$NON-NLS-1$
 		email.setSubject("Your Robotwitter account password"); //$NON-NLS-1$
 		email
-			.setText("Oops, forgot your password?\nDon't worry, we got you covered!\n\nYour password is: your_password123\n\nHave a pleasant day,\n\tRobotwitter."); //$NON-NLS-1$
+		.setText("Oops, forgot your password?\nDon't worry, we got you covered!\n\nYour password is: your_password123\n\nHave a pleasant day,\n\tRobotwitter."); //$NON-NLS-1$
 		
 		final GmailSession gSession =
 			new GmailSession("robotwitter.app", "robotwitter123"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -55,11 +55,10 @@ public class EmailPasswordRetrieverTest
 			new DBUser("itaykhazon@gmail.com", "your_password123");
 		Mockito.when(db.get("itaykhazon@gmail.com")).thenReturn(user);
 		
-		this.retriever =
-			new EmailPasswordRetriever("robotwitter.app@gmail.com", //$NON-NLS-1$
-				builder,
-				sender,
-				db);
+		retriever = new EmailPasswordRetriever("robotwitter.app@gmail.com", //$NON-NLS-1$
+			builder,
+			sender,
+			db);
 	}
 	
 	
@@ -68,8 +67,8 @@ public class EmailPasswordRetrieverTest
 	{
 		
 		ReturnStatus result =
-			this.retriever.retrievePasswordByMail("itaykhazon@gmail.com");
-		assertEquals(result,ReturnStatus.SUCCESS);
+			retriever.retrievePasswordByMail("itaykhazon@gmail.com");
+		assertEquals(result, ReturnStatus.SUCCESS);
 	}
 	
 	

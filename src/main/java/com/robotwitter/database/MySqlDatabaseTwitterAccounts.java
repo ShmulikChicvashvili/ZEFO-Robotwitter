@@ -27,7 +27,7 @@ import com.robotwitter.database.primitives.DBTwitterAccount;
  * @author Shmulik and Eyal
  *
  */
-public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
+public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 	implements
 		IDatabaseTwitterAccounts
 {
@@ -173,7 +173,7 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	 * com.Robotwitter.Database.IDatabase#insert(com.Robotwitter
 	 * .DatabasePrimitives.DatabaseType) */
 	@Override
-	@SuppressWarnings({ "boxing" })
+	@SuppressWarnings("boxing")
 	public final SqlError insert(final DBTwitterAccount twitterAccount)
 	{
 		if (twitterAccount == null) { return SqlError.INVALID_PARAMS; }

@@ -5,7 +5,7 @@ package com.robotwitter.database.interfaces;
 
 import java.util.ArrayList;
 
-import com.robotwitter.database.interfaces.returnValues.InsertError;
+import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 
 /**
@@ -37,7 +37,7 @@ public interface IDatabaseTwitterAccounts
 	 *            contain the result of the insert action. INSERT_SUCCESS,
 	 *            INSERT_ALREADY_EXISTS, INSERT_INVALID_PARAMETERS
 	 */
-	public InsertError insert(DBTwitterAccount twitterAccount);
+	public SqlError insert(DBTwitterAccount twitterAccount);
 	
 	
 	/**

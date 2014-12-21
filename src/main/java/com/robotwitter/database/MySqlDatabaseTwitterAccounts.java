@@ -15,7 +15,7 @@ import com.mysql.jdbc.Statement;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
-import com.robotwitter.database.interfaces.returnValues.InsertError;
+import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 
 
@@ -145,9 +145,9 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	 * .DatabasePrimitives.DatabaseType) */
 	@Override
 	@SuppressWarnings({ "boxing" })
-	public final InsertError insert(final DBTwitterAccount twitterAccount)
+	public final SqlError insert(final DBTwitterAccount twitterAccount)
 	{
-		if (twitterAccount == null) { return InsertError.INVALID_PARAMS; }
+		if (twitterAccount == null) { return SqlError.INVALID_PARAMS; }
 		try (
 			Connection con = connectionEstablisher.getConnection();
 
@@ -171,10 +171,10 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 			preparedStatement.executeUpdate();
 		} catch (final SQLException e)
 		{
-			if (e.getErrorCode() == insertAlreadyExists) { return InsertError.ALREADY_EXIST; }
+			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
 			e.printStackTrace();
 		}
-		return InsertError.SUCCESS;
+		return SqlError.SUCCESS;
 	}
 
 

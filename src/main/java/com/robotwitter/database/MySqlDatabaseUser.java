@@ -15,7 +15,7 @@ import com.mysql.jdbc.Statement;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
-import com.robotwitter.database.interfaces.returnValues.InsertError;
+import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBUser;
 
 
@@ -123,9 +123,9 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	 * Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
 	@SuppressWarnings("boxing")
 	@Override
-	public final InsertError insert(DBUser user)
+	public final SqlError insert(DBUser user)
 	{
-		if (user == null) { return InsertError.INVALID_PARAMS; }
+		if (user == null) { return SqlError.INVALID_PARAMS; }
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			@SuppressWarnings("nls")
@@ -144,11 +144,11 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 			
 		} catch (SQLException e)
 		{
-			if (e.getErrorCode() == insertAlreadyExists) { return InsertError.ALREADY_EXIST; }
+			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
 			// TODO what to do if not this error code
 			e.printStackTrace();
 		}
-		return InsertError.SUCCESS;
+		return SqlError.SUCCESS;
 	}
 	
 	

@@ -15,7 +15,7 @@ import com.google.inject.Injector;
 import com.robotwitter.database.MySQLDBUserModule;
 import com.robotwitter.database.MySqlDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
-import com.robotwitter.database.interfaces.returnValues.InsertError;
+import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 
 
@@ -45,6 +45,6 @@ public class TestDatabaseTwitterAccounts
 		{
 			db.insert(shmulikAccount);
 		}
-		assertEquals(db.insert(shmulikAccount), InsertError.ALREADY_EXIST);
+		assertEquals(db.insert(shmulikAccount), SqlError.ALREADY_EXIST);
 	}
 }

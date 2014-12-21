@@ -108,19 +108,19 @@ public class DatabaseFollowersTest
 		
 		c.setTime(new Date());
 		c.set(Calendar.MILLISECOND, 0);
-
+		
 		DBFollowersNumber badParamaters = new DBFollowersNumber(null, null, -1);
-
+		
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(null));
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(badParamaters));
-
+		
 		badParamaters = new DBFollowersNumber((long) 123456, null, -1);
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(badParamaters));
-
+		
 		badParamaters =
 			new DBFollowersNumber(null, Timestamp.from(c.toInstant()), -1);
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(badParamaters));
-
+		
 		badParamaters = new DBFollowersNumber(null, null, 1);
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(badParamaters));
 		
@@ -130,20 +130,30 @@ public class DatabaseFollowersTest
 			new DBFollowersNumber(userID, date, 0);
 		
 		assertEquals(SqlError.SUCCESS, db.insert(goodParamaters));
+		
+		assertEquals(null, db.get(null));
+		
 		List<DBFollowersNumber> getResult = db.get(userID);
 		assertEquals(1, getResult.size());
 		assertEquals(true, getResult.contains(goodParamaters));
 		
 		c.set(2014, 8, 12, 20, 01, 0);
 		c.set(Calendar.MILLISECOND, 0);
-
+		
 		final Timestamp newDate = Timestamp.from(c.toInstant());
 		goodParamaters.setDate(newDate);
 		goodParamaters.setNumFollowers(2);
 		assertEquals(SqlError.SUCCESS, db.insert(goodParamaters));
+		
+		assertEquals(null, db.get(null));
+		
 		getResult = db.get(userID);
 		assertEquals(2, getResult.size());
 		assertEquals(true, getResult.contains(goodParamaters));
+		
+		final Long userNotExist = (long) 666;
+		assertEquals(null, db.get(userNotExist));
+		assertEquals(null, db.get(null));
 		
 		int numOfFollowers = 0;
 		for (int i = 0; i < 100; i++)
@@ -156,8 +166,16 @@ public class DatabaseFollowersTest
 			goodParamaters.setDate(Timestamp.from(c.toInstant()));
 			
 			db.insert(goodParamaters);
+			
+			assertEquals(null, db.get(null));
+			
 			getResult = db.get(userID);
+
+			assertEquals(null, db.get(userNotExist));
+
 			assertEquals(true, getResult.contains(goodParamaters));
+			
+			assertEquals(null, db.get(userNotExist));
 		}
 	}
 

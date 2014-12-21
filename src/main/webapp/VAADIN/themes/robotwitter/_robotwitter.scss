@@ -35,9 +35,10 @@ $v-app-loading-text: "Robotwitter is loading...";
 @import "../valo/valo";
 /*----------------------------------------------------------------------------*/
 
-@import "internal/util/util";
-@import "internal/login/login";
-@import "internal/registration/registration";
+@import "internal/util";
+@import "internal/ui";
+@import "internal/view/login";
+@import "internal/view/registration";
 
 /*----------------------------------------------------------------------------*/
 
@@ -45,8 +46,11 @@ $v-app-loading-text: "Robotwitter is loading...";
 @mixin robotwitter
 {
 	@include valo;
-
-	@include util;
-	@include login;
-	@include registration;
+	
+	@include robotwitter-util;
+	@include robotwitter-ui;
+	
+	/* Views */
+	@include robotwitter-view-login;
+	@include robotwitter-view-registration;
 }

@@ -111,8 +111,7 @@ public class RegistrationView extends AbstractView
 	public static final String NAME = "registration"; //$NON-NLS-1$
 	
 	/** The CSS class name to apply to the box component. */
-	private static final String REGISTRATION_STYLENAME =
-		"RegistrationView	-box"; //$NON-NLS-1$
+	private static final String REGISTRATION_STYLENAME = "RegistrationView-box"; //$NON-NLS-1$
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

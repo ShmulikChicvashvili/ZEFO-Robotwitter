@@ -16,5 +16,5 @@ public class ControllerModule extends AbstractModule
 {
 	@Override
 	protected final void configure()
-	{}
+	{ /* Do nothing */}
 }

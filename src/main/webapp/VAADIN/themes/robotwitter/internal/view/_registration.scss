@@ -1,8 +1,8 @@
-@import "RegistrationView";
+@import "registration/RegistrationView";
 /*----------------------------------------------------------------------------*/
 
 
-@mixin registration
+@mixin robotwitter-view-registration
 {
 	@include RegistrationView;
 }

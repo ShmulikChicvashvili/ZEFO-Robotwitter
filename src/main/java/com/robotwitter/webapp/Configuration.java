@@ -14,8 +14,8 @@ import com.robotwitter.database.MySQLDBUserModule;
 import com.robotwitter.management.EmailPasswordRetrieverModule;
 import com.robotwitter.management.RetrievalMailBuilderModule;
 import com.robotwitter.miscellaneous.GmailSenderModule;
+import com.robotwitter.webapp.control.ControllerModule;
 import com.robotwitter.webapp.messages.MessagesProvider;
-import com.robotwitter.webapp.view.GuiceViewFactory;
 
 
 
@@ -36,9 +36,11 @@ public class Configuration implements ServletContextListener
 	/** Instantiates a new configuration. */
 	public Configuration()
 	{
+		menus = new MenuMap();
 		views = new ViewMap();
 		
 		initialiseMessagesProvider();
+		initialiseMenuFactory();
 		initialiseViewFactory();
 	}
 	
@@ -59,45 +61,62 @@ public class Configuration implements ServletContextListener
 		// dependencies cannot be injected.
 		
 		final ServletContext context = event.getServletContext();
+		context.setAttribute(MENU_FACTORY, menuFactory);
 		context.setAttribute(VIEW_FACTORY, viewFactory);
+	}
+	
+	
+	/** Initialises the menu factory. */
+	private void initialiseMenuFactory()
+	{
+		final MenuModule module = new MenuModule(menus, messagesProvider);
+		final Injector injector = Guice.createInjector(module);
+		menuFactory = new GuiceMenuFactory(menus, injector);
 	}
 	
 	
 	/** Initialises the messages provider. */
 	private void initialiseMessagesProvider()
 	{
-		messagesProvider = new MessagesProvider(views);
+		messagesProvider = new MessagesProvider(menus, views);
 	}
 	
 	
 	/** Initialises the view factory. */
 	private void initialiseViewFactory()
 	{
-		final ViewsModule viewsModule =
-			new ViewsModule(views, messagesProvider);
-		// FIXME: merge all these modules into a single module... apparently
-		// thats a good idea...
 		final Injector injector =
 			Guice.createInjector(
-				viewsModule,
+				new ViewModule(views, messagesProvider),
+				new ControllerModule(),
 				new GmailSenderModule(),
 				new EmailPasswordRetrieverModule(),
 				new RetrievalMailBuilderModule(),
 				new MySQLDBUserModule());
+		
 		viewFactory = new GuiceViewFactory(views, injector);
 	}
 	
 	
 	
+	/** The menu factory attribute's name. */
+	public static final String MENU_FACTORY = "MenuFactory"; //$NON-NLS-1$
+	
 	/** The view factory attribute's name. */
 	public static final String VIEW_FACTORY = "ViewFactory"; //$NON-NLS-1$
 	
-	/** A mapping of all accessible views. */
-	ViewMap views;
+	/** The menu factory, used for creation of menus during a client session. */
+	GuiceMenuFactory menuFactory;
+	
+	/** A mapping of all available menus. */
+	MenuMap menus;
 	
 	/** Provides messages containers for the views. */
 	MessagesProvider messagesProvider;
 	
 	/** The view factory, used for creation of views during a client session. */
 	GuiceViewFactory viewFactory;
+	
+	/** A mapping of all accessible views. */
+	ViewMap views;
 }

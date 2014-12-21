@@ -1,5 +1,5 @@
 /**
- * 
+ *
  *
  */
 
@@ -15,7 +15,7 @@ import com.mysql.jdbc.Statement;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
-import com.robotwitter.database.interfaces.returnValues.InsertError;
+import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBUser;
 
 
@@ -23,7 +23,7 @@ import com.robotwitter.database.primitives.DBUser;
 
 /**
  * Here we maintain functions over the users database.
- * 
+ *
  * @author Shmulik and Eyal
  *
  *         The database that handles registring a user and fetching a user
@@ -32,7 +32,7 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 {
 	/**
 	 * The columns this table has.
-	 * 
+	 *
 	 * @author Eyal
 	 */
 	private enum Columns
@@ -110,7 +110,7 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 						.toLowerCase()));
 			}
 			resultSet.close();
-		} catch (SQLException e)
+		} catch (final SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -123,9 +123,11 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	 * Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
 	@SuppressWarnings("boxing")
 	@Override
-	public final InsertError insert(DBUser user)
+	public final SqlError insert(DBUser user)
 	{
-		if (user == null) { return InsertError.INVALID_PARAMS; }
+		if (user == null
+			|| user.getEMail() == null
+			|| user.getPassword() == null) { return SqlError.INVALID_PARAMS; }
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			@SuppressWarnings("nls")
@@ -142,13 +144,13 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 			preparedStatement.setString(2, user.getPassword());
 			preparedStatement.executeUpdate();
 			
-		} catch (SQLException e)
+		} catch (final SQLException e)
 		{
-			if (e.getErrorCode() == insertAlreadyExists) { return InsertError.ALREADY_EXIST; }
+			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
 			// TODO what to do if not this error code
 			e.printStackTrace();
 		}
-		return InsertError.SUCCESS;
+		return SqlError.SUCCESS;
 	}
 	
 	
@@ -181,7 +183,7 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 				$ = true;
 			}
 			resultSet.close();
-		} catch (SQLException e)
+		} catch (final SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -190,9 +192,44 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	}
 	
 	
+	/**
+	 * @param user
+	 *            User to update
+	 * @return sqlError
+	 */
+	public SqlError update(DBUser user)
+	{
+		if (user == null
+			|| user.getEMail() == null
+			|| user.getPassword() == null) { return SqlError.INVALID_PARAMS; }
+		
+		if (!isExists(user.getEMail())) { return SqlError.DOES_NOT_EXIST; }
+		
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			@SuppressWarnings("nls")
+			PreparedStatement preparedStatement =
+				(PreparedStatement) con.prepareStatement(String.format(
+					"UPDATE %s SET %s = ?, %s = ?, %s = ? WHERE %s = ?",
+					table,
+					Columns.EMAIL.toString().toLowerCase(),
+					Columns.PASSWORD.toString().toLowerCase())))
+		{
+			preparedStatement.setString(1, user.getEMail());
+			preparedStatement.setString(2, user.getPassword());
+			preparedStatement.executeUpdate();
+		} catch (final SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return SqlError.SUCCESS;
+	}
+	
+	
 	
 	/**
 	 * The table name.
 	 */
-	private final String table = schema + "." + "`users`"; //$NON-NLS-1$ //$NON-NLS-2$ 
+	private final String table = schema + "." + "`users`"; //$NON-NLS-1$ //$NON-NLS-2$
 }

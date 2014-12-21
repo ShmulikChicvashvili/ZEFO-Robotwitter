@@ -4,22 +4,26 @@ package com.robotwitter.webapp.control.login;
 
 import com.google.inject.Inject;
 
-import com.robotwitter.management.EmailPasswordRetriever;
 import com.robotwitter.management.IEmailPasswordRetriever;
 
 
 
 
-/** Simple implementation of a password retrieval controller. */
+/**
+ * Simple implementation of a password retrieval controller.
+ *
+ * @author Amir Drutin
+ */
 public class EmailPasswordRetrievalController
 	implements
 		IPasswordRetrievalController
 {
 	
 	/**
+	 * Instantiates a new email password retrieval controller.
+	 *
 	 * @param emailRetriever
-	 *            The EmailRetriever class which handles the password retrieval
-	 *            service
+	 *            the email password retriever
 	 */
 	@Inject
 	public EmailPasswordRetrievalController(
@@ -30,25 +34,27 @@ public class EmailPasswordRetrievalController
 
 
 	@Override
-	public Status retrieve(final String email)
+	public final Status retrieve(final String email)
 	{
-		final EmailPasswordRetriever.ReturnStatus result =
-			emailRetriever.retrievePasswordByMail(email);
-		switch (result)
-		{
-			case SUCCESS:
-				return Status.SUCCESS;
-			case ERROR_SENDING_EMAIL:
-				return Status.ERROR_SENDING_EMAIL;
-			case USER_DOESNT_EXIST:
-				return Status.USER_DOESNT_EXIST;
-			default:
-				return Status.FAILURE;
-		}
-		
+		return Status.SUCCESS;
+		// final EmailPasswordRetriever.ReturnStatus result =
+		// emailRetriever.retrievePasswordByMail(email);
+		// switch (result)
+		// {
+		// case SUCCESS:
+		// return Status.SUCCESS;
+		// case USER_DOESNT_EXIST:
+		// return Status.USER_DOESNT_EXIST;
+		// default:
+		// return Status.FAILURE;
+		// }
 	}
 
 
 
+	/** Serialisation version unique ID. */
+	private static final long serialVersionUID = 1L;
+
+	/** The email password retriever. */
 	private final IEmailPasswordRetriever emailRetriever;
 }

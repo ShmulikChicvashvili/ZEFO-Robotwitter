@@ -1,0 +1,10 @@
+@import "util/AbstractFormComponent";
+@import "util/WindowWithDescription";
+/*----------------------------------------------------------------------------*/
+
+
+@mixin robotwitter-util
+{
+	@include AbstractFormComponent;
+	@include WindowWithDescription;
+}

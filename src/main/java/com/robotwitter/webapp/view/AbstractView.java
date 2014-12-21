@@ -4,9 +4,9 @@ package com.robotwitter.webapp.view;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.CustomComponent;
 
 import com.robotwitter.webapp.messages.IMessagesContainer;
+import com.robotwitter.webapp.util.RobotwitterCustomComponent;
 
 
 
@@ -18,9 +18,11 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
  *
  * @author Hagai Akibayov
  */
-public abstract class AbstractView extends CustomComponent implements View
+public abstract class AbstractView extends RobotwitterCustomComponent
+implements
+View
 {
-	
+
 	/**
 	 * Instantiates a new abstract view.
 	 *
@@ -31,11 +33,11 @@ public abstract class AbstractView extends CustomComponent implements View
 	 */
 	public AbstractView(IMessagesContainer messages, String title)
 	{
-		this.messages = messages;
+		super(messages);
 		this.title = title;
 	}
-
-
+	
+	
 	@Override
 	public final void enter(ViewChangeEvent event)
 	{
@@ -44,20 +46,22 @@ public abstract class AbstractView extends CustomComponent implements View
 	}
 	
 	
+	/**
+	 * @return <code>true</code> if the user must be signed <b>off</b> to
+	 *         navigate to this view, and <code>false</code> otherwise.
+	 */
+	public abstract boolean isSignedInProhibited();
+
+
+	/**
+	 * @return <code>true</code> if the user must be signed in to navigate to
+	 *         this view, and <code>false</code> otherwise.
+	 */
+	public abstract boolean isSignedInRequired();
+
+
 	/** Initialises the view. */
 	protected abstract void initialise();
-	
-	
-	/**
-	 * Navigates to the given view name.
-	 *
-	 * @param name
-	 *            the view's name
-	 */
-	protected final void navigate(String name)
-	{
-		getUI().getNavigator().navigateTo(name);
-	}
 	
 	
 	/**
@@ -70,16 +74,13 @@ public abstract class AbstractView extends CustomComponent implements View
 	{
 		getUI().getPage().setTitle(title);
 	}
-	
-	
-	
-	/** The messages displayed by this view. */
-	protected IMessagesContainer messages;
-	
-	/** The view's title. */
-	private final String title;
+
+
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
+	/** The view's title. */
+	private final String title;
+
 }

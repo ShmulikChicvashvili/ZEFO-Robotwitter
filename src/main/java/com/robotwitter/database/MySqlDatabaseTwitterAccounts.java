@@ -15,7 +15,7 @@ import com.mysql.jdbc.Statement;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
-import com.robotwitter.database.interfaces.returnValues.InsertError;
+import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 
 
@@ -90,6 +90,35 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	}
 
 
+	@SuppressWarnings("nls")
+	public SqlError delete(Long userID)
+	{
+		if (userID == null) { return SqlError.INVALID_PARAMS; }
+
+		if (!isExists(userID)) { return SqlError.DOES_NOT_EXIST; }
+
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			PreparedStatement preparedStatement =
+				(PreparedStatement) con.prepareStatement(""
+					+ "DELETE FROM "
+					+ table
+					+ " WHERE "
+					+ Columns.USER_ID.toString().toLowerCase()
+					+ "=?;"))
+		{
+			preparedStatement.setLong(1, userID);
+			preparedStatement.executeUpdate();
+		} catch (final SQLException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return SqlError.SUCCESS;
+	}
+
+
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#get(java.lang.String) */
 	@Override
@@ -145,9 +174,9 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 	 * .DatabasePrimitives.DatabaseType) */
 	@Override
 	@SuppressWarnings({ "boxing" })
-	public final InsertError insert(final DBTwitterAccount twitterAccount)
+	public final SqlError insert(final DBTwitterAccount twitterAccount)
 	{
-		if (twitterAccount == null) { return InsertError.INVALID_PARAMS; }
+		if (twitterAccount == null) { return SqlError.INVALID_PARAMS; }
 		try (
 			Connection con = connectionEstablisher.getConnection();
 
@@ -171,10 +200,10 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 			preparedStatement.executeUpdate();
 		} catch (final SQLException e)
 		{
-			if (e.getErrorCode() == insertAlreadyExists) { return InsertError.ALREADY_EXIST; }
+			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
 			e.printStackTrace();
 		}
-		return InsertError.SUCCESS;
+		return SqlError.SUCCESS;
 	}
 
 
@@ -209,9 +238,45 @@ public class MySqlDatabaseTwitterAccounts extends MySqlDatabase
 		}
 		return $;
 	}
-
-
-
+	
+	
+	public SqlError update(DBTwitterAccount twitterAccount)
+	{
+		if (twitterAccount == null
+			|| twitterAccount.getUserId() == null
+			|| twitterAccount.getEMail() == null
+			|| twitterAccount.getToken() == null
+			|| twitterAccount.getPrivateToken() == null) { return SqlError.INVALID_PARAMS; }
+		
+		if (!isExists(twitterAccount.getUserId())) { return SqlError.DOES_NOT_EXIST; }
+		
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			@SuppressWarnings("nls")
+			PreparedStatement preparedStatement =
+				(PreparedStatement) con.prepareStatement(String.format(
+					"UPDATE %s SET %s = ?, %s = ?, %s = ? WHERE %s = ?",
+					table,
+					Columns.USER_ID.toString().toLowerCase(),
+					Columns.EMAIL.toString().toLowerCase(),
+					Columns.TOKEN.toString().toLowerCase(),
+					Columns.PRIVATE_TOKEN.toString().toLowerCase())))
+		{
+			preparedStatement.setString(1, twitterAccount.getEMail());
+			preparedStatement.setString(2, twitterAccount.getToken());
+			preparedStatement.setString(3, twitterAccount.getPrivateToken());
+			preparedStatement.setLong(4, twitterAccount.getUserId());
+			preparedStatement.executeUpdate();
+		} catch (final SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return SqlError.SUCCESS;
+	}
+	
+	
+	
 	/**
 	 * The table's name
 	 */

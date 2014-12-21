@@ -1,9 +1,10 @@
-/* Common, userful SCSS definitions. */
+/* Common, useful SCSS definitions. */
 /*----------------------------------------------------------------------------*/
 
 
 /* Cross-platform border-radius. */
-@mixin robotwitter-border-radius($radius) {
+@mixin robotwitter-border-radius($radius)
+{
   -webkit-border-radius: $radius;
      -moz-border-radius: $radius;
       -ms-border-radius: $radius;
@@ -12,8 +13,49 @@
 
 
 /* Cross-platform box-shadow. */
-@mixin robotwitter-box-shadow($box-shadow) {
+@mixin robotwitter-box-shadow($box-shadow)
+{
   -webkit-box-shadow: $box-shadow;
      -moz-box-shadow: $box-shadow;
           box-shadow: $box-shadow;
+}
+
+/* Cross-platform transition. */
+@mixin robotwitter-transition($transition)
+{
+  -webkit-transition: $transition;
+     -moz-transition: $transition;
+      -ms-transition: $transition;
+       -o-transition: $transition;
+          transition: $transition;
+}
+
+/* Cross-platform keyframes. */
+@mixin robotwitter-keyframes($animation-name)
+{
+  @-webkit-keyframes #{$animation-name} { @content; }
+     @-moz-keyframes #{$animation-name} { @content; }
+      @-ms-keyframes #{$animation-name} { @content; }
+       @-o-keyframes #{$animation-name} { @content; }
+          @keyframes #{$animation-name} { @content; }
+}
+
+/* Cross-platform animation. */
+@mixin robotwitter-animation($animation)
+{
+  -webkit-animation: $animation;
+     -moz-animation: $animation;
+      -ms-animation: $animation;
+       -o-animation: $animation;
+          animation: $animation;
+}
+
+/* Cross-platform animation-fill-mode. */
+@mixin robotwitter-animation-fill-mode($animation-fill-mode)
+{
+  -webkit-animation-fill-mode: $animation-fill-mode;
+     -moz-animation-fill-mode: $animation-fill-mode;
+      -ms-animation-fill-mode: $animation-fill-mode;
+       -o-animation-fill-mode: $animation-fill-mode;
+          animation-fill-mode: $animation-fill-mode;
 }

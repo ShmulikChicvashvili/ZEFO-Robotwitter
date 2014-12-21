@@ -14,6 +14,7 @@ import com.robotwitter.database.MySQLDBUserModule;
 import com.robotwitter.management.EmailPasswordRetrieverModule;
 import com.robotwitter.management.RetrievalMailBuilderModule;
 import com.robotwitter.miscellaneous.GmailSenderModule;
+import com.robotwitter.webapp.control.ControllerModule;
 import com.robotwitter.webapp.messages.MessagesProvider;
 
 
@@ -84,11 +85,10 @@ public class Configuration implements ServletContextListener
 	/** Initialises the view factory. */
 	private void initialiseViewFactory()
 	{
-		final ViewModule module = new ViewModule(views, messagesProvider);
-		
 		final Injector injector =
 			Guice.createInjector(
-				module,
+				new ViewModule(views, messagesProvider),
+				new ControllerModule(),
 				new GmailSenderModule(),
 				new EmailPasswordRetrieverModule(),
 				new RetrievalMailBuilderModule(),

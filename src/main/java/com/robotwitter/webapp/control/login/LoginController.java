@@ -1,14 +1,16 @@
+/*
+ *
+ */
 
 package com.robotwitter.webapp.control.login;
 
 
-import com.google.inject.Guice;
-import com.google.inject.Injector;
+import com.google.inject.Inject;
 
-import com.robotwitter.database.MySQLDBUserModule;
-import com.robotwitter.database.MySqlDatabaseUser;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
 import com.robotwitter.database.primitives.DBUser;
+
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 
@@ -21,12 +23,23 @@ import com.robotwitter.database.primitives.DBUser;
 public class LoginController implements ILoginController
 {
 
+	/**
+	 * Instantiates a new login controller.
+	 *
+	 * @param dbUsers
+	 *            the users database
+	 */
+	@Inject
+	public LoginController(IDatabaseUsers dbUsers)
+	{
+		this.dbUsers = dbUsers;
+	}
+	
+	
 	@Override
 	public final Status authenticate(final String email, final String password)
 	{
-		final Injector injector = Guice.createInjector(new MySQLDBUserModule());
-		final IDatabaseUsers db = injector.getInstance(MySqlDatabaseUser.class);
-		final DBUser user = db.get(email);
+		final DBUser user = dbUsers.get(email);
 		if (user != null)
 		{
 			if (user.getPassword().equals(password)) { return Status.SUCCESS; }
@@ -37,6 +50,10 @@ public class LoginController implements ILoginController
 	
 	
 	
+	/** The users database. */
+	@SuppressFBWarnings("SE_BAD_FIELD")
+	IDatabaseUsers dbUsers;
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

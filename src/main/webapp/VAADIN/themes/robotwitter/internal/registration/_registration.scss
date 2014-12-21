@@ -1,0 +1,8 @@
+@import "RegistrationView";
+/*----------------------------------------------------------------------------*/
+
+
+@mixin registration
+{
+	@include RegistrationView;
+}

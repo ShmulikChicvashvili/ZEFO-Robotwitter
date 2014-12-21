@@ -36,7 +36,7 @@ public interface ILoginController extends Serializable
 	 *            The user's email address
 	 * @param password
 	 *            The user's password
-	 *
+	 * 
 	 * @return the operation's status
 	 */
 	Status authenticate(String email, String password);

@@ -10,10 +10,18 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.mysql.jdbc.Statement;
+
+import com.robotwitter.database.MySQLConEstablisher;
 import com.robotwitter.database.MySQLDBUserModule;
 import com.robotwitter.database.MySqlDatabaseUser;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
@@ -23,11 +31,42 @@ import com.robotwitter.database.primitives.DBUser;
 
 
 /**
- * @author Shmulik
+ * @author Shmulik and Eyal
  *
  */
 public class TestDatabaseUser
 {
+	/**
+	 * Before.
+	 */
+	@SuppressWarnings("nls")
+	@Before
+	public void before()
+	{
+		final Injector injector =
+			Guice.createInjector(new DatabaseTestModule());
+		
+		try (
+			Connection con =
+				injector.getInstance(MySQLConEstablisher.class).getConnection();
+			Statement statement = (Statement) con.createStatement())
+		{
+			String dropSchema = "DROP DATABASE `test`";
+			statement.executeUpdate(dropSchema);
+		} catch (SQLException e)
+		{
+			System.out.println(e.getErrorCode());
+		}
+		db = injector.getInstance(MySqlDatabaseUser.class);
+		
+	}
+	
+	@BeforeClass
+	public void beforeClass() {
+		
+	}
+	
+	
 	/**
 	 * Testing the user database table features
 	 */
@@ -53,4 +92,6 @@ public class TestDatabaseUser
 		
 	}
 	
+	
+	IDatabaseUsers db;
 }

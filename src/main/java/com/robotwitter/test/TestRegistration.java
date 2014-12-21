@@ -43,33 +43,54 @@ public class TestRegistration {
 	@SuppressWarnings("nls")
 	@Test
 	public void test() {
-		String existingEmail = "amir.drutin@gmail.com", goodEmail = "yossi@walla.co.il", 
-				badEmail1 = "yossi", badEmail2 = "yossi@walla", badEmail3 = "@walla.com", 
-				badEmail4 = "yossi@walla.", badEmail5 = "yossi@.com";
-		String goodPassword = "Amir1234" , lowerPassword = "amir1234", upperPassword = "AMIR1234" ,
-				shortPassword = "Ab123";
-		
-		assertEquals(Status.SUCCESS, this.registration.register(goodEmail, goodPassword));
-		
-		assertEquals(Status.BAD_EMAIL, this.registration.register(badEmail1, goodPassword));
-		assertEquals(Status.BAD_EMAIL, this.registration.register(badEmail2, goodPassword));
-		assertEquals(Status.BAD_EMAIL, this.registration.register(badEmail3, goodPassword));
-		assertEquals(Status.BAD_EMAIL, this.registration.register(badEmail4, goodPassword));
-		assertEquals(Status.BAD_EMAIL, this.registration.register(badEmail5, goodPassword));
-		
-		assertEquals(Status.LOWER_CASE_PASSWORD, this.registration.register(goodEmail, lowerPassword));
-		assertEquals(Status.UPPER_CASE_PASSWORD, this.registration.register(goodEmail, upperPassword));
-		assertEquals(Status.SHORT_PASSWORD, this.registration.register(goodEmail, shortPassword));
-		
-		assertEquals(Status.BAD_EMAIL, this.registration.register(badEmail1, shortPassword));
-		assertEquals(Status.BAD_EMAIL, this.registration.register(badEmail1, upperPassword));
-		assertEquals(Status.BAD_EMAIL, this.registration.register(badEmail1, lowerPassword));
-		
-		assertEquals(Status.USER_ALREADY_EXISTS, this.registration.register(existingEmail, goodPassword));
-		assertEquals(Status.LOWER_CASE_PASSWORD, this.registration.register(existingEmail, lowerPassword));
-		assertEquals(Status.UPPER_CASE_PASSWORD, this.registration.register(existingEmail, upperPassword));
-		assertEquals(Status.SHORT_PASSWORD, this.registration.register(existingEmail, shortPassword));
+		String existingEmail = "amir.drutin@gmail.com", goodEmail = "yossi@walla.co.il", badEmail1 = "yossi", badEmail2 = "yossi@walla", badEmail3 = "@walla.com", badEmail4 = "yossi@walla.", badEmail5 = "yossi@.com";
+		String goodPassword = "Amir1234", lowerPassword = "amir1234", upperPassword = "AMIR1234", shortPassword = "Ab123";
+
+		/** Testing case of success */
+		assertEquals(Status.SUCCESS,
+				this.registration.register(goodEmail, goodPassword));
+
+		/** Testing all the cases of bad email address */
+		assertEquals(Status.BAD_EMAIL,
+				this.registration.register(badEmail1, goodPassword));
+		assertEquals(Status.BAD_EMAIL,
+				this.registration.register(badEmail2, goodPassword));
+		assertEquals(Status.BAD_EMAIL,
+				this.registration.register(badEmail3, goodPassword));
+		assertEquals(Status.BAD_EMAIL,
+				this.registration.register(badEmail4, goodPassword));
+		assertEquals(Status.BAD_EMAIL,
+				this.registration.register(badEmail5, goodPassword));
+
+		/** Testing all the cases of bad passwords */
+		assertEquals(Status.LOWER_CASE_PASSWORD,
+				this.registration.register(goodEmail, lowerPassword));
+		assertEquals(Status.UPPER_CASE_PASSWORD,
+				this.registration.register(goodEmail, upperPassword));
+		assertEquals(Status.SHORT_PASSWORD,
+				this.registration.register(goodEmail, shortPassword));
+
+		/** Testing precedence of error messages */
+		assertEquals(Status.BAD_EMAIL,
+				this.registration.register(badEmail1, shortPassword));
+		assertEquals(Status.BAD_EMAIL,
+				this.registration.register(badEmail1, upperPassword));
+		assertEquals(Status.BAD_EMAIL,
+				this.registration.register(badEmail1, lowerPassword));
+
+		/**
+		 * Testing case of existing email adress, and the precedences of error
+		 * messages with it
+		 */
+		assertEquals(Status.USER_ALREADY_EXISTS,
+				this.registration.register(existingEmail, goodPassword));
+		assertEquals(Status.LOWER_CASE_PASSWORD,
+				this.registration.register(existingEmail, lowerPassword));
+		assertEquals(Status.UPPER_CASE_PASSWORD,
+				this.registration.register(existingEmail, upperPassword));
+		assertEquals(Status.SHORT_PASSWORD,
+				this.registration.register(existingEmail, shortPassword));
 	}
-	
+
 	RegistrationController registration;
 }

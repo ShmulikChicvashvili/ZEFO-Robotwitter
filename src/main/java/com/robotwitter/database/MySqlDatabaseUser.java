@@ -28,7 +28,9 @@ import com.robotwitter.database.primitives.DBUser;
  *
  *         The database that handles registring a user and fetching a user
  */
-public class MySqlDatabaseUser extends AbstractMySqlDatabase implements IDatabaseUsers
+public class MySqlDatabaseUser extends AbstractMySqlDatabase
+	implements
+		IDatabaseUsers
 {
 	/**
 	 * The columns this table has.
@@ -197,6 +199,7 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase implements IDatabas
 	 *            User to update
 	 * @return sqlError
 	 */
+	@Override
 	public SqlError update(DBUser user)
 	{
 		if (user == null
@@ -210,13 +213,13 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase implements IDatabas
 			@SuppressWarnings("nls")
 			PreparedStatement preparedStatement =
 				(PreparedStatement) con.prepareStatement(String.format(
-					"UPDATE %s SET %s = ?, %s = ?, %s = ? WHERE %s = ?",
+					"UPDATE %s SET %s = ? WHERE %s = ?",
 					table,
-					Columns.EMAIL.toString().toLowerCase(),
-					Columns.PASSWORD.toString().toLowerCase())))
+					Columns.PASSWORD.toString().toLowerCase(),
+					Columns.EMAIL.toString().toLowerCase())))
 		{
-			preparedStatement.setString(1, user.getEMail());
-			preparedStatement.setString(2, user.getPassword());
+			preparedStatement.setString(1, user.getPassword());
+			preparedStatement.setString(2, user.getEMail());
 			preparedStatement.executeUpdate();
 		} catch (final SQLException e)
 		{

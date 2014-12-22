@@ -116,7 +116,7 @@ public class AccountController implements IAccountController
 	{
 		if (email == null) { return null; }
 		// FIXME: once we support names in sign up, change this!
-		return null;
+		return "Robotwitter account:";
 	}
 
 
@@ -139,6 +139,8 @@ public class AccountController implements IAccountController
 	{
 		ArrayList<DBTwitterAccount> attachedAccounts =
 			twitterAccountsDB.get(email);
+		
+		if (attachedAccounts == null) { return true; }
 		
 		long[] ids = new long[attachedAccounts.size()];
 		for (int i = 0; i < attachedAccounts.size(); i++)

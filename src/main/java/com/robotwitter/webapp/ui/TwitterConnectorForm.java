@@ -60,6 +60,11 @@ public class TwitterConnectorForm extends AbstractFormComponent
 				VALID_LENGTH,
 				messages
 					.get("TwitterConnectorForm.error.pin-must-be-7-characters"));
+			
+			addConstraint(
+				"^[0-9]*$",
+				messages
+				.get("TwitterConnectorForm.error.must-contain-digits-only"));
 		}
 		
 		

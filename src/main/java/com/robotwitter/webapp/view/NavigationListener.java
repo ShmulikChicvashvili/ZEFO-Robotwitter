@@ -21,12 +21,12 @@ import com.robotwitter.webapp.view.login.LoginView;
  */
 class NavigationListener implements ViewChangeListener
 {
-	
+
 	@Override
 	public void afterViewChange(ViewChangeEvent event)
 	{ /* Do nothing */}
-	
-	
+
+
 	@Override
 	public boolean beforeViewChange(ViewChangeEvent event)
 	{
@@ -35,30 +35,39 @@ class NavigationListener implements ViewChangeListener
 		RobotwitterUI ui = (RobotwitterUI) navigator.getUI();
 		UserSession userSession = ui.getUserSession();
 		AbstractView view = (AbstractView) event.getNewView();
-		
+
 		// If the user is not signed in and the view requires signing in
 		if (view.isSignedInRequired() && !userSession.isSigned())
 		{
 			navigator.navigateTo(LoginView.NAME);
 			return false;
 		}
-		
+
 		// If the user is signed in and the view prohibits signed users
 		if (view.isSignedInProhibited() && userSession.isSigned())
 		{
 			navigator.navigateTo(DashboardView.NAME);
 			return false;
 		}
-		
+
 		// If the user is signed in but has no connected Twitter accounts
 		if (userSession.isSigned()
-			&& userSession.getAccountController().getActiveTwitterAccount() == null)
+			&& userSession.getAccountController().getActiveTwitterAccount() == null
+			&& !(view instanceof ConnectTwitterView))
 		{
-			if (view instanceof ConnectTwitterView) { return true; }
 			navigator.navigateTo(ConnectTwitterView.NAME);
 			return false;
 		}
-		
+
+		// If view is connect twitter but user already has one
+		if (userSession.isSigned()
+			&& userSession.getAccountController().getActiveTwitterAccount() != null
+			&& view instanceof ConnectTwitterView)
+		{
+			navigator.navigateTo(DashboardView.NAME);
+			return false;
+		}
+
 		// Show main menu if the user is signed in, otherwise hide
 		if (userSession.isSigned())
 		{
@@ -67,13 +76,13 @@ class NavigationListener implements ViewChangeListener
 		{
 			ui.hideMainMenu();
 		}
-		
+
 		return true;
 	}
-	
-	
-	
+
+
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 }

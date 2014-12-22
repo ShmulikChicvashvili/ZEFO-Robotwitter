@@ -46,7 +46,6 @@
 		top: $height !important;
 		right: 0;
 		padding: 0;
-		min-width: $height * 4;
 		
 		/* Card wrapper */
 		.AccountInformationPopup-card-wrapper
@@ -70,6 +69,10 @@
 		{
 			width: auto !important;
 		}
+		
+		/* Loading indicator */
+		min-width: $height * 2.1;
+		.v-popupview-loading { margin-left: auto; margin-right: auto; }
 	}
 	
 	/* Small arrow on top */

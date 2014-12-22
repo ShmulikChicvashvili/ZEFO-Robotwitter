@@ -26,7 +26,7 @@ import com.robotwitter.webapp.view.login.LoginView;
  */
 public class UserSession implements IUserSession
 {
-
+	
 	/**
 	 * Instantiates a new user session.
 	 *
@@ -42,7 +42,7 @@ public class UserSession implements IUserSession
 		this.session = session;
 		this.accountController = accountController;
 		isSigned = false;
-		
+
 		// Check if the user is remembered (using a cookie)
 		Cookie cookie = Cookies.get(EMAIL_COOKIE);
 		if (cookie != null && !"".equals(cookie.getValue()))
@@ -52,8 +52,8 @@ public class UserSession implements IUserSession
 			sign(cookie.getValue(), true);
 		}
 	}
-
-
+	
+	
 	@Override
 	public final void activateTwitterAccount(long id)
 	{
@@ -65,40 +65,44 @@ public class UserSession implements IUserSession
 			activateRandomTwitterAccount();
 			return;
 		}
-		
+
 		// Remember the active account with a cookie
 		rememberActiveTwitterAccount();
 	}
-
-
+	
+	
 	@Override
 	public final IAccountController getAccountController()
 	{
 		return accountController;
 	}
-
-
+	
+	
 	@Override
 	public final boolean isSigned()
 	{
 		return isSigned;
 	}
-	
-	
+
+
 	@Override
 	public final void sign(String email, boolean remember)
 	{
 		if (isSigned) { return; }
 		
+		if (accountController.connect(email) != Status.SUCCESS)
+		{
+			unsign();
+			return;
+		}
+
 		session.setAttribute(EMAIL_ATTRIBUTE, email);
-		
+
 		// If remember is not set, the duration of the cookie will be set to -1,
 		// meaning it will stored for this browsing session only
 		int duration = remember ? REMEMBER_USER_DURATION : -1;
 		Cookies.set(EMAIL_COOKIE, email, duration);
 
-		accountController.connect(email);
-		
 		// Check if the active Twitter account is remembered (using a cookie)
 		Cookie cookie = Cookies.get(ACTIVE_TWITTER_COOKIE);
 		if (cookie != null)
@@ -116,11 +120,11 @@ public class UserSession implements IUserSession
 		{
 			activateRandomTwitterAccount();
 		}
-
+		
 		isSigned = true;
 	}
-	
-	
+
+
 	@Override
 	public final void unsign()
 	{
@@ -128,12 +132,12 @@ public class UserSession implements IUserSession
 		Cookies.remove(EMAIL_COOKIE);
 		accountController.disconnect();
 		isSigned = false;
-		
+
 		// Navigate back to login page
 		UI.getCurrent().getNavigator().navigateTo(LoginView.NAME);
 	}
-	
-	
+
+
 	/** Activates a random connected Twitter account. */
 	private void activateRandomTwitterAccount()
 	{
@@ -145,13 +149,13 @@ public class UserSession implements IUserSession
 				.getTwitterAccounts()
 				.iterator()
 				.next().id);
-
+			
 			// Remember the active account with a cookie
 			rememberActiveTwitterAccount();
 		}
 	}
-
-
+	
+	
 	/** Remembers the active twitter account using a cookie. */
 	private void rememberActiveTwitterAccount()
 	{
@@ -164,9 +168,9 @@ public class UserSession implements IUserSession
 				REMEMBER_ACTIVE_TWITTER_DURATION);
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * The signed in user email address session attribute.
 	 * <p>
@@ -174,33 +178,33 @@ public class UserSession implements IUserSession
 	 * <code>null</code> if the user is not signed in.
 	 */
 	private static final String EMAIL_ATTRIBUTE = "UserSession.email";
-
+	
 	/** The signed in user email address cookie. */
 	private static final String EMAIL_COOKIE = "UserSession.email";
-
+	
 	/** The active Twitter account cookie. */
 	private static final String ACTIVE_TWITTER_COOKIE =
 		"UserSession.active-twitter-account";
-
+	
 	/** The default maximum cookie age (time till expiration). */
 	private static final int COOKIE_MAX_AGE = 3600 * 24 * 30; // 30 days
-	
+
 	/** The amount of time to remember the user for (in seconds). */
 	private static final int REMEMBER_USER_DURATION = COOKIE_MAX_AGE;
-
+	
 	/** The amount of time to remember the user for (in seconds). */
 	private static final int REMEMBER_ACTIVE_TWITTER_DURATION =
 		COOKIE_MAX_AGE * 1000; // Remember forever
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The current browsing session. */
 	private VaadinSession session;
-	
+
 	/** The current user's account controller. */
 	private IAccountController accountController;
-	
+
 	/** <code>true</code> if the user is currently signed in. */
 	private boolean isSigned;
 }

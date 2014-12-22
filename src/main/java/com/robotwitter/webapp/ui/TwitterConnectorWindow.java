@@ -17,6 +17,7 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.IFormComponent;
 import com.robotwitter.webapp.util.WindowWithDescription;
 import com.robotwitter.webapp.view.RobotwitterUI;
+import com.robotwitter.webapp.view.dashboard.DashboardView;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -51,8 +52,11 @@ public class TwitterConnectorWindow extends WindowWithDescription
 		setDescription(messages.get("TwitterConnectorWindow.instructions"));
 		setIcon(FontAwesome.TWITTER);
 		
-		// Initialise the button
+		// Initialise the content
 		setContent(createTwitterLoginButton());
+		
+		// Reset the content whenever the window is closed
+		addCloseListener(event -> setContent(createTwitterLoginButton()));
 		
 		// Set styling
 		addStyleName(STYLENAME);
@@ -75,8 +79,8 @@ public class TwitterConnectorWindow extends WindowWithDescription
 		
 		return connectorForm;
 	}
-
-
+	
+	
 	/**
 	 * Creates the twitter login button.
 	 *
@@ -101,14 +105,15 @@ public class TwitterConnectorWindow extends WindowWithDescription
 		twitterLogin.addStyleName(TWITTER_LOGIN_STYLENAME);
 		return twitterLogin;
 	}
-	
-	
+
+
 	/**
 	 * Handles a successful attempt at a Twitter account connection.
 	 *
 	 * @param form
 	 *            the Twitter account connector form
 	 */
+	@SuppressWarnings("boxing")
 	@SuppressFBWarnings("UPM_UNCALLED_PRIVATE_METHOD")
 	private void handleSuccessfulConnect(
 		@SuppressWarnings("unused") IFormComponent form)
@@ -136,9 +141,19 @@ public class TwitterConnectorWindow extends WindowWithDescription
 		notification.setDelayMsec(SUCCESS_NOTIFICATION_DELAY);
 		notification.show(Page.getCurrent());
 
-		// Reset then close the window
-		setContent(createTwitterLoginButton());
+		// Close the window
 		close();
+
+		// If its the user's first Twitter account, navigate to Dashboard
+		RobotwitterUI ui = (RobotwitterUI) UI.getCurrent();
+		if (ui
+			.getUserSession()
+			.getAccountController()
+			.getTwitterAccounts()
+			.size() == 1)
+		{
+			ui.getNavigator().navigateTo(DashboardView.NAME);
+		}
 	}
 	
 	

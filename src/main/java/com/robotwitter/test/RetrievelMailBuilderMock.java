@@ -4,7 +4,6 @@
 package com.robotwitter.test;
 
 import com.robotwitter.management.IRetrievalMailBuilder;
-import com.robotwitter.management.RetrievelMailBuilder;
 import com.robotwitter.miscellaneous.EmailMessage;
 
 /**

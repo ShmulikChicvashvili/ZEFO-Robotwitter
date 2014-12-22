@@ -6,7 +6,7 @@ package com.robotwitter.database.primitives;
 
 
 /**
- * @author Shmulik
+ * @author Shmulik and Eyal
  *
  *         User primitive type
  */
@@ -33,9 +33,12 @@ public class DBUser extends DatabaseType
 	{
 		if (obj != null)
 		{
-			final DBUser u = (DBUser) obj;
-			return eMail.equals(u.getEMail())
-				&& password.equals(u.getPassword());
+			if (obj instanceof DBUser)
+			{
+				final DBUser u = (DBUser) obj;
+				return eMail.toLowerCase().equals(u.getEMail().toLowerCase())
+					&& password.equals(u.getPassword());
+			}
 		}
 		return false;
 	}

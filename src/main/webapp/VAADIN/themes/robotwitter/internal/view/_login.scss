@@ -1,0 +1,10 @@
+@import "login/LoginView";
+@import "login/PasswordRetrievalWindow";
+/*----------------------------------------------------------------------------*/
+
+
+@mixin robotwitter-view-login
+{
+	@include LoginView;
+	@include PasswordRetrievalWindow;
+}

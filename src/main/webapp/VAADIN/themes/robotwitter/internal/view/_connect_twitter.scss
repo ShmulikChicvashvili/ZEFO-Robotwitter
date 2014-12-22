@@ -1,0 +1,8 @@
+@import "connect_twitter/ConnectTwitterView";
+/*----------------------------------------------------------------------------*/
+
+
+@mixin robotwitter-view-connect_twitter
+{
+	@include ConnectTwitterView;
+}

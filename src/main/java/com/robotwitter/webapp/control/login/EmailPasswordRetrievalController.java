@@ -2,57 +2,59 @@
 package com.robotwitter.webapp.control.login;
 
 
-import javax.mail.MessagingException;
-
-import org.mockito.Mockito;
-
-import com.google.inject.Guice;
 import com.google.inject.Inject;
-import com.google.inject.Injector;
+
 import com.robotwitter.management.EmailPasswordRetriever;
+import com.robotwitter.management.IEmailPasswordRetriever;
 
 
 
 
-/** Simple implementation of a password retrieval controller. */
+/**
+ * Simple implementation of a password retrieval controller.
+ *
+ * @author Amir Drutin
+ */
 public class EmailPasswordRetrievalController
 	implements
-		PasswordRetrievalController
+		IPasswordRetrievalController
 {
 	
-	private EmailPasswordRetriever emailRetriever;
-	
-	
-	
 	/**
+	 * Instantiates a new email password retrieval controller.
+	 *
 	 * @param emailRetriever
-	 *            The EmailRetriever class which handles the password retrieval
-	 *            service
+	 *            the email password retriever
 	 */
 	@Inject
 	public EmailPasswordRetrievalController(
-		EmailPasswordRetriever emailRetriever)
+		IEmailPasswordRetriever emailRetriever)
 	{
 		this.emailRetriever = emailRetriever;
 	}
-	
-	
+
+
 	@Override
-	public ReturnStatus retrieve(final String email)
+	public final Status retrieve(final String email)
 	{
-		EmailPasswordRetriever.ReturnStatus result =
-			this.emailRetriever.retrievePasswordByMail(email);
+		final EmailPasswordRetriever.ReturnStatus result =
+			emailRetriever.retrievePasswordByMail(email);
 		switch (result)
 		{
 			case SUCCESS:
-				return ReturnStatus.SUCCESS;
-			case ERROR_SENDING_EMAIL:
-				return ReturnStatus.ERROR_SENDING_EMAIL;
+				return Status.SUCCESS;
 			case USER_DOESNT_EXIST:
-				return ReturnStatus.USER_DOESNT_EXIST;
+				return Status.USER_DOESNT_EXIST;
 			default:
-				return ReturnStatus.FAILURE;
+				return Status.FAILURE;
 		}
-		
 	}
+
+
+
+	/** Serialisation version unique ID. */
+	private static final long serialVersionUID = 1L;
+
+	/** The email password retriever. */
+	private final IEmailPasswordRetriever emailRetriever;
 }

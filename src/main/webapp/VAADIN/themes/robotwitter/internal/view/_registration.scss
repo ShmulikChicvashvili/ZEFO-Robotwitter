@@ -1,0 +1,8 @@
+@import "registration/RegistrationView";
+/*----------------------------------------------------------------------------*/
+
+
+@mixin robotwitter-view-registration
+{
+	@include RegistrationView;
+}

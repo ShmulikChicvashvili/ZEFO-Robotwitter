@@ -1,0 +1,139 @@
+@import "../common";
+@import "../../config";
+/*----------------------------------------------------------------------------*/
+
+/** Represents the account information popup on the main menu. */
+@mixin AccountInformationPopup($height)	 /* NOTE: Doesn't use a parent class */
+{	
+	/* Minimised presentation */
+	.AccountInformationPopup-minimised
+	{
+		position: relative;
+		padding: 0 $height / 3;
+		padding-right: 2 * $height / 3;
+		
+		/* Hover */
+		&:hover { background: rgba($robotwitter-neutral-color, 0.15); }
+		
+		/* Sub-menu indicator */
+		.TwitterCard::after
+		{
+			display: block;
+			font-family: FontAwesome;
+			content: "\f078";
+			font-size: $height / 4.15;
+			vertical-align: 0.15em;
+			line-height: 1em;
+			margin: -0.5em -0.5em 0 0.5em;
+			opacity: 0.5;
+			color: $robotwitter-neutral-color;
+			position: absolute;
+			top: $height / 2;
+			right: $height / 3;
+		}
+	
+		/* Twitter screenname */
+		.TwitterCard .TwitterCard-names .TwitterCard-screenname
+		{
+			color: rgba($robotwitter-neutral-color, 0.7);
+		}
+	}
+	
+	/* Maximised (popped-out) presentation */
+	.v-popupview-popup-MainMenu-account
+	{
+		left: auto !important;
+		top: $height !important;
+		right: 0;
+		padding: 0;
+		
+		/* Card wrapper */
+		.AccountInformationPopup-card-wrapper
+		{
+			padding: 0 $height / 3;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+			
+			/* Align cards to the right */
+			.v-label { text-align: right; }
+			
+			/* Twitter Card */
+			.TwitterCard { display: inline-block; }
+			
+			/* Hover */
+			cursor: pointer;
+			&:hover { background: hsl(hue($robotwitter-main-color), 2%, 95%); }
+		}
+		
+		/* Account information. */
+		.v-slot-AccountInformationPopup-account-info
+		{
+			width: auto !important;
+		}
+		
+		/* Loading indicator */
+		min-width: $height * 2.1;
+		.v-popupview-loading { margin-left: auto; margin-right: auto; }
+	}
+	
+	/* Small arrow on top */
+	.v-popupview-popup-MainMenu-account:after,
+	.v-popupview-popup-MainMenu-account:before
+	{
+		bottom: 100%;
+		right: ($height * 2 / 3) + $height / 5;
+		border: solid transparent;
+		content: " ";
+		height: 0;
+		width: 0;
+		position: absolute;
+		pointer-events: none;
+	}
+	.v-popupview-popup-MainMenu-account:after
+	{
+		border-color: rgba(255, 255, 255, 0);
+		border-bottom-color: white;
+		border-width: 7px;
+	}
+	.v-popupview-popup-MainMenu-account:before
+	{
+		border-color: rgba(0, 0, 0, 0);
+		border-bottom-color: rgba(0, 0, 0, 0.1);
+		border-width: 8px;
+		right: ($height * 2 / 3) + $height / 5 - 1px;
+	}
+	
+	/* Manage Twitter accounts button */
+	.AccountInformationPopup-manage
+	{
+		border: none;
+		padding: 5px 0 !important;
+		border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+		background: hsl(hue($robotwitter-main-color), 5%, 95%);
+	}
+	
+	/* Account information wrapper */
+	.AccountInformationPopup-account-wrapper
+	{
+		padding: 5px $height / 3;
+		background: hsl(hue($robotwitter-main-color), 5%, 95%);
+		
+		/* Account name */
+		.AccountInformationPopup-account-name
+		{
+			font-weight: bold;
+		}
+		
+		/* Account email */
+		.AccountInformationPopup-account-email
+		{
+			color: rgba(0, 0, 0, 0.8);
+		}
+		
+		/* Sign out button */
+		.AccountInformationPopup-signout
+		{
+			margin-top: 7px;
+			margin-left: $height / 3;
+		}
+	}
+}

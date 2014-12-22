@@ -1,85 +1,120 @@
 /**
  *
+ *
  */
 
 package com.robotwitter.database;
 
 
-import java.io.File;
 import java.sql.Connection;
-import java.util.ArrayList;
+import java.sql.SQLException;
 
 import com.google.inject.Inject;
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
+
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
+import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBUser;
-import com.robotwitter.database.primitives.DatabaseType;
 
 
 
 
 /**
- * @author Shmulik
+ * Here we maintain functions over the users database.
+ *
+ * @author Shmulik and Eyal
  *
  *         The database that handles registring a user and fetching a user
  */
-public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
+public class MySqlDatabaseUser extends AbstractMySqlDatabase
+	implements
+		IDatabaseUsers
 {
+	/**
+	 * The columns this table has.
+	 *
+	 * @author Eyal
+	 */
+	private enum Columns
+	{
+		/**
+		 * Email column.
+		 */
+		EMAIL,
+		/**
+		 * Password column.
+		 */
+		PASSWORD
+	}
+	
+	
 	
 	/**
-	 * C'tor For MySql db of users
+	 * C'tor For MySql db of users.
 	 *
 	 * @param conEstablisher
 	 *            A connection establisher for the database
+	 * @throws SQLException
+	 *             Could not create the table
 	 */
 	@Inject
 	public MySqlDatabaseUser(final ConnectionEstablisher conEstablisher)
+		throws SQLException
 	{
 		super(conEstablisher);
-		try(Connection con = this.connectionEstablisher.getConnection())
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			Statement statement = (Statement) con.createStatement())
 		{
-			this.statement = con.createStatement();
-				final String statementCreate = 
-					"CREATE TABLE IF NOT EXISTS `yearlyproj_db`.`users` (" //$NON-NLS-1$
-						+ "`email` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-						+ "`password` VARCHAR(45) NOT NULL," //$NON-NLS-1$
-						+ "PRIMARY KEY (`email`));"; //$NON-NLS-1$
-				this.statement.execute(statementCreate);
-		} catch (final Exception e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+			final String statementCreate =
+				String.format("CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$
+					+ "`%s` VARCHAR(45) NOT NULL," //$NON-NLS-1$
+					+ "`%s` VARCHAR(45) NOT NULL," //$NON-NLS-1$
+					+ "PRIMARY KEY (`%s`));", //$NON-NLS-1$
+					table,
+					Columns.EMAIL.toString().toLowerCase(),
+					Columns.PASSWORD.toString().toLowerCase(),
+					Columns.EMAIL.toString().toLowerCase());
+			statement.execute(statementCreate);
+		}
 	}
 	
 	
 	/* (non-Javadoc) @see Database.IDatabase#get(java.lang.String) */
 	@Override
-	@SuppressWarnings("nls")
-	public DBUser get(final String eMailUser)
+	public final DBUser get(final String eMailUser)
 	{
-		String eMail = eMailUser.toLowerCase();
+		if (eMailUser == null) { return null; }
+		final String eMail = eMailUser.toLowerCase();
 		DBUser $ = null;
-		try(Connection con = this.connectionEstablisher.getConnection())
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			PreparedStatement preparedStatement =
+				(PreparedStatement) con.prepareStatement("SELECT * FROM " //$NON-NLS-1$
+					+ table
+					+ " WHERE " //$NON-NLS-1$
+					+ Columns.EMAIL.toString().toLowerCase()
+					+ "=?;")) //$NON-NLS-1$)
+		
 		{
-			this.preparedStatement =
-				con.prepareStatement(""
-					+ "SELECT * FROM "
-					+ this.table
-					+ " WHERE "
-					+ this.eMailColumn
-					+ "=?;");
-			this.preparedStatement.setString(1, eMail);
-			this.resultSet = this.preparedStatement.executeQuery();
-			if (this.resultSet.next())
+			
+			preparedStatement.setString(1, eMail);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next())
 			{
 				$ =
-					new DBUser(
-						this.resultSet.getString(this.eMailColumn),
-						this.resultSet.getString(this.passwordColumn));
+					new DBUser(resultSet.getString(Columns.EMAIL
+						.toString()
+						.toLowerCase()), resultSet.getString(Columns.PASSWORD
+						.toString()
+						.toLowerCase()));
 			}
-		} catch (final Exception e)
+			resultSet.close();
+		} catch (final SQLException e)
 		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return $;
@@ -88,76 +123,116 @@ public class MySqlDatabaseUser extends MySqlDatabase implements IDatabaseUsers
 	
 	/* (non-Javadoc) @see
 	 * Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
-	@SuppressWarnings("nls")
-	public void insert(DBUser user)
+	@SuppressWarnings("boxing")
+	@Override
+	public final SqlError insert(DBUser user)
 	{
-		try(Connection con = this.connectionEstablisher.getConnection())
-		{
-			this.preparedStatement =
-				con.prepareStatement("INSERT INTO "
-					+ this.table
+		if (user == null
+			|| user.getEMail() == null
+			|| user.getPassword() == null) { return SqlError.INVALID_PARAMS; }
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			@SuppressWarnings("nls")
+			PreparedStatement preparedStatement =
+				(PreparedStatement) con.prepareStatement("INSERT INTO "
+					+ table
 					+ " ("
-					+ this.eMailColumn
+					+ Columns.EMAIL.toString().toLowerCase()
 					+ ","
-					+ this.passwordColumn
-					+ ") VALUES ( ?, ? );");
-			this.preparedStatement.setString(1, user.getEMail().toLowerCase());
-			this.preparedStatement.setString(2, user.getPassword());
-			this.preparedStatement.executeUpdate();
-			
-		} catch (final Exception e)
+					+ Columns.PASSWORD.toString().toLowerCase()
+					+ ") VALUES ( ?, ? );"))
 		{
+			preparedStatement.setString(1, user.getEMail().toLowerCase());
+			preparedStatement.setString(2, user.getPassword());
+			preparedStatement.executeUpdate();
+			
+		} catch (final SQLException e)
+		{
+			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
+			// TODO what to do if not this error code
 			e.printStackTrace();
-		} 		
+		}
+		return SqlError.SUCCESS;
 	}
 	
 	
 	/**
-	 * Create table of users statement
+	 * Create table of users statement.
 	 */
 	
+	@Override
 	/* (non-Javadoc) @see Database.IDatabase#isExists(java.lang.String) */
 	@SuppressWarnings("nls")
-	public boolean isExists(String eMailUser)
+	public final boolean isExists(String eMailUser)
 	{
-		String eMail = eMailUser.toLowerCase();
+		if (eMailUser == null) { return false; }
+		final String eMail = eMailUser.toLowerCase();
 		boolean $ = false;
-		try(Connection con = this.connectionEstablisher.getConnection())
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			PreparedStatement preparedStatement =
+				(PreparedStatement) con.prepareStatement("" //$NON-NLS-1$
+					+ "SELECT * FROM " //$NON-NLS-1$
+					+ table
+					+ " WHERE " //$NON-NLS-1$
+					+ Columns.EMAIL.toString().toLowerCase()
+					+ "=?;"))
 		{
-			this.preparedStatement =
-				con.prepareStatement(""
-					+ "SELECT * FROM "
-					+ this.table
-					+ " WHERE "
-					+ this.eMailColumn
-					+ "=?;");
-			this.preparedStatement.setString(1, eMail);
-			this.resultSet = this.preparedStatement.executeQuery();
-			if (this.resultSet.first())
+			preparedStatement.setString(1, eMail);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.first())
 			{
 				$ = true;
 			}
-		} catch (final Exception e)
+			resultSet.close();
+		} catch (final SQLException e)
 		{
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 		return $;
 	}
 	
 	
+	/**
+	 * @param user
+	 *            User to update
+	 * @return sqlError
+	 */
+	@Override
+	public SqlError update(DBUser user)
+	{
+		if (user == null
+			|| user.getEMail() == null
+			|| user.getPassword() == null) { return SqlError.INVALID_PARAMS; }
+		
+		if (!isExists(user.getEMail())) { return SqlError.DOES_NOT_EXIST; }
+		
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			@SuppressWarnings("nls")
+			PreparedStatement preparedStatement =
+				(PreparedStatement) con.prepareStatement(String.format(
+					"UPDATE %s SET %s = ? WHERE %s = ?",
+					table,
+					Columns.PASSWORD.toString().toLowerCase(),
+					Columns.EMAIL.toString().toLowerCase())))
+		{
+			preparedStatement.setString(1, user.getPassword());
+			preparedStatement.setString(2, user.getEMail());
+			preparedStatement.executeUpdate();
+		} catch (final SQLException e)
+		{
+			e.printStackTrace();
+		}
+		
+		return SqlError.SUCCESS;
+	}
+	
+	
 	
 	/**
-	 * The table name
+	 * The table name.
 	 */
-	final private String table = this.schema + "." + "users"; //$NON-NLS-1$ //$NON-NLS-2$
-	
-	/**
-	 * Email column
-	 */
-	final private String eMailColumn = "email"; //$NON-NLS-1$
-	
-	/**
-	 * Password column
-	 */
-	final private String passwordColumn = "password"; //$NON-NLS-1$
+	private final String table = schema + "." + "`users`"; //$NON-NLS-1$ //$NON-NLS-2$
 }

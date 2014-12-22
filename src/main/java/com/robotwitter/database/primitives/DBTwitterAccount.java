@@ -6,12 +6,12 @@ package com.robotwitter.database.primitives;
 
 
 /**
- * @author Shmulik
+ * @author Shmulik and Eyal
  *
  */
 public class DBTwitterAccount extends DatabaseType
 {
-
+	
 	/**
 	 * @param email
 	 *            The email of the user which connected to his twitter account
@@ -42,11 +42,16 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		if (obj != null)
 		{
-			final DBTwitterAccount twitterAccount = (DBTwitterAccount) obj;
-			return getEMail() == twitterAccount.getEMail()
-				&& getToken() == twitterAccount.getToken()
-				&& getPrivateToken() == twitterAccount.getPrivateToken()
-				&& getUserId() == twitterAccount.getUserId();
+			if (obj instanceof DBTwitterAccount)
+			{
+				final DBTwitterAccount twitterAccount = (DBTwitterAccount) obj;
+				return getEMail().toLowerCase().equals(
+					twitterAccount.getEMail().toLowerCase())
+					&& getToken().equals(twitterAccount.getToken())
+					&& getPrivateToken().equals(
+						twitterAccount.getPrivateToken())
+						&& getUserId().equals(twitterAccount.getUserId());
+			}
 		}
 		return false;
 	}
@@ -68,8 +73,8 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		return token;
 	}
-
-
+	
+	
 	/**
 	 * @return the userId
 	 */
@@ -77,8 +82,8 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		return userId;
 	}
-
-
+	
+	
 	/**
 	 * @param privateToken
 	 *            The privateToken to set
@@ -87,8 +92,8 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		this.privateToken = privateToken;
 	}
-
-
+	
+	
 	/**
 	 * @param token
 	 *            The token to set
@@ -97,8 +102,8 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		this.token = token;
 	}
-
-
+	
+	
 	/**
 	 * @param userId
 	 *            the userId to set
@@ -107,8 +112,8 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		this.userId = userId;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.DatabasePrimitives.DatabaseType#toString() */
 	@SuppressWarnings("nls")
@@ -139,5 +144,5 @@ public class DBTwitterAccount extends DatabaseType
 	 * The user id
 	 */
 	Long userId;
-
+	
 }

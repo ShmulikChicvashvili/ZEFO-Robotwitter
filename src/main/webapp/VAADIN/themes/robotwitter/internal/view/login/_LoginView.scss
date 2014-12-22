@@ -1,0 +1,100 @@
+@import "../../common";
+@import "../../../config";
+/*----------------------------------------------------------------------------*/
+
+/* Size */
+$LoginView-width: 360px;		/* Defined outside mixin for use in robotwitter-keyframes */
+
+@mixin LoginView { .LoginView {
+	
+	/** Fix the clipping of the shadow of the form's div. */
+	overflow: visible;
+	
+	/* Wrapper */
+	.LoginView-wrapper
+	{
+		/* Centre horizontally */
+		display: block;
+		margin: auto;
+		text-align: center;
+		
+		/* Size */
+		width: $LoginView-width !important;
+		margin-top: $LoginView-width / 15;
+	}
+	
+	/* Robotwitter's logo */
+	.LoginView-title::before
+	{
+		content: "";
+		display: inline-block;
+		margin-bottom: 25px;
+		@include robotwitter-logo($LoginView-width);
+	}
+	
+	/* Title */
+	.LoginView-title
+	{
+		display: inline;
+		font-size: $LoginView-width / 248px * 1em;
+		font-weight: 500;
+	}
+	
+	/* Login Content */
+	.LoginView-box
+	{
+		display: inline-block;
+		
+		/* Size */
+		width: $LoginView-width !important;
+		padding: $LoginView-width / 12;
+		
+		/* Colour */
+		background-color: $robotwitter-neutral-color;
+		
+		/* Features */
+		@include robotwitter-border-radius(4px);
+		@include robotwitter-box-shadow(0px 3px 0 rgba(0, 0, 0, 0.2));
+		
+		/* Button and fields */
+		.v-textfield, .AbstractFormComponent-submit { font-size: 1.2em; }
+		
+		/* "Stay signed in" checkbox and "Forgot password?" link */
+		.v-checkbox, .v-button-link
+		{
+			font-weight: bold;
+			font-size: round($robotwitter-font-size * 0.85) !important;
+			height: round($robotwitter-font-size * 0.85) !important;
+		}
+	
+		/* Icons */
+		.v-icon { color: $robotwitter-sub-color; }		
+	}
+	
+	/* Registration component */
+	.LoginView-register
+	{	
+		font-size: 1.2em;
+		font-weight: 500;
+		
+		/* Fix spacing. */
+		.v-spacing { width: 6px; }
+		
+		/* Fix bottom small overflow clipping */
+		margin-bottom: 10px;
+	}
+	
+	/* Animate login view to fade in */
+	position: relative;
+	@include robotwitter-animation(LoginView-show-animation 2s ease);
+	@include robotwitter-animation-fill-mode(both);
+
+} }
+	
+
+/* robotwitter-animation robotwitter-keyframes */
+@include robotwitter-keyframes(LoginView-show-animation) {
+	from { opacity: 0; }
+	to	 { opacity: 1; }
+}
+

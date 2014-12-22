@@ -46,7 +46,7 @@ public class LoginForm extends AbstractFormComponent
 		AbstractPasswordValidator passwordValidator,
 		Consumer<IFormComponent> signInHandler)
 	{
-		super(messages.get("LoginForm.button.sign-in"), //$NON-NLS-1$
+		super(messages.get("LoginForm.button.sign-in"), 
 			FontAwesome.ARROW_CIRCLE_RIGHT,
 			signInHandler);
 		
@@ -62,9 +62,9 @@ public class LoginForm extends AbstractFormComponent
 	/** Initialises the email address field. */
 	private void initialiseEmail()
 	{
-		addEmailField(EMAIL, null, messages.get("LoginForm.label.email"), //$NON-NLS-1$
-			messages.get("LoginForm.error.email-empty"), //$NON-NLS-1$
-			messages.get("LoginForm.error.email-invalid")); //$NON-NLS-1$
+		addEmailField(EMAIL, null, messages.get("LoginForm.label.email"), 
+			messages.get("LoginForm.error.email-empty"), 
+			messages.get("LoginForm.error.email-invalid")); 
 	}
 	
 	
@@ -74,8 +74,8 @@ public class LoginForm extends AbstractFormComponent
 		addPasswordField(
 			PASSWORD,
 			null,
-			messages.get("LoginForm.label.password"), //$NON-NLS-1$
-			messages.get("LoginForm.error.password-empty"), //$NON-NLS-1$
+			messages.get("LoginForm.label.password"), 
+			messages.get("LoginForm.error.password-empty"), 
 			passwordValidator);
 	}
 
@@ -94,29 +94,29 @@ public class LoginForm extends AbstractFormComponent
 			case USER_DOESNT_EXIST:
 				return new Error(
 					EMAIL,
-					messages.get("LoginForm.error.user-doesnt-exist")); //$NON-NLS-1$
+					messages.get("LoginForm.error.user-doesnt-exist")); 
 				
 			case AUTHENTICATION_FAILURE:
 				return new Error(
 					PASSWORD,
-					messages.get("LoginForm.error.password-incorrect"));//$NON-NLS-1$
+					messages.get("LoginForm.error.password-incorrect"));
 
 			case FAILURE:
-				return new Error(null, messages.get("LoginForm.error.unknown"), //$NON-NLS-1$
+				return new Error(null, messages.get("LoginForm.error.unknown"), 
 					true);
 				
 			default:
-				throw new RuntimeException("Unknown status: " + status); //$NON-NLS-1$
+				throw new RuntimeException("Unknown status: " + status); 
 		}
 	}
 
 
 
 	/** The email field's identifier. */
-	public static final String EMAIL = "email"; //$NON-NLS-1$
+	public static final String EMAIL = "email"; 
 	
 	/** The password field's identifier. */
-	public static final String PASSWORD = "password"; //$NON-NLS-1$
+	public static final String PASSWORD = "password"; 
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

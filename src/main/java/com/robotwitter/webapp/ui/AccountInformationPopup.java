@@ -15,6 +15,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import com.robotwitter.webapp.control.account.IAccountController;
 import com.robotwitter.webapp.control.account.IAccountController.TwitterAccount;
+import com.robotwitter.webapp.control.account.ITwitterConnectorController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.IUserSession;
 import com.robotwitter.webapp.view.RobotwitterUI;
@@ -30,14 +31,22 @@ import com.robotwitter.webapp.view.RobotwitterUI;
 class AccountInformationPopup implements PopupView.Content
 {
 	/**
-	 * Instantiates a new account information popup.
+	 * Instantiates a new account information pop-up.
 	 *
 	 * @param messages
 	 *            the container of messages to display
+	 * @param twitterConnectorController
+	 *            the Twitter account connector controller
 	 */
-	public AccountInformationPopup(IMessagesContainer messages)
+	public AccountInformationPopup(
+		IMessagesContainer messages,
+		ITwitterConnectorController twitterConnectorController)
 	{
 		this.messages = messages;
+		this.twitterConnectorController = twitterConnectorController;
+
+		initialiseTwitterConnectorController();
+
 		userSession = ((RobotwitterUI) UI.getCurrent()).getUserSession();
 		owner = null;
 	}
@@ -49,15 +58,32 @@ class AccountInformationPopup implements PopupView.Content
 		IAccountController controller = userSession.getAccountController();
 
 		// Root element
-		String minimisedOpen = "<div class=\"" + MINIMISED_STYLENAME + "\">"; //$NON-NLS-1$ //$NON-NLS-2$
-		String minimiseClose = "</div>"; //$NON-NLS-1$
-		
+		String minimisedOpen = "<div class=\"" + MINIMISED_STYLENAME + "\">";
+		String minimiseClose = "</div>";
+
 		TwitterAccount account = controller.getActiveTwitterAccount();
-		String minimiseContent =
-			TwitterCard.createAsHtml(
-				account.name,
-				account.screenname,
-				account.image);
+		
+		String minimiseContent = null;
+		if (account == null)
+		{
+			minimiseContent =
+				TwitterCard
+					.createAsHtml(
+						messages
+					.get("AccountInformationPopup.label.no-twitter-account"),
+						messages
+					.get("AccountInformationPopup.label.click-to-connect"),
+						"http://www.austadpro.com/blog/wp-content/uploads/2011/07/anonymous-user-gravatar.png",
+						true);
+		} else
+		{
+			minimiseContent =
+				TwitterCard.createAsHtml(
+					account.name,
+					account.screenname,
+					account.image,
+					false);
+		}
 		
 		String minimiseElem = minimisedOpen + minimiseContent + minimiseClose;
 
@@ -75,19 +101,19 @@ class AccountInformationPopup implements PopupView.Content
 	
 	
 	/**
-	 * Sets the owner component of this popup view content.
+	 * Sets the owner component of this pop-up view content.
 	 * <p>
-	 * Must be called immediately after binding this content to a popup view
+	 * Must be called immediately after binding this content to a pop-up view
 	 * component.
 	 * <p>
 	 * Note: Vaadin does not provide a way to acquire the owning component of
-	 * this popup view component, and so we must manually set it using this
+	 * this pop-up view component, and so we must manually set it using this
 	 * method.
 	 * <p>
-	 * Note 2: this is required in order to close the popup programmatically.
+	 * Note 2: this is required in order to close the pop-up programmatically.
 	 *
 	 * @param owner
-	 *            the popup view owning this content
+	 *            the pop-up view owning this content
 	 */
 	public void setOwner(PopupView owner)
 	{
@@ -95,7 +121,7 @@ class AccountInformationPopup implements PopupView.Content
 	}
 	
 	
-	/** Closes the owning popup. */
+	/** Closes the owning pop-up. */
 	private void close()
 	{
 		owner.setPopupVisible(false);
@@ -111,7 +137,8 @@ class AccountInformationPopup implements PopupView.Content
 		Label name = new Label(controller.getName());
 		Label email = new Label(controller.getEmail());
 		Button signout =
-			new Button(messages.get("AccountInformationPopup.button.signout"), //$NON-NLS-1$
+			new Button(
+				messages.get("AccountInformationPopup.button.signout"),
 				event -> {
 					close();
 					userSession.unsign();
@@ -120,6 +147,7 @@ class AccountInformationPopup implements PopupView.Content
 		// Create layouts
 		VerticalLayout information = new VerticalLayout(name, email);
 		HorizontalLayout wrapper = new HorizontalLayout(information, signout);
+		wrapper.setSizeFull();
 
 		// Set styles
 		name.addStyleName(ACCOUNT_NAME_STYLENAME);
@@ -157,12 +185,14 @@ class AccountInformationPopup implements PopupView.Content
 				new Label(TwitterCard.createAsHtml(
 					account.name,
 					account.screenname,
-					account.image));
+					account.image,
+					false));
 			card.setContentMode(ContentMode.HTML);
 			VerticalLayout cardWrapper = new VerticalLayout(card);
 			cardWrapper.addStyleName(CARD_WRAPPER_STYLENAME);
 			cardWrapper.addLayoutClickListener(event -> {
-				userSession.activateTwitterAccount(account.screenname);
+				((RobotwitterUI) UI.getCurrent())
+				.activateTwitterAccount(account.id);
 				close();
 			});
 			twitterAccounts.addComponent(cardWrapper);
@@ -170,7 +200,12 @@ class AccountInformationPopup implements PopupView.Content
 
 		// Create manage button
 		Button manage =
-			new Button(messages.get("AccountInformationPopup.button.manage")); //$NON-NLS-1$
+			new Button(
+				messages.get("AccountInformationPopup.button.manage"),
+				event -> {
+					UI.getCurrent().addWindow(twitterConnectorWindow);
+					close();
+				});
 		manage.addStyleName(MANAGE_STYLENAME);
 		manage.addStyleName(ValoTheme.BUTTON_LINK);
 		manage.setSizeFull();
@@ -179,40 +214,48 @@ class AccountInformationPopup implements PopupView.Content
 
 		return twitterAccounts;
 	}
+
+
+	/** Initialises the Twitter account connector window. */
+	private void initialiseTwitterConnectorController()
+	{
+		twitterConnectorWindow =
+			new TwitterConnectorWindow(messages, twitterConnectorController);
+	}
 	
 	
 	
 	/** The CSS class name to apply to the minimised presentation. */
 	private static final String MINIMISED_STYLENAME =
-		"AccountInformationPopup-minimised"; //$NON-NLS-1$
+		"AccountInformationPopup-minimised";
 
 	/** The CSS class name to apply to a card wrapper. */
 	private static final String CARD_WRAPPER_STYLENAME =
-		"AccountInformationPopup-card-wrapper"; //$NON-NLS-1$
+		"AccountInformationPopup-card-wrapper";
 
 	/** The CSS class name to apply the "Manage Twitter accounts" button. */
 	private static final String MANAGE_STYLENAME =
-		"AccountInformationPopup-manage"; //$NON-NLS-1$
+		"AccountInformationPopup-manage";
 
 	/** The CSS class name to apply to the account information section. */
 	private static final String ACCOUNT_INFO_STYLENAME =
-		"AccountInformationPopup-account-info"; //$NON-NLS-1$
+		"AccountInformationPopup-account-info";
 
 	/** The CSS class name to apply to the account information wrapper. */
 	private static final String ACCOUNT_WRAPPER_STYLENAME =
-		"AccountInformationPopup-account-wrapper"; //$NON-NLS-1$
+		"AccountInformationPopup-account-wrapper";
 	
 	/** The CSS class name to apply to the account name label. */
 	private static final String ACCOUNT_NAME_STYLENAME =
-		"AccountInformationPopup-account-name"; //$NON-NLS-1$
-	
+		"AccountInformationPopup-account-name";
+
 	/** The CSS class name to apply to the account email label. */
 	private static final String ACCOUNT_EMAIL_STYLENAME =
-		"AccountInformationPopup-account-email"; //$NON-NLS-1$
+		"AccountInformationPopup-account-email";
 
 	/** The CSS class name to apply the "Sign out" button. */
 	private static final String SIGNOUT_STYLENAME =
-		"AccountInformationPopup-signout"; //$NON-NLS-1$
+		"AccountInformationPopup-signout";
 
 	/** The messages displayed by this component. */
 	protected IMessagesContainer messages;
@@ -222,6 +265,12 @@ class AccountInformationPopup implements PopupView.Content
 	
 	/** The owning component. */
 	private PopupView owner;
+
+	/** The Twitter account connector controller. */
+	private final ITwitterConnectorController twitterConnectorController;
+	
+	/** The Twitter account connector window. */
+	private TwitterConnectorWindow twitterConnectorWindow;
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

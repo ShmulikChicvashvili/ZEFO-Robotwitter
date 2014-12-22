@@ -2,6 +2,8 @@
 package com.robotwitter.webapp.view;
 
 
+import com.google.inject.Injector;
+
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewProvider;
@@ -13,7 +15,7 @@ import com.vaadin.ui.VerticalLayout;
 
 import com.robotwitter.webapp.Configuration;
 import com.robotwitter.webapp.IMenuFactory;
-import com.robotwitter.webapp.control.account.AccountControllerStub;
+import com.robotwitter.webapp.control.account.IAccountController;
 import com.robotwitter.webapp.ui.AbstractMenu;
 import com.robotwitter.webapp.ui.MainMenu;
 
@@ -47,6 +49,19 @@ public class RobotwitterUI extends UI
 	}
 
 
+	/**
+	 * Activates a Twitter account.
+	 *
+	 * @param id
+	 *            the ID of the Twitter account to activate
+	 */
+	public final void activateTwitterAccount(long id)
+	{
+		mainMenu.activateTwitterAccount(id);
+		userSession.activateTwitterAccount(id);
+	}
+
+
 	/** @return the current user's browsing session. */
 	public final UserSession getUserSession()
 	{
@@ -59,13 +74,6 @@ public class RobotwitterUI extends UI
 	{
 		content = new VerticalLayout();
 		mainMenuContainer = new VerticalLayout(content);
-		
-		// Main menu should be shown if the user is signed
-		if (userSession.isSigned())
-		{
-			showMainMenu();
-		}
-		
 		setContent(mainMenuContainer);
 	}
 
@@ -102,18 +110,26 @@ public class RobotwitterUI extends UI
 	/** Initialises the current user's browsing session. */
 	private void initialiseUserSession()
 	{
-		userSession =
-			new UserSession(getSession(), new AccountControllerStub());
+		Injector injector =
+			(Injector) VaadinServlet
+			.getCurrent()
+			.getServletContext()
+			.getAttribute(Configuration.INJECTOR);
+		
+		IAccountController controller =
+			injector.getInstance(IAccountController.class);
+		
+		userSession = new UserSession(getSession(), controller);
 	}
 
 
 	@Override
 	protected final void init(VaadinRequest request)
 	{
-		initialiseUserSession();
-		initialiseMainMenu();
 		initialiseLayout();
 		initialiseNavigator();
+		initialiseUserSession();
+		initialiseMainMenu();
 	}
 
 

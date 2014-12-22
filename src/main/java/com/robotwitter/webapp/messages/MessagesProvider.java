@@ -63,7 +63,7 @@ public class MessagesProvider implements IMessagesProvider
 	private void add(String name)
 	{
 		// ignore empty name (mapped to the default view)
-		if ("".equals(name)) { return; } //$NON-NLS-1$
+		if ("".equals(name)) { return; } 
 
 		containers.put(name, new ViewMessagesContainer(name));
 	}

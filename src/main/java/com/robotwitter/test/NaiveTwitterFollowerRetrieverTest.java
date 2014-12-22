@@ -25,7 +25,7 @@ import com.robotwitter.twitter.TwitterAppConfiguration;
  */
 public class NaiveTwitterFollowerRetrieverTest
 {
-	
+
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -33,11 +33,11 @@ public class NaiveTwitterFollowerRetrieverTest
 	public void setUp() throws Exception
 	{
 		final TwitterAppConfiguration conf = new TwitterAppConfiguration();
-		final TwitterFactory tf = new TwitterFactory(conf.getConfiguration());
+		final TwitterFactory tf =
+			new TwitterFactory(conf.getAppConfiguration());
 		retriever = new NaiveTwitterFollowerRetriever(tf);
-		
+
 	}
-	
 	
 	
 	/**
@@ -48,20 +48,20 @@ public class NaiveTwitterFollowerRetrieverTest
 	{
 		retriever = null;
 	}
-	
-	
+
+
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testExistingUser()
 	{
 		long yogiID = 47973104;
 		long shmulikID = 248335762;
-		
+
 		assertEquals(retriever.retrieveFollowersAmount(yogiID), 50);
 		assertEquals(retriever.retrieveFollowersAmount(shmulikID), 5);
 	}
-	
-	
+
+
 	@SuppressWarnings("javadoc")
 	@Test
 	public void testNonExistingUser()
@@ -70,6 +70,7 @@ public class NaiveTwitterFollowerRetrieverTest
 	}
 	
 	
-	NaiveTwitterFollowerRetriever retriever;
 	
+	NaiveTwitterFollowerRetriever retriever;
+
 }

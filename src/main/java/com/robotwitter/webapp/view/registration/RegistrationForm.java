@@ -26,7 +26,7 @@ import com.robotwitter.webapp.util.IFormComponent;
  */
 public class RegistrationForm extends AbstractFormComponent
 {
-	
+
 	/**
 	 * Instantiates a new registration form.
 	 *
@@ -47,86 +47,86 @@ public class RegistrationForm extends AbstractFormComponent
 		AbstractPasswordValidator passwordValidator,
 		Consumer<IFormComponent> signUpHandler)
 	{
-		super(messages.get("RegistrationForm.button.sign-up"), //$NON-NLS-1$
+		super(messages.get("RegistrationForm.button.sign-up"), 
 			FontAwesome.ARROW_CIRCLE_RIGHT,
 			signUpHandler);
-
+		
 		this.messages = messages;
 		this.registrationController = registrationController;
 		this.passwordValidator = passwordValidator;
-
+		
 		initialiseEmail();
 		initialisePassword();
 	}
-
-
+	
+	
 	/** Initialises the email address field. */
 	private void initialiseEmail()
 	{
-		addEmailField(EMAIL, messages.get("RegistrationForm.label.email"), //$NON-NLS-1$
+		addEmailField(EMAIL, messages.get("RegistrationForm.label.email"), 
 			null,
-			messages.get("RegistrationForm.error.email-empty"), //$NON-NLS-1$
-			messages.get("RegistrationForm.error.email-invalid")); //$NON-NLS-1$
+			messages.get("RegistrationForm.error.email-empty"), 
+			messages.get("RegistrationForm.error.email-invalid")); 
 	}
-
-
+	
+	
 	/** Initialises the password field. */
 	private void initialisePassword()
 	{
 		addPasswordField(
 			PASSWORD,
-			messages.get("RegistrationForm.label.password"), //$NON-NLS-1$
+			messages.get("RegistrationForm.label.password"), 
 			null,
-			messages.get("RegistrationForm.error.password-empty"), //$NON-NLS-1$
+			messages.get("RegistrationForm.error.password-empty"), 
 			passwordValidator);
 	}
-	
-	
+
+
 	@Override
 	protected final Error validate()
 	{
 		final Status status =
 			registrationController.register(get(EMAIL), get(PASSWORD));
-
+		
 		switch (status)
 		{
 			case SUCCESS:
 				return null;
-
+				
 			case USER_ALREADY_EXISTS:
 				return new Error(
 					EMAIL,
-					messages.get("RegistrationForm.error.user-already-exist")); //$NON-NLS-1$
-				
+					messages.get("RegistrationForm.error.user-already-exist")); 
+
 			case FAILURE:
 				return new Error(
 					null,
-					messages.get("RegistrationForm.error.unknown"), //$NON-NLS-1$
+					messages.get("RegistrationForm.error.unknown"), 
 					true);
-
+				
 			default:
 				assert false;
 				return null;
 		}
 	}
-	
-	
-	
+
+
+
 	/** The email field's identifier. */
-	public static final String EMAIL = "email"; //$NON-NLS-1$
-
+	public static final String EMAIL = "email"; 
+	
 	/** The password field's identifier. */
-	public static final String PASSWORD = "password"; //$NON-NLS-1$
-
+	public static final String PASSWORD = "password"; 
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The user's registration controller. */
 	IRegistrationController registrationController;
-	
+
 	/** The displayed messages. */
 	IMessagesContainer messages;
-	
+
 	/** The user's password validator. */
 	AbstractStringValidator passwordValidator;
 }

@@ -191,6 +191,19 @@ public abstract class AbstractFormComponent extends CustomComponent
 		final PasswordField password = new PasswordField();
 		addField(identifier, password, caption, prompt, emptyError, validator);
 	}
+	
+	
+	@Override
+	public final void addTextField(
+		String identifier,
+		String caption,
+		String prompt,
+		String emptyError,
+		AbstractStringValidator validator)
+	{
+		final TextField textfield = new TextField();
+		addField(identifier, textfield, caption, prompt, emptyError, validator);
+	}
 
 
 	@Override
@@ -439,21 +452,21 @@ public abstract class AbstractFormComponent extends CustomComponent
 
 
 	/** The CSS class name to apply to the form's error message. */
-	private static final String ERROR_STYLENAME = "AbstractFormComponent-error"; //$NON-NLS-1$
-	
+	private static final String ERROR_STYLENAME = "AbstractFormComponent-error";
+
 	/** The CSS class name to apply to the form's fields. */
-	private static final String FIELD_STYLENAME = "AbstractFormComponent-field"; //$NON-NLS-1$
-	
+	private static final String FIELD_STYLENAME = "AbstractFormComponent-field";
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 	
 	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "AbstractFormComponent"; //$NON-NLS-1$
-	
+	private static final String STYLENAME = "AbstractFormComponent";
+
 	/** The CSS class name to apply to the form's submit button. */
 	private static final String SUBMIT_STYLENAME =
-		"AbstractFormComponent-submit"; //$NON-NLS-1$
-	
+		"AbstractFormComponent-submit";
+
 	/** A mapping of the error messages displayed when fields are empty. */
 	private final Map<String, String> emptyErrorMessages;
 	

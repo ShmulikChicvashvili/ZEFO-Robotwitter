@@ -16,7 +16,7 @@ import com.robotwitter.database.interfaces.ConnectionEstablisher;
  * @author Shmulik and Eyal
  *
  */
-public abstract class MySqlDatabase
+public abstract class AbstractMySqlDatabase
 {
 	/**
 	 * C'tor of general settings
@@ -24,7 +24,7 @@ public abstract class MySqlDatabase
 	 * @param conEstablisher
 	 *            A connection establisher for the database
 	 */
-	public MySqlDatabase(final ConnectionEstablisher conEstablisher)
+	public AbstractMySqlDatabase(final ConnectionEstablisher conEstablisher)
 	{
 		connectionEstablisher = conEstablisher;
 		if (connectionEstablisher.getSchema().startsWith("`")) //$NON-NLS-1$

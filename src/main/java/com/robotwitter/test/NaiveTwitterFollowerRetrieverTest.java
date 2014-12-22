@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.test;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
@@ -26,10 +26,6 @@ import com.robotwitter.twitter.TwitterAppConfiguration;
 public class NaiveTwitterFollowerRetrieverTest
 {
 	
-	NaiveTwitterFollowerRetriever retriever;
-	
-	
-	
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -38,9 +34,10 @@ public class NaiveTwitterFollowerRetrieverTest
 	{
 		final TwitterAppConfiguration conf = new TwitterAppConfiguration();
 		final TwitterFactory tf = new TwitterFactory(conf.getConfiguration());
-		this.retriever = new NaiveTwitterFollowerRetriever(tf);
+		retriever = new NaiveTwitterFollowerRetriever(tf);
 		
 	}
+	
 	
 	
 	/**
@@ -49,7 +46,7 @@ public class NaiveTwitterFollowerRetrieverTest
 	@After
 	public void tearDown() throws Exception
 	{
-		this.retriever = null;
+		retriever = null;
 	}
 	
 	
@@ -60,8 +57,8 @@ public class NaiveTwitterFollowerRetrieverTest
 		long yogiID = 47973104;
 		long shmulikID = 248335762;
 		
-		assertEquals(this.retriever.retrieveFollowersAmount(yogiID), 50);
-		assertEquals(this.retriever.retrieveFollowersAmount(shmulikID), 5);
+		assertEquals(retriever.retrieveFollowersAmount(yogiID), 50);
+		assertEquals(retriever.retrieveFollowersAmount(shmulikID), 5);
 	}
 	
 	
@@ -69,7 +66,10 @@ public class NaiveTwitterFollowerRetrieverTest
 	@Test
 	public void testNonExistingUser()
 	{
-		assertEquals(this.retriever.retrieveFollowersAmount(-1), -1);
+		assertEquals(retriever.retrieveFollowersAmount(-1), -1);
 	}
+	
+	
+	NaiveTwitterFollowerRetriever retriever;
 	
 }

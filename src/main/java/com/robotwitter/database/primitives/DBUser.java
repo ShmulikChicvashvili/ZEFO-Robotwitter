@@ -12,7 +12,7 @@ package com.robotwitter.database.primitives;
  */
 public class DBUser extends DatabaseType
 {
-
+	
 	/**
 	 * @param email
 	 *            The email of the user
@@ -24,8 +24,8 @@ public class DBUser extends DatabaseType
 		super(email);
 		this.password = password;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * DatabasePrimitives.DatabaseType#equals(java.lang.Object) */
 	@Override
@@ -33,14 +33,17 @@ public class DBUser extends DatabaseType
 	{
 		if (obj != null)
 		{
-			final DBUser u = (DBUser) obj;
-			return eMail.toLowerCase().equals(u.getEMail().toLowerCase())
-				&& password.equals(u.getPassword());
+			if (obj instanceof DBUser)
+			{
+				final DBUser u = (DBUser) obj;
+				return eMail.toLowerCase().equals(u.getEMail().toLowerCase())
+					&& password.equals(u.getPassword());
+			}
 		}
 		return false;
 	}
-
-
+	
+	
 	/**
 	 * @return the password
 	 */
@@ -48,8 +51,8 @@ public class DBUser extends DatabaseType
 	{
 		return password;
 	}
-
-
+	
+	
 	/**
 	 * @param password
 	 *            the password to set
@@ -58,8 +61,8 @@ public class DBUser extends DatabaseType
 	{
 		this.password = password;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see DatabasePrimitives.DatabaseType#toString() */
 	@SuppressWarnings("nls")
 	@Override
@@ -67,12 +70,12 @@ public class DBUser extends DatabaseType
 	{
 		return "Email: " + getEMail() + " Password: " + getPassword();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * The password of the user
 	 */
 	String password;
-
+	
 }

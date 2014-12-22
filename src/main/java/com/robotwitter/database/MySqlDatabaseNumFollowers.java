@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.database;
@@ -7,6 +7,7 @@ package com.robotwitter.database;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,17 +25,17 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
 
 /**
  * Handles the connection to number followers table.
- * 
+ *
  * @author Eyal
  *
  */
-public final class MySqlDatabaseNumFollowers extends MySqlDatabase
+public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 	implements
 		IDatabaseNumFollowers
 {
 	/**
 	 * The columns for the table.
-	 * 
+	 *
 	 * @author Eyal
 	 *
 	 */
@@ -53,12 +54,12 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 		 */
 		NUM_FOLLOWERS
 	}
-	
-	
-	
+
+
+
 	/**
 	 * C'tor for MySqlDB for the number followers table.
-	 * 
+	 *
 	 * @param conEsatblisher
 	 *            An object to create connections to the database.
 	 * @throws SQLException
@@ -73,9 +74,9 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 			Connection con = connectionEstablisher.getConnection();
 			Statement statement = (Statement) con.createStatement())
 		{
-			
+
 			final String statementCreate =
-				String.format("CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$ 
+				String.format("CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$
 					+ "`%s` BIGINT NOT NULL," //$NON-NLS-1$
 					+ "`%s` TIMESTAMP NOT NULL," //$NON-NLS-1$
 					+ "`%s` INT NOT NULL," //$NON-NLS-1$
@@ -86,12 +87,12 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 					Columns.NUM_FOLLOWERS.toString().toLowerCase(),
 					Columns.TWITTER_ID.toString().toLowerCase(),
 					Columns.DATE.toString().toLowerCase());
-			
+
 			statement.execute(statementCreate);
 		}
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.database.interfaces.IDatabaseNumFollowers
 	 * #get(java.lang.String) */
@@ -116,6 +117,10 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 			$ = new ArrayList<>();
 			while (resultSet.next())
 			{
+				final Timestamp date =
+					resultSet.getTimestamp(Columns.DATE
+						.toString()
+						.toLowerCase());
 				final DBFollowersNumber statistic =
 					new DBFollowersNumber(resultSet.getLong(Columns.TWITTER_ID
 						.toString()
@@ -127,7 +132,7 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 				$.add(statistic);
 			}
 			resultSet.close();
-		} catch (SQLException e)
+		} catch (final SQLException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -135,8 +140,8 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 		if ($ == null || $.isEmpty()) { return null; }
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.database.interfaces.IDatabaseNumFollowers
 	 * #insert(com.robotwitter.database.primitives.DBFollowersNumber) */
@@ -144,7 +149,10 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 	@Override
 	public SqlError insert(DBFollowersNumber statistic)
 	{
-		if (statistic == null) { return SqlError.INVALID_PARAMS; }
+		if (statistic == null
+			|| statistic.getTwitterId() == null
+			|| statistic.getDate() == null
+			|| statistic.getNumFollowers() < 0) { return SqlError.INVALID_PARAMS; }
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			PreparedStatement preparedStatement =
@@ -158,11 +166,12 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 					+ Columns.NUM_FOLLOWERS.toString().toLowerCase()
 					+ ") VALUES (?,?,?);"))
 		{
+			final Timestamp date = statistic.getDate();
 			preparedStatement.setLong(1, statistic.getTwitterId());
 			preparedStatement.setTimestamp(2, statistic.getDate());
 			preparedStatement.setInt(3, statistic.getNumFollowers());
 			preparedStatement.executeUpdate();
-		} catch (SQLException e)
+		} catch (final SQLException e)
 		{
 			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
 			// TODO what to do if not this error code
@@ -170,12 +179,12 @@ public final class MySqlDatabaseNumFollowers extends MySqlDatabase
 		}
 		return SqlError.SUCCESS;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * The table name.
 	 */
 	private final String table = schema + ".`followers_number`"; //$NON-NLS-1$
-	
+
 }

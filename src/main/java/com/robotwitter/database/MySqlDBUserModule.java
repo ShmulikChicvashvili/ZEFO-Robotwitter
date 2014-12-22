@@ -18,13 +18,13 @@ import com.robotwitter.database.interfaces.ConnectionEstablisher;
  *         The class handles the default configuration for the factory of
  *         IDatabase
  */
-public class MySQLDBUserModule extends AbstractModule
+public class MySqlDBUserModule extends AbstractModule
 {
 
 	/**
 	 *
 	 */
-	public MySQLDBUserModule()
+	public MySqlDBUserModule()
 	{}
 
 

@@ -22,7 +22,7 @@ import twitter4j.auth.AccessToken;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.robotwitter.database.MySQLDBUserModule;
+import com.robotwitter.database.MySqlDBUserModule;
 import com.robotwitter.database.MySqlDatabaseTwitterAccounts;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.database.primitives.DatabaseType;
@@ -55,7 +55,7 @@ public class IntegratedTwitterAttacherTest
 		final TwitterFactory tf = new TwitterFactory(conf.getConfiguration());
 		this.account = new TwitterAccount(tf);
 		
-		final Injector injector = Guice.createInjector(new MySQLDBUserModule());
+		final Injector injector = Guice.createInjector(new MySqlDBUserModule());
 		this.db = injector.getInstance(MySqlDatabaseTwitterAccounts.class);
 		
 		this.attacher =

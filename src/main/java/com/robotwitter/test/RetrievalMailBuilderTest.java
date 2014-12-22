@@ -1,11 +1,13 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.test;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,6 +15,7 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
 import com.robotwitter.management.RetrievalMailBuilder;
 import com.robotwitter.management.RetrievalMailBuilderModule;
 import com.robotwitter.miscellaneous.EmailMessage;
@@ -27,10 +30,6 @@ import com.robotwitter.miscellaneous.EmailMessage;
 public class RetrievalMailBuilderTest
 {
 	
-	RetrievalMailBuilder builder;
-	
-	
-	
 	/**
 	 */
 	@Before
@@ -38,9 +37,10 @@ public class RetrievalMailBuilderTest
 	{
 		Injector injector =
 			Guice.createInjector(new RetrievalMailBuilderModule());
-		this.builder = injector.getInstance(RetrievalMailBuilder.class);
+		builder = injector.getInstance(RetrievalMailBuilder.class);
 		
 	}
+	
 	
 	
 	/**
@@ -48,7 +48,7 @@ public class RetrievalMailBuilderTest
 	@After
 	public void tearDown()
 	{
-		this.builder = null;
+		builder = null;
 	}
 	
 	
@@ -56,7 +56,7 @@ public class RetrievalMailBuilderTest
 	public void test()
 	{
 		EmailMessage mail =
-			this.builder.buildRetrievalEmail(
+			builder.buildRetrievalEmail(
 				"systemMail",
 				"userMail",
 				"userPassword");
@@ -70,5 +70,8 @@ public class RetrievalMailBuilderTest
 		
 		System.out.println(mail.getMsgText());
 	}
+	
+	
+	RetrievalMailBuilder builder;
 	
 }

@@ -5,6 +5,8 @@ package com.robotwitter.webapp;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
+import com.robotwitter.webapp.control.account.ITwitterConnectorController;
+import com.robotwitter.webapp.control.account.TwitterConnectorController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.messages.IMessagesProvider;
 
@@ -18,7 +20,7 @@ import com.robotwitter.webapp.messages.IMessagesProvider;
  */
 public class MenuModule extends AbstractModule
 {
-	
+
 	/**
 	 * Instantiates a new menu module.
 	 *
@@ -32,8 +34,8 @@ public class MenuModule extends AbstractModule
 		this.menus = menus;
 		this.messagesProvider = messagesProvider;
 	}
-
-
+	
+	
 	/**
 	 * Binds an instance of {@link IMessagesContainer} to instances of a given
 	 * {@link com.vaadin.navigator.View} given their name.
@@ -48,24 +50,28 @@ public class MenuModule extends AbstractModule
 	private void bindMessagesContainer(String name)
 	{
 		bind(IMessagesContainer.class)
-		.annotatedWith(Names.named(name))
-		.toInstance(messagesProvider.get(name));
+			.annotatedWith(Names.named(name))
+			.toInstance(messagesProvider.get(name));
 	}
-	
-	
+
+
 	@Override
 	protected final void configure()
 	{
 		// Bind message containers
 		menus.keySet().forEach(name -> bindMessagesContainer(name));
+
+		// Bind controllers
+		bind(ITwitterConnectorController.class).to(
+			TwitterConnectorController.class);
 	}
-	
-	
-	
+
+
+
 	/** A mapping of all available menus. */
 	private final MenuMap menus;
-	
+
 	/** Provides messages containers for the menus. */
 	IMessagesProvider messagesProvider;
-	
+
 }

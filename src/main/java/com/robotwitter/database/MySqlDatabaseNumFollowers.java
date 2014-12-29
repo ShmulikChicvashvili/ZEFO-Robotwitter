@@ -26,12 +26,12 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
 /**
  * Handles the connection to number followers table.
  *
- * @author Eyal
+ * @author Eyal and Shmulik
  *
  */
 public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
-	implements
-		IDatabaseNumFollowers
+implements
+IDatabaseNumFollowers
 {
 	/**
 	 * The columns for the table.
@@ -54,9 +54,9 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 		 */
 		NUM_FOLLOWERS
 	}
-
-
-
+	
+	
+	
 	/**
 	 * C'tor for MySqlDB for the number followers table.
 	 *
@@ -73,8 +73,8 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			Statement statement = (Statement) con.createStatement())
-		{
-
+			{
+			
 			final String statementCreate =
 				String.format("CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$
 					+ "`%s` BIGINT NOT NULL," //$NON-NLS-1$
@@ -87,12 +87,12 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 					Columns.NUM_FOLLOWERS.toString().toLowerCase(),
 					Columns.TWITTER_ID.toString().toLowerCase(),
 					Columns.DATE.toString().toLowerCase());
-
+			
 			statement.execute(statementCreate);
-		}
+			}
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.database.interfaces.IDatabaseNumFollowers
 	 * #get(java.lang.String) */
@@ -111,7 +111,7 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 					+ " WHERE "
 					+ Columns.TWITTER_ID.name().toLowerCase()
 					+ "=?;"))
-		{
+					{
 			preparedStatement.setLong(1, twitterId);
 			resultSet = preparedStatement.executeQuery();
 			$ = new ArrayList<>();
@@ -125,23 +125,23 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 					new DBFollowersNumber(resultSet.getLong(Columns.TWITTER_ID
 						.toString()
 						.toLowerCase()), resultSet.getTimestamp(Columns.DATE
-						.toString()
-						.toLowerCase()), resultSet.getInt(Columns.NUM_FOLLOWERS
-						.toString()
-						.toLowerCase()));
+							.toString()
+							.toLowerCase()), resultSet.getInt(Columns.NUM_FOLLOWERS
+								.toString()
+								.toLowerCase()));
 				$.add(statistic);
 			}
 			resultSet.close();
-		} catch (final SQLException e)
+					} catch (final SQLException e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 		}
 		if ($ == null || $.isEmpty()) { return null; }
 		return $;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.database.interfaces.IDatabaseNumFollowers
 	 * #insert(com.robotwitter.database.primitives.DBFollowersNumber) */
@@ -165,26 +165,26 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 					+ ","
 					+ Columns.NUM_FOLLOWERS.toString().toLowerCase()
 					+ ") VALUES (?,?,?);"))
-		{
+					{
 			final Timestamp date = statistic.getDate();
 			preparedStatement.setLong(1, statistic.getTwitterId());
 			preparedStatement.setTimestamp(2, statistic.getDate());
 			preparedStatement.setInt(3, statistic.getNumFollowers());
 			preparedStatement.executeUpdate();
-		} catch (final SQLException e)
+					} catch (final SQLException e)
 		{
-			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
-			// TODO what to do if not this error code
-			e.printStackTrace();
+						if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
+						// TODO what to do if not this error code
+						e.printStackTrace();
 		}
 		return SqlError.SUCCESS;
 	}
-
-
-
+	
+	
+	
 	/**
 	 * The table name.
 	 */
 	private final String table = schema + ".`followers_number`"; //$NON-NLS-1$
-
+	
 }

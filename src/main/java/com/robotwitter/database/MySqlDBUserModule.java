@@ -7,6 +7,7 @@ package com.robotwitter.database;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
+
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 
 
@@ -20,14 +21,14 @@ import com.robotwitter.database.interfaces.ConnectionEstablisher;
  */
 public class MySqlDBUserModule extends AbstractModule
 {
-
+	
 	/**
 	 *
 	 */
 	public MySqlDBUserModule()
 	{}
-
-
+	
+	
 	/* (non-Javadoc) @see com.google.inject.AbstractModule#configure() */
 	@SuppressWarnings("nls")
 	@Override
@@ -37,8 +38,8 @@ public class MySqlDBUserModule extends AbstractModule
 			"localhost");
 		bind(String.class).annotatedWith(Names.named("DB Schema")).toInstance(
 			"yearlyproj_db");
-
+		
 		bind(ConnectionEstablisher.class).to(MySQLConEstablisher.class);
 	}
-
+	
 }

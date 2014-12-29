@@ -6,7 +6,7 @@ package com.robotwitter.database.interfaces.returnValues;
 
 
 /**
- * @author Eyal
+ * @author Eyal and Shmulik
  *
  */
 public enum SqlError

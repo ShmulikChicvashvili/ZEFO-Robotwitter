@@ -4,6 +4,7 @@ package com.robotwitter.webapp.control.login;
 
 import com.google.inject.Inject;
 
+import com.robotwitter.management.EmailPasswordRetriever;
 import com.robotwitter.management.IEmailPasswordRetriever;
 
 
@@ -36,18 +37,17 @@ public class EmailPasswordRetrievalController
 	@Override
 	public final Status retrieve(final String email)
 	{
-		return Status.SUCCESS;
-		// final EmailPasswordRetriever.ReturnStatus result =
-		// emailRetriever.retrievePasswordByMail(email);
-		// switch (result)
-		// {
-		// case SUCCESS:
-		// return Status.SUCCESS;
-		// case USER_DOESNT_EXIST:
-		// return Status.USER_DOESNT_EXIST;
-		// default:
-		// return Status.FAILURE;
-		// }
+		final EmailPasswordRetriever.ReturnStatus result =
+			emailRetriever.retrievePasswordByMail(email);
+		switch (result)
+		{
+			case SUCCESS:
+				return Status.SUCCESS;
+			case USER_DOESNT_EXIST:
+				return Status.USER_DOESNT_EXIST;
+			default:
+				return Status.FAILURE;
+		}
 	}
 
 

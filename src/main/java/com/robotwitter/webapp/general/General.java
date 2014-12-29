@@ -17,9 +17,9 @@ public final class General
 	 */
 	private General() throws Exception
 	{
-		throw new Exception("instantiation of class " //$NON-NLS-1$
+		throw new Exception("instantiation of class " 
 			+ this.getClass().getName()
-			+ " is illegal"); //$NON-NLS-1$
+			+ " is illegal"); 
 	}
 
 
@@ -29,5 +29,5 @@ public final class General
 	 *
 	 * @see com.robotwitter.webapp.messages.IMessagesProvider
 	 */
-	public static final String MESSAGES = "general"; //$NON-NLS-1$
+	public static final String MESSAGES = "general"; 
 }

@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import com.vaadin.navigator.View;
 
+import com.robotwitter.webapp.view.connect_twitter.ConnectTwitterView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
 import com.robotwitter.webapp.view.login.LoginView;
 import com.robotwitter.webapp.view.registration.RegistrationView;
@@ -51,16 +52,17 @@ public class ViewMap extends HashMap<String, Class<? extends View>>
 	public ViewMap()
 	{
 		// default view
-		put("", LoginView.class); //$NON-NLS-1$
-
+		put("", LoginView.class);
+		
 		// other views. Add additional views here
 		put(LoginView.NAME, LoginView.class);
 		put(RegistrationView.NAME, RegistrationView.class);
+		put(ConnectTwitterView.NAME, ConnectTwitterView.class);
 		put(DashboardView.NAME, DashboardView.class);
 	}
-	
-	
-	
+
+
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

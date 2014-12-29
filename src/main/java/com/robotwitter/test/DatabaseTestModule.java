@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.test;
@@ -17,19 +17,19 @@ import com.robotwitter.database.interfaces.ConnectionEstablisher;
 
 /**
  * Module for creating a database for testing.
- * @author Eyal
+ * @author Eyal and Shmulik
  *
  */
 public class DatabaseTestModule extends AbstractModule
 {
-	
+
 	/**
 	 * Instantiates a new database test module.
 	 */
 	public DatabaseTestModule()
 	{}
-	
-	
+
+
 	/* (non-Javadoc) @see com.google.inject.AbstractModule#configure() */
 	@SuppressWarnings("nls")
 	@Override
@@ -39,8 +39,8 @@ public class DatabaseTestModule extends AbstractModule
 			"localhost");
 		bind(String.class).annotatedWith(Names.named("DB Schema")).toInstance(
 			"test");
-		
+
 		bind(ConnectionEstablisher.class).to(MySQLConEstablisher.class);
 	}
-	
+
 }

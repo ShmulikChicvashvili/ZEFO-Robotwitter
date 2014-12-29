@@ -7,7 +7,9 @@ import twitter4j.TwitterException;
 import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
-import com.robotwitter.database.MySqlDatabaseTwitterAccounts;
+import com.google.inject.Inject;
+
+import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 
 
@@ -19,8 +21,8 @@ import com.robotwitter.database.primitives.DBTwitterAccount;
  */
 public class TwitterAttacher implements ITwitterAttacher
 {
-
-	public TwitterAttacher(final MySqlDatabaseTwitterAccounts db)
+	@Inject
+	public TwitterAttacher(final IDatabaseTwitterAccounts db)
 	{
 		twitterDB = db;
 	}
@@ -38,7 +40,7 @@ public class TwitterAttacher implements ITwitterAttacher
 		if (pin.length() != CORRECT_PIN_LENGTH) { throw new IllegalPinException(
 			"The Pin " + pin + " is illegal!"); //$NON-NLS-1$ //$NON-NLS-2$
 		}
-		final Twitter twitter = account.getTwitter();
+		Twitter twitter = account.getTwitter();
 		try
 		{
 			final AccessToken accessToken = twitter.getOAuthAccessToken(pin);
@@ -72,7 +74,7 @@ public class TwitterAttacher implements ITwitterAttacher
 		{
 			final RequestToken requestToken = twitter.getOAuthRequestToken();
 			final String $ = requestToken.getAuthorizationURL(); // TODO: find a
-																	// way
+			// way
 			// to get the url
 			// from the
 			// configuration.
@@ -89,5 +91,5 @@ public class TwitterAttacher implements ITwitterAttacher
 	
 	private static final int CORRECT_PIN_LENGTH = 7;
 	
-	MySqlDatabaseTwitterAccounts twitterDB;
+	IDatabaseTwitterAccounts twitterDB;
 }

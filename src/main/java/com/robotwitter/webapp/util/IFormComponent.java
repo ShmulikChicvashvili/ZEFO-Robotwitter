@@ -36,8 +36,8 @@ public interface IFormComponent
 		String prompt,
 		String emptyError,
 		String invalidError);
-	
-	
+
+
 	/**
 	 * Adds a password field to the form.
 	 *
@@ -47,7 +47,7 @@ public interface IFormComponent
 	 *            the password's caption (or <code>null</code> for none)
 	 * @param prompt
 	 *            the password's prompt (or <code>null</code> for none)
-	 * @param emptyErrorMessage
+	 * @param emptyError
 	 *            the message to display when the password is empty
 	 * @param validator
 	 *            the password's validator
@@ -56,7 +56,29 @@ public interface IFormComponent
 		String id,
 		String caption,
 		String prompt,
-		String emptyErrorMessage,
+		String emptyError,
+		AbstractStringValidator validator);
+	
+	
+	/**
+	 * Adds a plain textfield to the form.
+	 *
+	 * @param id
+	 *            a unique identifier of the field
+	 * @param caption
+	 *            the textfield's caption (or <code>null</code> for none)
+	 * @param prompt
+	 *            the textfield's prompt (or <code>null</code> for none)
+	 * @param emptyError
+	 *            the message to display when the textfield is empty
+	 * @param validator
+	 *            the textfield's validator
+	 */
+	void addTextField(
+		String id,
+		String caption,
+		String prompt,
+		String emptyError,
 		AbstractStringValidator validator);
 
 

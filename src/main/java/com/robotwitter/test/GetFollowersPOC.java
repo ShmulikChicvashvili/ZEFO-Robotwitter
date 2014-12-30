@@ -10,7 +10,6 @@ import static org.junit.Assert.fail;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +19,6 @@ import org.junit.Test;
 
 import com.robotwitter.twitter.TwitterAppConfiguration;
 
-import twitter4j.IDs;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 
@@ -36,44 +34,21 @@ import twitter4j.TwitterFactory;
 public class GetFollowersPOC
 {
 	/**
-	 * idf's user id, this will be our study case since it has a large-ish
-	 * account (408k followers) and doesn't change drastically.
-	 */
-	private long idfUserID;
-	
-	/**
-	 * our connector to twitter.
-	 */
-	Twitter twitterConnctor;
-	
-	/**
-	 * Yesterday followers, will be read from a file.
-	 */
-	long[] yesterdayFollowers;
-	
-	/**
-	 * Today's followers, will be gathered from twitter via REST API
-	 */
-	long[] todayFollowers;
-	
-	
-	
-	/**
 	 * 
 	 * @throws java.lang.Exception
 	 */
 	@Before
 	public void setUp() throws Exception
 	{
-		this.idfUserID = 18576537;
+		idfUserID = 18576537;
 		
 		final TwitterAppConfiguration conf = new TwitterAppConfiguration();
-		this.twitterConnctor =
-			(new TwitterFactory(conf.getConfiguration())).getInstance();
+		twitterConnctor =
+			(new TwitterFactory(conf.getAppConfiguration())).getInstance();
 		
-		this.todayFollowers =
-			this.twitterConnctor
-				.getFollowersIDs(this.idfUserID, -1, 5000)
+		todayFollowers =
+			twitterConnctor
+				.getFollowersIDs(idfUserID, -1, 5000)
 				.getIDs();
 		
 		File file = new File("yesterdayFollowers.txt"); // this file was taken
@@ -87,13 +62,12 @@ public class GetFollowersPOC
 		{
 			list.add(Long.parseLong(text));
 		}
-		this.yesterdayFollowers = new long[list.size()];
+		yesterdayFollowers = new long[list.size()];
 		for (int i = 0; i < list.size(); i++)
 		{
-			this.yesterdayFollowers[i] = list.get(i);
+			yesterdayFollowers[i] = list.get(i);
 		}
 	}
-	
 	
 	/**
 	 * @throws java.lang.Exception
@@ -101,12 +75,11 @@ public class GetFollowersPOC
 	@After
 	public void tearDown() throws Exception
 	{
-		this.idfUserID = 0;
-		this.todayFollowers = null;
-		this.yesterdayFollowers = null;
-		this.twitterConnctor = null;
+		idfUserID = 0;
+		todayFollowers = null;
+		yesterdayFollowers = null;
+		twitterConnctor = null;
 	}
-	
 	
 	@SuppressWarnings("nls")
 	@Test
@@ -125,20 +98,45 @@ public class GetFollowersPOC
 		}
 	}
 	
-	
 	/**
 	 * 
 	 */
 	private int findNewFollowers()
 	{
-		for (int i = 0; i < this.yesterdayFollowers.length; i++)
+		for (long yesterdayFollower : yesterdayFollowers)
 		{
-			for (int j = 0; j < this.todayFollowers.length; j++)
+			for (int j = 0; j < todayFollowers.length; j++)
 			{
-				if (this.yesterdayFollowers[i] == this.todayFollowers[j]) { return j; }
+				if (yesterdayFollower == todayFollowers[j]) { return j; }
 			}
 		}
 		return 5001;
 	}
+	
+	
+	
+	/**
+	 * idf's user id, this will be our study case since it has a large-ish
+	 * account (408k followers) and doesn't change drastically.
+	 */
+	private long idfUserID;
+	
+	
+	/**
+	 * our connector to twitter.
+	 */
+	Twitter twitterConnctor;
+	
+	
+	/**
+	 * Yesterday followers, will be read from a file.
+	 */
+	long[] yesterdayFollowers;
+	
+	
+	/**
+	 * Today's followers, will be gathered from twitter via REST API
+	 */
+	long[] todayFollowers;
 	
 }

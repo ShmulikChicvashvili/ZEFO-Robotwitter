@@ -57,6 +57,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-stream</artifactId>
+			<version>4.0.2</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>org.jukito</groupId>
 			<artifactId>jukito</artifactId>
 			<version>1.4.1</version>
@@ -121,11 +128,11 @@
 			<scope>test</scope>
 		</dependency>
 
-        <dependency>
-        	<groupId>com.google.code.findbugs</groupId>
-        	<artifactId>annotations</artifactId>
-        	<version>3.0.0</version>
-        </dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>annotations</artifactId>
+			<version>3.0.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

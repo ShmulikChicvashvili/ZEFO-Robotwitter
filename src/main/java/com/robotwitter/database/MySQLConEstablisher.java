@@ -40,11 +40,11 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 	{
 		this.serverName = serverName;
 		this.schema = schema;
-		
+
 		createSchema();
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see Database.ConnectionEstablisher#getConnection() */
 	@Override
 	@SuppressWarnings("nls")
@@ -53,30 +53,30 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 		try
 		{
 			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e)
+		} catch (final ClassNotFoundException e)
 		{
 			e.printStackTrace();
 			throw new RuntimeException("Can't create mysql.jdbc driver");
 		}
-		
+
 		final Connection $ =
 			DriverManager.getConnection("jdbc:mysql://" + serverName + "/"
 			// + schema
 				+ "?user=root&password=root");
-		
+
 		return $;
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see Database.ConnectionEstablisher#getSchema() */
 	@Override
 	public final String getSchema()
 	{
 		return schema;
 	}
-	
-	
+
+
 	private void createSchema() throws SQLException
 	{
 		try (
@@ -86,17 +86,17 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 			statement.executeUpdate("CREATE SCHEMA IF NOT EXISTS " + schema); //$NON-NLS-1$
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * The server name.
 	 */
 	private final String serverName;
-	
+
 	/**
 	 * The name of the schema.
 	 */
 	private final String schema;
-	
+
 }

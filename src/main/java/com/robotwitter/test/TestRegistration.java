@@ -8,6 +8,7 @@ import static org.mockito.Matchers.any;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import org.mockito.Matchers;
 
 import com.robotwitter.database.interfaces.IDatabaseUsers;
 import com.robotwitter.database.interfaces.returnValues.SqlError;
@@ -33,7 +34,7 @@ public class TestRegistration
 		final DBUser user = new DBUser("amir.drutin@gmail.com", "Amir1234");
 		Mockito.when(db.get("amir.drutin@gmail.com")).thenReturn(user);
 		final DBUser dbuser;
-		Mockito.when(db.insert(any(DBUser.class))).thenReturn(SqlError.SUCCESS);
+		Mockito.when(db.insert(Matchers.isA(DBUser.class))).thenReturn(SqlError.SUCCESS);
 		registration = new RegistrationController(db);
 	}
 	

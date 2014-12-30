@@ -3,9 +3,10 @@ package com.robotwitter.database.primitives;
 import java.sql.Timestamp;
 
 public class DBFollower {
-	public DBFollower(final String name, final String screenName,
-			final String description, final int followers, final int following,
-			final String location, final int favorites, final String language,
+	public DBFollower(final long twitterId, final String name,
+			final String screenName, final String description,
+			final int followers, final int following, final String location,
+			final int favorites, final String language,
 			final boolean isCelebrity, final Timestamp joined) {
 		this.name = name;
 		this.screenName = screenName;
@@ -25,7 +26,7 @@ public class DBFollower {
 			return false;
 		}
 		final DBFollower follower = (DBFollower) obj;
-		return name.equals(follower.name)
+		return twitterId == follower.twitterId && name.equals(follower.name)
 				&& screenName.equals(follower.screenName)
 				&& description.equals(follower.description)
 				&& followers == follower.followers
@@ -35,6 +36,13 @@ public class DBFollower {
 				&& language.equals(follower.language)
 				&& isCelebrity == follower.isCelebrity
 				&& joined.equals(follower.joined);
+	}
+
+	/**
+	 * @return the id of the follower
+	 */
+	public long getTwitterId() {
+		return this.twitterId;
 	}
 
 	/**
@@ -100,7 +108,6 @@ public class DBFollower {
 		return this.joined;
 	}
 
-	
 	/**
 	 * @param name
 	 *            the name to set
@@ -184,6 +191,7 @@ public class DBFollower {
 				+ ", joined at=" + joined;
 	}
 
+	private long twitterId;
 	private String name;
 	private String screenName;
 	private String description;

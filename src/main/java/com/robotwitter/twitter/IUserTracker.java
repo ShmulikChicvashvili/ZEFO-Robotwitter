@@ -4,9 +4,11 @@
 
 package com.robotwitter.twitter;
 
+import twitter4j.UserStreamListener;
+
 
 /**
- * @author Itay
+ * @author Itay, Shmulik
  * 
  *         An interface which provides following a user via stream. Basically a
  *         wrapper to the UserStream stream in the twitter4j library.
@@ -14,20 +16,36 @@ package com.robotwitter.twitter;
 public interface IUserTracker
 {
 	/**
-	 * @author Itay
+	 * @author Itay, Shmulik
 	 *
-	 *         A return status enum.
 	 */
-	public enum Status
-	{
-		/** Operation succeeded. */
+	public enum Status {
 		SUCCESS,
 		
-		/** The received twitter id is not attached to any existing user. */
 		ACCOUNT_DOESNT_EXIST,
 		
-		/** An unknown failure occurred . */
 		FAILURE
 	}
 	
+	/**
+	 * @param listener a stream listener to listen on the user stream
+	 * @return the success status of the action performed
+	 */
+	Status addListener(UserStreamListener listener);
+	
+	/**
+	 * @return the success status of the action performed
+	 */
+	Status beginTrack();
+	
+	/**
+	 * @param listener a stream listener to listen on the user stream
+	 * @return the success status of the action performed
+	 */
+	Status removeListener(UserStreamListener listener);
+	
+	/**
+	 * @return the success status of the action performed
+	 */
+	Status stopTrack();	
 }

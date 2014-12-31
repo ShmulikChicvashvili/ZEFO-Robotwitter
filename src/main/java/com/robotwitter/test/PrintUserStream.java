@@ -47,6 +47,7 @@ public final class PrintUserStream
 				new TwitterAppConfiguration().getUserConfiguration())
 				.getInstance(token);
 		twitterStream1.addListener(listener);
+		
 		// user() method internally creates a thread which manipulates
 		// TwitterStream and calls these adequate listener methods continuously.
 		twitterStream1.user();

@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 
 /**
- * @author Shmulik
+ * @author Shmulik and Amir
  *
  */
 public interface ConnectionPool

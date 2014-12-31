@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 
-import com.robotwitter.database.MySqlDatabaseUser.Columns;
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseFollowers;
 import com.robotwitter.database.interfaces.returnValues.SqlError;

@@ -27,7 +27,9 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
  * Handles the connection to number followers table.
  *
  * @author Eyal and Shmulik
- *
+ * @author Itay
+ * 
+ *	Updated by Itay in 31.12 to support update and delete.
  */
 public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 	implements
@@ -93,6 +95,15 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 	}
 
 
+	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseNumFollowers#delete(java.lang.Long) */
+	@Override
+	public SqlError delete(Long twitterId)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.database.interfaces.IDatabaseNumFollowers
 	 * #get(java.lang.String) */
@@ -142,6 +153,7 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 	}
 
 
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.database.interfaces.IDatabaseNumFollowers
 	 * #insert(com.robotwitter.database.primitives.DBFollowersNumber) */
@@ -180,6 +192,15 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 		return SqlError.SUCCESS;
 	}
 
+
+
+	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseNumFollowers#update(com.robotwitter.database.primitives.DBFollowersNumber) */
+	@Override
+	public SqlError update(DBFollowersNumber statistic)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 
 	/**

@@ -5,7 +5,18 @@ import java.util.ArrayList;
 import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBFollower;
 
+/**
+ * @author Amir and Shmulik
+ */
+
 public interface IDatabaseFollowers {
+	
+	/**
+	 * @param name
+	 *            The actual name of the followers you want to get
+	 * @return The followers associated with this specific name
+	 */
+	public DBFollower get(long twitterId);
 
 	/**
 	 * @param name
@@ -16,10 +27,10 @@ public interface IDatabaseFollowers {
 
 	/**
 	 * @param screenName
-	 *            The screen name of the follower you want to get
-	 * @return The follower associated with this specific screen name
+	 *            The screen name of the followers you want to get
+	 * @return The followers associated with this specific screen name
 	 */
-	public DBFollower getByScreenName(String screenName);
+	public ArrayList<DBFollower> getByScreenName(String screenName);
 
 	/**
 	 * @param follower

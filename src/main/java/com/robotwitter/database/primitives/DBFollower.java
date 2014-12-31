@@ -2,6 +2,10 @@ package com.robotwitter.database.primitives;
 
 import java.sql.Timestamp;
 
+/**
+ * @author Amir and Shmulik
+ */
+
 public class DBFollower {
 	public DBFollower(final long twitterId, final String name,
 			final String screenName, final String description,

@@ -9,18 +9,18 @@ public interface IDatabaseFollowers {
 
 	/**
 	 * @param followerId
-	 * 				The id of the follower to get
+	 *            The id of the follower to get
 	 * @return The follower associated with this Id
 	 */
 	public DBFollower get(long followerId);
-	
+
 	/**
 	 * @param userId
-	 * 			The id of the user you want to get it's followers ids
+	 *            The id of the user you want to get it's followers ids
 	 * @return The ids of the followers of this user
 	 */
 	public ArrayList<Long> getFollowersId(String userId);
-	
+
 	/**
 	 * @param name
 	 *            The actual name of the followers you want to get
@@ -42,12 +42,12 @@ public interface IDatabaseFollowers {
 	 *         DOES_NOT_EXIST, INVALID_PARAMS
 	 */
 	public SqlError insert(DBFollower follower);
-	
+
 	/**
 	 * @param userId
-	 * 			The id of the user being followed
+	 *            The id of the user being followed
 	 * @param followerId
-	 * 			The id of the follower
+	 *            The id of the follower
 	 * @return whether the insert was successful. It could be either SUCCESS,
 	 *         DOES_NOT_EXIST, INVALID_PARAMS
 	 */
@@ -55,11 +55,11 @@ public interface IDatabaseFollowers {
 
 	/**
 	 * @param followerId
-	 * 			The id of the user to check
+	 *            The id of the user to check
 	 * @return whether a follower with this id exists
 	 */
 	public boolean isExists(long followerId);
-	
+
 	/**
 	 * @param name
 	 *            the actual name of the followers to check
@@ -81,18 +81,20 @@ public interface IDatabaseFollowers {
 	 *         DOES_NOT_EXIST, INVALID_PARAMS
 	 */
 	public SqlError update(DBFollower follower);
-	
+
 	/**
 	 * Delete the information of a follower
+	 * 
 	 * @param followerId
 	 *            The follower to delete
 	 * @return Return the status code. It could be either SUCCESS,
 	 *         DOES_NOT_EXIST, INVALID_PARAMS
 	 */
 	public SqlError deleteFollower(long followerId);
-	
+
 	/**
 	 * Delete the following connection between two users
+	 * 
 	 * @param followedId
 	 *            The followed user in the deleted connection
 	 * @param followerId

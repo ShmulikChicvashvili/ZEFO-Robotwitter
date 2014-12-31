@@ -81,4 +81,24 @@ public interface IDatabaseFollowers {
 	 *         DOES_NOT_EXIST, INVALID_PARAMS
 	 */
 	public SqlError update(DBFollower follower);
+	
+	/**
+	 * Delete the information of a follower
+	 * @param followerId
+	 *            The follower to delete
+	 * @return Return the status code. It could be either SUCCESS,
+	 *         DOES_NOT_EXIST, INVALID_PARAMS
+	 */
+	public SqlError deleteFollower(long followerId);
+	
+	/**
+	 * Delete the following connection between two users
+	 * @param followedId
+	 *            The followed user in the deleted connection
+	 * @param followerId
+	 *            The follower user in the deleted connection
+	 * @return Return the status code. It could be either SUCCESS,
+	 *         DOES_NOT_EXIST, INVALID_PARAMS
+	 */
+	public SqlError deleteFollow(long followedId, long followerId);
 }

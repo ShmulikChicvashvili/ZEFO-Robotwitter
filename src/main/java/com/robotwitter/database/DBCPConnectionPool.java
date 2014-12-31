@@ -19,7 +19,7 @@ import com.robotwitter.database.interfaces.ConnectionPool;
 
 
 /**
- * @author Shmulik
+ * @author Shmulik and Amir
  *
  */
 public class DBCPConnectionPool implements ConnectionPool
@@ -35,11 +35,11 @@ public class DBCPConnectionPool implements ConnectionPool
 		this.userName = userName;
 		this.password = password;
 		this.url = url;
-		
+
 		buildDataSource();
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.database.interfaces.ConnectionPool#getConnection() */
 	@Override
@@ -47,8 +47,8 @@ public class DBCPConnectionPool implements ConnectionPool
 	{
 		return dataSource.getConnection();
 	}
-
-
+	
+	
 	private void buildDataSource()
 	{
 		dataSource = new BasicDataSource();
@@ -56,22 +56,22 @@ public class DBCPConnectionPool implements ConnectionPool
 		dataSource.setUsername(userName);
 		dataSource.setPassword(password);
 		dataSource.setUrl(url);
-
+		
 		dataSource.setMinIdle(5);
 		dataSource.setMaxIdle(20);
 		dataSource.setMaxOpenPreparedStatements(180);
 	}
-	
-	
-	
-	BasicDataSource dataSource;
-	
-	private final String driverName;
-	
-	private final String userName;
 
+
+
+	BasicDataSource dataSource;
+
+	private final String driverName;
+
+	private final String userName;
+	
 	private final String password;
-	
+
 	private final String url;
-	
+
 }

@@ -13,7 +13,7 @@ import com.robotwitter.statistics.IHeavyHitters;
 
 
 /**
- * @author Shmulik
+ * @author Shmulik, Itay
  *
  */
 public class HeavyHittersListnerFactory
@@ -23,14 +23,14 @@ public class HeavyHittersListnerFactory
 	{
 		this.heavyHitters = heavyHitters;
 	}
-	
-	
+
+
 	public IHeavyHitters getInstance()
 	{
 		return heavyHitters;
 	}
-	
-	
-	
+
+
+
 	IHeavyHitters heavyHitters;
 }

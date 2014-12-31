@@ -14,17 +14,17 @@ import com.robotwitter.statistics.IHeavyHitters;
 
 
 /**
- * @author Shmulik
+ * @author Shmulik, Itay
  *
  */
 public class HeavyHittersModule extends AbstractModule
 {
-	
+
 	/* (non-Javadoc) @see com.google.inject.AbstractModule#configure() */
 	@Override
 	protected void configure()
 	{
 		bind(IHeavyHitters.class).to(HeavyHitters.class);
 	}
-	
+
 }

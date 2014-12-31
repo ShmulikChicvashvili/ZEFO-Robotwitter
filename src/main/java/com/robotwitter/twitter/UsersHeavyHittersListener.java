@@ -22,28 +22,28 @@ import com.robotwitter.statistics.IHeavyHitters;
 
 
 /**
- * @author Shmulik
+ * @author Shmulik, Itay
  *
  */
 @SuppressWarnings("boxing")
-public class HeavyHittersListener implements UserStreamListener
+public class UsersHeavyHittersListener implements UserStreamListener
 {
-	
+
 	/**
 	 * @param heavyHittersListnerFactory
 	 *            The factory which will create for us the handler
 	 * @param userID
 	 *            The user id we track
 	 */
-	public HeavyHittersListener(
+	public UsersHeavyHittersListener(
 		HeavyHittersListnerFactory heavyHittersListnerFactory,
 		Long userID)
 	{
 		heavyHittersHandler = heavyHittersListnerFactory.getInstance();
 		this.userID = userID;
 	}
-
-
+	
+	
 	/**
 	 * @return The current heavy hitters
 	 */
@@ -51,43 +51,43 @@ public class HeavyHittersListener implements UserStreamListener
 	{
 		return heavyHittersHandler.getCurrentHeavyHitters();
 	}
-
-
+	
+	
 	@Override
 	public void onBlock(User source, User blockedUser)
 	{
 		// For our purposes we don't need this.
 	}
-
-
+	
+	
 	@Override
 	public void onDeletionNotice(long directMessageId, long userId)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onDirectMessage(DirectMessage directMessage)
 	{
 		heavyHittersHandler.onDirectMessage(directMessage.getSenderId());
 	}
-	
-	
+
+
 	@Override
 	public void onException(Exception ex)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onFavorite(User source, User target, Status favoritedStatus)
 	{
@@ -96,8 +96,8 @@ public class HeavyHittersListener implements UserStreamListener
 			heavyHittersHandler.onFavorite(source.getId());
 		}
 	}
-	
-	
+
+
 	@Override
 	public void onFollow(User source, User followedUser)
 	{
@@ -106,29 +106,29 @@ public class HeavyHittersListener implements UserStreamListener
 			heavyHittersHandler.onFollow(source.getId());
 		}
 	}
-	
-	
+
+
 	@Override
 	public void onFriendList(long[] friendIds)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onScrubGeo(long userId, long upToStatusId)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onStallWarning(StallWarning warning)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onStatus(Status status)
 	{
@@ -143,31 +143,31 @@ public class HeavyHittersListener implements UserStreamListener
 					heavyHittersHandler.onMentioned(source.getId());
 				}
 			}
-			
+
 			if (status.isRetweet()
 				&& status.getRetweetedStatus().getUser().getId() == userID)
 			{
 				heavyHittersHandler.onRetweetedStatus(source.getId());
 			}
 		}
-
+		
 	}
-	
-	
+
+
 	@Override
 	public void onTrackLimitationNotice(int numberOfLimitedStatuses)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onUnblock(User source, User unblockedUser)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public
 		void
@@ -175,29 +175,29 @@ public class HeavyHittersListener implements UserStreamListener
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onUnfollow(User source, User followedUser)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onUserListCreation(User listOwner, UserList list)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onUserListDeletion(User listOwner, UserList list)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onUserListMemberAddition(
 		User addedMember,
@@ -206,8 +206,8 @@ public class HeavyHittersListener implements UserStreamListener
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onUserListMemberDeletion(
 		User deletedMember,
@@ -216,8 +216,8 @@ public class HeavyHittersListener implements UserStreamListener
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onUserListSubscription(
 		User subscriber,
@@ -226,8 +226,8 @@ public class HeavyHittersListener implements UserStreamListener
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onUserListUnsubscription(
 		User subscriber,
@@ -236,28 +236,28 @@ public class HeavyHittersListener implements UserStreamListener
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onUserListUpdate(User listOwner, UserList list)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
+
+
 	@Override
 	public void onUserProfileUpdate(User updatedUser)
 	{
 		// For our purposes we don't need this.
 	}
-	
-	
-	
+
+
+
 	/**
 	 * The user we track
 	 */
 	Long userID;
-
+	
 	/**
 	 * Heavy hitters handler
 	 */

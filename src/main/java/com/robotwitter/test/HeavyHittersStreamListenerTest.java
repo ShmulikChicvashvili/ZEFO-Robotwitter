@@ -18,7 +18,7 @@ import com.robotwitter.statistics.HeavyHitters;
 import com.robotwitter.twitter.HeavyHittersListnerFactory;
 import com.robotwitter.twitter.TwitterAppConfiguration;
 import com.robotwitter.twitter.UserTracker;
-import com.robotwitter.twitter.HeavyHittersListener;
+import com.robotwitter.twitter.UsersHeavyHittersListener;
 
 
 
@@ -52,7 +52,7 @@ public class HeavyHittersStreamListenerTest
 		tracker = new UserTracker(factory, accountsDB, trackedUser);
 		
 		listener =
-			new HeavyHittersListener(new HeavyHittersListnerFactory(
+			new UsersHeavyHittersListener(new HeavyHittersListnerFactory(
 				new HeavyHitters(200, 10)), trackedUser);
 	}
 	
@@ -96,6 +96,6 @@ public class HeavyHittersStreamListenerTest
 	
 	private UserTracker tracker;
 	
-	private HeavyHittersListener listener;
+	private UsersHeavyHittersListener listener;
 	
 }

@@ -26,7 +26,7 @@ import com.robotwitter.statistics.IHeavyHitters;
  *
  */
 @SuppressWarnings("boxing")
-public class UsersHeavyHittersListener implements UserStreamListener
+public class HeavyHittersListener implements UserStreamListener
 {
 	
 	/**
@@ -35,7 +35,7 @@ public class UsersHeavyHittersListener implements UserStreamListener
 	 * @param userID
 	 *            The user id we track
 	 */
-	public UsersHeavyHittersListener(
+	public HeavyHittersListener(
 		HeavyHittersListnerFactory heavyHittersListnerFactory,
 		Long userID)
 	{

@@ -20,7 +20,7 @@ import com.robotwitter.statistics.HeavyHitters;
 
 
 /**
- * @author Itay
+ * @author Itay, Shmulik
  *
  */
 public class HeavyHittersTest

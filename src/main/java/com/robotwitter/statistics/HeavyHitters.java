@@ -30,11 +30,15 @@ public class HeavyHitters implements IHeavyHitters
 		{
 			this.numOfHeavyHitters = numOfCounters;
 		}
-
-		counters = new ArrayList<HeavyHittersCounter>(numOfCounters);
+		
+		counters = new ArrayList<HeavyHittersCounter>();
+		for (int i = 0; i < numOfCounters; i++)
+		{
+			counters.add(new HeavyHittersCounter());
+		}
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.statistics.IHeavyHitters#getCurrentHeavyHitters() */
 	@SuppressWarnings("boxing")
@@ -43,8 +47,8 @@ public class HeavyHitters implements IHeavyHitters
 	{
 		Collections.sort(
 			counters,
-			(o1, o2) -> Long.signum(o1.getCount() - o2.getCount()));
-
+			(o1, o2) -> Long.signum(o2.getCount() - o1.getCount()));
+		
 		final ArrayList<Long> $ = new ArrayList<>();
 		for (int i = 0; i < numOfHeavyHitters; i++)
 		{
@@ -71,8 +75,8 @@ public class HeavyHitters implements IHeavyHitters
 	{
 		handleEvent(userID, favoriteAmount, decreasionAmount);
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.statistics.IHeavyHitters#onFollow(java.lang.Long) */
 	@Override
@@ -158,9 +162,9 @@ public class HeavyHitters implements IHeavyHitters
 	private final static int followAmount = 7;
 	
 	private final static int favoriteAmount = 5;
-
+	
 	private final static int retweetAmount = 4;
-
+	
 	private final static int messageAmount = 3;
 	
 	private final static int mentionAmount = 1;

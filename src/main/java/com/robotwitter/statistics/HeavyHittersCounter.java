@@ -11,7 +11,7 @@ package com.robotwitter.statistics;
  */
 public class HeavyHittersCounter
 {
-	private HeavyHittersCounter()
+	HeavyHittersCounter()
 	{
 		isTaken = false;
 		userID = -1;

@@ -19,6 +19,13 @@ public interface IDatabaseFollowers {
 	public DBFollower get(long followerId);
 	
 	/**
+	 * @param userId
+	 * 			The id of the user you want to get it's followers ids
+	 * @return The ids of the followers of this user
+	 */
+	public ArrayList<Long> getFollowersId(String userId);
+	
+	/**
 	 * @param name
 	 *            The actual name of the followers you want to get
 	 * @return The followers associated with this specific name
@@ -39,6 +46,16 @@ public interface IDatabaseFollowers {
 	 *         DOES_NOT_EXIST, INVALID_PARAMS
 	 */
 	public SqlError insert(DBFollower follower);
+	
+	/**
+	 * @param userId
+	 * 			The id of the user being followed
+	 * @param followerId
+	 * 			The id of the follower
+	 * @return whether the insert was successful. It could be either SUCCESS,
+	 *         DOES_NOT_EXIST, INVALID_PARAMS
+	 */
+	public SqlError insert(long userId, long followerId);
 
 	/**
 	 * @param name

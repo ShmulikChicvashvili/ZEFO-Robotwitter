@@ -19,6 +19,13 @@ public interface IDatabaseFollowers {
 	public DBFollower get(long twitterId);
 
 	/**
+	 * @param followerId
+	 * 				The id of the follower to get
+	 * @return The follower associated with this Id
+	 */
+	public DBFollower get(long followerId);
+	
+	/**
 	 * @param name
 	 *            The actual name of the followers you want to get
 	 * @return The followers associated with this specific name

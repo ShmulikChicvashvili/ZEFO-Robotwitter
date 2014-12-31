@@ -34,7 +34,7 @@ public class TestLoginAuthenticator
 			Guice.createInjector(new DatabaseTestModule());
 		final IDatabaseUsers db = injector.getInstance(MySqlDatabaseUser.class);
 		login = new LoginController(db);
-		final DBUser user = new DBUser("amir.drutin@gmail.com", "amir");
+		final DBUser user = new DBUser("amir.drutin@gmail.com", "amir1");
 		if (!db.isExists("amir.drutin@gmail.com"))
 		{
 			db.insert(user);
@@ -42,19 +42,19 @@ public class TestLoginAuthenticator
 		ILoginController.Status result =
 			login.authenticate("amir.drutin@gmail.com", "amir");
 		assertEquals(Status.SUCCESS, result);
-
+		
 		result = login.authenticate("amir.drutin@gmail.com", "wrong");
 		assertEquals(Status.AUTHENTICATION_FAILURE, result);
-
+		
 		result = login.authenticate("yossi@gmail.com", "amir");
 		assertEquals(Status.USER_DOESNT_EXIST, result);
-
+		
 		result = login.authenticate("yossi@gmail.com", "wrong");
 		assertEquals(Status.USER_DOESNT_EXIST, result);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Testing login authentication
 	 */

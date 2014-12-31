@@ -338,7 +338,38 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 
 	/*
 	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
-	 * #insert(com.robotwitter.database.primitives.DBFollower)
+	 * #isExists(com.robotwitter.database.primitives.DBFollower)
+	 */
+	@Override
+	public boolean isExists(long followerId) {
+		if (followerId < 1) { return false; }
+		boolean $ = false;
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			PreparedStatement preparedStatement = con.prepareStatement("" //$NON-NLS-1$
+				+ "SELECT * FROM " //$NON-NLS-1$
+				+ followersTable
+				+ " WHERE " //$NON-NLS-1$
+				+ Columns.FOLLOWER_ID.toString().toLowerCase()
+				+ "=?;"))
+		{
+			preparedStatement.setLong(1, followerId);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.first())
+			{
+				$ = true;
+			}
+			resultSet.close();
+		} catch (final SQLException e)
+		{
+			e.printStackTrace();
+		}
+		return $;
+	}
+	
+	/*
+	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
+	 * #isExistsByName(com.robotwitter.database.primitives.DBFollower)
 	 */
 	@SuppressWarnings({ "boxing", "nls" })
 	@Override

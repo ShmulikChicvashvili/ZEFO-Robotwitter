@@ -58,6 +58,13 @@ public interface IDatabaseFollowers {
 	public SqlError insert(long userId, long followerId);
 
 	/**
+	 * @param followerId
+	 * 			The id of the user to check
+	 * @return whether a follower with this id exists
+	 */
+	public boolean isExists(long followerId);
+	
+	/**
 	 * @param name
 	 *            the actual name of the followers to check
 	 * @return whether a follower with this name exists

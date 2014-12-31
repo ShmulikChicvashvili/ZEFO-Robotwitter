@@ -6,10 +6,13 @@ package com.robotwitter.twitter;
 
 
 import java.sql.Timestamp;
+import java.util.Date;
+import java.util.HashMap;
 
 import com.robotwitter.database.interfaces.IDatabaseFollowers;
 import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
 import com.robotwitter.database.primitives.DBFollower;
+import com.robotwitter.database.primitives.DBFollowersNumber;
 
 import twitter4j.DirectMessage;
 import twitter4j.StallWarning;
@@ -17,13 +20,14 @@ import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.User;
 import twitter4j.UserList;
+import twitter4j.UserMentionEntity;
 import twitter4j.UserStreamListener;
 
 
 
 
 /**
- * @author Itay
+ * @author Itay, Shmulik
  *
  */
 public class FollowerStoreListener implements UserStreamListener
@@ -36,6 +40,10 @@ public class FollowerStoreListener implements UserStreamListener
 		this.followersDB = followersDB;
 		this.numFollowersDB = numFollowersDB;
 		this.userID = userID;
+		lastUpdated = null;
+		
+		updateFollowersBarrier = new HashMap<Long, DBFollower>();
+		followersNumBarrier = new DBFollowersNumber(userID, lastUpdated, -1);
 	}
 	
 	
@@ -80,18 +88,18 @@ public class FollowerStoreListener implements UserStreamListener
 		// This means that I sent a message to him, hence he follows me.
 		if (recipient.getId() != userID && sender.getId() == userID)
 		{
-			updateFollowersDatabase(recipient);
+			updateFollowers(recipient);
+			updateNumFollowers(sender);
 		}
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * twitter4j.StreamListener#onException(java.lang.Exception) */
 	@Override
 	public void onException(Exception ex)
 	{
-		// TODO Auto-generated method stub
-		
+		// Nothing to do here
 	}
 	
 	
@@ -101,7 +109,11 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onFavorite(User source, User target, Status favoritedStatus)
 	{
-		// TODO Auto-generated method stub
+		if (target.getId() == userID && source.getId() != userID)
+		{	
+			updateFollowers(source);
+			updateNumFollowers(target);
+		}
 		
 	}
 	
@@ -111,7 +123,11 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onFollow(User source, User followedUser)
 	{
-		// TODO Auto-generated method stub
+		if (followedUser.getId() == userID && source.getId() != userID)
+		{
+			updateFollowers(source);
+			updateNumFollowers(followedUser);
+		}
 		
 	}
 	
@@ -120,7 +136,7 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onFriendList(long[] friendIds)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -129,7 +145,7 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onScrubGeo(long userId, long upToStatusId)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -139,7 +155,7 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onStallWarning(StallWarning warning)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -148,7 +164,30 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onStatus(Status status)
 	{
-		// TODO Auto-generated method stub
+		final User source = status.getUser();
+		if (source.getId() != userID)
+		{
+			for (final UserMentionEntity userMentioned : status
+				.getUserMentionEntities())
+			{
+				if (userMentioned.getId() == userID)
+				{
+					updateFollowers(source);
+					break;
+				}
+			}
+
+			if (status.isRetweet()
+				&& status.getRetweetedStatus().getUser().getId() == userID)
+			{
+				updateFollowers(source);
+				updateNumFollowers(status.getRetweetedStatus().getUser());
+			}
+		}
+		
+		if(source.getId() == userID) {
+			updateNumFollowers(source);
+		}
 		
 	}
 	
@@ -157,7 +196,7 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onTrackLimitationNotice(int numberOfLimitedStatuses)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -167,7 +206,7 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onUnblock(User source, User unblockedUser)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -180,7 +219,7 @@ public class FollowerStoreListener implements UserStreamListener
 		void
 		onUnfavorite(User source, User target, Status unfavoritedStatus)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -190,7 +229,7 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onUnfollow(User source, User unfollowedUser)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -201,7 +240,7 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onUserListCreation(User listOwner, UserList list)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -212,7 +251,7 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onUserListDeletion(User listOwner, UserList list)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -226,7 +265,7 @@ public class FollowerStoreListener implements UserStreamListener
 		User listOwner,
 		UserList list)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -240,7 +279,7 @@ public class FollowerStoreListener implements UserStreamListener
 		User listOwner,
 		UserList list)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -254,7 +293,7 @@ public class FollowerStoreListener implements UserStreamListener
 		User listOwner,
 		UserList list)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -268,7 +307,7 @@ public class FollowerStoreListener implements UserStreamListener
 		User listOwner,
 		UserList list)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -279,7 +318,7 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onUserListUpdate(User listOwner, UserList list)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -289,7 +328,7 @@ public class FollowerStoreListener implements UserStreamListener
 	@Override
 	public void onUserProfileUpdate(User updatedUser)
 	{
-		// TODO Auto-generated method stub
+		// Nothing to do here
 		
 	}
 	
@@ -312,20 +351,106 @@ public class FollowerStoreListener implements UserStreamListener
 	}
 	
 	
+	private DBFollowersNumber buildFollowersNumber(User myUser)
+	{
+		return new DBFollowersNumber(
+			userID,
+			new Timestamp(new Date().getTime()),
+			myUser.getFollowersCount());
+	}
+	
+	
+	/**
+	 * 
+	 */
+	private void flushFollowersNumber()
+	{
+		numFollowersDB.insert(followersNumBarrier);
+	}
+	
+	
+	/**
+	 * @param follower
+	 */
+	private void flushFollowerToDatabase(Long follower)
+	{
+		// FIXME: we are inserting people who may not be following the user!,
+		// talk with drutin and see what we can do.
+		if (followersDB.isExists(follower))
+		{
+			followersDB.update(updateFollowersBarrier.get(follower));
+		} else
+		{
+			followersDB.insert(updateFollowersBarrier.get(follower));
+		}
+		
+	}
+	
+	
+	/**
+	 * 
+	 */
+	private void flushUpdates()
+	{
+		for (Long follower : updateFollowersBarrier.keySet())
+		{
+			flushFollowerToDatabase(follower);
+		}
+		
+		flushFollowersNumber();
+		lastUpdated = new Timestamp(new Date().getTime());
+		
+	}
+	
+	
+	/**
+	 * @param timestamp
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	private boolean sameDaySinceUpdate(Timestamp timestamp)
+	{
+		return lastUpdated != null
+			&& timestamp.getDay() == lastUpdated.getDay();
+	}
+	
+	
 	/**
 	 * @param followingUser
 	 */
-	private void updateFollowersDatabase(User followingUser)
+	private void updateFollowers(User followingUser)
 	{
 		DBFollower follower = buildFollowerFromUser(followingUser);
-		if (followersDB.isExists(follower.getFollowerId())) {
-			followersDB.update(follower);
-		} else {
-			followersDB.insert(follower);
+		updateFollowersBarrier.put(followingUser.getId(), follower);
+		
+		Timestamp now = new Timestamp(new Date().getTime());
+		if (!sameDaySinceUpdate(now))
+		{
+			flushUpdates();
 		}
 	}
 	
 	
+	/**
+	 * @param myUser
+	 */
+	private void updateNumFollowers(User myUser)
+	{
+		Timestamp now = new Timestamp(new Date().getTime());
+		followersNumBarrier = buildFollowersNumber(myUser);
+		if (!sameDaySinceUpdate(now))
+		{
+			flushUpdates();
+		}
+	}
+	
+	
+	
+	private DBFollowersNumber followersNumBarrier;
+	
+	private HashMap<Long, DBFollower> updateFollowersBarrier;
+	
+	private Timestamp lastUpdated;
 	
 	private IDatabaseFollowers followersDB;
 	

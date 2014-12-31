@@ -1,72 +1,176 @@
 /**
- * 
+ *
  */
+
 package com.robotwitter.statistics;
 
-import java.util.ArrayList;
 
-import twitter4j.DirectMessage;
-import twitter4j.Status;
-import twitter4j.User;
+import java.util.ArrayList;
+import java.util.Collections;
+
+
+
 
 /**
- * @author Shmulik
+ * @author Shmulik, Itay
  *
  */
 public class HeavyHitters implements IHeavyHitters
 {
-	
-	/* (non-Javadoc) @see com.robotwitter.statistics.IHeavyHitters#getCurrentHeavyHitters() */
+	/**
+	 * @param numOfCounters
+	 * @param numOfHeavyHitters
+	 */
+	public HeavyHitters(int numOfCounters, int numOfHeavyHitters)
+	{
+		this.numOfCounters = numOfCounters;
+		this.numOfHeavyHitters = numOfHeavyHitters;
+		
+		if (numOfHeavyHitters > numOfCounters)
+		{
+			this.numOfHeavyHitters = numOfCounters;
+		}
+
+		counters = new ArrayList<HeavyHittersCounter>(numOfCounters);
+	}
+
+
+	/* (non-Javadoc) @see
+	 * com.robotwitter.statistics.IHeavyHitters#getCurrentHeavyHitters() */
+	@SuppressWarnings("boxing")
 	@Override
 	public ArrayList<Long> getCurrentHeavyHitters()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Collections.sort(
+			counters,
+			(o1, o2) -> Long.signum(o1.getCount() - o2.getCount()));
+
+		final ArrayList<Long> $ = new ArrayList<>();
+		for (int i = 0; i < numOfHeavyHitters; i++)
+		{
+			if (counters.get(i).getIsTaken() == false) { return $; }
+			$.add(counters.get(i).getUserID());
+		}
+		return $;
 	}
 	
 	
-	/* (non-Javadoc) @see com.robotwitter.statistics.IHeavyHitters#onDirectMessage(twitter4j.DirectMessage) */
+	/* (non-Javadoc) @see
+	 * com.robotwitter.statistics.IHeavyHitters#onDirectMessage(java.lang.Long) */
 	@Override
-	public void onDirectMessage(DirectMessage directMessage)
+	public void onDirectMessage(Long userID)
 	{
-		// TODO Auto-generated method stub
-		
+		handleEvent(userID, messageAmount, decreasionAmount);
 	}
 	
 	
-	/* (non-Javadoc) @see com.robotwitter.statistics.IHeavyHitters#onFavorite(twitter4j.User, twitter4j.User, twitter4j.Status) */
+	/* (non-Javadoc) @see
+	 * com.robotwitter.statistics.IHeavyHitters#onFavorite(java.lang.Long) */
 	@Override
-	public void onFavorite(User source, User target, Status favoritedStatus)
+	public void onFavorite(Long userID)
 	{
-		// TODO Auto-generated method stub
-		
+		handleEvent(userID, favoriteAmount, decreasionAmount);
 	}
-	
-	
-	/* (non-Javadoc) @see com.robotwitter.statistics.IHeavyHitters#onFollow(twitter4j.User, twitter4j.User) */
+
+
+	/* (non-Javadoc) @see
+	 * com.robotwitter.statistics.IHeavyHitters#onFollow(java.lang.Long) */
 	@Override
-	public void onFollow(User source, User followedUser)
+	public void onFollow(Long userID)
 	{
-		// TODO Auto-generated method stub
-		
+		handleEvent(userID, followAmount, decreasionAmount);
 	}
 	
 	
-	/* (non-Javadoc) @see com.robotwitter.statistics.IHeavyHitters#onMentioned(twitter4j.Status) */
+	/* (non-Javadoc) @see
+	 * com.robotwitter.statistics.IHeavyHitters#onMentioned(java.lang.Long) */
 	@Override
-	public void onMentioned(Status status)
+	public void onMentioned(Long userID)
 	{
-		// TODO Auto-generated method stub
-		
+		handleEvent(userID, mentionAmount, decreasionAmount);
 	}
 	
 	
-	/* (non-Javadoc) @see com.robotwitter.statistics.IHeavyHitters#onRetweetedStatus(twitter4j.Status) */
+	/* (non-Javadoc) @see
+	 * com.robotwitter.statistics.IHeavyHitters#onRetweetedStatus
+	 * (java.lang.Long) */
 	@Override
-	public void onRetweetedStatus(Status status)
+	public void onRetweetedStatus(Long userID)
 	{
-		// TODO Auto-generated method stub
-		
+		handleEvent(userID, retweetAmount, decreasionAmount);
 	}
+	
+	
+	private void decreaseCounter(int amount)
+	{
+		for (final HeavyHittersCounter counter : counters)
+		{
+			counter.dec(amount);
+		}
+	}
+	
+	
+	private HeavyHittersCounter getUserCounter(Long userID)
+	{
+		HeavyHittersCounter $ = null;
+		for (final HeavyHittersCounter counter : counters)
+		{
+			if (counter.getUserID() == userID)
+			{
+				$ = counter;
+			}
+		}
+		return $;
+	}
+	
+	
+	private
+		void
+		handleEvent(Long userID, int increaseAmount, int decreaseAmount)
+	{
+		if (increaseCounter(userID, increaseAmount)) { return; }
+		decreaseCounter(decreaseAmount);
+		increaseCounter(userID, increaseAmount);
+	}
+	
+	
+	private boolean increaseCounter(Long userID, int amount)
+	{
+		final HeavyHittersCounter userCounter = getUserCounter(userID);
+		if (userCounter != null)
+		{
+			userCounter.inc(amount);
+			return true;
+		}
+		for (final HeavyHittersCounter counter : counters)
+		{
+			if (counter.takeCounter(userID))
+			{
+				counter.inc(amount);
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	
+	private final static int followAmount = 7;
+	
+	private final static int favoriteAmount = 5;
+
+	private final static int retweetAmount = 4;
+
+	private final static int messageAmount = 3;
+	
+	private final static int mentionAmount = 1;
+	
+	private final static int decreasionAmount = 4;
+	
+	int numOfCounters;
+	
+	int numOfHeavyHitters;
+	
+	ArrayList<HeavyHittersCounter> counters;
 	
 }

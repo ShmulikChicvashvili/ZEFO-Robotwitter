@@ -7,10 +7,6 @@ package com.robotwitter.statistics;
 
 import java.util.ArrayList;
 
-import twitter4j.DirectMessage;
-import twitter4j.Status;
-import twitter4j.User;
-
 
 
 
@@ -23,18 +19,18 @@ public interface IHeavyHitters
 	public ArrayList<Long> getCurrentHeavyHitters();
 
 
-	public void onDirectMessage(DirectMessage directMessage);
+	public void onDirectMessage(Long userID);
 
 
-	public void onFavorite(User source, User target, Status favoritedStatus);
+	public void onFavorite(Long userID);
 
 
-	public void onFollow(User source, User followedUser);
+	public void onFollow(Long userID);
 
 
-	public void onMentioned(Status status);
+	public void onMentioned(Long userID);
 
 
-	public void onRetweetedStatus(Status status);
+	public void onRetweetedStatus(Long userID);
 
 }

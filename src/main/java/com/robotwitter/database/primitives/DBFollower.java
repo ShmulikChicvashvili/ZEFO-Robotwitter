@@ -7,11 +7,12 @@ import java.sql.Timestamp;
  */
 
 public class DBFollower {
-	public DBFollower(final long twitterId, final String name,
+	public DBFollower(final long followerId, final String name,
 			final String screenName, final String description,
 			final int followers, final int following, final String location,
 			final int favorites, final String language,
-			final boolean isCelebrity, final Timestamp joined) {
+			final boolean isCelebrity, final Timestamp joined, final String picture) {
+		this.followerId = followerId;
 		this.name = name;
 		this.screenName = screenName;
 		this.description = description;
@@ -22,6 +23,7 @@ public class DBFollower {
 		this.language = language;
 		this.isCelebrity = isCelebrity;
 		this.joined = joined;
+		this.picture = picture;
 	}
 
 	@Override
@@ -39,7 +41,8 @@ public class DBFollower {
 				&& favorites == follower.favorites
 				&& language.equals(follower.language)
 				&& isCelebrity == follower.isCelebrity
-				&& joined.equals(follower.joined);
+				&& joined.equals(follower.joined)
+				&& picture.equals(follower.picture);
 	}
 
 	/**
@@ -117,6 +120,13 @@ public class DBFollower {
 	 */
 	public Timestamp getJoined() {
 		return this.joined;
+	}
+	
+	/**
+	 * @return the picture URL of the follower
+	 */
+	public String getPicture() {
+		return this.picture;
 	}
 
 	/**
@@ -199,6 +209,14 @@ public class DBFollower {
 	public void setJoined(Timestamp joined) {
 		this.joined = joined;
 	}
+	
+	/**
+	 * @param picture
+	 *            the picture URL to set
+	 */
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
 
 	/* (non-Javadoc) @see java.lang.Object#toString() */
 	@Override
@@ -208,7 +226,7 @@ public class DBFollower {
 				+ ", following=" + following + ", location=" + location
 				+ ", favorites=" + favorites + ", language=" + language
 				+ ", is the follower a celebrity=" + isCelebrity
-				+ ", joined at=" + joined;
+				+ ", joined at=" + joined + ", picture URL=" + picture +"]";
 	}
 
 	private long followerId;
@@ -222,4 +240,5 @@ public class DBFollower {
 	private String language;
 	private boolean isCelebrity;
 	private Timestamp joined;
+	private String picture;
 }

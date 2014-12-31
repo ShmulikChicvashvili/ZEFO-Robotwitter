@@ -77,7 +77,11 @@ public class HeavyHittersListener implements UserStreamListener
 	@Override
 	public void onDirectMessage(DirectMessage directMessage)
 	{
-		heavyHittersHandler.onDirectMessage(directMessage.getSenderId());
+		User recipient = directMessage.getRecipient();
+		User sender = directMessage.getSender();
+		if(recipient.getId() != userID && sender.getId() == userID) {			
+			heavyHittersHandler.onDirectMessage(recipient.getId());
+		}
 	}
 
 

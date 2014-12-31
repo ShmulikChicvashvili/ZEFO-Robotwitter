@@ -43,10 +43,9 @@ public class DBCPConnectionPool implements ConnectionPool
 	/* (non-Javadoc) @see
 	 * com.robotwitter.database.interfaces.ConnectionPool#getConnection() */
 	@Override
-	public Connection getConnection()
+	public Connection getConnection() throws SQLException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return dataSource.getConnection();
 	}
 
 

@@ -6,6 +6,7 @@ package com.robotwitter.database.interfaces;
 
 
 import java.sql.Connection;
+import java.sql.SQLException;
 
 
 
@@ -16,5 +17,5 @@ import java.sql.Connection;
  */
 public interface ConnectionPool
 {
-	Connection getConnection();
+	Connection getConnection() throws SQLException;
 }

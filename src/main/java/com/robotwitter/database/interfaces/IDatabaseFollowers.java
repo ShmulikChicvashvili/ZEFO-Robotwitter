@@ -10,13 +10,6 @@ import com.robotwitter.database.primitives.DBFollower;
  */
 
 public interface IDatabaseFollowers {
-	
-	/**
-	 * @param name
-	 *            The actual name of the followers you want to get
-	 * @return The followers associated with this specific name
-	 */
-	public DBFollower get(long twitterId);
 
 	/**
 	 * @param followerId

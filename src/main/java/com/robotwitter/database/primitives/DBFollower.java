@@ -30,7 +30,7 @@ public class DBFollower {
 			return false;
 		}
 		final DBFollower follower = (DBFollower) obj;
-		return twitterId == follower.twitterId && name.equals(follower.name)
+		return followerId == follower.followerId && name.equals(follower.name)
 				&& screenName.equals(follower.screenName)
 				&& description.equals(follower.description)
 				&& followers == follower.followers
@@ -45,8 +45,8 @@ public class DBFollower {
 	/**
 	 * @return the id of the follower
 	 */
-	public long getTwitterId() {
-		return this.twitterId;
+	public long getFollowerId() {
+		return this.followerId;
 	}
 
 	/**
@@ -211,7 +211,7 @@ public class DBFollower {
 				+ ", joined at=" + joined;
 	}
 
-	private long twitterId;
+	private long followerId;
 	private String name;
 	private String screenName;
 	private String description;

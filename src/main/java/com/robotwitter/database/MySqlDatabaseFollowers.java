@@ -23,7 +23,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 		/**
 		 * Email column.
 		 */
-		FOLLOWER_ID, FOLLOWING_ID,
+		FOLLOWER_ID, FOLLOWED_ID,
 		/**
 		 * Password column.
 		 */
@@ -66,10 +66,11 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 					"CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$
 							+ "`%s` TINYTEXT NOT NULL," //$NON-NLS-1$
 							+ "`%s` TINYTEXT NOT NULL," //$NON-NLS-1$
-							+ "PRIMARY KEY (`%s`));", //$NON-NLS-1$
+							+ "PRIMARY KEY (`%s` , `%s`));", //$NON-NLS-1$
 					followingTable, Columns.FOLLOWER_ID.toString()
-							.toLowerCase(), Columns.FOLLOWING_ID.toString()
+							.toLowerCase(), Columns.FOLLOWED_ID.toString()
 							.toLowerCase(), Columns.FOLLOWER_ID.toString()
+							.toLowerCase(), Columns.FOLLOWED_ID.toString()
 							.toLowerCase());
 			statement.execute(statementCreateFollowers);
 			statement.execute(statementCreateFollowing);
@@ -124,6 +125,32 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 		}
 		return $;
 	}
+	
+	/*
+	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
+	 * #getFollowersIds(com.robotwitter.database.primitives.DBFollower)
+	 */
+	@SuppressWarnings({ "boxing", "nls" })
+	@Override
+	public ArrayList<Long> getFollowersId(String userId) {
+		ArrayList<Long> $ = new ArrayList<Long>();
+		try (Connection con = connectionEstablisher.getConnection();
+				PreparedStatement preparedStatement = con
+						.prepareStatement("SELECT * FROM " //$NON-NLS-1$
+								+ followingTable + " WHERE " //$NON-NLS-1$
+								+ Columns.FOLLOWED_ID.toString().toLowerCase() + "=?;")) //$NON-NLS-1$)
+		{
+			preparedStatement.setString(1, userId);
+			resultSet = preparedStatement.executeQuery();
+			while (resultSet.next()) {
+				$.add(resultSet.getLong(Columns.FOLLOWER_ID.toString().toLowerCase()));
+			}
+			resultSet.close();
+		} catch (final SQLException e) {
+			e.printStackTrace();
+		}
+		return $;
+	}
 
 	/*
 	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
@@ -132,7 +159,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 	@SuppressWarnings({ "boxing", "nls" })
 	@Override
 	public ArrayList<DBFollower> getByName(String name) {
-		ArrayList<DBFollower> $ = null;
+		ArrayList<DBFollower> $ = new ArrayList<DBFollower>();
 		try (Connection con = connectionEstablisher.getConnection();
 				PreparedStatement preparedStatement = con
 						.prepareStatement("SELECT * FROM " //$NON-NLS-1$
@@ -178,7 +205,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 	@SuppressWarnings({ "boxing", "nls" })
 	@Override
 	public ArrayList<DBFollower> getByScreenName(String screenName) {
-		ArrayList<DBFollower> $ = null;
+		ArrayList<DBFollower> $ = new ArrayList<DBFollower>();
 		try (Connection con = connectionEstablisher.getConnection();
 				PreparedStatement preparedStatement = con
 						.prepareStatement("SELECT * FROM " //$NON-NLS-1$
@@ -276,19 +303,66 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 		}
 		return SqlError.SUCCESS;
 	}
+	
+	/*
+	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
+	 * #insert(com.robotwitter.database.primitives.DBFollower)
+	 */
+	@SuppressWarnings({ "boxing", "nls" })
+	@Override
+	public SqlError insert(long userId, long followerId) {
+		if (userId < 1 || followerId < 1) {
+			return SqlError.INVALID_PARAMS;
+		}
+		try (Connection con = connectionEstablisher.getConnection();
+				@SuppressWarnings("nls")
+				PreparedStatement preparedStatement = (PreparedStatement) con
+						.prepareStatement("INSERT INTO " + followingTable
+								+ " ("
+								+ Columns.FOLLOWER_ID.toString().toLowerCase()
+								+ "," 
+								+ Columns.FOLLOWED_ID.toString().toLowerCase()
+								+ ") VALUES ( ?, ?);")) {
+			preparedStatement.setLong(1, followerId);
+			preparedStatement.setLong(2, userId);
+			preparedStatement.executeUpdate();
 
+		} catch (final SQLException e) {
+			if (e.getErrorCode() == insertAlreadyExists) {
+				return SqlError.ALREADY_EXIST;
+			}
+			e.printStackTrace();
+		}
+		return SqlError.SUCCESS;
+	}
+
+	/*
+	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
+	 * #insert(com.robotwitter.database.primitives.DBFollower)
+	 */
+	@SuppressWarnings({ "boxing", "nls" })
 	@Override
 	public boolean isExistsByName(String name) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/*
+	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
+	 * #insert(com.robotwitter.database.primitives.DBFollower)
+	 */
+	@SuppressWarnings({ "boxing", "nls" })
 	@Override
 	public boolean isExistsByScreenName(String ScreenName) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
+	/*
+	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
+	 * #insert(com.robotwitter.database.primitives.DBFollower)
+	 */
+	@SuppressWarnings({ "boxing", "nls" })
 	@Override
 	public SqlError update(DBFollower follower) {
 		// TODO Auto-generated method stub
@@ -304,5 +378,4 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 	 * The table name.
 	 */
 	private final String followersTable = schema + "." + "`followers`"; //$NON-NLS-1$ //$NON-NLS-2$
-
 }

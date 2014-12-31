@@ -502,6 +502,66 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 		return SqlError.SUCCESS;
 	}
 
+	/*
+	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
+	 * #deleteFollower(com.robotwitter.database.primitives.DBFollower)
+	 */
+	@Override
+	public SqlError deleteFollower(long followerId) {
+		if (followerId < 1) {
+			return SqlError.INVALID_PARAMS;
+		}
+
+		if (!isExists(followerId)) {
+			return SqlError.DOES_NOT_EXIST;
+		}
+
+		try (Connection con = connectionEstablisher.getConnection();
+				PreparedStatement preparedStatement = con.prepareStatement(""
+						+ "DELETE FROM " + followersTable + " WHERE "
+						+ Columns.FOLLOWER_ID.toString().toLowerCase() + "=?;")) {
+			preparedStatement.setLong(1, followerId);
+			preparedStatement.executeUpdate();
+		} catch (final SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return SqlError.SUCCESS;
+	}
+
+	/*
+	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
+	 * #deleteFollow(com.robotwitter.database.primitives.DBFollower)
+	 */
+	@Override
+	public SqlError deleteFollow(long followedId, long followerId) {
+		if (followerId < 1 || followedId < 1) {
+			return SqlError.INVALID_PARAMS;
+		}
+
+		if (!isExists(followerId) || !isExists(followedId)) {
+			return SqlError.DOES_NOT_EXIST;
+		}
+
+		try (Connection con = connectionEstablisher.getConnection();
+				PreparedStatement preparedStatement = con
+						.prepareStatement("" + "DELETE FROM " + followingTable
+								+ " WHERE ("
+								+ Columns.FOLLOWER_ID.toString().toLowerCase()
+								+ "= ? ,"
+								+ Columns.FOLLOWED_ID.toString().toLowerCase()
+								+ "= ?;")) {
+			preparedStatement.setLong(1, followerId);
+			preparedStatement.setLong(2, followedId);
+			preparedStatement.executeUpdate();
+		} catch (final SQLException e) {
+			e.printStackTrace();
+		}
+
+		return SqlError.SUCCESS;
+	}
+
 	/**
 	 * The table name.
 	 */

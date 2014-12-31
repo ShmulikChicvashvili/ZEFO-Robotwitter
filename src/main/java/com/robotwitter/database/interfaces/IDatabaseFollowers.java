@@ -8,6 +8,13 @@ import com.robotwitter.database.primitives.DBFollower;
 public interface IDatabaseFollowers {
 
 	/**
+	 * @param followerId
+	 * 				The id of the follower to get
+	 * @return The follower associated with this Id
+	 */
+	public DBFollower get(long followerId);
+	
+	/**
 	 * @param name
 	 *            The actual name of the followers you want to get
 	 * @return The followers associated with this specific name
@@ -16,10 +23,10 @@ public interface IDatabaseFollowers {
 
 	/**
 	 * @param screenName
-	 *            The screen name of the follower you want to get
-	 * @return The follower associated with this specific screen name
+	 *            The screen name of the followers you want to get
+	 * @return The followers associated with this specific screen name
 	 */
-	public DBFollower getByScreenName(String screenName);
+	public ArrayList<DBFollower> getByScreenName(String screenName);
 
 	/**
 	 * @param follower

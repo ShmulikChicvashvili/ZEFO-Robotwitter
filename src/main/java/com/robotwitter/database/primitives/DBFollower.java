@@ -87,6 +87,13 @@ public class DBFollower {
 	}
 
 	/**
+	 * @return the language setting of the follower
+	 */
+	public String getLanguage() {
+		return this.language;
+	}
+	
+	/**
 	 * @return is the follower a celebrity
 	 */
 	public boolean getIsCelebrity() {
@@ -156,6 +163,15 @@ public class DBFollower {
 	public void setFavorites(int favorites) {
 		this.favorites = favorites;
 	}
+	
+	/**
+	 * @param language
+	 *            the language to set
+	 */
+	public void setLanguage(String language) {
+		this.language = language;
+	}
+	
 
 	/**
 	 * @param isCelebrity

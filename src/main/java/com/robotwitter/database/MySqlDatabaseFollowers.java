@@ -27,7 +27,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 		/**
 		 * Password column.
 		 */
-		NAME, SCREEN_NAME, DESCRIPTION, FOLLOWERS, FOLLOWING, LOCATION, FAVORITES, LANGUAGE, IS_CELEBRITY, JOINED
+		NAME, SCREEN_NAME, DESCRIPTION, FOLLOWERS, FOLLOWING, LOCATION, FAVORITES, LANGUAGE, IS_CELEBRITY, JOINED, PICTURE
 	}
 
 	public MySqlDatabaseFollowers(final ConnectionEstablisher conEstablisher)
@@ -37,6 +37,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 				Statement statement = (Statement) con.createStatement()) {
 			final String statementCreateFollowers = String.format(
 					"CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$
+							+ "`%s` TINYTEXT NOT NULL," //$NON-NLS-1$
 							+ "`%s` TINYTEXT NOT NULL," //$NON-NLS-1$
 							+ "`%s` TINYTEXT NOT NULL," //$NON-NLS-1$
 							+ "`%s` TINYTEXT NOT NULL," //$NON-NLS-1$
@@ -60,6 +61,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 							.toLowerCase(), Columns.LANGUAGE.toString()
 							.toLowerCase(), Columns.IS_CELEBRITY.toString()
 							.toLowerCase(), Columns.JOINED.toString()
+							.toLowerCase(), Columns.PICTURE.toString()
 							.toLowerCase(), Columns.FOLLOWER_ID.toString()
 							.toLowerCase());
 			final String statementCreateFollowing = String.format(
@@ -117,6 +119,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 						resultSet.getBoolean(Columns.IS_CELEBRITY.toString()
 								.toLowerCase()),
 						resultSet.getTimestamp(Columns.JOINED.toString()
+								.toLowerCase()),
+						resultSet.getString(Columns.PICTURE.toString()
 								.toLowerCase()));
 			}
 			resultSet.close();
@@ -125,7 +129,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 		}
 		return $;
 	}
-	
+
 	/*
 	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #getFollowersIds(com.robotwitter.database.primitives.DBFollower)
@@ -137,13 +141,16 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 		try (Connection con = connectionEstablisher.getConnection();
 				PreparedStatement preparedStatement = con
 						.prepareStatement("SELECT * FROM " //$NON-NLS-1$
-								+ followingTable + " WHERE " //$NON-NLS-1$
-								+ Columns.FOLLOWED_ID.toString().toLowerCase() + "=?;")) //$NON-NLS-1$)
+								+ followingTable
+								+ " WHERE " //$NON-NLS-1$
+								+ Columns.FOLLOWED_ID.toString().toLowerCase()
+								+ "=?;")) //$NON-NLS-1$)
 		{
 			preparedStatement.setString(1, userId);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
-				$.add(resultSet.getLong(Columns.FOLLOWER_ID.toString().toLowerCase()));
+				$.add(resultSet.getLong(Columns.FOLLOWER_ID.toString()
+						.toLowerCase()));
 			}
 			resultSet.close();
 		} catch (final SQLException e) {
@@ -189,6 +196,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 								.getBoolean(Columns.IS_CELEBRITY.toString()
 										.toLowerCase()), resultSet
 								.getTimestamp(Columns.JOINED.toString()
+										.toLowerCase()), resultSet
+								.getString(Columns.PICTURE.toString()
 										.toLowerCase())));
 			}
 			resultSet.close();
@@ -237,6 +246,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 								.getBoolean(Columns.IS_CELEBRITY.toString()
 										.toLowerCase()), resultSet
 								.getTimestamp(Columns.JOINED.toString()
+										.toLowerCase()), resultSet
+								.getString(Columns.PICTURE.toString()
 										.toLowerCase())));
 			}
 			resultSet.close();
@@ -258,16 +269,19 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 				|| follower.getDescription() == null
 				|| follower.getLocation() == null
 				|| follower.getLanguage() == null
-				|| follower.getJoined() == null) {
+				|| follower.getJoined() == null
+				|| follower.getPicture() == null) {
 			return SqlError.INVALID_PARAMS;
 		}
 		try (Connection con = connectionEstablisher.getConnection();
 				@SuppressWarnings("nls")
 				PreparedStatement preparedStatement = (PreparedStatement) con
-						.prepareStatement("INSERT INTO " + followersTable
+						.prepareStatement("INSERT INTO "
+								+ followersTable
 								+ " ("
 								+ Columns.FOLLOWER_ID.toString().toLowerCase()
-								+ "," + Columns.NAME.toString().toLowerCase()
+								+ ","
+								+ Columns.NAME.toString().toLowerCase()
 								+ ","
 								+ Columns.SCREEN_NAME.toString().toLowerCase()
 								+ ","
@@ -282,8 +296,11 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 								+ Columns.LANGUAGE.toString().toLowerCase()
 								+ ","
 								+ Columns.IS_CELEBRITY.toString().toLowerCase()
-								+ "," + Columns.JOINED.toString().toLowerCase()
-								+ ") VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );")) {
+								+ ","
+								+ Columns.JOINED.toString().toLowerCase()
+								+ ","
+								+ Columns.PICTURE.toString().toLowerCase()
+								+ ") VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );")) {
 			preparedStatement.setLong(1, follower.getFollowerId());
 			preparedStatement.setString(2, follower.getName());
 			preparedStatement.setString(3, follower.getScreenName());
@@ -293,6 +310,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 			preparedStatement.setInt(7, follower.getFavorites());
 			preparedStatement.setBoolean(8, follower.getIsCelebrity());
 			preparedStatement.setTimestamp(9, follower.getJoined());
+			preparedStatement.setString(10, follower.getPicture());
 			preparedStatement.executeUpdate();
 
 		} catch (final SQLException e) {
@@ -303,7 +321,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 		}
 		return SqlError.SUCCESS;
 	}
-	
+
 	/*
 	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #insert(com.robotwitter.database.primitives.DBFollower)
@@ -320,7 +338,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 						.prepareStatement("INSERT INTO " + followingTable
 								+ " ("
 								+ Columns.FOLLOWER_ID.toString().toLowerCase()
-								+ "," 
+								+ ","
 								+ Columns.FOLLOWED_ID.toString().toLowerCase()
 								+ ") VALUES ( ?, ?);")) {
 			preparedStatement.setLong(1, followerId);
@@ -342,31 +360,27 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 	 */
 	@Override
 	public boolean isExists(long followerId) {
-		if (followerId < 1) { return false; }
+		if (followerId < 1) {
+			return false;
+		}
 		boolean $ = false;
-		try (
-			Connection con = connectionEstablisher.getConnection();
-			PreparedStatement preparedStatement = con.prepareStatement("" //$NON-NLS-1$
-				+ "SELECT * FROM " //$NON-NLS-1$
-				+ followersTable
-				+ " WHERE " //$NON-NLS-1$
-				+ Columns.FOLLOWER_ID.toString().toLowerCase()
-				+ "=?;"))
-		{
+		try (Connection con = connectionEstablisher.getConnection();
+				PreparedStatement preparedStatement = con.prepareStatement("" //$NON-NLS-1$
+						+ "SELECT * FROM " //$NON-NLS-1$
+						+ followersTable + " WHERE " //$NON-NLS-1$
+						+ Columns.FOLLOWER_ID.toString().toLowerCase() + "=?;")) {
 			preparedStatement.setLong(1, followerId);
 			resultSet = preparedStatement.executeQuery();
-			if (resultSet.first())
-			{
+			if (resultSet.first()) {
 				$ = true;
 			}
 			resultSet.close();
-		} catch (final SQLException e)
-		{
+		} catch (final SQLException e) {
 			e.printStackTrace();
 		}
 		return $;
 	}
-	
+
 	/*
 	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #isExistsByName(com.robotwitter.database.primitives.DBFollower)
@@ -374,8 +388,25 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 	@SuppressWarnings({ "boxing", "nls" })
 	@Override
 	public boolean isExistsByName(String name) {
-		// TODO Auto-generated method stub
-		return false;
+		if (name == null) {
+			return false;
+		}
+		boolean $ = false;
+		try (Connection con = connectionEstablisher.getConnection();
+				PreparedStatement preparedStatement = con.prepareStatement("" //$NON-NLS-1$
+						+ "SELECT * FROM " //$NON-NLS-1$
+						+ followersTable + " WHERE " //$NON-NLS-1$
+						+ Columns.NAME.toString().toLowerCase() + "=?;")) {
+			preparedStatement.setString(1, name);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.first()) {
+				$ = true;
+			}
+			resultSet.close();
+		} catch (final SQLException e) {
+			e.printStackTrace();
+		}
+		return $;
 	}
 
 	/*
@@ -385,8 +416,25 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 	@SuppressWarnings({ "boxing", "nls" })
 	@Override
 	public boolean isExistsByScreenName(String ScreenName) {
-		// TODO Auto-generated method stub
-		return false;
+		if (ScreenName == null) {
+			return false;
+		}
+		boolean $ = false;
+		try (Connection con = connectionEstablisher.getConnection();
+				PreparedStatement preparedStatement = con.prepareStatement("" //$NON-NLS-1$
+						+ "SELECT * FROM " //$NON-NLS-1$
+						+ followersTable + " WHERE " //$NON-NLS-1$
+						+ Columns.SCREEN_NAME.toString().toLowerCase() + "=?;")) {
+			preparedStatement.setString(1, ScreenName);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.first()) {
+				$ = true;
+			}
+			resultSet.close();
+		} catch (final SQLException e) {
+			e.printStackTrace();
+		}
+		return $;
 	}
 
 	/*
@@ -396,8 +444,62 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 	@SuppressWarnings({ "boxing", "nls" })
 	@Override
 	public SqlError update(DBFollower follower) {
-		// TODO Auto-generated method stub
-		return null;
+		if (follower == null || follower.getName() == null
+				|| follower.getScreenName() == null
+				|| follower.getDescription() == null
+				|| follower.getLocation() == null
+				|| follower.getLanguage() == null
+				|| follower.getJoined() == null
+				|| follower.getPicture() == null) {
+			return SqlError.INVALID_PARAMS;
+		}
+		if (!isExists(follower.getFollowerId())) {
+			return SqlError.DOES_NOT_EXIST;
+		}
+
+		try (Connection con = connectionEstablisher.getConnection();
+				@SuppressWarnings("nls")
+				PreparedStatement preparedStatement = con
+						.prepareStatement(String
+								.format("UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ?",
+										followersTable, Columns.FOLLOWER_ID
+												.toString().toLowerCase(),
+										Columns.NAME.toString().toLowerCase(),
+										Columns.SCREEN_NAME.toString()
+												.toLowerCase(),
+										Columns.FOLLOWERS.toString()
+												.toLowerCase(),
+										Columns.FOLLOWING.toString()
+												.toLowerCase(),
+										Columns.LOCATION.toString()
+												.toLowerCase(),
+										Columns.FAVORITES.toString()
+												.toLowerCase(),
+										Columns.LANGUAGE.toString()
+												.toLowerCase(),
+										Columns.IS_CELEBRITY.toString()
+												.toLowerCase(), Columns.JOINED
+												.toString().toLowerCase(),
+										Columns.PICTURE.toString()
+												.toLowerCase(),
+										Columns.FOLLOWER_ID.toString()
+												.toLowerCase()))) {
+			preparedStatement.setString(1, follower.getName());
+			preparedStatement.setString(2, follower.getScreenName());
+			preparedStatement.setInt(3, follower.getFollowers());
+			preparedStatement.setInt(4, follower.getFollowing());
+			preparedStatement.setString(5, follower.getLocation());
+			preparedStatement.setInt(6, follower.getFavorites());
+			preparedStatement.setBoolean(7, follower.getIsCelebrity());
+			preparedStatement.setTimestamp(8, follower.getJoined());
+			preparedStatement.setString(9, follower.getPicture());
+			preparedStatement.setLong(10, follower.getFollowerId());
+			preparedStatement.executeUpdate();
+		} catch (final SQLException e) {
+			e.printStackTrace();
+		}
+
+		return SqlError.SUCCESS;
 	}
 
 	/**

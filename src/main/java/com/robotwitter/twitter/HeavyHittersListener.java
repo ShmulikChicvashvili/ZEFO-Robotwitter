@@ -145,6 +145,7 @@ public class HeavyHittersListener implements UserStreamListener
 				if (userMentioned.getId() == userID)
 				{
 					heavyHittersHandler.onMentioned(source.getId());
+					break;
 				}
 			}
 

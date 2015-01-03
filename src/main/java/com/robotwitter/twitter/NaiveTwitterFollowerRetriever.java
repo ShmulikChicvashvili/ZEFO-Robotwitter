@@ -4,6 +4,10 @@
 
 package com.robotwitter.twitter;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.TreeMap;
+
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -20,10 +24,6 @@ public class NaiveTwitterFollowerRetriever
 	implements
 		ITwitterFollowersRetriever
 {
-	private Twitter twitterConnector;
-	
-	
-	
 	/**
 	 * @param tf
 	 *            a TwitterFactory configured for the robotwitter app to create
@@ -31,7 +31,26 @@ public class NaiveTwitterFollowerRetriever
 	 */
 	public NaiveTwitterFollowerRetriever(TwitterFactory tf)
 	{
-		this.twitterConnector = tf.getInstance();
+		twitterConnector = tf.getInstance();
+	}
+	
+	
+	
+	/* (non-Javadoc) @see com.robotwitter.twitter.ITwitterFollowersRetriever#retrieveFollowersAmount(long) */
+	@Override
+	public TreeMap<Timestamp, Integer> retrieveFollowersAmount(long userID)
+	{
+		try
+		{
+			User twitterUser = twitterConnector.showUser(userID); //This calls the twitter API
+			TreeMap<Timestamp,Integer> $ = new TreeMap<Timestamp, Integer>();
+			$.put(new Timestamp(new Date().getTime()), twitterUser.getFollowersCount());
+			return $;
+		} catch (TwitterException e)
+		{
+			// User doesn't exist, or network issues.
+			return null;
+		}
 	}
 	
 	
@@ -39,11 +58,11 @@ public class NaiveTwitterFollowerRetriever
 	 * com.robotwitter.twitter.ITwitterFollowersRetriever#retrieveFollowersAmount
 	 * (com.robotwitter.twitter.TwitterAccount) */
 	@Override
-	public int retrieveFollowersAmount(long userID)
+	public int retrieveLatestFollowersAmount(long userID)
 	{
 		try
 		{
-			User twitterUser = this.twitterConnector.showUser(userID);
+			User twitterUser = twitterConnector.showUser(userID); //This calls the twitter API
 			return twitterUser.getFollowersCount();
 		} catch (TwitterException e)
 		{
@@ -52,5 +71,8 @@ public class NaiveTwitterFollowerRetriever
 		}
 		
 	}
+
+
+	private Twitter twitterConnector;
 	
 }

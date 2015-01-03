@@ -6,14 +6,14 @@ package com.robotwitter.database;
 
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.inject.Inject;
-import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.Statement;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
@@ -26,7 +26,7 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
 /**
  * Handles the connection to number followers table.
  *
- * @author Eyal
+ * @author Eyal and Shmulik
  *
  */
 public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
@@ -72,7 +72,7 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 		super(conEsatblisher);
 		try (
 			Connection con = connectionEstablisher.getConnection();
-			Statement statement = (Statement) con.createStatement())
+			Statement statement = con.createStatement())
 		{
 
 			final String statementCreate =
@@ -105,7 +105,7 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			PreparedStatement preparedStatement =
-				(PreparedStatement) con.prepareStatement(""
+				con.prepareStatement(""
 					+ "SELECT * FROM "
 					+ table
 					+ " WHERE "
@@ -156,7 +156,7 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			PreparedStatement preparedStatement =
-				(PreparedStatement) con.prepareStatement("INSERT INTO "
+				con.prepareStatement("INSERT INTO "
 					+ table
 					+ " ("
 					+ Columns.TWITTER_ID.toString().toLowerCase()

@@ -6,12 +6,12 @@ package com.robotwitter.database.primitives;
 
 
 /**
- * @author Shmulik
+ * @author Shmulik and Eyal
  *
  */
 public class DBTwitterAccount extends DatabaseType
 {
-
+	
 	/**
 	 * @param email
 	 *            The email of the user which connected to his twitter account
@@ -33,8 +33,8 @@ public class DBTwitterAccount extends DatabaseType
 		this.privateToken = privateToken;
 		this.userId = userId;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.DatabasePrimitives.DatabaseType#equals(java.lang.Object) */
 	@Override
@@ -55,8 +55,8 @@ public class DBTwitterAccount extends DatabaseType
 		}
 		return false;
 	}
-
-
+	
+	
 	/**
 	 * @return the privateToken
 	 */
@@ -64,8 +64,8 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		return privateToken;
 	}
-
-
+	
+	
 	/**
 	 * @return the token
 	 */
@@ -73,8 +73,8 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		return token;
 	}
-
-
+	
+	
 	/**
 	 * @return the userId
 	 */
@@ -82,8 +82,8 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		return userId;
 	}
-
-
+	
+	
 	/**
 	 * @param privateToken
 	 *            The privateToken to set
@@ -92,8 +92,8 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		this.privateToken = privateToken;
 	}
-
-
+	
+	
 	/**
 	 * @param token
 	 *            The token to set
@@ -102,8 +102,8 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		this.token = token;
 	}
-
-
+	
+	
 	/**
 	 * @param userId
 	 *            the userId to set
@@ -112,8 +112,8 @@ public class DBTwitterAccount extends DatabaseType
 	{
 		this.userId = userId;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.DatabasePrimitives.DatabaseType#toString() */
 	@SuppressWarnings("nls")
@@ -127,22 +127,22 @@ public class DBTwitterAccount extends DatabaseType
 			+ " Private Token: "
 			+ getPrivateToken();
 	}
-
-
-
+	
+	
+	
 	/**
 	 * Argument given by twitter system
 	 */
 	String token;
-
+	
 	/**
 	 * Argument given by twitter system
 	 */
 	String privateToken;
-
+	
 	/**
 	 * The user id
 	 */
 	Long userId;
-
+	
 }

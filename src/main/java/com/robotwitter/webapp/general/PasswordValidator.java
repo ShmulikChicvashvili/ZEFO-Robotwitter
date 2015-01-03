@@ -33,22 +33,22 @@ public class PasswordValidator extends AbstractPasswordValidator
 	{
 		setMinLength(
 			MIN_VALID_LENGTH,
-			messages.get("PasswordValidator.error.must-be-longer-than")); //$NON-NLS-1$
+			messages.get("PasswordValidator.error.must-be-longer-than")); 
 
 		setMaxLength(
 			MAX_VALID_LENGTH,
-			messages.get("PasswordValidator.error.must-be-shorter-than")); //$NON-NLS-1$
+			messages.get("PasswordValidator.error.must-be-shorter-than")); 
 
-		addConstraint(".*[0-9].*", //$NON-NLS-1$
-			messages.get("PasswordValidator.error.must-contain-digit")); //$NON-NLS-1$
+		addConstraint(".*[0-9].*", 
+			messages.get("PasswordValidator.error.must-contain-digit")); 
 
-		addConstraint(".*[a-z].*", //$NON-NLS-1$
+		addConstraint(".*[a-z].*", 
 			messages
-				.get("PasswordValidator.error.must-contain-lower-case-letter")); //$NON-NLS-1$
+				.get("PasswordValidator.error.must-contain-lower-case-letter")); 
 
-		addConstraint(".*[A-Z].*", //$NON-NLS-1$
+		addConstraint(".*[A-Z].*", 
 			messages
-				.get("PasswordValidator.error.must-contain-upper-case-letter")); //$NON-NLS-1$
+				.get("PasswordValidator.error.must-contain-upper-case-letter")); 
 	}
 
 

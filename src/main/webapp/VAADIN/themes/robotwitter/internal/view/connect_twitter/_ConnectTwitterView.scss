@@ -1,0 +1,35 @@
+@import "../../common";
+@import "../../../config";
+/*----------------------------------------------------------------------------*/
+
+@mixin ConnectTwitterView { .ConnectTwitterView {
+	
+	/** Fix the clipping of the shadow of the form's div. */
+	overflow: visible;
+	
+	/* Header */
+	.ConnectTwitterView-header
+	{
+		font-size: 5em;
+		text-align: center;
+	}
+	
+	/* "Connect a Twitter account" button layout slot container */
+	.v-slot-ConnectTwitterView-connect
+	{	
+		text-align: center;
+	}
+	
+	/* "Connect a Twitter account" button */
+	.ConnectTwitterView-connect
+	{	
+		height: 75px;
+		font-size: 3em;
+		padding: 0 30px;
+		
+		/* Icon */
+		.v-icon { color: $robotwitter-main-color; }
+	}
+
+} }
+

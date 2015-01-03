@@ -38,33 +38,15 @@ public interface IAccountController extends Serializable
 	
 	
 	
-	/** Represents information on a single Twitter account. */
-	static class TwitterAccount implements Serializable
-	{
-		/** The Twitter accounts' name. */
-		public String name;
-		
-		/** The Twitter accounts' screenname. */
-		public String screenname;
-		
-		/** The Twitter accounts' profile image. */
-		public String image;
-
-		/** Serialisation version unique ID. */
-		private static final long serialVersionUID = 1L;
-	}
-	
-	
-	
 	/**
 	 * Activates a twitter account.
 	 *
-	 * @param screenname
-	 *            the Twitter account's screenname
+	 * @param id
+	 *            the Twitter account's ID
 	 *
 	 * @return the operation's status
 	 */
-	Status activateTwitterAccount(String screenname);
+	Status activateTwitterAccount(long id);
 	
 	
 	/**
@@ -91,7 +73,7 @@ public interface IAccountController extends Serializable
 	 *         user is currently connected to this controller or the user had
 	 *         yet to select a Twitter account.
 	 */
-	TwitterAccount getActiveTwitterAccount();
+	ITwitterAccountController getActiveTwitterAccount();
 	
 	
 	/**
@@ -113,5 +95,5 @@ public interface IAccountController extends Serializable
 	 *         <code>null</code> if no user is currently connected to this
 	 *         controller.
 	 */
-	Collection<TwitterAccount> getTwitterAccounts();
+	Collection<ITwitterAccountController> getTwitterAccounts();
 }

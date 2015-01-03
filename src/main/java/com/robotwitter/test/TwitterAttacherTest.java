@@ -38,12 +38,13 @@ public class TwitterAttacherTest // TODO: think how to test this...
 	public void before()
 	{
 		final TwitterAppConfiguration conf = new TwitterAppConfiguration();
-		final TwitterFactory tf = new TwitterFactory(conf.getConfiguration());
+		final TwitterFactory tf =
+			new TwitterFactory(conf.getUserConfiguration());
 		account = new TwitterAccount(tf);
 
 		final MySqlDatabaseTwitterAccounts db =
 			Mockito.mock(MySqlDatabaseTwitterAccounts.class);
-
+		
 		attacher = new TwitterAttacher(db);
 	}
 	

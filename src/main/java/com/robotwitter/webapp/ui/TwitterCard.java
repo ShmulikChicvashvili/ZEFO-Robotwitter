@@ -14,6 +14,7 @@ package com.robotwitter.webapp.ui;
  */
 public final class TwitterCard
 {
+
 	/**
 	 * Creates a Twitter card as an HTML element.
 	 *
@@ -23,43 +24,53 @@ public final class TwitterCard
 	 *            the Twitter account's screenname (eg, <code>@CocaCola</code>)
 	 * @param image
 	 *            the Twitter account's profile image URI
-	 *
+	 * @param isEmpty
+	 *            is the account empty
 	 * @return an HTML string representing the newly created card
 	 */
-	static String createAsHtml(String name, String screenname, String image)
+	static String createAsHtml(
+		String name,
+		String screenname,
+		String image,
+		boolean isEmpty)
 	
 	{		// Twitter account name element
-		String nameOpen = "<div class=\"" + TWITTER_NAME_STYLENAME + "\">"; //$NON-NLS-1$ //$NON-NLS-2$
-		String nameClose = "</div>"; //$NON-NLS-1$
+		String nameOpen = "<div class=\"" + TWITTER_NAME_STYLENAME + "\">";
+		String nameClose = "</div>";
 		String nameContent = name;
 		String nameElem = nameOpen + nameContent + nameClose;
 
 		// Twitter account screenname element
 		String screennameOpen =
-			"<div class=\"" + TWITTER_SCREENNAME_STYLENAME + "\">"; //$NON-NLS-1$ //$NON-NLS-2$
-		String screennameClose = "</div>"; //$NON-NLS-1$
-		String screennameContent = '@' + screenname;
+			"<div class=\"" + TWITTER_SCREENNAME_STYLENAME + "\">";
+		String screennameClose = "</div>";
+		String screennameContent = "";
+		if (!isEmpty)
+		{
+			screennameContent += '@';
+		}
+		screennameContent += screenname;
 		String screennameElem =
 			screennameOpen + screennameContent + screennameClose;
 
 		// Twitter card names section (contains name and screenname)
 		String namesOpen =
-			"<div class=\"" + TWITTER_CARD_NAMES_STYLENAME + "\">"; //$NON-NLS-1$ //$NON-NLS-2$
-		String namesClose = "</div>"; //$NON-NLS-1$
+			"<div class=\"" + TWITTER_CARD_NAMES_STYLENAME + "\">";
+		String namesClose = "</div>";
 		String namesContent = nameElem + screennameElem;
 		String namesElem = namesOpen + namesContent + namesClose;
 
 		// Twitter profile image
 		String imageOpen =
-			"<img class=\"" + TWITTER_PROFILE_IMAGE_STYLENAME + "\" "; //$NON-NLS-1$ //$NON-NLS-2$
-		imageOpen += "alt=\"" + name + "\" src=\"";  //$NON-NLS-1$ //$NON-NLS-2$
-		String imageClose = "\">"; //$NON-NLS-1$
+			"<img class=\"" + TWITTER_PROFILE_IMAGE_STYLENAME + "\" ";
+		imageOpen += "alt=\"" + name + "\" src=\"";
+		String imageClose = "\">";
 		String imageContent = image;
 		String imageElem = imageOpen + imageContent + imageClose;
 
 		// Root element (Twitter profile card)
-		String cardOpen = "<div class=\"" + STYLENAME + "\">"; //$NON-NLS-1$ //$NON-NLS-2$
-		String cardClose = "</div>"; //$NON-NLS-1$
+		String cardOpen = "<div class=\"" + STYLENAME + "\">";
+		String cardClose = "</div>";
 		String cardContent = namesElem + imageElem;
 		String cardElem = cardOpen + cardContent + cardClose;
 
@@ -75,28 +86,28 @@ public final class TwitterCard
 	 */
 	private TwitterCard() throws Exception
 	{
-		throw new Exception("Initialisation of class " //$NON-NLS-1$
+		throw new Exception("Initialisation of class "
 			+ this.getClass().getName()
-			+ " is prohibited"); //$NON-NLS-1$
+			+ " is prohibited");
 	}
 
 
 
 	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "TwitterCard"; //$NON-NLS-1$
+	private static final String STYLENAME = "TwitterCard";
 
 	/** The CSS class name to apply to a Twitter name in a profile card. */
-	private static final String TWITTER_NAME_STYLENAME = "TwitterCard-name"; //$NON-NLS-1$
+	private static final String TWITTER_NAME_STYLENAME = "TwitterCard-name";
 
 	/** The CSS class name to apply to a Twitter profile image. */
 	private static final String TWITTER_PROFILE_IMAGE_STYLENAME =
-		"TwitterCard-image"; //$NON-NLS-1$
+		"TwitterCard-image";
 
 	/** The CSS class name to apply to a Twitter screenname in a profile card. */
 	private static final String TWITTER_SCREENNAME_STYLENAME =
-		"TwitterCard-screenname"; //$NON-NLS-1$
+		"TwitterCard-screenname";
 
 	/** The CSS class name to apply to a names section in a profile card. */
 	private static final String TWITTER_CARD_NAMES_STYLENAME =
-		"TwitterCard-names"; //$NON-NLS-1$
+		"TwitterCard-names";
 }

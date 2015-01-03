@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.test;
@@ -22,10 +22,10 @@ import twitter4j.auth.AccessToken;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+
 import com.robotwitter.database.MySqlDBUserModule;
 import com.robotwitter.database.MySqlDatabaseTwitterAccounts;
 import com.robotwitter.database.primitives.DBTwitterAccount;
-import com.robotwitter.database.primitives.DatabaseType;
 import com.robotwitter.twitter.IllegalPinException;
 import com.robotwitter.twitter.TwitterAccount;
 import com.robotwitter.twitter.TwitterAppConfiguration;
@@ -40,62 +40,53 @@ import com.robotwitter.twitter.TwitterAttacher;
  */
 public class IntegratedTwitterAttacherTest
 {
-	TwitterAccount account;
-	
-	TwitterAttacher attacher;
-	
-	MySqlDatabaseTwitterAccounts db;
-	
-	
-	
 	@Before
 	public void before()
 	{
 		final TwitterAppConfiguration conf = new TwitterAppConfiguration();
-		final TwitterFactory tf = new TwitterFactory(conf.getConfiguration());
-		this.account = new TwitterAccount(tf);
-		
+		final TwitterFactory tf =
+			new TwitterFactory(conf.getUserConfiguration());
+		account = new TwitterAccount(tf);
+
 		final Injector injector = Guice.createInjector(new MySqlDBUserModule());
-		this.db = injector.getInstance(MySqlDatabaseTwitterAccounts.class);
-		
-		this.attacher =
-			new TwitterAttacher((MySqlDatabaseTwitterAccounts) this.db);
+		db = injector.getInstance(MySqlDatabaseTwitterAccounts.class);
+
+		attacher = new TwitterAttacher(db);
 	}
-	
-	
+
+
 	@Test
 	public void test()
 	{
 		System.out
-			.println("Enter the url and enter the pin after authrization");
-		System.out.println(this.attacher.getAuthorizationURL(this.account));
-		
+		.println("Enter the url and enter the pin after authrization");
+		System.out.println(attacher.getAuthorizationURL(account));
+
 		BufferedReader br =
 			new BufferedReader(new InputStreamReader(System.in));
 		System.out.print("Enter PIN: "); //$NON-NLS-1$
 		try
 		{
-			this.attacher.attachAccount(
+			attacher.attachAccount(
 				"shmulikjkech@gmail.com",
-				this.account,
+				account,
 				br.readLine());
 			System.out.println("Attached account!");
-			
+
 			ArrayList<DBTwitterAccount> twitterAccounts =
-				this.db.get("shmulikjkech@gmail.com");
+				db.get("shmulikjkech@gmail.com");
 			assertTrue(twitterAccounts.size() == 1);
-			DBTwitterAccount shmulikAccount =
-				(DBTwitterAccount) twitterAccounts.get(0);
+			DBTwitterAccount shmulikAccount = twitterAccounts.get(0);
 			Twitter shmulikTwitter =
-				(new TwitterFactory(
-					(new TwitterAppConfiguration()).getConfiguration()))
-					.getInstance();
+				new TwitterFactory(
+					new TwitterAppConfiguration().getUserConfiguration())
+			.getInstance();
 			AccessToken shmulikAccess =
 				new AccessToken(
 					shmulikAccount.getToken(),
 					shmulikAccount.getPrivateToken());
 			shmulikTwitter.setOAuthAccessToken(shmulikAccess);
-			
+
 			try
 			{
 				shmulikTwitter.updateStatus("yolo swag!");
@@ -104,7 +95,7 @@ public class IntegratedTwitterAttacherTest
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		} catch (IllegalPinException e)
 		{
 			// TODO Auto-generated catch block
@@ -113,7 +104,15 @@ public class IntegratedTwitterAttacherTest
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} //$NON-NLS-1$
+		}
 	}
-	
+
+
+
+	TwitterAccount account;
+
+	TwitterAttacher attacher;
+
+	MySqlDatabaseTwitterAccounts db;
+
 }

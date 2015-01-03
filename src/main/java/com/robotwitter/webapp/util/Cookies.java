@@ -52,9 +52,9 @@ public final class Cookies
 	{
 		Cookie cookie = get(name);
 		if (cookie == null) { return; }
-		cookie.setValue("");  //$NON-NLS-1$
+		cookie.setValue("");  
 		cookie.setMaxAge(0);
-		cookie.setPath("/"); //$NON-NLS-1$
+		cookie.setPath("/"); 
 		VaadinService.getCurrentResponse().addCookie(cookie);
 	}
 
@@ -74,7 +74,7 @@ public final class Cookies
 	{
 		Cookie cookie = new Cookie(name, value);
 		cookie.setMaxAge(duration);
-		cookie.setPath("/"); //$NON-NLS-1$
+		cookie.setPath("/"); 
 		VaadinService.getCurrentResponse().addCookie(cookie);
 	}
 
@@ -87,8 +87,8 @@ public final class Cookies
 	 */
 	private Cookies() throws Exception
 	{
-		throw new Exception("Initialisation of class " //$NON-NLS-1$
+		throw new Exception("Initialisation of class " 
 			+ this.getClass().getName()
-			+ " is prohibited"); //$NON-NLS-1$
+			+ " is prohibited"); 
 	}
 }

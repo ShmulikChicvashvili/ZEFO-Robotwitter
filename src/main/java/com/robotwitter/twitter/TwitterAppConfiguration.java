@@ -20,13 +20,16 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public class TwitterAppConfiguration
 {
-	public TwitterAppConfiguration()
+	
+	/**
+	 * @return
+	 */
+	public Configuration getAppConfiguration()
 	{
-		//FIXME: fix this baaaah code
 		ConfigurationBuilder cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true);
-		cb.setOAuthConsumerKey(this.consumerKey);
-		cb.setOAuthConsumerSecret(this.consumerSecret);
+		cb.setOAuthConsumerKey(consumerKey);
+		cb.setOAuthConsumerSecret(consumerSecret);
 		cb.setApplicationOnlyAuthEnabled(true);
 		OAuth2Token token = null;
 		try
@@ -40,28 +43,35 @@ public class TwitterAppConfiguration
 		}
 		cb = new ConfigurationBuilder();
 		cb.setDebugEnabled(true);
-		cb.setOAuthConsumerKey(this.consumerKey);
-		cb.setOAuthConsumerSecret(this.consumerSecret);
+		cb.setOAuthConsumerKey(consumerKey);
+		cb.setOAuthConsumerSecret(consumerSecret);
 		cb.setApplicationOnlyAuthEnabled(true);
 		cb.setOAuth2TokenType(token.getTokenType());
 		cb.setOAuth2AccessToken(token.getAccessToken());
 		
-		this.conf = cb.build();
+		return cb.build();
 	}
-	
-	
-	public Configuration getConfiguration()
+
+
+	public Configuration getUserConfiguration()
 	{
-		return this.conf;
+		ConfigurationBuilder cb = new ConfigurationBuilder();
+		cb.setDebugEnabled(true);
+		cb.setOAuthConsumerKey(consumerKey);
+		cb.setOAuthConsumerSecret(consumerSecret);
+		
+		return cb.build();
 	}
-	
-	
+
+
+
+	public static final String USER_BASED = "TwitterAppConfiguration.user-base";
 	
 	// TODO: allow to change and configure these values
-	String consumerKey = "0kkK9O83YyDRC3HkOP97HFiIi"; //$NON-NLS-1$
+	String consumerKey = "wTlnDZNxIsFU65JnBnCyxlEDH"; //$NON-NLS-1$
 	
 	String consumerSecret =
-		"13wJ8y3gu4epaM9vqJFuWUa0MNE8IfCDYmBdcKE0NfT3RWbM9M"; //$NON-NLS-1$
+		"soeJE6y7YiYRH9LRqoAf9r1sVgCAokXG3gIC1KYEu9g4cIWmt0"; //$NON-NLS-1$
 	
 	Configuration conf;
 }

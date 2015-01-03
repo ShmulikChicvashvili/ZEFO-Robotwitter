@@ -14,6 +14,7 @@ import com.robotwitter.database.MySqlDBUserModule;
 import com.robotwitter.management.EmailPasswordRetrieverModule;
 import com.robotwitter.management.RetrievalMailBuilderModule;
 import com.robotwitter.miscellaneous.GmailSenderModule;
+import com.robotwitter.twitter.TwitterAttacherModule;
 import com.robotwitter.webapp.control.ControllerModule;
 import com.robotwitter.webapp.messages.MessagesProvider;
 
@@ -40,6 +41,7 @@ public class Configuration implements ServletContextListener
 		views = new ViewMap();
 		
 		initialiseMessagesProvider();
+		initialiseInjector();
 		initialiseMenuFactory();
 		initialiseViewFactory();
 	}
@@ -61,16 +63,33 @@ public class Configuration implements ServletContextListener
 		// dependencies cannot be injected.
 		
 		final ServletContext context = event.getServletContext();
+		context.setAttribute(INJECTOR, injector);
 		context.setAttribute(MENU_FACTORY, menuFactory);
 		context.setAttribute(VIEW_FACTORY, viewFactory);
+	}
+	
+	
+	/** Initialises the injector. */
+	private void initialiseInjector()
+	{
+		injector =
+			Guice.createInjector(
+				new ConfigurationModule(),
+				new MenuModule(menus, messagesProvider),
+				new ViewModule(views, messagesProvider),
+				new ControllerModule(),
+				new GmailSenderModule(),
+				new EmailPasswordRetrieverModule(),
+				new RetrievalMailBuilderModule(),
+				new MySqlDBUserModule(),
+				new TwitterAttacherModule());
+		
 	}
 	
 	
 	/** Initialises the menu factory. */
 	private void initialiseMenuFactory()
 	{
-		final MenuModule module = new MenuModule(menus, messagesProvider);
-		final Injector injector = Guice.createInjector(module);
 		menuFactory = new GuiceMenuFactory(menus, injector);
 	}
 	
@@ -85,25 +104,22 @@ public class Configuration implements ServletContextListener
 	/** Initialises the view factory. */
 	private void initialiseViewFactory()
 	{
-		final Injector injector =
-			Guice.createInjector(
-				new ViewModule(views, messagesProvider),
-				new ControllerModule(),
-				new GmailSenderModule(),
-				new EmailPasswordRetrieverModule(),
-				new RetrievalMailBuilderModule(),
-				new MySqlDBUserModule());
-		
 		viewFactory = new GuiceViewFactory(views, injector);
 	}
 	
 	
 	
+	/** The injector resolving all dependencies of Robotwitter classes. */
+	private Injector injector;
+	
 	/** The menu factory attribute's name. */
-	public static final String MENU_FACTORY = "MenuFactory"; //$NON-NLS-1$
+	public static final String MENU_FACTORY = "MenuFactory";
 	
 	/** The view factory attribute's name. */
-	public static final String VIEW_FACTORY = "ViewFactory"; //$NON-NLS-1$
+	public static final String VIEW_FACTORY = "ViewFactory";
+	
+	/** The injector attribute's name. */
+	public static final String INJECTOR = "Injector";
 	
 	/** The menu factory, used for creation of menus during a client session. */
 	GuiceMenuFactory menuFactory;

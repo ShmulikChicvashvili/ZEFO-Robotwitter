@@ -118,24 +118,24 @@ public class WindowWithDescription extends Window
 	
 	/** The CSS class name to apply to the description label. */
 	private static final String DESCRIPTION_STYLENAME =
-		"WindowWithDescription-description"; //$NON-NLS-1$
+		"WindowWithDescription-description"; 
 
 	/** The CSS class name to apply to the content component. */
 	private static final String ICON_DESC_WRAPPER_STYLENAME =
-		"WindowWithDescription-icon-desc-wrapper"; //$NON-NLS-1$
+		"WindowWithDescription-icon-desc-wrapper"; 
 	
 	/** The CSS class name to apply to the icon label. */
-	private static final String ICON_STYLENAME = "WindowWithDescription-icon"; //$NON-NLS-1$
+	private static final String ICON_STYLENAME = "WindowWithDescription-icon"; 
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 
 	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "WindowWithDescription"; //$NON-NLS-1$
+	private static final String STYLENAME = "WindowWithDescription"; 
 
 	/** The CSS class name to apply to the content component. */
 	private static final String WRAPPER_STYLENAME =
-		"WindowWithDescription-wrapper"; //$NON-NLS-1$
+		"WindowWithDescription-wrapper"; 
 	
 	/** The content. */
 	Component content;

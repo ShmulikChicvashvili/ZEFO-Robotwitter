@@ -9,6 +9,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,7 +20,6 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.mysql.jdbc.Statement;
 
 import com.robotwitter.database.MySQLConEstablisher;
 import com.robotwitter.database.MySqlDatabaseNumFollowers;
@@ -49,7 +49,7 @@ public class DatabaseFollowersTest
 		try (
 			Connection con =
 				injector.getInstance(MySQLConEstablisher.class).getConnection();
-			Statement statement = (Statement) con.createStatement())
+			Statement statement = con.createStatement())
 		{
 			final String dropSchema = "DROP DATABASE `test`";
 			statement.executeUpdate(dropSchema);

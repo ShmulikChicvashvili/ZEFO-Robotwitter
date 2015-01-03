@@ -14,9 +14,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 /**
- * Stub implementation.
  *
- * @author Hagai Akibayov
+ * @author Amir Drutin
  */
 public class RegistrationController implements IRegistrationController
 {

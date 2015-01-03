@@ -7,11 +7,11 @@ package com.robotwitter.database;
 
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.google.inject.Inject;
-import com.mysql.jdbc.PreparedStatement;
-import com.mysql.jdbc.Statement;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
@@ -48,9 +48,9 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 		 */
 		PASSWORD
 	}
-	
-	
-	
+
+
+
 	/**
 	 * C'tor For MySql db of users.
 	 *
@@ -66,7 +66,7 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 		super(conEstablisher);
 		try (
 			Connection con = connectionEstablisher.getConnection();
-			Statement statement = (Statement) con.createStatement())
+			Statement statement = con.createStatement())
 		{
 			final String statementCreate =
 				String.format("CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$
@@ -80,8 +80,8 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 			statement.execute(statementCreate);
 		}
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see Database.IDatabase#get(java.lang.String) */
 	@Override
 	public final DBUser get(final String eMailUser)
@@ -92,14 +92,14 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			PreparedStatement preparedStatement =
-				(PreparedStatement) con.prepareStatement("SELECT * FROM " //$NON-NLS-1$
+				con.prepareStatement("SELECT * FROM " //$NON-NLS-1$
 					+ table
 					+ " WHERE " //$NON-NLS-1$
 					+ Columns.EMAIL.toString().toLowerCase()
 					+ "=?;")) //$NON-NLS-1$)
-		
+
 		{
-			
+
 			preparedStatement.setString(1, eMail);
 			resultSet = preparedStatement.executeQuery();
 			if (resultSet.next())
@@ -119,8 +119,8 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 		}
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * Database.IDatabase#insert(DatabasePrimitives.DatabaseTypes) */
 	@SuppressWarnings("boxing")
@@ -134,7 +134,7 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 			Connection con = connectionEstablisher.getConnection();
 			@SuppressWarnings("nls")
 			PreparedStatement preparedStatement =
-				(PreparedStatement) con.prepareStatement("INSERT INTO "
+				con.prepareStatement("INSERT INTO "
 					+ table
 					+ " ("
 					+ Columns.EMAIL.toString().toLowerCase()
@@ -145,7 +145,7 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 			preparedStatement.setString(1, user.getEMail().toLowerCase());
 			preparedStatement.setString(2, user.getPassword());
 			preparedStatement.executeUpdate();
-			
+
 		} catch (final SQLException e)
 		{
 			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
@@ -154,12 +154,12 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 		}
 		return SqlError.SUCCESS;
 	}
-	
-	
+
+
 	/**
 	 * Create table of users statement.
 	 */
-	
+
 	@Override
 	/* (non-Javadoc) @see Database.IDatabase#isExists(java.lang.String) */
 	@SuppressWarnings("nls")
@@ -170,13 +170,12 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 		boolean $ = false;
 		try (
 			Connection con = connectionEstablisher.getConnection();
-			PreparedStatement preparedStatement =
-				(PreparedStatement) con.prepareStatement("" //$NON-NLS-1$
-					+ "SELECT * FROM " //$NON-NLS-1$
-					+ table
-					+ " WHERE " //$NON-NLS-1$
-					+ Columns.EMAIL.toString().toLowerCase()
-					+ "=?;"))
+			PreparedStatement preparedStatement = con.prepareStatement("" //$NON-NLS-1$
+				+ "SELECT * FROM " //$NON-NLS-1$
+				+ table
+				+ " WHERE " //$NON-NLS-1$
+				+ Columns.EMAIL.toString().toLowerCase()
+				+ "=?;"))
 		{
 			preparedStatement.setString(1, eMail);
 			resultSet = preparedStatement.executeQuery();
@@ -192,8 +191,8 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 		}
 		return $;
 	}
-	
-	
+
+
 	/**
 	 * @param user
 	 *            User to update
@@ -205,14 +204,14 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 		if (user == null
 			|| user.getEMail() == null
 			|| user.getPassword() == null) { return SqlError.INVALID_PARAMS; }
-		
+
 		if (!isExists(user.getEMail())) { return SqlError.DOES_NOT_EXIST; }
-		
+
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			@SuppressWarnings("nls")
 			PreparedStatement preparedStatement =
-				(PreparedStatement) con.prepareStatement(String.format(
+				con.prepareStatement(String.format(
 					"UPDATE %s SET %s = ? WHERE %s = ?",
 					table,
 					Columns.PASSWORD.toString().toLowerCase(),
@@ -225,12 +224,12 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 		{
 			e.printStackTrace();
 		}
-		
+
 		return SqlError.SUCCESS;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * The table name.
 	 */

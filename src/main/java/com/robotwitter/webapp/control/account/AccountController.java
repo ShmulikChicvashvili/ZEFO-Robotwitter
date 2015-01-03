@@ -65,7 +65,7 @@ public class AccountController implements IAccountController
 	public final Status activateTwitterAccount(long id)
 	{
 		if (email == null) { return null; }
-		TwitterAccount account = twitterAccounts.get(id);
+		ITwitterAccountController account = twitterAccounts.get(id);
 		if (account == null) { return Status.TWITTER_ACCOUNT_DOESNT_EXIST; }
 		activeTwitterAccount = account;
 		return Status.SUCCESS;
@@ -97,7 +97,7 @@ public class AccountController implements IAccountController
 
 
 	@Override
-	public final TwitterAccount getActiveTwitterAccount()
+	public final ITwitterAccountController getActiveTwitterAccount()
 	{
 		if (email == null) { return null; }
 		return activeTwitterAccount;
@@ -121,7 +121,7 @@ public class AccountController implements IAccountController
 
 
 	@Override
-	public final Collection<TwitterAccount> getTwitterAccounts()
+	public final Collection<ITwitterAccountController> getTwitterAccounts()
 	{
 		if (email == null) { return null; }
 		if (!updateTwitterAccounts()) { return null; }
@@ -157,13 +157,14 @@ public class AccountController implements IAccountController
 			e.printStackTrace();
 			return false;
 		}
-		for (User twitterUser : userList)
+		for (User user : userList)
 		{
-			TwitterAccount currAccount = new TwitterAccount();
-			currAccount.id = twitterUser.getId();
-			currAccount.name = twitterUser.getName();
-			currAccount.screenname = twitterUser.getScreenName();
-			currAccount.image = twitterUser.getProfileImageURL();
+			TwitterAccountController currAccount =
+				new TwitterAccountController(
+					user.getId(),
+					user.getName(),
+					user.getScreenName(),
+					user.getProfileImageURL());
 			twitterAccounts.put(currAccount.id, currAccount);
 		}
 
@@ -187,10 +188,10 @@ public class AccountController implements IAccountController
 	private IDatabaseTwitterAccounts twitterAccountsDB;
 	
 	/** The Twitter accounts connected to the user, mapped by their IDs. */
-	private Map<Long, TwitterAccount> twitterAccounts;
+	private Map<Long, ITwitterAccountController> twitterAccounts;
 
 	/** The currently active Twitter account. */
-	private TwitterAccount activeTwitterAccount;
+	private ITwitterAccountController activeTwitterAccount;
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

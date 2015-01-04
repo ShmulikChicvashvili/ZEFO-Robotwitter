@@ -20,7 +20,7 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
  */
 public class TwitterAccountController implements ITwitterAccountController
 {
-
+	
 	/**
 	 * Instantiates a new twitter account controller.
 	 *
@@ -48,14 +48,15 @@ public class TwitterAccountController implements ITwitterAccountController
 		this.image = image;
 		this.numFollowersDB = numFollowersDB;
 	}
-
-
+	
+	
 	@Override
 	public final Map<Date, Integer> getAmountOfFollowers(Date from, Date to)
 	{
-
+		
 		final Map<Date, Integer> followersBetween = new HashMap<>();
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
+		if (dbfollowers == null) { return followersBetween; }
 		for (final DBFollowersNumber follower : dbfollowers)
 		{
 			final Date d = new Date(follower.getDate().getTime());
@@ -75,56 +76,56 @@ public class TwitterAccountController implements ITwitterAccountController
 					Integer.valueOf(follower.getNumFollowers()));
 			}
 		}
-
+		
 		return followersBetween;
 	}
-
-
+	
+	
 	@Override
 	public final long getID()
 	{
 		return id;
 	}
-
-
+	
+	
 	@Override
 	public final String getImage()
 	{
 		return image;
 	}
-
-
+	
+	
 	@Override
 	public final String getName()
 	{
 		return name;
 	}
-
-
+	
+	
 	@Override
 	public final String getScreenname()
 	{
 		return screenname;
 	}
-
-
-
+	
+	
+	
 	/** The Twitter accounts' ID. */
 	public long id;
-
+	
 	/** The Twitter accounts' name. */
 	public String name;
-
+	
 	/** The Twitter accounts' screenname. */
 	public String screenname;
-
+	
 	/** The Twitter accounts' profile image. */
 	public String image;
-
+	
 	/** The Twtitter's account number of followers Database */
 	public IDatabaseNumFollowers numFollowersDB;
-
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 }

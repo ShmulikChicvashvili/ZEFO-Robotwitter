@@ -63,8 +63,6 @@ public class FollowersNumberTest {
 		TwitterAccountController tac1;
 		TwitterAccountController tac2;
 		TwitterAccountController tac3;
-		TwitterAccountController tac4;
-		TwitterAccountController tac5;
 		
 		IDatabaseNumFollowers dbnumfollowers;
 
@@ -86,16 +84,9 @@ public class FollowersNumberTest {
 
 		Mockito.when(dbnumfollowers.get((long) 3)).thenReturn(list3);
 
-		Mockito.when(dbnumfollowers.get((long) 4)).thenReturn(list4);
-
-		Mockito.when(dbnumfollowers.get((long) 5)).thenReturn(list5);
-
 		tac1=new TwitterAccountController(1,"1","1","1",dbnumfollowers);
 		tac2=new TwitterAccountController(2,"1","1","1",dbnumfollowers);
 		tac3=new TwitterAccountController(3,"1","1","1",dbnumfollowers);
-		tac4=new TwitterAccountController(4,"1","1","1",dbnumfollowers);
-		tac5=new TwitterAccountController(5,"1","1","1",dbnumfollowers);
-
 		//initializing the calendar
 		Calendar calendar = Calendar.getInstance();
 
@@ -136,18 +127,7 @@ public class FollowersNumberTest {
 		list2.add(f13);
 		list2.add(f14);
 		
-		// Initiallizing list 3 of test case 3:
-
-		
-		// Initiallizing list 4 of test case 4:
-
-		
-		
-		// Initiallizing list 5 of test case 5:
-
-	  // TODO use mock in test.... 
-		
-		
+		// list 3 is an empty list for test cases		
 	} 
 	
 
@@ -189,7 +169,7 @@ public class FollowersNumberTest {
 	 */
 	@Test
 	public void testNullList(){
-		Map<Date,Integer> test1=tac5.getAmountOfFollowers(null,null);
+		Map<Date,Integer> test1=tac3.getAmountOfFollowers(null,null);
 		assertEquals(test1.size(),0);
 	}
 	

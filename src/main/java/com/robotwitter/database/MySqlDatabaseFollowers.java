@@ -136,7 +136,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 	 */
 	@SuppressWarnings({ "boxing", "nls" })
 	@Override
-	public ArrayList<Long> getFollowersId(String userId) {
+	public ArrayList<Long> getFollowersId(long userId) {
 		ArrayList<Long> $ = new ArrayList<Long>();
 		try (Connection con = connectionEstablisher.getConnection();
 				PreparedStatement preparedStatement = con
@@ -146,7 +146,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 								+ Columns.FOLLOWED_ID.toString().toLowerCase()
 								+ "=?;")) //$NON-NLS-1$)
 		{
-			preparedStatement.setString(1, userId);
+			preparedStatement.setLong(1, userId);
 			resultSet = preparedStatement.executeQuery();
 			while (resultSet.next()) {
 				$.add(resultSet.getLong(Columns.FOLLOWER_ID.toString()
@@ -270,7 +270,9 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 				|| follower.getLocation() == null
 				|| follower.getLanguage() == null
 				|| follower.getJoined() == null
-				|| follower.getPicture() == null) {
+				|| follower.getPicture() == null
+				|| follower.getFollowerId() < 1 || follower.getFavorites() < 0
+				|| follower.getFollowers() < 0 || follower.getFollowing() < 0) {
 			return SqlError.INVALID_PARAMS;
 		}
 		try (Connection con = connectionEstablisher.getConnection();
@@ -383,6 +385,37 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 
 	/*
 	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
+	 * #isExists(com.robotwitter.database.primitives.DBFollower)
+	 */
+	@Override
+	public boolean isExists(long followedId, long followerId) {
+		if (followerId < 1 || followedId < 1) {
+			return false;
+		}
+		boolean $ = false;
+		try (Connection con = connectionEstablisher.getConnection();
+				PreparedStatement preparedStatement = con.prepareStatement("" //$NON-NLS-1$
+						+ "SELECT * FROM " //$NON-NLS-1$
+						+ followingTable
+						+ " WHERE (" //$NON-NLS-1$
+						+ Columns.FOLLOWED_ID.toString().toLowerCase()
+						+ "=?,"
+						+ Columns.FOLLOWER_ID.toString().toLowerCase() + "=?;")) {
+			preparedStatement.setLong(1, followedId);
+			preparedStatement.setLong(2, followerId);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.first()) {
+				$ = true;
+			}
+			resultSet.close();
+		} catch (final SQLException e) {
+			e.printStackTrace();
+		}
+		return $;
+	}
+
+	/*
+	 * (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #isExistsByName(com.robotwitter.database.primitives.DBFollower)
 	 */
 	@SuppressWarnings({ "boxing", "nls" })
@@ -450,7 +483,9 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 				|| follower.getLocation() == null
 				|| follower.getLanguage() == null
 				|| follower.getJoined() == null
-				|| follower.getPicture() == null) {
+				|| follower.getPicture() == null
+				|| follower.getFollowerId() < 1 || follower.getFavorites() < 0
+				|| follower.getFollowers() < 0 || follower.getFollowing() < 0) {
 			return SqlError.INVALID_PARAMS;
 		}
 		if (!isExists(follower.getFollowerId())) {

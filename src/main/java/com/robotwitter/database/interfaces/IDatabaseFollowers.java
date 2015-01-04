@@ -23,7 +23,7 @@ public interface IDatabaseFollowers {
 	 *            The id of the user you want to get it's followers ids
 	 * @return The ids of the followers of this user
 	 */
-	public ArrayList<Long> getFollowersId(String userId);
+	public ArrayList<Long> getFollowersId(long userId);
 
 	/**
 	 * @param name
@@ -43,7 +43,7 @@ public interface IDatabaseFollowers {
 	 * @param follower
 	 *            The follower you want to insert into the database
 	 * @return whether the insert was successful. It could be either SUCCESS,
-	 *         DOES_NOT_EXIST, INVALID_PARAMS
+	 *         ALREADY_EXIST, INVALID_PARAMS
 	 */
 	public SqlError insert(DBFollower follower);
 
@@ -53,7 +53,7 @@ public interface IDatabaseFollowers {
 	 * @param followerId
 	 *            The id of the follower
 	 * @return whether the insert was successful. It could be either SUCCESS,
-	 *         DOES_NOT_EXIST, INVALID_PARAMS
+	 *         ALREADY_EXIST, INVALID_PARAMS
 	 */
 	public SqlError insert(long userId, long followerId);
 
@@ -63,6 +63,15 @@ public interface IDatabaseFollowers {
 	 * @return whether a follower with this id exists
 	 */
 	public boolean isExists(long followerId);
+	
+	/**
+	 * @param followedId
+	 *            The id of the followed in the connection
+	 * @param followerId
+	 *            The id of the follower in the connection
+	 * @return whether a follower with this id exists
+	 */
+	public boolean isExists(long followedId, long followerId);
 
 	/**
 	 * @param name

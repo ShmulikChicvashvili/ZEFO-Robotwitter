@@ -24,22 +24,22 @@ import com.robotwitter.database.interfaces.ConnectionPool;
  */
 public class DatabaseTestModule extends AbstractModule
 {
-
+	
 	/**
 	 * Instantiates a new database test module.
 	 */
 	public DatabaseTestModule()
 	{}
-
-
+	
+	
 	/* (non-Javadoc) @see com.google.inject.AbstractModule#configure() */
 	@SuppressWarnings("nls")
 	@Override
 	protected void configure()
 	{
 		bind(String.class).annotatedWith(Names.named("DB Schema")).toInstance(
-			"yearlyproj_db");
-
+			"test");
+		
 		// Stuff for connection pool
 		bind(String.class).annotatedWith(Names.named("DB Driver")).toInstance(
 			"com.mysql.jdbc.Driver");
@@ -51,10 +51,10 @@ public class DatabaseTestModule extends AbstractModule
 			.toInstance("root");
 		bind(String.class).annotatedWith(Names.named("DB URL")).toInstance(
 			"jdbc:mysql://localhost/");
-
+		
 		bind(ConnectionPool.class).to(DBCPConnectionPool.class);
-
+		
 		bind(ConnectionEstablisher.class).to(MySQLConEstablisher.class);
 	}
-
+	
 }

@@ -16,8 +16,8 @@ import com.vaadin.ui.VerticalLayout;
 import com.robotwitter.webapp.Configuration;
 import com.robotwitter.webapp.IMenuFactory;
 import com.robotwitter.webapp.control.account.IAccountController;
-import com.robotwitter.webapp.ui.AbstractMenu;
-import com.robotwitter.webapp.ui.MainMenu;
+import com.robotwitter.webapp.menu.AbstractMenu;
+import com.robotwitter.webapp.menu.MainMenu;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 

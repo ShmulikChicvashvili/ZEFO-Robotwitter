@@ -4,8 +4,8 @@ package com.robotwitter.webapp;
 
 import java.util.HashMap;
 
-import com.robotwitter.webapp.ui.AbstractMenu;
-import com.robotwitter.webapp.ui.MainMenu;
+import com.robotwitter.webapp.menu.AbstractMenu;
+import com.robotwitter.webapp.menu.MainMenu;
 
 
 

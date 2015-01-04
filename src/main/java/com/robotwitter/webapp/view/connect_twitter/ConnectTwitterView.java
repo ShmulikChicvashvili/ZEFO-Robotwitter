@@ -12,9 +12,9 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 import com.robotwitter.webapp.control.account.ITwitterConnectorController;
+import com.robotwitter.webapp.menu.MainMenu;
+import com.robotwitter.webapp.menu.TwitterConnectorWindow;
 import com.robotwitter.webapp.messages.IMessagesContainer;
-import com.robotwitter.webapp.ui.MainMenu;
-import com.robotwitter.webapp.ui.TwitterConnectorWindow;
 import com.robotwitter.webapp.view.AbstractView;
 
 

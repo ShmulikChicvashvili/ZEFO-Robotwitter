@@ -19,10 +19,10 @@ import com.robotwitter.webapp.util.RobotwitterCustomComponent;
  * @author Hagai Akibayov
  */
 public abstract class AbstractView extends RobotwitterCustomComponent
-implements
-View
+	implements
+		View
 {
-
+	
 	/**
 	 * Instantiates a new abstract view.
 	 *
@@ -36,34 +36,35 @@ View
 		super(messages);
 		this.title = title;
 	}
-	
-	
+
+
 	@Override
 	public final void enter(ViewChangeEvent event)
 	{
 		setTitle(title);
+		setSizeFull();
 		initialise();
 	}
-	
-	
+
+
 	/**
 	 * @return <code>true</code> if the user must be signed <b>off</b> to
 	 *         navigate to this view, and <code>false</code> otherwise.
 	 */
 	public abstract boolean isSignedInProhibited();
-
-
+	
+	
 	/**
 	 * @return <code>true</code> if the user must be signed in to navigate to
 	 *         this view, and <code>false</code> otherwise.
 	 */
 	public abstract boolean isSignedInRequired();
-
-
+	
+	
 	/** Initialises the view. */
 	protected abstract void initialise();
-	
-	
+
+
 	/**
 	 * Sets the title of the view.
 	 *
@@ -74,13 +75,13 @@ View
 	{
 		getUI().getPage().setTitle(title);
 	}
-
-
-
+	
+	
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 	/** The view's title. */
 	private final String title;
-
+	
 }

@@ -24,7 +24,22 @@ class NavigationListener implements ViewChangeListener
 
 	@Override
 	public void afterViewChange(ViewChangeEvent event)
-	{ /* Do nothing */}
+	{
+		// Retrieve needed objects
+		Navigator navigator = event.getNavigator();
+		RobotwitterUI ui = (RobotwitterUI) navigator.getUI();
+		UserSession userSession = ui.getUserSession();
+		AbstractView view = (AbstractView) event.getNewView();
+
+		// Show main menu if the user is signed in, otherwise hide
+		if (userSession.isSigned())
+		{
+			ui.showMainMenu();
+		} else
+		{
+			ui.hideMainMenu();
+		}
+	}
 
 
 	@Override
@@ -66,15 +81,6 @@ class NavigationListener implements ViewChangeListener
 		{
 			navigator.navigateTo(DashboardView.NAME);
 			return false;
-		}
-
-		// Show main menu if the user is signed in, otherwise hide
-		if (userSession.isSigned())
-		{
-			ui.showMainMenu();
-		} else
-		{
-			ui.hideMainMenu();
 		}
 
 		return true;

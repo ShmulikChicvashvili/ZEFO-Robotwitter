@@ -24,6 +24,8 @@ import org.dussan.vaadin.dcharts.renderers.tick.CanvasAxisTickRenderer;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import com.vaadin.ui.UI;
+
 import com.robotwitter.webapp.control.account.ITwitterAccountController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.AbstractView;
@@ -31,7 +33,12 @@ import com.robotwitter.webapp.view.AbstractView;
 
 
 
-/** Analysis view. */
+/**
+ * Analysis view.
+ *
+ * @author Eyal Tolchinsky
+ * @author Hagai Akibayov
+ */
 public class AnalysisView extends AbstractView
 {
 
@@ -101,15 +108,18 @@ public class AnalysisView extends AbstractView
 		.setUseAxesFormatters(true)
 		.setFormatString("%s followers on %s");
 
-		// Cursor cursor = new Cursor().setShow(true);
-
 		Options options = new Options().addOption(axes).addOption(highlighter);
-		// .addOption(cursor);
 
 		DCharts chart =
 			new DCharts().setDataSeries(dataSeries).setOptions(options).show();
 
 		setCompositionRoot(chart);
+
+		UI.getCurrent().getPage().addBrowserWindowResizeListener(event -> {
+			chart.setSizeFull();
+		});
+		
+		addStyleName(STYLENAME);
 	}
 
 
@@ -117,6 +127,9 @@ public class AnalysisView extends AbstractView
 	/** The view's name. */
 	public static final String NAME = "analysis";
 
+	/** The CSS class name to apply to this component. */
+	private static final String STYLENAME = "AnalysisView";
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

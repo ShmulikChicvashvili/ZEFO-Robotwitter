@@ -127,6 +127,51 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 	}
 
 
+	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseTwitterAccounts#get(java.lang.Long) */
+	@Override
+	public DBTwitterAccount get(long userID)
+	{
+		DBTwitterAccount $ = null;
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			PreparedStatement preparedStatement =
+				con.prepareStatement(""
+					+ "SELECT * FROM "
+					+ table
+					+ " WHERE "
+					+ Columns.USER_ID.toString().toLowerCase()
+					+ "=?;"))
+		{
+			preparedStatement.setLong(1, userID);
+			resultSet = preparedStatement.executeQuery();
+			if (resultSet.next())
+			{
+				$ =
+					new DBTwitterAccount(
+						resultSet.getString(Columns.EMAIL
+							.toString()
+							.toLowerCase()),
+						resultSet.getString(Columns.TOKEN
+							.toString()
+							.toLowerCase()),
+						resultSet.getString(Columns.PRIVATE_TOKEN
+							.toString()
+							.toLowerCase()),
+						resultSet.getLong(Columns.USER_ID
+							.toString()
+							.toLowerCase()));
+			}
+			resultSet.close();
+		} catch (final Exception e)
+		{
+			// TODO understand what the hell we should do?!
+			e.printStackTrace();
+		}
+		if ($ == null) { return null; }
+		return $;
+	}
+
+
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#get(java.lang.String) */
 	@Override
@@ -250,6 +295,7 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 		}
 		return $;
 	}
+
 
 
 	@SuppressWarnings("boxing")

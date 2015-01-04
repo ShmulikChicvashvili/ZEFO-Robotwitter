@@ -15,37 +15,26 @@ import twitter4j.UserStreamListener;
  */
 public interface IUserTracker
 {
-	/**
-	 * @author Itay, Shmulik
-	 *
-	 */
-	public enum Status {
-		SUCCESS,
-		
-		ACCOUNT_DOESNT_EXIST,
-		
-		FAILURE
-	}
 	
 	/**
 	 * @param listener a stream listener to listen on the user stream
 	 * @return the success status of the action performed
 	 */
-	Status addListener(UserStreamListener listener);
+	void addListener(UserStreamListener listener);
 	
 	/**
 	 * @return the success status of the action performed
 	 */
-	Status beginTrack();
+	void beginTrack();
 	
 	/**
 	 * @param listener a stream listener to listen on the user stream
 	 * @return the success status of the action performed
 	 */
-	Status removeListener(UserStreamListener listener);
+	void removeListener(UserStreamListener listener);
 	
 	/**
 	 * @return the success status of the action performed
 	 */
-	Status stopTrack();	
+	void stopTrack();	
 }

@@ -27,7 +27,7 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
  * Handles the connection to number followers table.
  *
  * @author Eyal and Shmulik
- *
+ * 
  */
 public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 	implements
@@ -142,6 +142,7 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 	}
 
 
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.database.interfaces.IDatabaseNumFollowers
 	 * #insert(com.robotwitter.database.primitives.DBFollowersNumber) */
@@ -179,7 +180,6 @@ public final class MySqlDatabaseNumFollowers extends AbstractMySqlDatabase
 		}
 		return SqlError.SUCCESS;
 	}
-
 
 
 	/**

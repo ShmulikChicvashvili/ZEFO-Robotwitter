@@ -11,7 +11,7 @@ import com.vaadin.ui.UI;
 
 import com.robotwitter.webapp.control.account.IAccountController;
 import com.robotwitter.webapp.control.account.IAccountController.Status;
-import com.robotwitter.webapp.control.account.IAccountController.TwitterAccount;
+import com.robotwitter.webapp.control.account.ITwitterAccountController;
 import com.robotwitter.webapp.util.Cookies;
 import com.robotwitter.webapp.view.login.LoginView;
 
@@ -141,14 +141,15 @@ public class UserSession implements IUserSession
 	/** Activates a random connected Twitter account. */
 	private void activateRandomTwitterAccount()
 	{
-		Collection<TwitterAccount> twitterAccounts =
+		Collection<ITwitterAccountController> twitterAccounts =
 			accountController.getTwitterAccounts();
 		if (twitterAccounts.size() > 0)
 		{
 			accountController.activateTwitterAccount(accountController
 				.getTwitterAccounts()
 				.iterator()
-				.next().id);
+				.next()
+				.getID());
 			
 			// Remember the active account with a cookie
 			rememberActiveTwitterAccount();
@@ -159,12 +160,13 @@ public class UserSession implements IUserSession
 	/** Remembers the active twitter account using a cookie. */
 	private void rememberActiveTwitterAccount()
 	{
-		TwitterAccount account = accountController.getActiveTwitterAccount();
+		ITwitterAccountController account =
+			accountController.getActiveTwitterAccount();
 		if (account != null)
 		{
 			Cookies.set(
 				ACTIVE_TWITTER_COOKIE,
-				String.valueOf(account.id),
+				String.valueOf(account.getID()),
 				REMEMBER_ACTIVE_TWITTER_DURATION);
 		}
 	}

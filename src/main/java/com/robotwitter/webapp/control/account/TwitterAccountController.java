@@ -1,6 +1,4 @@
-
 package com.robotwitter.webapp.control.account;
-
 
 import java.util.Date;
 import java.util.HashMap;
@@ -10,16 +8,12 @@ import java.util.Map;
 import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
 import com.robotwitter.database.primitives.DBFollowersNumber;
 
-
-
-
 /**
  * A simple implementation of the Twitter account controller interface.
  *
  * @author Doron Hogery
  */
-public class TwitterAccountController implements ITwitterAccountController
-{
+public class TwitterAccountController implements ITwitterAccountController {
 
 	/**
 	 * Instantiates a new twitter account controller.
@@ -35,13 +29,8 @@ public class TwitterAccountController implements ITwitterAccountController
 	 * @param numFollowersDB
 	 *            The number of followers database
 	 */
-	public TwitterAccountController(
-		long id,
-		String name,
-		String screenname,
-		String image,
-		IDatabaseNumFollowers numFollowersDB)
-	{
+	public TwitterAccountController(long id, String name, String screenname,
+			String image, IDatabaseNumFollowers numFollowersDB) {
 		this.id = id;
 		this.name = name;
 		this.screenname = screenname;
@@ -49,65 +38,58 @@ public class TwitterAccountController implements ITwitterAccountController
 		this.numFollowersDB = numFollowersDB;
 	}
 
-
 	@Override
-	public final Map<Date, Integer> getAmountOfFollowers(Date from, Date to)
-	{
+	public final Map<Date, Integer> getAmountOfFollowers(Date from, Date to) {
 
 		final Map<Date, Integer> followersBetween = new HashMap<>();
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
-		for (final DBFollowersNumber follower : dbfollowers)
-		{
+		for (final DBFollowersNumber follower : dbfollowers) {
 			final Date d = new Date(follower.getDate().getTime());
-			if (from == null && to == null)
-			{
-				followersBetween.put(
-					d,
-					Integer.valueOf(follower.getNumFollowers()));
-			} else if (follower
-				.getDate()
-				.toInstant()
-				.compareTo(from.toInstant()) >= 0
-				&& follower.getDate().toInstant().compareTo(to.toInstant()) <= 0)
-			{
-				followersBetween.put(
-					d,
-					Integer.valueOf(follower.getNumFollowers()));
+			if (from == null && to == null) {
+				followersBetween.put(d,
+						Integer.valueOf(follower.getNumFollowers()));
+			} else if (from == null) {
+				if (follower.getDate().toInstant().compareTo(to.toInstant()) <= 0) {
+					followersBetween.put(d,
+							Integer.valueOf(follower.getNumFollowers()));
+				}
+			} else if (to == null) {
+				if (follower.getDate().toInstant().compareTo(from.toInstant()) >= 0) {
+					followersBetween.put(d,
+							Integer.valueOf(follower.getNumFollowers()));
+				}
+			} else {
+				if (follower.getDate().toInstant().compareTo(from.toInstant()) >= 0
+						&& follower.getDate().toInstant()
+								.compareTo(to.toInstant()) <= 0) {
+					followersBetween.put(d,
+							Integer.valueOf(follower.getNumFollowers()));
+				}
 			}
 		}
-
 		return followersBetween;
+
 	}
 
-
 	@Override
-	public final long getID()
-	{
+	public final long getID() {
 		return id;
 	}
 
-
 	@Override
-	public final String getImage()
-	{
+	public final String getImage() {
 		return image;
 	}
 
-
 	@Override
-	public final String getName()
-	{
+	public final String getName() {
 		return name;
 	}
 
-
 	@Override
-	public final String getScreenname()
-	{
+	public final String getScreenname() {
 		return screenname;
 	}
-
-
 
 	/** The Twitter accounts' ID. */
 	public long id;

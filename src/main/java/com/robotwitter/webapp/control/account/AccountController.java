@@ -54,7 +54,7 @@ public class AccountController implements IAccountController
 	{
 		this.usersDB = usersDB;
 		this.twitterAccountsDB = twitterAccountsDB;
-		this.numFollowersDB=numFollowersDB;
+		this.numFollowersDB = numFollowersDB;
 		appConnector =
 			new TwitterFactory(conf.getAppConfiguration()).getInstance();
 		email = null;
@@ -73,13 +73,13 @@ public class AccountController implements IAccountController
 		activeTwitterAccount = account;
 		return Status.SUCCESS;
 	}
-
-
+	
+	
 	@Override
 	public final Status connect(@SuppressWarnings("hiding") String email)
 	{
 		if (!usersDB.isExists(email)) { return Status.USER_DOESNT_EXIST; }
-
+		
 		this.email = email;
 		if (!updateTwitterAccounts())
 		{
@@ -88,8 +88,8 @@ public class AccountController implements IAccountController
 		}
 		return Status.SUCCESS;
 	}
-
-
+	
+	
 	@Override
 	public final void disconnect()
 	{
@@ -97,8 +97,8 @@ public class AccountController implements IAccountController
 		activeTwitterAccount = null;
 		twitterAccounts = new HashMap<>();
 	}
-
-
+	
+	
 	@Override
 	public final ITwitterAccountController getActiveTwitterAccount()
 	{
@@ -121,8 +121,8 @@ public class AccountController implements IAccountController
 		// FIXME: once we support names in sign up, change this!
 		return "Robotwitter account:";
 	}
-
-
+	
+	
 	@Override
 	public final Collection<ITwitterAccountController> getTwitterAccounts()
 	{
@@ -171,7 +171,7 @@ public class AccountController implements IAccountController
 					numFollowersDB);
 			twitterAccounts.put(currAccount.id, currAccount);
 		}
-
+		
 		return true;
 	}
 	
@@ -182,11 +182,11 @@ public class AccountController implements IAccountController
 	
 	/** <code>null</code> if a user isn't connected, else his email. */
 	private String email;
-
+	
 	/** The users database. */
 	@SuppressFBWarnings("SE_BAD_FIELD")
 	private IDatabaseUsers usersDB;
-
+	
 	/** The twitter accounts database. */
 	@SuppressFBWarnings("SE_BAD_FIELD")
 	private IDatabaseTwitterAccounts twitterAccountsDB;
@@ -195,11 +195,9 @@ public class AccountController implements IAccountController
 	@SuppressFBWarnings("SE_BAD_FIELD")
 	private IDatabaseNumFollowers numFollowersDB;
 	
-	
-	
 	/** The Twitter accounts connected to the user, mapped by their IDs. */
 	private Map<Long, ITwitterAccountController> twitterAccounts;
-
+	
 	/** The currently active Twitter account. */
 	private ITwitterAccountController activeTwitterAccount;
 	

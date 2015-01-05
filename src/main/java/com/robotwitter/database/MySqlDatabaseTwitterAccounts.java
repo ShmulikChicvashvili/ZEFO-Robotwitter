@@ -222,6 +222,50 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 	}
 
 
+	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseTwitterAccounts#getAllAccounts() */
+	@SuppressWarnings("boxing")
+	@Override
+	public ArrayList<DBTwitterAccount> getAllAccounts()
+	{
+		ArrayList<DBTwitterAccount> $ = null;
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			PreparedStatement preparedStatement =
+				con.prepareStatement(""
+					+ "SELECT * FROM "
+					+ table))
+		{
+			resultSet = preparedStatement.executeQuery();
+			$ = new ArrayList<>();
+			while (resultSet.next())
+			{
+				final DBTwitterAccount twitterAccount =
+					new DBTwitterAccount(
+						resultSet.getString(Columns.EMAIL
+							.toString()
+							.toLowerCase()),
+						resultSet.getString(Columns.TOKEN
+							.toString()
+							.toLowerCase()),
+						resultSet.getString(Columns.PRIVATE_TOKEN
+							.toString()
+							.toLowerCase()),
+						resultSet.getLong(Columns.USER_ID
+							.toString()
+							.toLowerCase()));
+				$.add(twitterAccount);
+			}
+			resultSet.close();
+		} catch (final Exception e)
+		{
+			// TODO understand what the hell we should do?!
+			e.printStackTrace();
+		}
+		if ($ == null || $.isEmpty()) { return null; }
+		return $;
+	}
+
+
 	/* (non-Javadoc) @see
 	 * com.Robotwitter.Database.IDatabase#insert(com.Robotwitter
 	 * .DatabasePrimitives.DatabaseType) */
@@ -262,6 +306,7 @@ public class MySqlDatabaseTwitterAccounts extends AbstractMySqlDatabase
 		}
 		return SqlError.SUCCESS;
 	}
+
 
 
 	/* (non-Javadoc) @see

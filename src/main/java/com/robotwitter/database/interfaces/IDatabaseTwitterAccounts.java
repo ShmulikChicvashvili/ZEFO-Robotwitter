@@ -44,6 +44,10 @@ public interface IDatabaseTwitterAccounts
 	 */
 	public ArrayList<DBTwitterAccount> get(String eMail);
 	
+	/**
+	 * @return All the accounts in the database
+	 */
+	public ArrayList<DBTwitterAccount> getAllAccounts();	
 	
 	/**
 	 * Controls connection to DB

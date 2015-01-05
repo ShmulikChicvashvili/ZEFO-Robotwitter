@@ -97,7 +97,7 @@ public class AnalysisView extends AbstractView
 								messages.get("AnalysisView.chart.label.followers"))
 								.setLabelRenderer(LabelRenderers.CANVAS)
 								.setTickOptions(
-									new AxisTickRenderer().setFormatString("%d")));
+									new AxisTickRenderer().setFormatString("%d")).setTickInterval(1));
 
 		Highlighter highlighter =
 			new Highlighter()

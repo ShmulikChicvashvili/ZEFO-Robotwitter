@@ -400,6 +400,9 @@ public class FollowerStoreListener implements UserStreamListener
 		flushFollowersNumber();
 		lastUpdated = new Timestamp(new Date().getTime());
 		
+		updateFollowersBarrier = new HashMap<Long, DBFollower>();
+		
+		
 	}
 	
 	

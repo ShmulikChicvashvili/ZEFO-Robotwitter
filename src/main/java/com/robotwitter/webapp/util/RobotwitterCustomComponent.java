@@ -64,6 +64,7 @@ public class RobotwitterCustomComponent extends CustomComponent
 	 */
 	protected final void navigate(String name)
 	{
+		getUserSession().clearActiveTwitterAccountObservers();
 		getUI().getNavigator().navigateTo(name);
 	}
 

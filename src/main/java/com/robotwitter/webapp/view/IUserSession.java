@@ -5,6 +5,7 @@ package com.robotwitter.webapp.view;
 import java.io.Serializable;
 
 import com.robotwitter.webapp.control.account.IAccountController;
+import com.robotwitter.webapp.util.RobotwitterCustomComponent;
 
 
 
@@ -31,6 +32,13 @@ public interface IUserSession extends Serializable
 	void activateTwitterAccount(long id);
 	
 	
+	/**
+	 * Clear all observers of active Twitter Account change registered using
+	 * {@link #observeActiveTwitterAccount}.
+	 */
+	void clearActiveTwitterAccountObservers();
+
+
 	/** @return the current user's account controller. */
 	IAccountController getAccountController();
 
@@ -40,6 +48,19 @@ public interface IUserSession extends Serializable
 	 *         otherwise.
 	 */
 	boolean isSigned();
+	
+	
+	/**
+	 * Observe a change in the active Twitter Account.
+	 *
+	 * The {@link RobotwitterCustomComponent#activateTwitterAccount} method will
+	 * be called on each observing component after the active Twitter Account
+	 * changes.
+	 *
+	 * @param component
+	 *            the component that will be the observer
+	 */
+	void observeActiveTwitterAccount(RobotwitterCustomComponent component);
 	
 	
 	/**

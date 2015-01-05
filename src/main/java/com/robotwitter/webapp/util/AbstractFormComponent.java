@@ -40,7 +40,27 @@ public abstract class AbstractFormComponent extends CustomComponent
 		IFormComponent,
 		Button.ClickListener
 {
-	
+	public class ConfirmationValidator extends AbstractStringValidator{
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		String identifier;
+		String confirmation;
+		ConfirmationValidator(String identifier,String confirmation,String error){
+			super(error);
+			this.identifier=identifier;
+			this.confirmation=confirmation;
+		}
+
+		@Override
+		protected boolean isValidValue(String value) {
+			if (get(identifier).equals(get(confirmation))){
+				return true;
+			}
+			return false;
+		}
+	}
 	/** Represents a validation error in the form. */
 	protected static class Error
 	{
@@ -165,7 +185,19 @@ public abstract class AbstractFormComponent extends CustomComponent
 		setStyleName(STYLENAME);
 	}
 
-
+	public void addConfirmationField(
+			String identifier,
+			String ConfirmIdentifier,
+			String caption,
+			String prompt,
+			String emptyError,
+			String invalidError)
+		{
+			final TextField confirmation = new TextField();
+			final ConfirmationValidator validator = new ConfirmationValidator(identifier,ConfirmIdentifier,invalidError);
+			addField(identifier,confirmation,caption,prompt,emptyError,validator);
+		}
+	
 	@Override
 	public final void addEmailField(
 		String identifier,

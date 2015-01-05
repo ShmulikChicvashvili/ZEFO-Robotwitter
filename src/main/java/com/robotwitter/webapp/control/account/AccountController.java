@@ -17,6 +17,7 @@ import com.google.inject.Inject;
 
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
+import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.twitter.TwitterAppConfiguration;
 
@@ -48,10 +49,12 @@ public class AccountController implements IAccountController
 	public AccountController(
 		IDatabaseUsers usersDB,
 		IDatabaseTwitterAccounts twitterAccountsDB,
+		IDatabaseNumFollowers numFollowersDB,
 		TwitterAppConfiguration conf)
 	{
 		this.usersDB = usersDB;
 		this.twitterAccountsDB = twitterAccountsDB;
+		this.numFollowersDB=numFollowersDB;
 		appConnector =
 			new TwitterFactory(conf.getAppConfiguration()).getInstance();
 		email = null;
@@ -164,7 +167,8 @@ public class AccountController implements IAccountController
 					user.getId(),
 					user.getName(),
 					user.getScreenName(),
-					user.getProfileImageURL());
+					user.getProfileImageURL(),
+					numFollowersDB);
 			twitterAccounts.put(currAccount.id, currAccount);
 		}
 
@@ -186,6 +190,12 @@ public class AccountController implements IAccountController
 	/** The twitter accounts database. */
 	@SuppressFBWarnings("SE_BAD_FIELD")
 	private IDatabaseTwitterAccounts twitterAccountsDB;
+	
+	/** The twitter accounts num of followers database. */
+	@SuppressFBWarnings("SE_BAD_FIELD")
+	private IDatabaseNumFollowers numFollowersDB;
+	
+	
 	
 	/** The Twitter accounts connected to the user, mapped by their IDs. */
 	private Map<Long, ITwitterAccountController> twitterAccounts;

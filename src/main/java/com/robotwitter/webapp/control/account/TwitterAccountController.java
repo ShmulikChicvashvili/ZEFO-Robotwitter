@@ -2,10 +2,13 @@
 package com.robotwitter.webapp.control.account;
 
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
+import com.robotwitter.database.primitives.DBFollowersNumber;
 
 
 
@@ -13,7 +16,7 @@ import java.util.Map;
 /**
  * A simple implementation of the Twitter account controller interface.
  *
- * @author Hagai Akibayov
+ * @author Doron Hogery
  */
 public class TwitterAccountController implements ITwitterAccountController
 {
@@ -29,62 +32,78 @@ public class TwitterAccountController implements ITwitterAccountController
 	 *            the Twitter account's screenname
 	 * @param image
 	 *            the Twitter account's image
+	 * @param numFollowersDB
+	 *            The number of followers database
 	 */
-	TwitterAccountController(
+	public TwitterAccountController(
 		long id,
 		String name,
 		String screenname,
-		String image)
-		{
+		String image,
+		IDatabaseNumFollowers numFollowersDB)
+	{
 		this.id = id;
 		this.name = name;
 		this.screenname = screenname;
 		this.image = image;
-		}
-
-
+		this.numFollowersDB = numFollowersDB;
+	}
+	
+	
 	@Override
 	public final Map<Date, Integer> getAmountOfFollowers(Date from, Date to)
 	{
-		// TODO Hogery use this example to generate the map
 		
-		Map<Date, Integer> followers = new HashMap<>();
-		Calendar calendar = Calendar.getInstance();
+		final Map<Date, Integer> followersBetween = new HashMap<>();
+		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
+		if (dbfollowers == null) { return followersBetween; }
+		for (final DBFollowersNumber follower : dbfollowers)
+		{
+			final Date d = new Date(follower.getDate().getTime());
+			if (from == null && to == null)
+			{
+				followersBetween.put(
+					d,
+					Integer.valueOf(follower.getNumFollowers()));
+			} else if (from == null)
+			{
+				if (follower.getDate().toInstant().compareTo(to.toInstant()) <= 0)
+				{
+					followersBetween.put(
+						d,
+						Integer.valueOf(follower.getNumFollowers()));
+				}
+			} else if (to == null)
+			{
+				if (follower.getDate().toInstant().compareTo(from.toInstant()) >= 0)
+				{
+					followersBetween.put(
+						d,
+						Integer.valueOf(follower.getNumFollowers()));
+				}
+			} else
+			{
+				if (follower.getDate().toInstant().compareTo(from.toInstant()) >= 0
+					&& follower.getDate().toInstant().compareTo(to.toInstant()) <= 0)
+				{
+					followersBetween.put(
+						d,
+						Integer.valueOf(follower.getNumFollowers()));
+				}
+			}
+		}
+		return followersBetween;
 		
-		// For example, two dates, the first being:
-		calendar.set(Calendar.YEAR, 1993);
-		calendar.set(Calendar.MONTH, Calendar.JUNE);
-		calendar.set(Calendar.DATE, 24);
-		calendar.set(Calendar.HOUR_OF_DAY, 13);
-		calendar.set(Calendar.MINUTE, 49);
-		calendar.set(Calendar.SECOND, 35);
-		// Obviously, you don't need to set everything. Just what you can.
-		// (If database has only hour precision now, don't set minutes, and
-		// seconds)
-		Date date1 = calendar.getTime();
-		int followers1 = 9000;
-		followers.put(date1, Integer.valueOf(followers1));
-		
-		// For example, the second date can be
-		calendar.clear(); // First clear the previous date
-		calendar.set(1993, 6, 25);	// Then set 25 June, 1993 (for example)
-		calendar.set(Calendar.HOUR_OF_DAY, 13); // I can then set hour too
-		// See that I can set year, month, and date in one method
-		Date date2 = calendar.getTime();
-		int followers2 = 9001;
-		followers.put(date2, Integer.valueOf(followers2));
-		
-		return followers;
 	}
-
-
+	
+	
 	@Override
 	public final long getID()
 	{
 		return id;
 	}
-
-
+	
+	
 	@Override
 	public final String getImage()
 	{
@@ -109,15 +128,18 @@ public class TwitterAccountController implements ITwitterAccountController
 	
 	/** The Twitter accounts' ID. */
 	public long id;
-
+	
 	/** The Twitter accounts' name. */
 	public String name;
-
+	
 	/** The Twitter accounts' screenname. */
 	public String screenname;
 	
 	/** The Twitter accounts' profile image. */
 	public String image;
+	
+	/** The Twtitter's account number of followers Database */
+	public IDatabaseNumFollowers numFollowersDB;
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

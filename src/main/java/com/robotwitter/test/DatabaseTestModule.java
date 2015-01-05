@@ -18,7 +18,7 @@ import com.robotwitter.database.interfaces.ConnectionPool;
 
 /**
  * Module for creating a database for testing.
- * 
+ *
  * @author Eyal and Shmulik
  *
  */

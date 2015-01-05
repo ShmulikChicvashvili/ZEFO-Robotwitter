@@ -28,7 +28,7 @@ public class TwitterTracker implements ITwitterTracker
 		Long userID,
 		UserStreamListener listener)
 	{
-		if(trackerArray.containsKey(userID)) {
+		if(!trackerArray.containsKey(userID)) {
 			return Status.TRACKER_DOESNT_EXIST;
 		}
 		trackerArray.get(userID).addListener(listener);
@@ -57,7 +57,7 @@ public class TwitterTracker implements ITwitterTracker
 	@Override
 	public Status removeListenerFromTracker(Long userID, UserStreamListener listener)
 	{
-		if(trackerArray.containsKey(userID)) {
+		if(!trackerArray.containsKey(userID)) {
 			return Status.TRACKER_DOESNT_EXIST;
 		}
 		trackerArray.get(userID).removeListener(null);
@@ -81,7 +81,7 @@ public class TwitterTracker implements ITwitterTracker
 	@Override
 	public Status startTracker(Long userID)
 	{
-		if(trackerArray.containsKey(userID)) {
+		if(!trackerArray.containsKey(userID)) {
 			return Status.TRACKER_DOESNT_EXIST;
 		}
 		trackerArray.get(userID).beginTrack();

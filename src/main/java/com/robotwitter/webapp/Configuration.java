@@ -2,6 +2,7 @@
 package com.robotwitter.webapp;
 
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
@@ -16,6 +17,9 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import com.robotwitter.database.MySqlDBUserModule;
+import com.robotwitter.database.MySqlDatabaseFollowers;
+import com.robotwitter.database.MySqlDatabaseNumFollowers;
+import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.management.EmailPasswordRetrieverModule;
@@ -24,6 +28,7 @@ import com.robotwitter.management.RetrievalMailBuilderModule;
 import com.robotwitter.management.TwitterTracker;
 import com.robotwitter.miscellaneous.GmailSenderModule;
 import com.robotwitter.statistics.HeavyHitters;
+import com.robotwitter.twitter.FollowerStoreListener;
 import com.robotwitter.twitter.HeavyHittersListener;
 import com.robotwitter.twitter.HeavyHittersListnerFactory;
 import com.robotwitter.twitter.IUserTracker;
@@ -121,7 +126,7 @@ public class Configuration implements ServletContextListener
 	/**
 	 * 
 	 */
-	//FIXME: this is gross. fix this ASAP!
+	// FIXME: this is gross. fix this ASAP!
 	private void initialiseUserTracking()
 	{
 		accountsTracker = new TwitterTracker();
@@ -133,8 +138,11 @@ public class Configuration implements ServletContextListener
 		TwitterStreamFactory factory =
 			new TwitterStreamFactory(
 				new TwitterAppConfiguration().getUserConfiguration());
+		ConnectionEstablisher connector =
+			injector.getInstance(ConnectionEstablisher.class);
 		for (DBTwitterAccount account : accounts)
 		{
+			System.out.println("trying to track " + account.getUserId());
 			IUserTracker tracker =
 				new UserTracker(factory, accountsDB, account.getUserId());
 			Status result = accountsTracker.addUserTracker(tracker);
@@ -145,8 +153,31 @@ public class Configuration implements ServletContextListener
 			UserStreamListener hhListener =
 				new HeavyHittersListener(new HeavyHittersListnerFactory(
 					new HeavyHitters(100, 10)), account.getUserId());
-//			UserStreamListener dbListener =
-//				new FollowerStoreListener(new MySqlFollower
+			UserStreamListener dbListener = null;
+			try
+			{
+				dbListener =
+					new FollowerStoreListener(
+						new MySqlDatabaseFollowers(connector),
+						new MySqlDatabaseNumFollowers(connector),
+						account.getUserId());
+			} catch (SQLException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			result = accountsTracker.addListenerToTracker(account.getUserId(), hhListener);
+			if (result != Status.SUCCESS)
+			{
+				System.err.println("woops, everything is horrible!");
+			}
+			result = accountsTracker.addListenerToTracker(account.getUserId(), dbListener);
+			if (result != Status.SUCCESS)
+			{
+				System.err.println("woops, everything is horrible!");
+			}
+			
+			accountsTracker.startTracker(account.getUserId());
 		}
 		
 	}

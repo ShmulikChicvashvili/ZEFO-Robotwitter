@@ -519,16 +519,17 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase implements
 												.toLowerCase(),
 										Columns.FOLLOWER_ID.toString()
 												.toLowerCase()))) {
-			preparedStatement.setString(1, follower.getName());
-			preparedStatement.setString(2, follower.getScreenName());
-			preparedStatement.setInt(3, follower.getFollowers());
-			preparedStatement.setInt(4, follower.getFollowing());
-			preparedStatement.setString(5, follower.getLocation());
-			preparedStatement.setInt(6, follower.getFavorites());
-			preparedStatement.setBoolean(7, follower.getIsCelebrity());
-			preparedStatement.setTimestamp(8, follower.getJoined());
-			preparedStatement.setString(9, follower.getPicture());
-			preparedStatement.setLong(10, follower.getFollowerId());
+			preparedStatement.setLong(1, follower.getFollowerId());
+			preparedStatement.setString(2, follower.getName());
+			preparedStatement.setString(3, follower.getScreenName());
+			preparedStatement.setInt(4, follower.getFollowers());
+			preparedStatement.setInt(5, follower.getFollowing());
+			preparedStatement.setString(6, follower.getLocation());
+			preparedStatement.setInt(7, follower.getFavorites());
+			preparedStatement.setBoolean(8, follower.getIsCelebrity());
+			preparedStatement.setTimestamp(9, follower.getJoined());
+			preparedStatement.setString(10, follower.getPicture());
+			preparedStatement.setLong(11, follower.getFollowerId());
 			preparedStatement.executeUpdate();
 		} catch (final SQLException e) {
 			e.printStackTrace();

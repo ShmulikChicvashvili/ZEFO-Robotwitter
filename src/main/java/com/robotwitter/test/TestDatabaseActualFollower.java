@@ -245,8 +245,7 @@ public class TestDatabaseActualFollower
 		}
 		final ArrayList<DBFollower> previousNameFollowers =
 			db.getByName("Yossi");
-		System.err.println(previousNameFollowers.size());
-		// assertTrue(previousNameFollowers.size() == 0);
+		assertTrue(previousNameFollowers.size() == 0);
 		ArrayList<DBFollower> updatedNameFollowers = db.getByName("Menahem");
 		assertTrue(updatedNameFollowers.size() == 100);
 		

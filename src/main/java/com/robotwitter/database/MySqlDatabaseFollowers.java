@@ -26,7 +26,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 	implements
 		IDatabaseFollowers
 {
-	
+
 	private enum Columns
 	{
 		/**
@@ -49,9 +49,9 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		JOINED,
 		PICTURE
 	}
-	
-	
-	
+
+
+
 	@Inject
 	public MySqlDatabaseFollowers(ConnectionEstablisher conEstablisher)
 		throws SQLException
@@ -104,17 +104,17 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 			statement.execute(statementCreateFollowing);
 		}
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #deleteFollow(com.robotwitter.database.primitives.DBFollower) */
 	@Override
 	public SqlError deleteFollow(long followedId, long followerId)
 	{
 		if (followerId < 1 || followedId < 1) { return SqlError.INVALID_PARAMS; }
-		
+
 		if (!isExists(followerId) || !isExists(followedId)) { return SqlError.DOES_NOT_EXIST; }
-		
+
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			PreparedStatement preparedStatement =
@@ -134,20 +134,20 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		{
 			e.printStackTrace();
 		}
-		
+
 		return SqlError.SUCCESS;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #deleteFollower(com.robotwitter.database.primitives.DBFollower) */
 	@Override
 	public SqlError deleteFollower(long followerId)
 	{
 		if (followerId < 1) { return SqlError.INVALID_PARAMS; }
-		
+
 		if (!isExists(followerId)) { return SqlError.DOES_NOT_EXIST; }
-		
+
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			PreparedStatement preparedStatement =
@@ -165,11 +165,11 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return SqlError.SUCCESS;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #get(com.robotwitter.database.primitives.DBFollower) */
 	@SuppressWarnings({ "boxing", "nls" })
@@ -236,8 +236,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		}
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #getByName(com.robotwitter.database.primitives.DBFollower) */
 	@SuppressWarnings({ "boxing", "nls" })
@@ -291,8 +291,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		}
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #getByScreenName(com.robotwitter.database.primitives.DBFollower) */
 	@SuppressWarnings({ "boxing", "nls" })
@@ -346,8 +346,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		}
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #getFollowersIds(com.robotwitter.database.primitives.DBFollower) */
 	@SuppressWarnings({ "boxing", "nls" })
@@ -379,8 +379,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		}
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #insert(com.robotwitter.database.primitives.DBFollower) */
 	@SuppressWarnings({ "boxing", "nls" })
@@ -444,7 +444,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 			preparedStatement.setTimestamp(11, follower.getJoined());
 			preparedStatement.setString(12, follower.getPicture());
 			preparedStatement.executeUpdate();
-			
+
 		} catch (final SQLException e)
 		{
 			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
@@ -452,8 +452,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		}
 		return SqlError.SUCCESS;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #insert(com.robotwitter.database.primitives.DBFollower) */
 	@SuppressWarnings({ "boxing", "nls" })
@@ -476,7 +476,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 			preparedStatement.setLong(1, followerId);
 			preparedStatement.setLong(2, userId);
 			preparedStatement.executeUpdate();
-			
+
 		} catch (final SQLException e)
 		{
 			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
@@ -484,8 +484,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		}
 		return SqlError.SUCCESS;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #isExists(com.robotwitter.database.primitives.DBFollower) */
 	@Override
@@ -515,8 +515,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		}
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #isExists(com.robotwitter.database.primitives.DBFollower) */
 	@Override
@@ -549,8 +549,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		}
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #isExistsByName(com.robotwitter.database.primitives.DBFollower) */
 	@SuppressWarnings({ "boxing", "nls" })
@@ -581,8 +581,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		}
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #insert(com.robotwitter.database.primitives.DBFollower) */
 	@SuppressWarnings({ "boxing", "nls" })
@@ -613,8 +613,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		}
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #insert(com.robotwitter.database.primitives.DBFollower) */
 	@SuppressWarnings({ "boxing", "nls" })
@@ -634,7 +634,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 			|| follower.getFollowers() < 0
 			|| follower.getFollowing() < 0) { return SqlError.INVALID_PARAMS; }
 		if (!isExists(follower.getFollowerId())) { return SqlError.DOES_NOT_EXIST; }
-
+		
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			@SuppressWarnings("nls")
@@ -676,17 +676,17 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		{
 			e.printStackTrace();
 		}
-
+		
 		return SqlError.SUCCESS;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * The table name.
 	 */
 	private final String followingTable = schema + "." + "`following`"; //$NON-NLS-1$ //$NON-NLS-2$
-	
+
 	/**
 	 * The table name.
 	 */

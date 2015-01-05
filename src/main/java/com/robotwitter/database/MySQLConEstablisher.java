@@ -6,14 +6,14 @@ package com.robotwitter.database;
 
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.mysql.jdbc.Statement;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
+import com.robotwitter.database.interfaces.ConnectionPool;
 
 
 
@@ -35,53 +35,39 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 	 */
 	@Inject
 	public MySQLConEstablisher(
-		@Named("DB Server") final String serverName,
+		final ConnectionPool connectionPool,
 		@Named("DB Schema") final String schema) throws SQLException
 	{
-		this.serverName = serverName;
+		this.connectionPool = connectionPool;
 		this.schema = schema;
-		
+
 		createSchema();
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see Database.ConnectionEstablisher#getConnection() */
 	@Override
 	@SuppressWarnings("nls")
 	public final Connection getConnection() throws SQLException
 	{
-		try
-		{
-			Class.forName("com.mysql.jdbc.Driver");
-		} catch (ClassNotFoundException e)
-		{
-			e.printStackTrace();
-			throw new RuntimeException("Can't create mysql.jdbc driver");
-		}
-		
-		final Connection $ =
-			DriverManager.getConnection("jdbc:mysql://" + serverName + "/"
-			// + schema
-				+ "?user=root&password=root");
-		
-		return $;
-		
+		return connectionPool.getConnection();
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see Database.ConnectionEstablisher#getSchema() */
 	@Override
 	public final String getSchema()
 	{
 		return schema;
 	}
-	
-	
+
+
 	private void createSchema() throws SQLException
 	{
 		try (
-			Connection con = getConnection();
-			Statement statement = (Statement) con.createStatement())
+			final Connection con = getConnection();
+			Statement statement = con.createStatement())
 		{
 			statement.executeUpdate("CREATE SCHEMA IF NOT EXISTS " + schema); //$NON-NLS-1$
 		}
@@ -89,14 +75,11 @@ public class MySQLConEstablisher implements ConnectionEstablisher
 	
 	
 	
-	/**
-	 * The server name.
-	 */
-	private final String serverName;
-	
+	private final ConnectionPool connectionPool;
+
 	/**
 	 * The name of the schema.
 	 */
 	private final String schema;
-	
+
 }

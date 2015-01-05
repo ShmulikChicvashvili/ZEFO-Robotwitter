@@ -2,7 +2,7 @@
 package com.robotwitter.webapp;
 
 
-import com.robotwitter.webapp.ui.AbstractMenu;
+import com.robotwitter.webapp.menu.AbstractMenu;
 
 
 

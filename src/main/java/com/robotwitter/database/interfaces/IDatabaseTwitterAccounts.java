@@ -32,6 +32,12 @@ public interface IDatabaseTwitterAccounts
 	
 	
 	/**
+	 * @param userID The user's id
+	 * @return The user
+	 */
+	public DBTwitterAccount get(long userID);
+	
+	/**
 	 * @param eMail
 	 *            The email which you want to get is twitter accounts
 	 * @return The twitter accounts associated with this specific email

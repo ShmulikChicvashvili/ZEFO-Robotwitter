@@ -1,5 +1,5 @@
 
-package com.robotwitter.webapp.ui;
+package com.robotwitter.webapp.menu;
 
 
 import com.robotwitter.webapp.messages.IMessagesContainer;

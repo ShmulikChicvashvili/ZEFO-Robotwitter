@@ -57,6 +57,20 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-stream</artifactId>
+			<version>4.0.2</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>org.jukito</groupId>
 			<artifactId>jukito</artifactId>
 			<version>1.4.1</version>
@@ -100,11 +114,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.vaadin</groupId>
-			<artifactId>vaadin-push</artifactId>
-			<version>${vaadin.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.vaadin</groupId>
 			<artifactId>vaadin-themes</artifactId>
 			<version>${vaadin.version}</version>
 		</dependency>
@@ -121,11 +130,21 @@
 			<scope>test</scope>
 		</dependency>
 
-        <dependency>
-        	<groupId>com.google.code.findbugs</groupId>
-        	<artifactId>annotations</artifactId>
-        	<version>3.0.0</version>
-        </dependency>
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>annotations</artifactId>
+			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.vaadin.addons</groupId>
+			<artifactId>dcharts-widget</artifactId>
+			<version>1.7.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.vaadin</groupId>
+			<artifactId>vaadin-client-compiler</artifactId>
+			<version>${vaadin.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>

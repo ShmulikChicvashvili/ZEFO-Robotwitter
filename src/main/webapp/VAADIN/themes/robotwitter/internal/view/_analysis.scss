@@ -1,0 +1,8 @@
+@import "analysis/AnalysisView";
+/*----------------------------------------------------------------------------*/
+
+
+@mixin robotwitter-view-analysis
+{
+	@include AnalysisView;
+}

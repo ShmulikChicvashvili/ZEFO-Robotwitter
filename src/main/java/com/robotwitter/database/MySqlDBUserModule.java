@@ -9,6 +9,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
+import com.robotwitter.database.interfaces.ConnectionPool;
 
 
 
@@ -16,30 +17,41 @@ import com.robotwitter.database.interfaces.ConnectionEstablisher;
 /**
  * @author Shmulik and Eyal
  *
- *         The class handles the default configuration for the factory of
+ *         The class handles the default configuration for the factory of the
  *         IDatabase
  */
 public class MySqlDBUserModule extends AbstractModule
 {
-	
+
 	/**
 	 *
 	 */
 	public MySqlDBUserModule()
 	{}
-	
-	
+
+
 	/* (non-Javadoc) @see com.google.inject.AbstractModule#configure() */
 	@SuppressWarnings("nls")
 	@Override
 	protected void configure()
 	{
-		bind(String.class).annotatedWith(Names.named("DB Server")).toInstance(
-			"localhost");
 		bind(String.class).annotatedWith(Names.named("DB Schema")).toInstance(
 			"yearlyproj_db");
 		
+		// Stuff for connection pool
+		bind(String.class).annotatedWith(Names.named("DB Driver")).toInstance(
+			"com.mysql.jdbc.Driver");
+		bind(String.class)
+		.annotatedWith(Names.named("DB Username"))
+		.toInstance("root");
+		bind(String.class)
+		.annotatedWith(Names.named("DB Password"))
+		.toInstance("root");
+		bind(String.class).annotatedWith(Names.named("DB URL")).toInstance(
+			"jdbc:mysql://localhost/");
+		
+		bind(ConnectionPool.class).to(DBCPConnectionPool.class);
 		bind(ConnectionEstablisher.class).to(MySQLConEstablisher.class);
 	}
-	
+
 }

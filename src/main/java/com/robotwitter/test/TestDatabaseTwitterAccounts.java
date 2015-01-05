@@ -12,6 +12,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,6 @@ import org.junit.Test;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.mysql.jdbc.Statement;
 
 import com.robotwitter.database.MySQLConEstablisher;
 import com.robotwitter.database.MySqlDatabaseTwitterAccounts;
@@ -38,7 +38,7 @@ import com.robotwitter.database.primitives.DBTwitterAccount;
 @SuppressWarnings("nls")
 public class TestDatabaseTwitterAccounts
 {
-	
+
 	/**
 	 * Before.
 	 */
@@ -47,22 +47,22 @@ public class TestDatabaseTwitterAccounts
 	{
 		final Injector injector =
 			Guice.createInjector(new DatabaseTestModule());
-		
+
 		try (
 			Connection con =
-			injector.getInstance(MySQLConEstablisher.class).getConnection();
-			Statement statement = (Statement) con.createStatement())
-			{
-			String dropSchema = "DROP DATABASE `test`";
-			statement.executeUpdate(dropSchema);
-			} catch (SQLException e)
+				injector.getInstance(MySQLConEstablisher.class).getConnection();
+			Statement statement = con.createStatement())
 		{
-				System.out.println(e.getErrorCode());
+			final String dropSchema = "DROP DATABASE `test`";
+			statement.executeUpdate(dropSchema);
+		} catch (final SQLException e)
+		{
+			System.out.println(e.getErrorCode());
 		}
 		db = injector.getInstance(MySqlDatabaseTwitterAccounts.class);
 	}
-	
-	
+
+
 	/**
 	 * Test delete single email.
 	 */
@@ -70,15 +70,15 @@ public class TestDatabaseTwitterAccounts
 	public final void testDeleteSingleEmail()
 	{
 		final int num = 50;
-		String email1 = "email1@gmail.com";
-		String email2 = "email1@gmail.com";
-		String tokenPrefix = "token";
-		String pTokenPrefix = "pToken";
-		List<DBTwitterAccount> accounts =
+		final String email1 = "email1@gmail.com";
+		final String email2 = "email1@gmail.com";
+		final String tokenPrefix = "token";
+		final String pTokenPrefix = "pToken";
+		final List<DBTwitterAccount> accounts =
 			generateSingleEmailAccounts(num, email1, tokenPrefix, pTokenPrefix);
 	}
-	
-	
+
+
 	/**
 	 * Test insert get.
 	 */
@@ -110,40 +110,40 @@ public class TestDatabaseTwitterAccounts
 		badAccount =
 			new DBTwitterAccount("email@gmail.com", "token", "pToken", null);
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(badAccount));
-		
+
 		assertEquals(null, db.get(null));
 		assertEquals(null, db.get(""));
 		assertEquals(null, db.get("email@gmail.com"));
-		
-		String okMail = "OK@gmail.com";
-		String token = "token";
-		String pToken = "privateToken";
-		Long uid = (long) 123;
-		DBTwitterAccount okAccount =
+
+		final String okMail = "OK@gmail.com";
+		final String token = "token";
+		final String pToken = "privateToken";
+		final Long uid = (long) 123;
+		final DBTwitterAccount okAccount =
 			new DBTwitterAccount(okMail, token, pToken, uid);
-		
+
 		validateAccountNotExists(uid, okMail);
-		
+
 		assertEquals(SqlError.SUCCESS, db.insert(okAccount));
 		validateSingleAccount(uid, okMail, token, pToken);
 		validateSingleAccount(uid, okMail.toUpperCase(), token, pToken);
-		
+
 		assertEquals(SqlError.ALREADY_EXIST, db.insert(okAccount));
 		validateSingleAccount(uid, okMail, token, pToken);
-		
+
 		okAccount.setEMail("NotOkMail@gmail.com");
 		assertEquals(SqlError.ALREADY_EXIST, db.insert(okAccount));
 		validateSingleAccount(uid, okMail, token, pToken);
-		
+
 		okAccount.setToken("DifferentToken");
 		assertEquals(SqlError.ALREADY_EXIST, db.insert(okAccount));
 		validateSingleAccount(uid, okMail, token, pToken);
-		
+
 		okAccount.setPrivateToken("DifferentPrivateToken");
 		assertEquals(SqlError.ALREADY_EXIST, db.insert(okAccount));
 		validateSingleAccount(uid, okMail, token, pToken);
-		
-		DBTwitterAccount bigOkAccount =
+
+		final DBTwitterAccount bigOkAccount =
 			new DBTwitterAccount(
 				okMail.toUpperCase(),
 				"DifferentToken",
@@ -151,19 +151,19 @@ public class TestDatabaseTwitterAccounts
 				uid);
 		assertEquals(SqlError.ALREADY_EXIST, db.insert(bigOkAccount));
 	}
-	
-	
+
+
 	/**
 	 * Test insert get single email.
 	 */
 	@Test
 	public final void testInsertGetSingleEmail()
 	{
-		String email = "eMail@gmail.com";
-		List<DBTwitterAccount> accounts =
+		final String email = "eMail@gmail.com";
+		final List<DBTwitterAccount> accounts =
 			generateSingleEmailAccounts(50, email, "token", "pToken");
-		
-		for (DBTwitterAccount account : accounts)
+
+		for (final DBTwitterAccount account : accounts)
 		{
 			assertFalse(db.isExists(account.getUserId()));
 			assertEquals(SqlError.SUCCESS, db.insert(account));
@@ -171,12 +171,13 @@ public class TestDatabaseTwitterAccounts
 		}
 		validateAccountListsSame(email, accounts);
 		validateAccountListsSame(email.toUpperCase(), accounts);
-		
-		List<DBTwitterAccount> badEmailAccounts = db.get("badEmail@Gmail.COm");
+
+		final List<DBTwitterAccount> badEmailAccounts =
+			db.get("badEmail@Gmail.COm");
 		assertEquals(null, badEmailAccounts);
 	}
-	
-	
+
+
 	/**
 	 * Test is exist.
 	 */
@@ -188,8 +189,8 @@ public class TestDatabaseTwitterAccounts
 		assertFalse(db.isExists((long) 123));
 		assertFalse(db.isExists((long) -123));
 	}
-	
-	
+
+
 	/**
 	 * Generate single email accounts.
 	 *
@@ -209,11 +210,11 @@ public class TestDatabaseTwitterAccounts
 		String email,
 		String tokenPrefix,
 		String pTokenPrefix)
-		{
-		List<DBTwitterAccount> accounts = new ArrayList<>();
+	{
+		final List<DBTwitterAccount> accounts = new ArrayList<>();
 		for (int i = 0; i < num; ++i)
 		{
-			DBTwitterAccount account =
+			final DBTwitterAccount account =
 				new DBTwitterAccount(
 					email,
 					tokenPrefix + i,
@@ -222,9 +223,9 @@ public class TestDatabaseTwitterAccounts
 			accounts.add(account);
 		}
 		return accounts;
-		}
-	
-	
+	}
+
+
 	/**
 	 * Validate the list we get from Database for the given email is the
 	 * expected one.
@@ -238,8 +239,8 @@ public class TestDatabaseTwitterAccounts
 		String email,
 		List<DBTwitterAccount> expected)
 	{
-		List<DBTwitterAccount> accountsOnDB = db.get(email);
-		
+		final List<DBTwitterAccount> accountsOnDB = db.get(email);
+
 		if (expected == null)
 		{
 			assertEquals(null, accountsOnDB);
@@ -247,18 +248,18 @@ public class TestDatabaseTwitterAccounts
 		}
 		assertNotEquals(null, accountsOnDB);
 		assertEquals(expected.size(), accountsOnDB.size());
-		
-		for (DBTwitterAccount acc : expected)
+
+		for (final DBTwitterAccount acc : expected)
 		{
 			assertTrue(accountsOnDB.contains(acc));
 		}
-		for (DBTwitterAccount acc : accountsOnDB)
+		for (final DBTwitterAccount acc : accountsOnDB)
 		{
 			assertTrue(expected.contains(acc));
 		}
 	}
-	
-	
+
+
 	/**
 	 * Validate user not exists.
 	 *
@@ -272,8 +273,8 @@ public class TestDatabaseTwitterAccounts
 		assertFalse(db.isExists(uid));
 		assertEquals(null, db.get(email));
 	}
-	
-	
+
+
 	/**
 	 * Validate db user.
 	 *
@@ -293,18 +294,18 @@ public class TestDatabaseTwitterAccounts
 		String pToken)
 	{
 		assertTrue(db.isExists(uid));
-		ArrayList<DBTwitterAccount> inDBList = db.get(email);
+		final ArrayList<DBTwitterAccount> inDBList = db.get(email);
 		assertNotEquals(null, inDBList);
 		assertEquals(1, inDBList.size());
-		
-		DBTwitterAccount inDB = inDBList.get(0);
+
+		final DBTwitterAccount inDB = inDBList.get(0);
 		assertEquals(uid, inDB.getUserId());
 		assertEquals(email.toLowerCase(), inDB.getEMail().toLowerCase());
 		assertEquals(token, inDB.getToken());
 		assertEquals(pToken, inDB.getPrivateToken());
 	}
-	
-	
-	
+
+
+
 	IDatabaseTwitterAccounts db;
 }

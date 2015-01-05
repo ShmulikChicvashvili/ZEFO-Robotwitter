@@ -11,13 +11,10 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
 
 /**
  * @author Eyal and Shmulik
- *
  */
 public interface IDatabaseNumFollowers
-{	
-	
+{		
 	public List<DBFollowersNumber> get(Long twitterId);
 	
-	public SqlError insert(DBFollowersNumber statistic);
-	
+	public SqlError insert(DBFollowersNumber statistic);	
 }

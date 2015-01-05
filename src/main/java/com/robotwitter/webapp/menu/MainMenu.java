@@ -1,5 +1,5 @@
 
-package com.robotwitter.webapp.ui;
+package com.robotwitter.webapp.menu;
 
 
 import com.google.inject.Inject;
@@ -15,6 +15,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import com.robotwitter.webapp.control.account.ITwitterConnectorController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
+import com.robotwitter.webapp.view.analysis.AnalysisView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
 
 
@@ -97,7 +98,7 @@ public class MainMenu extends AbstractMenu
 		links.addItem(
 			messages.get("MainMenu.link.analyse"),
 			FontAwesome.BAR_CHART_O,
-			null).setEnabled(false);
+			item -> navigate(AnalysisView.NAME));
 		
 		// Add tools button
 		links.addItem(

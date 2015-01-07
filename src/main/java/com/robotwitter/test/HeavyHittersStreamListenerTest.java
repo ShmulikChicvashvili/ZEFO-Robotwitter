@@ -10,14 +10,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import twitter4j.TwitterStreamFactory;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 
+import com.robotwitter.database.MySqlConnectionEstablisherModule;
+import com.robotwitter.database.MySqlDBModule;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.primitives.DBTwitterAccount;
-import com.robotwitter.statistics.HeavyHitters;
-import com.robotwitter.twitter.TwitterAppConfiguration;
-import com.robotwitter.twitter.UserTracker;
+import com.robotwitter.statistics.UserListenerModule;
 import com.robotwitter.twitter.HeavyHittersListener;
+import com.robotwitter.twitter.UserTracker;
+import com.robotwitter.twitter.UserTrackerModule;
 
 
 
@@ -34,10 +37,12 @@ public class HeavyHittersStreamListenerTest
 	@Before
 	public void setUp() throws Exception
 	{
-		TwitterAppConfiguration conf = new TwitterAppConfiguration();
-		TwitterStreamFactory factory =
-			new TwitterStreamFactory(conf.getUserConfiguration());
-		
+		Injector injector =
+			Guice.createInjector(
+				new MySqlConnectionEstablisherModule(),
+				new MySqlDBModule(),
+				new UserTrackerModule(),
+				new UserListenerModule());
 		trackedUser = 248335762;
 		
 		IDatabaseTwitterAccounts accountsDB =
@@ -48,12 +53,10 @@ public class HeavyHittersStreamListenerTest
 				"248335762-hzlfNjWvIn1OJgV2d6szoVQxVFVfdlAcR36eB6Pa",
 				"3PnhpehlVKN7o7RDSekE8tOW35fEAz22AARUoFsQToKyo",
 				trackedUser));
-		tracker = new UserTracker(factory, accountsDB);
+		tracker = injector.getInstance(UserTracker.class);
 		tracker.setUser(trackedUser);
 		
-		listener =
-			new HeavyHittersListener(
-				new HeavyHitters(200, 10));
+		listener = injector.getInstance(HeavyHittersListener.class);
 		listener.setUser(trackedUser);
 	}
 	

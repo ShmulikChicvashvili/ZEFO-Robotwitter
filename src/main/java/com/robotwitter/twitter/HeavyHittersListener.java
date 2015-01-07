@@ -46,7 +46,7 @@ public class HeavyHittersListener implements UserStreamListener
 		heavyHittersHandler = heavyHitters;
 		this.db = db;
 		userID = null;
-		lastUpdated = new Timestamp(new Date().getTime());
+		lastUpdated = null;
 	}
 	
 	

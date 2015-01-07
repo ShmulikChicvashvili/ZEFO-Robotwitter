@@ -29,8 +29,8 @@ public class RobotwitterCustomComponent extends CustomComponent
 	{
 		return ((RobotwitterUI) UI.getCurrent()).getUserSession();
 	}
-	
-	
+
+
 	/**
 	 * Instantiates a new abstract view.
 	 *
@@ -41,8 +41,8 @@ public class RobotwitterCustomComponent extends CustomComponent
 	{
 		this.messages = messages;
 	}
-
-
+	
+	
 	/**
 	 * Activates a Twitter account.
 	 * <p>
@@ -54,8 +54,8 @@ public class RobotwitterCustomComponent extends CustomComponent
 	 */
 	public void activateTwitterAccount(@SuppressWarnings("unused") long id)
 	{/* Do nothing */}
-
-
+	
+	
 	/**
 	 * Navigates to the given view name.
 	 *
@@ -64,16 +64,15 @@ public class RobotwitterCustomComponent extends CustomComponent
 	 */
 	protected final void navigate(String name)
 	{
-		getUserSession().clearActiveTwitterAccountObservers();
 		getUI().getNavigator().navigateTo(name);
 	}
-
-
-
+	
+	
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 	/** The messages displayed by this component. */
 	protected IMessagesContainer messages;
-
+	
 }

@@ -22,7 +22,7 @@ import com.robotwitter.webapp.util.RobotwitterCustomComponent;
  */
 public interface IUserSession extends Serializable
 {
-	
+
 	/**
 	 * Activates a connected Twitter account.
 	 *
@@ -32,24 +32,17 @@ public interface IUserSession extends Serializable
 	void activateTwitterAccount(long id);
 	
 	
-	/**
-	 * Clear all observers of active Twitter Account change registered using
-	 * {@link #observeActiveTwitterAccount}.
-	 */
-	void clearActiveTwitterAccountObservers();
-
-
 	/** @return the current user's account controller. */
 	IAccountController getAccountController();
-
-
+	
+	
 	/**
 	 * @return <code>true</code> if the user is signed in, <code>false</code>
 	 *         otherwise.
 	 */
 	boolean isSigned();
-	
-	
+
+
 	/**
 	 * Observe a change in the active Twitter Account.
 	 *
@@ -61,8 +54,8 @@ public interface IUserSession extends Serializable
 	 *            the component that will be the observer
 	 */
 	void observeActiveTwitterAccount(RobotwitterCustomComponent component);
-	
-	
+
+
 	/**
 	 * Keeps a user signing for this session.
 	 * <p>
@@ -76,8 +69,8 @@ public interface IUserSession extends Serializable
 	 *            next session, <code>false</code> otherwise
 	 */
 	void sign(String email, boolean remember);
-
-
+	
+	
 	/** Signs out a currently signed in user. */
 	void unsign();
 }

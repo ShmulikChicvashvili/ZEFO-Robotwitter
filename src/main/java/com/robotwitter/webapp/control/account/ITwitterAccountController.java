@@ -4,7 +4,11 @@ package com.robotwitter.webapp.control.account;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+
+import com.robotwitter.twitter.GainedLostNumFollowers;
+import com.robotwitter.twitter.TwitterFollower;
 
 
 
@@ -22,11 +26,19 @@ public interface ITwitterAccountController extends Serializable
 	{
 		/** Operation succeeded. */
 		SUCCESS,
-		
+
 		/** An unknown failure occurred . */
 		FAILURE
 	}
 
+
+
+	/**
+	 * Gets the followers for the twitter account.
+	 *
+	 * @return A list containing all the followers for the account.
+	 */
+	List<TwitterFollower> getAccountFollowers();
 
 
 	/**
@@ -51,11 +63,20 @@ public interface ITwitterAccountController extends Serializable
 	String getImage();
 
 
+	/**
+	 * Gets the last known numbers of total, gained and lost followers.
+	 *
+	 * @return An object containing the numbers of total, gained and lost
+	 *         followers, as recent as possible.
+	 */
+	GainedLostNumFollowers getLastGainedAndLostNumFollowers();
+
+
 	/** @return The Twitter account's name. */
 	String getName();
 
 
 	/** @return The Twitter account's screenname. */
 	String getScreenname();
-	
+
 }

@@ -5,7 +5,9 @@
 package com.robotwitter.twitter;
 
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 import twitter4j.DirectMessage;
 import twitter4j.StallWarning;
@@ -18,6 +20,7 @@ import twitter4j.UserStreamListener;
 
 import com.google.inject.Inject;
 
+import com.robotwitter.database.interfaces.IDatabaseHeavyHitters;
 import com.robotwitter.statistics.IHeavyHitters;
 
 
@@ -36,10 +39,14 @@ public class HeavyHittersListener implements UserStreamListener
 	 *            the heavy hitters algorithm handler
 	 */
 	@Inject
-	public HeavyHittersListener(IHeavyHitters heavyHitters)
+	public HeavyHittersListener(
+		IHeavyHitters heavyHitters,
+		IDatabaseHeavyHitters db)
 	{
 		heavyHittersHandler = heavyHitters;
+		this.db = db;
 		userID = null;
+		lastUpdated = new Timestamp(new Date().getTime());
 	}
 	
 	
@@ -81,6 +88,7 @@ public class HeavyHittersListener implements UserStreamListener
 		if (recipient.getId() != userID && sender.getId() == userID)
 		{
 			heavyHittersHandler.onDirectMessage(recipient.getId());
+			updateHeavyHitters();
 		}
 	}
 	
@@ -98,6 +106,7 @@ public class HeavyHittersListener implements UserStreamListener
 		if (target.getId() == userID && source.getId() != userID)
 		{
 			heavyHittersHandler.onFavorite(source.getId());
+			updateHeavyHitters();
 		}
 	}
 	
@@ -108,6 +117,7 @@ public class HeavyHittersListener implements UserStreamListener
 		if (followedUser.getId() == userID && source.getId() != userID)
 		{
 			heavyHittersHandler.onFollow(source.getId());
+			updateHeavyHitters();
 		}
 	}
 	
@@ -145,6 +155,7 @@ public class HeavyHittersListener implements UserStreamListener
 				if (userMentioned.getId() == userID)
 				{
 					heavyHittersHandler.onMentioned(source.getId());
+					updateHeavyHitters();
 					break;
 				}
 			}
@@ -153,6 +164,7 @@ public class HeavyHittersListener implements UserStreamListener
 				&& status.getRetweetedStatus().getUser().getId() == userID)
 			{
 				heavyHittersHandler.onRetweetedStatus(source.getId());
+				updateHeavyHitters();
 			}
 		}
 		
@@ -263,6 +275,26 @@ public class HeavyHittersListener implements UserStreamListener
 	}
 	
 	
+	private boolean sameDaySinceUpdate(Timestamp timestamp)
+	{
+		return lastUpdated != null
+			&& timestamp.getDay() == lastUpdated.getDay();
+	}
+	
+	
+	private void updateHeavyHitters()
+	{
+		if (!sameDaySinceUpdate(new Timestamp(new Date().getTime())))
+		{
+			db.insert(userID, getHeavyHitters());
+		}
+	}
+	
+	
+	
+	private Timestamp lastUpdated;
+	
+	private IDatabaseHeavyHitters db;
 	
 	/**
 	 * The user we track

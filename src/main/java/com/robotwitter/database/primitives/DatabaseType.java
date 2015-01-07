@@ -28,7 +28,9 @@ public class DatabaseType
 	@Override
 	public boolean equals(final Object obj)
 	{
-		return equals(obj);
+		if(obj == null || !(obj instanceof DatabaseType)) { return false; }
+		DatabaseType other = (DatabaseType) obj;
+		return other.eMail.equals(eMail);
 	}
 
 

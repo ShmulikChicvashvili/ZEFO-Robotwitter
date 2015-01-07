@@ -9,6 +9,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 
+import com.google.inject.Inject;
+
 import com.robotwitter.database.interfaces.IDatabaseFollowers;
 import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
 import com.robotwitter.database.primitives.DBFollower;
@@ -32,18 +34,18 @@ import twitter4j.UserStreamListener;
  */
 public class FollowerStoreListener implements UserStreamListener
 {
+	@Inject
 	public FollowerStoreListener(
 		IDatabaseFollowers followersDB,
-		IDatabaseNumFollowers numFollowersDB,
-		Long userID)
+		IDatabaseNumFollowers numFollowersDB)
 	{
 		this.followersDB = followersDB;
 		this.numFollowersDB = numFollowersDB;
-		this.userID = userID;
+		
 		lastUpdated = null;
 		
 		updateFollowersBarrier = new HashMap<Long, DBFollower>();
-		followersNumBarrier = new DBFollowersNumber(userID, lastUpdated, -1);
+		followersNumBarrier = null;
 	}
 	
 	
@@ -55,7 +57,6 @@ public class FollowerStoreListener implements UserStreamListener
 		// Nothing to do here
 		
 	}
-	
 	
 	/* (non-Javadoc) @see twitter4j.UserStreamListener#onDeletionNotice(long,
 	 * long) */
@@ -330,6 +331,12 @@ public class FollowerStoreListener implements UserStreamListener
 	{
 		// Nothing to do here
 		
+	}
+	
+	
+	public void setUser(Long userID) {
+		this.userID = userID;
+		followersNumBarrier = new DBFollowersNumber(userID, lastUpdated, -1);
 	}
 	
 	

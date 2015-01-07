@@ -21,13 +21,12 @@ import twitter4j.auth.AccessToken;
 public class UserTracker implements IUserTracker
 {
 	@Inject
-	public UserTracker(@Named("User based factory") TwitterStreamFactory factory, IDatabaseTwitterAccounts db, Long  userID) {
-		userAccount = db.get(userID);
-		if(userAccount == null) {
-			throw new RuntimeException("Tried to track a user that doesn't exist!");
-		}
-		stream = factory.getInstance(new AccessToken(userAccount.getToken(), userAccount.getPrivateToken()));
+	public UserTracker(@Named("User based factory") TwitterStreamFactory factory, IDatabaseTwitterAccounts db) {
+		twitterAccountsDB = db;
+		userAccount = null;
+		stream = factory.getInstance();
 	}
+	
 	/* (non-Javadoc) @see com.robotwitter.twitter.IUserTracker#addListener(twitter4j.UserStreamListener) */
 	@Override
 	public void addListener(UserStreamListener listener)
@@ -42,20 +41,27 @@ public class UserTracker implements IUserTracker
 	{
 		stream.user();
 	}
-	
 	/* (non-Javadoc) @see com.robotwitter.twitter.IUserTracker#getTrackedUser() */
 	@Override
 	public Long getTrackedUser()
 	{
 		return userAccount.getUserId();
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.twitter.IUserTracker#removeListener(twitter4j.UserStreamListener) */
 	@Override
 	public void removeListener(UserStreamListener listener)
 	{
 		stream.removeListener(listener);
+	}
+	
+	public void setUser(Long userID) {
+		userAccount = twitterAccountsDB.get(userID);
+		if(userAccount == null) {
+			throw new RuntimeException("Tried to track a user that doesn't exist!");
+		}
+		stream.setOAuthAccessToken(new AccessToken(userAccount.getToken(), userAccount.getPrivateToken()));
 	}
 	
 	
@@ -65,6 +71,9 @@ public class UserTracker implements IUserTracker
 	{
 		stream.cleanUp();
 	}
+	
+	
+	private IDatabaseTwitterAccounts twitterAccountsDB;
 	
 	
 	private TwitterStream stream;

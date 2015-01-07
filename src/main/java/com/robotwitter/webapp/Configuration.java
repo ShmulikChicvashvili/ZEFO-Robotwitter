@@ -2,7 +2,6 @@
 package com.robotwitter.webapp;
 
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
@@ -10,16 +9,11 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
-import twitter4j.TwitterStreamFactory;
-import twitter4j.UserStreamListener;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import com.robotwitter.database.MySqlDBUserModule;
-import com.robotwitter.database.MySqlDatabaseFollowers;
-import com.robotwitter.database.MySqlDatabaseNumFollowers;
-import com.robotwitter.database.interfaces.ConnectionEstablisher;
+import com.robotwitter.database.MySqlConnectionEstablisherModule;
+import com.robotwitter.database.MySqlDBModule;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.management.EmailPasswordRetrieverModule;
@@ -27,14 +21,12 @@ import com.robotwitter.management.ITwitterTracker.Status;
 import com.robotwitter.management.RetrievalMailBuilderModule;
 import com.robotwitter.management.TwitterTracker;
 import com.robotwitter.miscellaneous.GmailSenderModule;
-import com.robotwitter.statistics.HeavyHitters;
+import com.robotwitter.statistics.UserListenerModule;
 import com.robotwitter.twitter.FollowerStoreListener;
 import com.robotwitter.twitter.HeavyHittersListener;
-import com.robotwitter.twitter.HeavyHittersListnerFactory;
 import com.robotwitter.twitter.IUserTracker;
-import com.robotwitter.twitter.TwitterAppConfiguration;
-import com.robotwitter.twitter.TwitterAttacherModule;
 import com.robotwitter.twitter.UserTracker;
+import com.robotwitter.twitter.UserTrackerModule;
 import com.robotwitter.webapp.control.ControllerModule;
 import com.robotwitter.webapp.messages.MessagesProvider;
 
@@ -96,6 +88,8 @@ public class Configuration implements ServletContextListener
 	{
 		injector =
 			Guice.createInjector(
+				new MySqlConnectionEstablisherModule(),
+				new MySqlDBModule(),
 				new ConfigurationModule(),
 				new MenuModule(menus, messagesProvider),
 				new ViewModule(views, messagesProvider),
@@ -103,8 +97,8 @@ public class Configuration implements ServletContextListener
 				new GmailSenderModule(),
 				new EmailPasswordRetrieverModule(),
 				new RetrievalMailBuilderModule(),
-				new MySqlDBUserModule(),
-				new TwitterAttacherModule());
+				new UserTrackerModule(),
+				new UserListenerModule());
 		
 	}
 	
@@ -124,9 +118,12 @@ public class Configuration implements ServletContextListener
 	
 	
 	/**
+	 * Created and guiced up by Itay and Shmulik. Initialises the user trackers
+	 * and starts them.
 	 * 
+	 * TODO: put accountsTracker in servlet context so we can add trackers when
+	 * we attack new accounts.
 	 */
-	// FIXME: this is gross. fix this ASAP!
 	private void initialiseUserTracking()
 	{
 		accountsTracker = new TwitterTracker();
@@ -135,43 +132,37 @@ public class Configuration implements ServletContextListener
 		ArrayList<DBTwitterAccount> accounts = accountsDB.getAllAccounts();
 		if (accounts == null) { return; }
 		
-		TwitterStreamFactory factory =
-			new TwitterStreamFactory(
-				new TwitterAppConfiguration().getUserConfiguration());
-		ConnectionEstablisher connector =
-			injector.getInstance(ConnectionEstablisher.class);
 		for (DBTwitterAccount account : accounts)
 		{
 			System.out.println("trying to track " + account.getUserId());
-			IUserTracker tracker =
-				new UserTracker(factory, accountsDB, account.getUserId());
+			IUserTracker tracker = injector.getInstance(IUserTracker.class);
+			((UserTracker) tracker).setUser(account.getUserId());
+			
 			Status result = accountsTracker.addUserTracker(tracker);
 			if (result != Status.SUCCESS)
 			{
 				System.err.println("woops, everything is horrible!");
 			}
-			UserStreamListener hhListener =
-				new HeavyHittersListener(new HeavyHittersListnerFactory(
-					new HeavyHitters(100, 10)), account.getUserId());
-			UserStreamListener dbListener = null;
-			try
-			{
-				dbListener =
-					new FollowerStoreListener(
-						new MySqlDatabaseFollowers(connector),
-						new MySqlDatabaseNumFollowers(connector),
-						account.getUserId());
-			} catch (SQLException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			result = accountsTracker.addListenerToTracker(account.getUserId(), hhListener);
+			
+			HeavyHittersListener hhListener =
+				injector.getInstance(HeavyHittersListener.class);
+			hhListener.setUser(account.getUserId());
+			FollowerStoreListener dbListener =
+				injector.getInstance(FollowerStoreListener.class);
+			dbListener.setUser(account.getUserId());
+			
+			result =
+				accountsTracker.addListenerToTracker(
+					account.getUserId(),
+					hhListener);
 			if (result != Status.SUCCESS)
 			{
 				System.err.println("woops, everything is horrible!");
 			}
-			result = accountsTracker.addListenerToTracker(account.getUserId(), dbListener);
+			result =
+				accountsTracker.addListenerToTracker(
+					account.getUserId(),
+					dbListener);
 			if (result != Status.SUCCESS)
 			{
 				System.err.println("woops, everything is horrible!");

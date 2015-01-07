@@ -15,7 +15,6 @@ import twitter4j.TwitterStreamFactory;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.statistics.HeavyHitters;
-import com.robotwitter.twitter.HeavyHittersListnerFactory;
 import com.robotwitter.twitter.TwitterAppConfiguration;
 import com.robotwitter.twitter.UserTracker;
 import com.robotwitter.twitter.HeavyHittersListener;
@@ -24,7 +23,7 @@ import com.robotwitter.twitter.HeavyHittersListener;
 
 
 /**
- * @author Itay
+ * @author Itay, Shmulik
  *
  */
 public class HeavyHittersStreamListenerTest
@@ -49,11 +48,13 @@ public class HeavyHittersStreamListenerTest
 				"248335762-hzlfNjWvIn1OJgV2d6szoVQxVFVfdlAcR36eB6Pa",
 				"3PnhpehlVKN7o7RDSekE8tOW35fEAz22AARUoFsQToKyo",
 				trackedUser));
-		tracker = new UserTracker(factory, accountsDB, trackedUser);
+		tracker = new UserTracker(factory, accountsDB);
+		tracker.setUser(trackedUser);
 		
 		listener =
-			new HeavyHittersListener(new HeavyHittersListnerFactory(
-				new HeavyHitters(200, 10)), trackedUser);
+			new HeavyHittersListener(
+				new HeavyHitters(200, 10));
+		listener.setUser(trackedUser);
 	}
 	
 	
@@ -78,11 +79,12 @@ public class HeavyHittersStreamListenerTest
 		tracker.addListener(listener);
 		tracker.beginTrack();
 		
-		for(int i=0;i<12;i++) {
+		for (int i = 0; i < 12; i++)
+		{
 			System.out.println(listener.getHeavyHitters().toString());
 			try
 			{
-				Thread.sleep(1000*10);
+				Thread.sleep(1000 * 10);
 			} catch (InterruptedException e)
 			{
 				// All is fine, this wakes us up!

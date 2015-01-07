@@ -82,13 +82,6 @@ public class UserSession implements IUserSession
 
 
 	@Override
-	public final void clearActiveTwitterAccountObservers()
-	{
-		observingTwitterAccountChange.clear();
-	}
-
-
-	@Override
 	public final IAccountController getAccountController()
 	{
 		return accountController;
@@ -107,6 +100,9 @@ public class UserSession implements IUserSession
 		RobotwitterCustomComponent component)
 	{
 		observingTwitterAccountChange.add(component);
+		
+		component.addDetachListener(event -> observingTwitterAccountChange
+			.remove(event.getSource()));
 	}
 	
 	

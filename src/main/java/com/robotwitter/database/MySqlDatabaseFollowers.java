@@ -162,8 +162,8 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 			preparedStatement.executeUpdate();
 		} catch (final SQLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return SqlError.FAILURE;
 		}
 
 		return SqlError.SUCCESS;

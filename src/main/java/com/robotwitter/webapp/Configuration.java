@@ -122,7 +122,7 @@ public class Configuration implements ServletContextListener
 	 * and starts them.
 	 * 
 	 * TODO: put accountsTracker in servlet context so we can add trackers when
-	 * we attack new accounts.
+	 * we attach new accounts.
 	 */
 	private void initialiseUserTracking()
 	{

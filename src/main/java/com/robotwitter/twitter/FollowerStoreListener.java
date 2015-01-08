@@ -381,8 +381,6 @@ public class FollowerStoreListener implements UserStreamListener
 	 */
 	private void flushFollowerToDatabase(Long follower)
 	{
-		// FIXME: we are inserting people who may not be following the user!,
-		// talk with drutin and see what we can do.
 		if (followersDB.isExists(follower))
 		{
 			followersDB.update(updateFollowersBarrier.get(follower));

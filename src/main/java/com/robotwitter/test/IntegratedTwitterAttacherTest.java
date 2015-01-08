@@ -92,17 +92,14 @@ public class IntegratedTwitterAttacherTest
 				shmulikTwitter.updateStatus("yolo swag!");
 			} catch (TwitterException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		} catch (IllegalPinException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

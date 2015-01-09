@@ -4,8 +4,6 @@ package com.robotwitter.webapp;
 
 import com.google.inject.AbstractModule;
 
-import com.robotwitter.database.MySqlDatabaseNumFollowers;
-import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
 import com.robotwitter.webapp.control.account.AccountController;
 import com.robotwitter.webapp.control.account.IAccountController;
 
@@ -23,7 +21,6 @@ public class ConfigurationModule extends AbstractModule
 	@Override
 	protected final void configure()
 	{
-		bind(IDatabaseNumFollowers.class).to(MySqlDatabaseNumFollowers.class);
 		bind(IAccountController.class).to(AccountController.class);
 	}
 

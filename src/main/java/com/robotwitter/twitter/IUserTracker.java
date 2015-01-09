@@ -28,6 +28,11 @@ public interface IUserTracker
 	void beginTrack();
 	
 	/**
+	 * @return the account id of the user the tracker is tracking
+	 */
+	Long getTrackedUser();
+	
+	/**
 	 * @param listener a stream listener to listen on the user stream
 	 * @return the success status of the action performed
 	 */
@@ -36,5 +41,5 @@ public interface IUserTracker
 	/**
 	 * @return the success status of the action performed
 	 */
-	void stopTrack();	
+	void stopTrack();
 }

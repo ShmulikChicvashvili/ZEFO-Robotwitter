@@ -114,7 +114,6 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 			resultSet.close();
 		} catch (final SQLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return $;
@@ -149,8 +148,8 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 		} catch (final SQLException e)
 		{
 			if (e.getErrorCode() == insertAlreadyExists) { return SqlError.ALREADY_EXIST; }
-			// TODO what to do if not this error code
 			e.printStackTrace();
+			return SqlError.FAILURE;
 		}
 		return SqlError.SUCCESS;
 	}
@@ -186,7 +185,6 @@ public class MySqlDatabaseUser extends AbstractMySqlDatabase
 			resultSet.close();
 		} catch (final SQLException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return $;

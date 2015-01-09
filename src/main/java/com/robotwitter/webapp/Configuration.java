@@ -134,50 +134,64 @@ public class Configuration implements ServletContextListener
 		
 		for (DBTwitterAccount account : accounts)
 		{
-			System.out.println("trying to track " + account.getUserId());
-			IUserTracker tracker = injector.getInstance(IUserTracker.class);
-			((UserTracker) tracker).setUser(account.getUserId());
-			
-			Status result = accountsTracker.addUserTracker(tracker);
-			if (result != Status.SUCCESS)
-			{
-				System.err.println("woops, everything is horrible!");
-			}
-			
-			HeavyHittersListener hhListener =
-				injector.getInstance(HeavyHittersListener.class);
-			hhListener.setUser(account.getUserId());
-			FollowerStoreListener dbListener =
-				injector.getInstance(FollowerStoreListener.class);
-			dbListener.setUser(account.getUserId());
-			
-			result =
-				accountsTracker.addListenerToTracker(
-					account.getUserId(),
-					hhListener);
-			if (result != Status.SUCCESS)
-			{
-				System.err.println("woops, everything is horrible!");
-			}
-			result =
-				accountsTracker.addListenerToTracker(
-					account.getUserId(),
-					dbListener);
-			if (result != Status.SUCCESS)
-			{
-				System.err.println("woops, everything is horrible!");
-			}
-			
-			accountsTracker.startTracker(account.getUserId());
+			track(account);
 		}
 		
 	}
-	
-	
+
+
 	/** Initialises the view factory. */
 	private void initialiseViewFactory()
 	{
 		viewFactory = new GuiceViewFactory(views, injector);
+	}
+	
+	
+	/**
+	 * @param account
+	 */
+	private void track(DBTwitterAccount account)
+	{
+		System.out.println("trying to track " + account.getUserId());
+		IUserTracker tracker = injector.getInstance(IUserTracker.class);
+		((UserTracker) tracker).setUser(account.getUserId());
+		
+		Status result = accountsTracker.addUserTracker(tracker);
+		if (result != Status.SUCCESS)
+		{
+			System.err.println("woops, everything is horrible!");
+			return;
+		}
+		
+		HeavyHittersListener hhListener =
+			injector.getInstance(HeavyHittersListener.class);
+		hhListener.setUser(account.getUserId());
+		FollowerStoreListener dbListener =
+			injector.getInstance(FollowerStoreListener.class);
+		dbListener.setUser(account.getUserId());
+		
+		result =
+			accountsTracker.addListenerToTracker(
+				account.getUserId(),
+				hhListener);
+		if (result != Status.SUCCESS)
+		{
+			System.err.println("woops, everything is horrible!");
+			accountsTracker.removeUserTracker(account.getUserId());
+			return;
+		}
+		result =
+			accountsTracker.addListenerToTracker(
+				account.getUserId(),
+				dbListener);
+		if (result != Status.SUCCESS)
+		{
+			System.err.println("woops, everything is horrible!");
+			accountsTracker.removeUserTracker(account.getUserId());
+			return;
+		}
+		
+		accountsTracker.startTracker(account.getUserId());
 	}
 	
 	

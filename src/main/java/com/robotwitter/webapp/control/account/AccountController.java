@@ -127,7 +127,10 @@ public class AccountController implements IAccountController
 	public final Collection<ITwitterAccountController> getTwitterAccounts()
 	{
 		if (email == null) { return null; }
-		if (!updateTwitterAccounts()) { return null; }
+		if (!updateTwitterAccounts()) { return null; } // FIXME: this askes
+														// twitter for the users
+														// every time... change
+														// this!
 		return twitterAccounts.values();
 	}
 	

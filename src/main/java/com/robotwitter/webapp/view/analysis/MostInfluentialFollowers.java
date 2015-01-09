@@ -2,28 +2,17 @@
 package com.robotwitter.webapp.view.analysis;
 
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
+import java.util.List;
 
-import org.dussan.vaadin.dcharts.DCharts;
-import org.dussan.vaadin.dcharts.base.elements.XYaxis;
-import org.dussan.vaadin.dcharts.data.DataSeries;
-import org.dussan.vaadin.dcharts.metadata.TooltipAxes;
-import org.dussan.vaadin.dcharts.metadata.XYaxes;
-import org.dussan.vaadin.dcharts.metadata.locations.TooltipLocations;
-import org.dussan.vaadin.dcharts.metadata.renderers.AxisRenderers;
-import org.dussan.vaadin.dcharts.metadata.renderers.LabelRenderers;
-import org.dussan.vaadin.dcharts.options.Axes;
-import org.dussan.vaadin.dcharts.options.Highlighter;
-import org.dussan.vaadin.dcharts.options.Options;
-import org.dussan.vaadin.dcharts.renderers.tick.AxisTickRenderer;
-import org.dussan.vaadin.dcharts.renderers.tick.CanvasAxisTickRenderer;
-
-import com.vaadin.ui.UI;
+import com.vaadin.shared.MouseEventDetails.MouseButton;
+import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 
 import com.robotwitter.webapp.control.account.ITwitterAccountController;
+import com.robotwitter.webapp.control.account.TwitterFollower;
+import com.robotwitter.webapp.menu.TwitterCard;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.RobotwitterCustomComponent;
 
@@ -31,8 +20,7 @@ import com.robotwitter.webapp.util.RobotwitterCustomComponent;
 
 
 /**
- * Represents a graph of the amount of Twitter followers of the active Twitter
- * account over time.
+ * Represents a list of the most influential followers of a Twitter account.
  *
  * @author Hagai Akibayov
  * @author Eyal Tolchinsky
@@ -41,7 +29,7 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 {
 
 	/**
-	 * Instantiates a new followers over time chart.
+	 * Instantiates a new most influential followers list.
 	 *
 	 * @param messages
 	 *            the container of messages to display
@@ -49,89 +37,101 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 	public MostInfluentialFollowers(IMessagesContainer messages)
 	{
 		super(messages);
+		activeCardWrapper = null;
 		initialiseLayout();
 		getUserSession().observeActiveTwitterAccount(this);
 	}
 	
 	
+	/**
+	 * Activates the given follower.
+	 *
+	 * @param id
+	 *            the follower's Twitter account ID
+	 */
+	public void activateFollower(long id)
+	{
+
+	}
+
+
 	@Override
 	public final void activateTwitterAccount(long id)
 	{
-		updateChart();
+		updateList();
 	}
 
 
 	/** Initialises the layout. */
 	private void initialiseLayout()
 	{
-		Axes axes = new Axes();
-		axes.addAxis(new XYaxis()
-		.setRenderer(AxisRenderers.DATE)
-		.setTickOptions(
-			new CanvasAxisTickRenderer().setAngle(-30).setFormatString(
-				"%#d %b, %Y")));
-		axes.addAxis(new XYaxis(XYaxes.Y)
-			.setLabel(messages.get("AnalysisView.chart.label.followers"))
-			.setLabelRenderer(LabelRenderers.CANVAS)
-			.setTickOptions(new AxisTickRenderer().setFormatString("%d")));
-		
-		Highlighter highlighter =
-			new Highlighter()
-				.setShow(true)
-				.setSizeAdjust(10)
-				.setTooltipLocation(TooltipLocations.NORTH)
-				.setTooltipAxes(TooltipAxes.YX)
-				.setUseAxesFormatters(true)
-				.setFormatString("%s followers on %s");
-		
-		Options options =
-			new Options()
-		.addOption(axes)
-		.addOption(highlighter)
-		.setAnimate(true);
-		
-		chart = new DCharts().setOptions(options);
-		updateChart();
-		
-		// FIXME this should be done on the client-side
-		UI.getCurrent().getPage().addBrowserWindowResizeListener(event -> {
-			chart.setSizeFull();
-		});
+		followers = new VerticalLayout();
+		updateList();
 
 		addStyleName(STYLENAME);
 		
-		setCompositionRoot(chart);
+		setCompositionRoot(followers);
 	}
-
-
+	
+	
 	/** Update the followers over time chart. */
-	private void updateChart()
+	private void updateList()
 	{
 		ITwitterAccountController controller =
 			getUserSession().getAccountController().getActiveTwitterAccount();
 
-		Map<Date, Integer> followers =
-			controller.getAmountOfFollowers(null, null);
+		influentialFollowers = controller.getMostInfluentialFollowers();
 
-		DataSeries dataSeries = new DataSeries().newSeries();
-
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-
-		for (Map.Entry<Date, Integer> entry : followers.entrySet())
+		followers.removeAllComponents();
+		for (TwitterFollower follower : influentialFollowers)
 		{
-			dataSeries.add(df.format(entry.getKey()), entry.getValue());
-		}
+			Label card =
+				new Label(TwitterCard.createAsHtml(
+					follower.getName(),
+					follower.getScreenName(),
+					follower.getPicture(),
+					false));
+			card.setContentMode(ContentMode.HTML);
+			VerticalLayout cardWrapper = new VerticalLayout(card);
+			cardWrapper.addStyleName(CARD_WRAPPER_STYLENAME);
+			cardWrapper
+				.addLayoutClickListener(event -> {
+					if (event.getButton().compareTo(MouseButton.LEFT) != 0) { return; }
+					if (activeCardWrapper != null)
+				{
+					activeCardWrapper
+					.removeStyleName(ACTIVE_CARD_WRAPPER_STYLENAME);
+				}
+					event.getClickedComponent().addStyleName(
+					ACTIVE_CARD_WRAPPER_STYLENAME);
+					activeCardWrapper = event.getClickedComponent();
+				});
 
-		chart.setDataSeries(dataSeries).show();
+			followers.addComponent(cardWrapper);
+		}
 	}
 
 
 
-	/** The followers over time chart. */
-	DCharts chart;
+	/** The list of influential followers. */
+	VerticalLayout followers;
+	
+	/** A list of the most influential followers. */
+	List<TwitterFollower> influentialFollowers;
+	
+	/** The current active Twitter account card wrapper component. */
+	Component activeCardWrapper;
 
 	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "FollowersOverTimeChart";
+	private static final String STYLENAME = "MostInfluentialFollowers";
+
+	/** The CSS class name to apply to the active card wrapper component. */
+	private static final String ACTIVE_CARD_WRAPPER_STYLENAME =
+		"MostInfluentialFollowers-active-card-wrapper";
+	
+	/** The CSS class name to apply to a card wrapper. */
+	private static final String CARD_WRAPPER_STYLENAME =
+		"AccountInformationPopup-card-wrapper";
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

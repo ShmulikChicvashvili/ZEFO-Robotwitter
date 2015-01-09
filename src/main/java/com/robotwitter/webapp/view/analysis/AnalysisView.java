@@ -61,8 +61,8 @@ public class AnalysisView extends AbstractView
 
 		FollowersAmountOverTimeChart followersChart =
 			new FollowersAmountOverTimeChart(messages);
-		FollowersAmountOverTimeChart influentialFollowers =
-			new FollowersAmountOverTimeChart(messages);
+		MostInfluentialFollowers influentialFollowers =
+			new MostInfluentialFollowers(messages);
 		HorizontalLayout followers =
 			new HorizontalLayout(influentialFollowers, followersChart);
 		followers.setSizeFull();

@@ -5,6 +5,7 @@ package com.robotwitter.webapp.view.analysis;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
@@ -53,17 +54,25 @@ public class AnalysisView extends AbstractView
 	@Override
 	protected final void initialise()
 	{
-		addStyleName(STYLENAME);
 
 		Label header = new Label(messages.get("AnalysisView.label.header"));
-		FollowersAmountOverTimeChart chart =
-			new FollowersAmountOverTimeChart(messages);
 		FollowersAmountOverview overview =
 			new FollowersAmountOverview(messages);
-		header.addStyleName(HEADER_STYLENAME);
-		VerticalLayout layout = new VerticalLayout(header, overview, chart);
+
+		FollowersAmountOverTimeChart followersChart =
+			new FollowersAmountOverTimeChart(messages);
+		FollowersAmountOverTimeChart influentialFollowers =
+			new FollowersAmountOverTimeChart(messages);
+		HorizontalLayout followers =
+			new HorizontalLayout(influentialFollowers, followersChart);
+		followers.setSizeFull();
+		
+		VerticalLayout layout = new VerticalLayout(header, overview, followers);
 		layout.setSizeFull();
-		layout.setExpandRatio(chart, 1);
+		layout.setExpandRatio(followers, 1);
+
+		header.addStyleName(HEADER_STYLENAME);
+		addStyleName(STYLENAME);
 
 		setCompositionRoot(layout);
 	}

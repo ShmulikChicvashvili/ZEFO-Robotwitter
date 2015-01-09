@@ -2,7 +2,7 @@
  *
  */
 
-package com.robotwitter.twitter;
+package com.robotwitter.webapp.control.account;
 
 
 import java.sql.Timestamp;

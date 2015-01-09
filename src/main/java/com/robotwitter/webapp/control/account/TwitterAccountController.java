@@ -4,6 +4,7 @@ package com.robotwitter.webapp.control.account;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
  */
 public class TwitterAccountController implements ITwitterAccountController
 {
-	
+
 	/**
 	 * Instantiates a new twitter account controller.
 	 *
@@ -48,12 +49,12 @@ public class TwitterAccountController implements ITwitterAccountController
 		this.image = image;
 		this.numFollowersDB = numFollowersDB;
 	}
-	
-	
+
+
 	@Override
 	public final Map<Date, Integer> getAmountOfFollowers(Date from, Date to)
 	{
-		
+
 		final Map<Date, Integer> followersBetween = new HashMap<>();
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
 		if (dbfollowers == null) { return followersBetween; }
@@ -93,21 +94,50 @@ public class TwitterAccountController implements ITwitterAccountController
 			}
 		}
 		return followersBetween;
-		
+
 	}
-	
-	
+
+
 	@Override
 	public final long getID()
 	{
 		return id;
 	}
-	
-	
+
+
 	@Override
 	public final String getImage()
 	{
 		return image;
+	}
+
+
+	@Override
+	public final int getLastKnownAmountOfFollowers()
+	{
+		return 9000;
+	}
+	
+	
+	@Override
+	public final int getLastKnownAmountOfGainedFollowers()
+	{
+		return 42;
+	}
+	
+	
+	@Override
+	public final int getLastKnownAmountOfLostFollowers()
+	{
+		return 69;
+	}
+	
+	
+	@Override
+	public final List<TwitterFollower> getMostInfluentialFollowers()
+	{
+		List<TwitterFollower> list = new LinkedList<>();
+		return list;
 	}
 	
 	
@@ -138,10 +168,10 @@ public class TwitterAccountController implements ITwitterAccountController
 	/** The Twitter accounts' profile image. */
 	public String image;
 	
-	/** The Twtitter's account number of followers Database */
+	/** The Twtitter's account number of followers Database. */
 	public IDatabaseNumFollowers numFollowersDB;
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 }

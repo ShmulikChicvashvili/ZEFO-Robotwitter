@@ -1,8 +1,10 @@
+@import "analysis/FollowersAmountOverview";
 @import "analysis/AnalysisView";
 /*----------------------------------------------------------------------------*/
 
 
 @mixin robotwitter-view-analysis
 {
+	@include FollowersAmountOverview;
 	@include AnalysisView;
 }

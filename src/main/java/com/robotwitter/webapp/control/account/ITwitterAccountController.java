@@ -7,9 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.robotwitter.twitter.GainedLostNumFollowers;
-import com.robotwitter.twitter.TwitterFollower;
-
 
 
 
@@ -20,25 +17,17 @@ import com.robotwitter.twitter.TwitterFollower;
  */
 public interface ITwitterAccountController extends Serializable
 {
-
+	
 	/** Status codes returned by this instance. */
 	enum Status
 	{
 		/** Operation succeeded. */
 		SUCCESS,
-
+		
 		/** An unknown failure occurred . */
 		FAILURE
 	}
 
-
-
-	/**
-	 * Gets the followers for the twitter account.
-	 *
-	 * @return A list containing all the followers for the account.
-	 */
-	List<TwitterFollower> getAccountFollowers();
 
 
 	/**
@@ -53,30 +42,37 @@ public interface ITwitterAccountController extends Serializable
 	 *         <code>from</code> and <code>to</code>.
 	 */
 	Map<Date, Integer> getAmountOfFollowers(Date from, Date to);
-
-
+	
+	
 	/** @return The Twitter account's ID. */
 	long getID();
-
-
+	
+	
 	/** @return The Twitter account's image. */
 	String getImage();
-
-
-	/**
-	 * Gets the last known numbers of total, gained and lost followers.
-	 *
-	 * @return An object containing the numbers of total, gained and lost
-	 *         followers, as recent as possible.
-	 */
-	GainedLostNumFollowers getLastGainedAndLostNumFollowers();
-
-
+	
+	
+	/** @return The last known amount of followers. */
+	int getLastKnownAmountOfFollowers();
+	
+	
+	/** @return The last known amount of gained followers. */
+	int getLastKnownAmountOfGainedFollowers();
+	
+	
+	/** @return The last known amount of lost followers. */
+	int getLastKnownAmountOfLostFollowers();
+	
+	
+	/** @return A list of the most influential followers. */
+	List<TwitterFollower> getMostInfluentialFollowers();
+	
+	
 	/** @return The Twitter account's name. */
 	String getName();
-
-
+	
+	
 	/** @return The Twitter account's screenname. */
 	String getScreenname();
-
+	
 }

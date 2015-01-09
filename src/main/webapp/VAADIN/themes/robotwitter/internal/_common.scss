@@ -20,6 +20,15 @@
           box-shadow: $box-shadow;
 }
 
+
+/* Cross-platform text-shadow. */
+@mixin robotwitter-text-shadow($text-shadow)
+{
+  -webkit-text-shadow: $text-shadow;
+     -moz-text-shadow: $text-shadow;
+          text-shadow: $text-shadow;
+}
+
 /* Cross-platform transition. */
 @mixin robotwitter-transition($transition)
 {

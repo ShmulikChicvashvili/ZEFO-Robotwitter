@@ -12,18 +12,43 @@ import com.robotwitter.database.primitives.DBFollower;
 public interface IDatabaseFollowers {
 
 	/**
+	 * Delete the following connection between two users
+	 * 
+	 * @param followedId
+	 *            The followed user in the deleted connection
+	 * @param followerId
+	 *            The follower user in the deleted connection
+	 * @return Return the status code. It could be either SUCCESS,
+	 *         DOES_NOT_EXIST, INVALID_PARAMS
+	 */
+	public SqlError deleteFollow(long followedId, long followerId);
+
+	/**
+	 * Delete the information of a follower
+	 * 
+	 * @param followerId
+	 *            The follower to delete
+	 * @return Return the status code. It could be either SUCCESS,
+	 *         DOES_NOT_EXIST, INVALID_PARAMS
+	 */
+	public SqlError deleteFollower(long followerId);
+
+	/**
+	 * Delete all the follower links that follow this user.
+	 * 
+	 * @param followedId
+	 *            The followed user in the deleted connection
+	 * @return Return the status code. It could be either SUCCESS,
+	 *         INVALID_PARAMS
+	 */
+	public SqlError deleteUserFollowers(long followedId);
+
+	/**
 	 * @param followerId
 	 *            The id of the follower to get
 	 * @return The follower associated with this Id
 	 */
 	public DBFollower get(long followerId);
-
-	/**
-	 * @param userId
-	 *            The id of the user you want to get it's followers ids
-	 * @return The ids of the followers of this user
-	 */
-	public ArrayList<Long> getFollowersId(long userId);
 
 	/**
 	 * @param name
@@ -39,6 +64,13 @@ public interface IDatabaseFollowers {
 	 */
 	public ArrayList<DBFollower> getByScreenName(String screenName);
 
+	/**
+	 * @param userId
+	 *            The id of the user you want to get it's followers ids
+	 * @return The ids of the followers of this user
+	 */
+	public ArrayList<Long> getFollowersId(long userId);
+	
 	/**
 	 * @param follower
 	 *            The follower you want to insert into the database
@@ -63,7 +95,7 @@ public interface IDatabaseFollowers {
 	 * @return whether a follower with this id exists
 	 */
 	public boolean isExists(long followerId);
-	
+
 	/**
 	 * @param followedId
 	 *            The id of the followed in the connection
@@ -86,7 +118,7 @@ public interface IDatabaseFollowers {
 	 * @return whether a follower with this screen name exists
 	 */
 	public boolean isExistsByScreenName(String ScreenName);
-
+	
 	/**
 	 * @param follower
 	 *            The follower to update
@@ -94,26 +126,4 @@ public interface IDatabaseFollowers {
 	 *         DOES_NOT_EXIST, INVALID_PARAMS
 	 */
 	public SqlError update(DBFollower follower);
-
-	/**
-	 * Delete the information of a follower
-	 * 
-	 * @param followerId
-	 *            The follower to delete
-	 * @return Return the status code. It could be either SUCCESS,
-	 *         DOES_NOT_EXIST, INVALID_PARAMS
-	 */
-	public SqlError deleteFollower(long followerId);
-
-	/**
-	 * Delete the following connection between two users
-	 * 
-	 * @param followedId
-	 *            The followed user in the deleted connection
-	 * @param followerId
-	 *            The follower user in the deleted connection
-	 * @return Return the status code. It could be either SUCCESS,
-	 *         DOES_NOT_EXIST, INVALID_PARAMS
-	 */
-	public SqlError deleteFollow(long followedId, long followerId);
 }

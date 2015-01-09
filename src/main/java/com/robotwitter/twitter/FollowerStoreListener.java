@@ -14,8 +14,6 @@ import com.google.inject.Inject;
 import com.robotwitter.database.interfaces.IDatabaseFollowers;
 import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
 import com.robotwitter.database.primitives.DBFollower;
-import com.robotwitter.database.primitives.DBFollowersNumber;
-
 import twitter4j.DirectMessage;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -45,7 +43,6 @@ public class FollowerStoreListener implements UserStreamListener
 		lastUpdated = null;
 		
 		updateFollowersBarrier = new HashMap<Long, DBFollower>();
-		followersNumBarrier = null;
 	}
 	
 	
@@ -336,7 +333,6 @@ public class FollowerStoreListener implements UserStreamListener
 	
 	public void setUser(Long userID) {
 		this.userID = userID;
-		followersNumBarrier = new DBFollowersNumber(userID, lastUpdated, -1);
 	}
 	
 	
@@ -355,24 +351,6 @@ public class FollowerStoreListener implements UserStreamListener
 			user.isVerified(),
 			new Timestamp(user.getCreatedAt().getTime()),
 			user.getProfileImageURL());
-	}
-	
-	
-	private DBFollowersNumber buildFollowersNumber(User myUser)
-	{
-		return new DBFollowersNumber(
-			userID,
-			new Timestamp(new Date().getTime()),
-			myUser.getFollowersCount());
-	}
-	
-	
-	/**
-	 * 
-	 */
-	private void flushFollowersNumber()
-	{
-		numFollowersDB.insert(followersNumBarrier);
 	}
 	
 	
@@ -401,8 +379,6 @@ public class FollowerStoreListener implements UserStreamListener
 		{
 			flushFollowerToDatabase(follower);
 		}
-		
-		flushFollowersNumber();
 		lastUpdated = new Timestamp(new Date().getTime());
 		
 		updateFollowersBarrier = new HashMap<Long, DBFollower>();
@@ -445,16 +421,12 @@ public class FollowerStoreListener implements UserStreamListener
 	private void updateNumFollowers(User myUser)
 	{
 		Timestamp now = new Timestamp(new Date().getTime());
-		followersNumBarrier = buildFollowersNumber(myUser);
 		if (!sameDaySinceUpdate(now))
 		{
 			flushUpdates();
 		}
 	}
 	
-	
-	
-	private DBFollowersNumber followersNumBarrier;
 	
 	private HashMap<Long, DBFollower> updateFollowersBarrier;
 	

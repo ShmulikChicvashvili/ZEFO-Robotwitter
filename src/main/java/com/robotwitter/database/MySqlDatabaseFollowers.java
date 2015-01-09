@@ -20,6 +20,10 @@ import com.robotwitter.database.primitives.DBFollower;
 
 /**
  * @author Amir and Shmulik
+ * 
+ * 
+ * @Author Itay
+ * implemented deleteUsersFollowers function in date 9.1.2015
  */
 
 public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
@@ -164,6 +168,33 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		{
 			e.printStackTrace();
 			return SqlError.FAILURE;
+		}
+
+		return SqlError.SUCCESS;
+	}
+
+
+	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers#deleteUserFollowers(long) */
+	@Override
+	public SqlError deleteUserFollowers(long followedId)
+	{
+		if (followedId < 1) { return SqlError.INVALID_PARAMS; }
+
+		try (
+			Connection con = connectionEstablisher.getConnection();
+			PreparedStatement preparedStatement =
+				con.prepareStatement(""
+					+ "DELETE FROM "
+					+ followingTable
+					+ " WHERE "
+					+ Columns.FOLLOWED_ID.toString().toLowerCase()
+					+ "= ?;"))
+		{
+			preparedStatement.setLong(1, followedId);
+			preparedStatement.executeUpdate();
+		} catch (final SQLException e)
+		{
+			e.printStackTrace();
 		}
 
 		return SqlError.SUCCESS;
@@ -615,6 +646,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 	}
 
 
+
 	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
 	 * #insert(com.robotwitter.database.primitives.DBFollower) */
 	@SuppressWarnings({ "boxing", "nls" })
@@ -679,8 +711,6 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 		
 		return SqlError.SUCCESS;
 	}
-
-
 
 	/**
 	 * The table name.

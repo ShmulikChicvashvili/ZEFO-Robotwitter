@@ -5,6 +5,7 @@
 package com.robotwitter.twitter;
 
 
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -52,7 +53,13 @@ public class FollowerIdsBackfiller
 		this.followersDB = followersDB;
 		this.followersNumDB = followersNumDB;
 		twitterConnector = factory.getInstance();
+		
+		// Uninitialised
 		userAccount = null;
+		yesterdaysFirstPage = null;
+		yesterdayFollowerNumber = -1;
+		workTimer = null;
+		
 	}
 	
 	
@@ -63,6 +70,24 @@ public class FollowerIdsBackfiller
 			"Tried to track a user that doesn't exist!"); }
 		twitterConnector.setOAuthAccessToken(new AccessToken(userAccount
 			.getToken(), userAccount.getPrivateToken()));
+		
+		yesterdaysFirstPage = getFirstFollowersPage();
+		try
+		{
+			yesterdayFollowerNumber =
+				twitterConnector
+					.showUser(userAccount.getUserId())
+					.getFollowersCount();
+		} catch (TwitterException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if (workTimer != null)
+		{
+			workTimer.cancel();
+			workTimer = null;
+		}
 	}
 	
 	
@@ -109,8 +134,12 @@ public class FollowerIdsBackfiller
 		int newFollowersNumber,
 		int newUnfollowerNumber)
 	{
-		// TODO Implement after we changed the database.
-		return null;
+		return new DBFollowersNumber(
+			userAccount.getUserId(),
+			new Timestamp(new Date().getTime()),
+			todaysFollowerNumber,
+			newFollowersNumber,
+			newUnfollowerNumber);
 	}
 	
 	
@@ -143,8 +172,7 @@ public class FollowerIdsBackfiller
 	 */
 	private void clearYesterdaysFollowersDatabase()
 	{
-		// TODO: Implement after the database implemented delete function for
-		// user.
+		followersDB.deleteUserFollowers(userAccount.getUserId());
 	}
 	
 	
@@ -224,8 +252,8 @@ public class FollowerIdsBackfiller
 		int $ = firstPage.getIDs().length;
 		IDs nextPage = firstPage;
 		clearYesterdaysFollowersDatabase();
-		while (nextPage.getNextCursor() != 0
-			&& nextPage.getRateLimitStatus().getRemaining() > 0)
+		
+		do
 		{
 			updatePageToDatabase(nextPage);
 			if (nextPage.getRateLimitStatus().getRemaining() == 0)
@@ -235,7 +263,8 @@ public class FollowerIdsBackfiller
 			}
 			nextPage = getNextFollowersPage(nextPage);
 			$ += nextPage.getIDs().length;
-		}
+		} while (nextPage.getNextCursor() != 0
+			&& nextPage.getRateLimitStatus().getRemaining() > 0);
 		return $;
 	}
 	

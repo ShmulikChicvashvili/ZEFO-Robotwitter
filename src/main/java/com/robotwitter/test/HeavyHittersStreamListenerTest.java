@@ -8,15 +8,11 @@ package com.robotwitter.test;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import com.robotwitter.database.MySqlConnectionEstablisherModule;
 import com.robotwitter.database.MySqlDBModule;
-import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
-import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.statistics.UserListenerModule;
 import com.robotwitter.twitter.HeavyHittersListener;
 import com.robotwitter.twitter.UserTracker;
@@ -45,14 +41,6 @@ public class HeavyHittersStreamListenerTest
 				new UserListenerModule());
 		trackedUser = 248335762;
 		
-		IDatabaseTwitterAccounts accountsDB =
-			Mockito.mock(IDatabaseTwitterAccounts.class);
-		Mockito.when(accountsDB.get(trackedUser)).thenReturn(
-			new DBTwitterAccount(
-				"shmulikjkech@gmail.com",
-				"248335762-hzlfNjWvIn1OJgV2d6szoVQxVFVfdlAcR36eB6Pa",
-				"3PnhpehlVKN7o7RDSekE8tOW35fEAz22AARUoFsQToKyo",
-				trackedUser));
 		tracker = injector.getInstance(UserTracker.class);
 		tracker.setUser(trackedUser);
 		

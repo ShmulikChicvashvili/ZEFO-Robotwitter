@@ -5,6 +5,7 @@
 package com.robotwitter.twitter;
 
 
+import twitter4j.TwitterFactory;
 import twitter4j.TwitterStreamFactory;
 
 import com.google.inject.AbstractModule;
@@ -28,6 +29,11 @@ public class UserTrackerModule extends AbstractModule
 		bind(TwitterStreamFactory.class).annotatedWith(
 			Names.named("User based factory")).toInstance(
 			new TwitterStreamFactory(new TwitterAppConfiguration()
+				.getUserConfiguration()));
+		
+		bind(TwitterFactory.class).annotatedWith(
+			Names.named("User based factory")).toInstance(
+			new TwitterFactory(new TwitterAppConfiguration()
 				.getUserConfiguration()));
 		
 		bind(IUserTracker.class).to(UserTracker.class);

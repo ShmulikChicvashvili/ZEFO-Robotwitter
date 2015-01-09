@@ -1,10 +1,10 @@
-@import "ui/TwitterCard";
-@import "ui/AccountInformationPopup";
-@import "ui/MainMenu";
+@import "menu/TwitterCard";
+@import "menu/AccountInformationPopup";
+@import "menu/MainMenu";
 /*----------------------------------------------------------------------------*/
 
 
-@mixin robotwitter-ui
+@mixin robotwitter-menu
 {
 	@include TwitterCard($MainMenu-height);
 	@include AccountInformationPopup($MainMenu-height);

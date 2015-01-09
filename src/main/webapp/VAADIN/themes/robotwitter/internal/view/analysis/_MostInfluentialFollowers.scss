@@ -1,0 +1,43 @@
+@import "../../common";
+@import "../../../config";
+/*----------------------------------------------------------------------------*/
+
+@mixin MostInfluentialFollowers { .MostInfluentialFollowers {
+
+	$width: 250px;
+	$height: 300px;
+	
+	width: $width !important;
+	height: 300px;
+	
+	overflow-y: scroll;
+	
+	background: white;
+	border: 1px solid rgba(black, 0.15);
+	
+	/* A wrapper of a twitter follower card. */
+	.AccountInformationPopup-card-wrapper
+	{
+		text-align: right;
+	
+		padding: 0 15px;
+		
+		border-bottom: 1px solid rgba(black, 0.15);
+		
+		/* The card itself. */
+		.v-label { width: auto !important; }
+			
+		/* Hover */
+		cursor: pointer;
+		&:hover { background: hsl(hue($robotwitter-main-color), 2%, 95%); }
+	}
+	
+	/* Active twitter follower card. */
+	.AccountInformationPopup-active-card-wrapper
+	{
+		cursor: default;
+		background: $robotwitter-main-color;
+	}
+
+} }
+

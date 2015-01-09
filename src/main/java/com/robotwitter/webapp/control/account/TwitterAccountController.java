@@ -2,6 +2,8 @@
 package com.robotwitter.webapp.control.account;
 
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,7 +23,7 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
  */
 public class TwitterAccountController implements ITwitterAccountController
 {
-
+	
 	/**
 	 * Instantiates a new twitter account controller.
 	 *
@@ -49,12 +51,12 @@ public class TwitterAccountController implements ITwitterAccountController
 		this.image = image;
 		this.numFollowersDB = numFollowersDB;
 	}
-
-
+	
+	
 	@Override
 	public final Map<Date, Integer> getAmountOfFollowers(Date from, Date to)
 	{
-
+		
 		final Map<Date, Integer> followersBetween = new HashMap<>();
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
 		if (dbfollowers == null) { return followersBetween; }
@@ -94,10 +96,10 @@ public class TwitterAccountController implements ITwitterAccountController
 			}
 		}
 		return followersBetween;
-
+		
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.account.ITwitterAccountController
 	 * #getFollowersAmountByDisplayedLanguage() */
@@ -138,15 +140,15 @@ public class TwitterAccountController implements ITwitterAccountController
 	{
 		return id;
 	}
-
-
+	
+	
 	@Override
 	public final String getImage()
 	{
 		return image;
 	}
-
-
+	
+	
 	@Override
 	public final int getLastKnownAmountOfFollowers()
 	{
@@ -171,7 +173,46 @@ public class TwitterAccountController implements ITwitterAccountController
 	@Override
 	public final List<TwitterFollower> getMostInfluentialFollowers()
 	{
+		TwitterFollower follower1 =
+			new TwitterFollower(
+				1,
+				"Hagai Akibayov",
+				"DonAkibayov",
+				"Some Description",
+				100,
+				30,
+				"Israel",
+				5,
+				"Hebrew",
+				true,
+				Timestamp.valueOf(LocalDateTime.now()),
+				"http://pbs.twimg.com/profile_images/546786848849158145/wS82lZr8_normal.jpeg");
+		TwitterFollower follower2 =
+			new TwitterFollower(
+				1,
+				"Eyal Tolchisnky",
+				"DonTasd",
+				"Somasdasdjasde Description",
+				1340,
+				3430,
+				"Haifa",
+				53,
+				"English",
+				false,
+				Timestamp.valueOf(LocalDateTime.now()),
+				"http://mkalty.org/wp-content/uploads/2014/06/3602836742_6f8c876e28.jpg");
+
 		List<TwitterFollower> list = new LinkedList<>();
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower2);
 		return list;
 	}
 
@@ -208,5 +249,5 @@ public class TwitterAccountController implements ITwitterAccountController
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 }

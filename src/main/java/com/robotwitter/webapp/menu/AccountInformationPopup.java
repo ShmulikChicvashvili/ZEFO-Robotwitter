@@ -3,6 +3,7 @@ package com.robotwitter.webapp.menu;
 
 
 import com.vaadin.server.FontAwesome;
+import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -44,38 +45,38 @@ class AccountInformationPopup implements PopupView.Content
 	{
 		this.messages = messages;
 		this.twitterConnectorController = twitterConnectorController;
-		
+
 		initialiseTwitterConnectorController();
-		
+
 		userSession = ((RobotwitterUI) UI.getCurrent()).getUserSession();
 		owner = null;
 	}
-
-
+	
+	
 	@Override
 	public String getMinimizedValueAsHTML()
 	{
 		IAccountController controller = userSession.getAccountController();
-		
+
 		// Root element
 		String minimisedOpen = "<div class=\"" + MINIMISED_STYLENAME + "\">";
 		String minimiseClose = "</div>";
-		
+
 		ITwitterAccountController account =
 			controller.getActiveTwitterAccount();
-
+		
 		String minimiseContent = null;
 		if (account == null)
 		{
 			minimiseContent =
 				TwitterCard
-				.createAsHtml(
-					messages
-							.get("AccountInformationPopup.label.no-twitter-account"),
-					messages
-							.get("AccountInformationPopup.label.click-to-connect"),
-					"http://www.austadpro.com/blog/wp-content/uploads/2011/07/anonymous-user-gravatar.png",
-					true);
+					.createAsHtml(
+						messages
+					.get("AccountInformationPopup.label.no-twitter-account"),
+						messages
+					.get("AccountInformationPopup.label.click-to-connect"),
+						"http://www.austadpro.com/blog/wp-content/uploads/2011/07/anonymous-user-gravatar.png",
+						true);
 		} else
 		{
 			minimiseContent =
@@ -85,13 +86,13 @@ class AccountInformationPopup implements PopupView.Content
 					account.getImage(),
 					false);
 		}
-
-		String minimiseElem = minimisedOpen + minimiseContent + minimiseClose;
 		
+		String minimiseElem = minimisedOpen + minimiseContent + minimiseClose;
+
 		return minimiseElem;
 	}
-	
-	
+
+
 	@Override
 	public Component getPopupComponent()
 	{
@@ -99,8 +100,8 @@ class AccountInformationPopup implements PopupView.Content
 			createTwitterAccountCards(),
 			createAccountInformation());
 	}
-
-
+	
+	
 	/**
 	 * Sets the owner component of this pop-up view content.
 	 * <p>
@@ -120,20 +121,20 @@ class AccountInformationPopup implements PopupView.Content
 	{
 		this.owner = owner;
 	}
-
-
+	
+	
 	/** Closes the owning pop-up. */
 	private void close()
 	{
 		owner.setPopupVisible(false);
 	}
-	
-	
+
+
 	/** @return an account information section component. */
 	private Component createAccountInformation()
 	{
 		IAccountController controller = userSession.getAccountController();
-
+		
 		// Create components
 		Label name = new Label(controller.getName());
 		Label email = new Label(controller.getEmail());
@@ -144,12 +145,12 @@ class AccountInformationPopup implements PopupView.Content
 					close();
 					userSession.unsign();
 				});
-
+		
 		// Create layouts
 		VerticalLayout information = new VerticalLayout(name, email);
 		HorizontalLayout wrapper = new HorizontalLayout(information, signout);
 		wrapper.setSizeFull();
-		
+
 		// Set styles
 		name.addStyleName(ACCOUNT_NAME_STYLENAME);
 		email.addStyleName(ACCOUNT_EMAIL_STYLENAME);
@@ -157,11 +158,11 @@ class AccountInformationPopup implements PopupView.Content
 		signout.addStyleName(ValoTheme.BUTTON_SMALL);
 		information.addStyleName(ACCOUNT_INFO_STYLENAME);
 		wrapper.addStyleName(ACCOUNT_WRAPPER_STYLENAME);
-		
+
 		return wrapper;
 	}
-	
-	
+
+
 	/**
 	 * @return a list of twitter account cards as a component. Does not include
 	 *         the currently active twitter account.
@@ -169,9 +170,9 @@ class AccountInformationPopup implements PopupView.Content
 	private Component createTwitterAccountCards()
 	{
 		IAccountController controller = userSession.getAccountController();
-		
-		VerticalLayout twitterAccounts = new VerticalLayout();
 
+		VerticalLayout twitterAccounts = new VerticalLayout();
+		
 		ITwitterAccountController activeAccount =
 			controller.getActiveTwitterAccount();
 		for (ITwitterAccountController account : controller
@@ -183,7 +184,7 @@ class AccountInformationPopup implements PopupView.Content
 			{
 				continue;
 			}
-
+			
 			Label card =
 				new Label(TwitterCard.createAsHtml(
 					account.getName(),
@@ -193,14 +194,16 @@ class AccountInformationPopup implements PopupView.Content
 			card.setContentMode(ContentMode.HTML);
 			VerticalLayout cardWrapper = new VerticalLayout(card);
 			cardWrapper.addStyleName(CARD_WRAPPER_STYLENAME);
-			cardWrapper.addLayoutClickListener(event -> {
-				((RobotwitterUI) UI.getCurrent())
-					.activateTwitterAccount(account.getID());
-				close();
-			});
+			cardWrapper
+				.addLayoutClickListener(event -> {
+					if (event.getButton().compareTo(MouseButton.LEFT) != 0) { return; }
+					((RobotwitterUI) UI.getCurrent())
+						.activateTwitterAccount(account.getID());
+					close();
+				});
 			twitterAccounts.addComponent(cardWrapper);
 		}
-		
+
 		// Create manage button
 		Button manage =
 			new Button(
@@ -214,67 +217,67 @@ class AccountInformationPopup implements PopupView.Content
 		manage.setSizeFull();
 		manage.setIcon(FontAwesome.TWITTER);
 		twitterAccounts.addComponent(manage);
-		
+
 		return twitterAccounts;
 	}
-	
-	
+
+
 	/** Initialises the Twitter account connector window. */
 	private void initialiseTwitterConnectorController()
 	{
 		twitterConnectorWindow =
 			new TwitterConnectorWindow(messages, twitterConnectorController);
 	}
-
-
-
+	
+	
+	
 	/** The CSS class name to apply to the minimised presentation. */
 	private static final String MINIMISED_STYLENAME =
 		"AccountInformationPopup-minimised";
-	
+
 	/** The CSS class name to apply to a card wrapper. */
 	private static final String CARD_WRAPPER_STYLENAME =
 		"AccountInformationPopup-card-wrapper";
-	
+
 	/** The CSS class name to apply the "Manage Twitter accounts" button. */
 	private static final String MANAGE_STYLENAME =
 		"AccountInformationPopup-manage";
-	
+
 	/** The CSS class name to apply to the account information section. */
 	private static final String ACCOUNT_INFO_STYLENAME =
 		"AccountInformationPopup-account-info";
-	
+
 	/** The CSS class name to apply to the account information wrapper. */
 	private static final String ACCOUNT_WRAPPER_STYLENAME =
 		"AccountInformationPopup-account-wrapper";
-
+	
 	/** The CSS class name to apply to the account name label. */
 	private static final String ACCOUNT_NAME_STYLENAME =
 		"AccountInformationPopup-account-name";
-	
+
 	/** The CSS class name to apply to the account email label. */
 	private static final String ACCOUNT_EMAIL_STYLENAME =
 		"AccountInformationPopup-account-email";
-	
+
 	/** The CSS class name to apply the "Sign out" button. */
 	private static final String SIGNOUT_STYLENAME =
 		"AccountInformationPopup-signout";
-	
+
 	/** The messages displayed by this component. */
 	protected IMessagesContainer messages;
-
+	
 	/** The current user's browsing session. */
 	private final IUserSession userSession;
-
+	
 	/** The owning component. */
 	private PopupView owner;
-	
+
 	/** The Twitter account connector controller. */
 	private final ITwitterConnectorController twitterConnectorController;
-
+	
 	/** The Twitter account connector window. */
 	private TwitterConnectorWindow twitterConnectorWindow;
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

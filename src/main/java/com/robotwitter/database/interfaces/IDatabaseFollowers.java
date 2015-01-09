@@ -41,7 +41,7 @@ public interface IDatabaseFollowers {
 	 * @return Return the status code. It could be either SUCCESS,
 	 *         INVALID_PARAMS
 	 */
-	public SqlError deleteUserFollowers(long followedId);
+	public SqlError deleteUserFollowersLinks(long followedId);
 
 	/**
 	 * @param followerId

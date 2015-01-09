@@ -172,7 +172,7 @@ public class FollowerIdsBackfiller
 	 */
 	private void clearYesterdaysFollowersDatabase()
 	{
-		followersDB.deleteUserFollowers(userAccount.getUserId());
+		followersDB.deleteUserFollowersLinks(userAccount.getUserId());
 	}
 	
 	

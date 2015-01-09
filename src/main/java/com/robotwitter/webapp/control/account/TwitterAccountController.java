@@ -98,6 +98,41 @@ public class TwitterAccountController implements ITwitterAccountController
 	}
 
 
+	/* (non-Javadoc) @see
+	 * com.robotwitter.webapp.control.account.ITwitterAccountController
+	 * #getFollowersAmountByDisplayedLanguage() */
+	@Override
+	public Map<String, Integer> getFollowersAmountByDisplayedLanguage()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/* (non-Javadoc) @see
+	 * com.robotwitter.webapp.control.account.ITwitterAccountController
+	 * #getFollowersAmountByTheirFollowersAmount(java.util.List) */
+	@Override
+	public List<Integer> getFollowersAmountByTheirFollowersAmount(
+		List<Integer> separators)
+		{
+		// TODO Auto-generated method stub
+		return null;
+		}
+
+
+	/* (non-Javadoc) @see
+	 * com.robotwitter.webapp.control.account.ITwitterAccountController
+	 * #getFollowersAmountByTheirFollowingAmount(java.util.List) */
+	@Override
+	public List<Integer> getFollowersAmountByTheirFollowingAmount(
+		List<Integer> separators)
+		{
+		// TODO Auto-generated method stub
+		return null;
+		}
+
+
 	@Override
 	public final long getID()
 	{
@@ -117,60 +152,60 @@ public class TwitterAccountController implements ITwitterAccountController
 	{
 		return 9000;
 	}
-	
-	
+
+
 	@Override
 	public final int getLastKnownAmountOfGainedFollowers()
 	{
 		return 42;
 	}
-	
-	
+
+
 	@Override
 	public final int getLastKnownAmountOfLostFollowers()
 	{
 		return 69;
 	}
-	
-	
+
+
 	@Override
 	public final List<TwitterFollower> getMostInfluentialFollowers()
 	{
 		List<TwitterFollower> list = new LinkedList<>();
 		return list;
 	}
-	
-	
+
+
 	@Override
 	public final String getName()
 	{
 		return name;
 	}
-	
-	
+
+
 	@Override
 	public final String getScreenname()
 	{
 		return screenname;
 	}
-	
-	
-	
+
+
+
 	/** The Twitter accounts' ID. */
 	public long id;
-	
+
 	/** The Twitter accounts' name. */
 	public String name;
-	
+
 	/** The Twitter accounts' screenname. */
 	public String screenname;
-	
+
 	/** The Twitter accounts' profile image. */
 	public String image;
-	
+
 	/** The Twtitter's account number of followers Database. */
 	public IDatabaseNumFollowers numFollowersDB;
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 

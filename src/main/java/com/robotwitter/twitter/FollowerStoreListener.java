@@ -12,7 +12,6 @@ import java.util.HashMap;
 import com.google.inject.Inject;
 
 import com.robotwitter.database.interfaces.IDatabaseFollowers;
-import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
 import com.robotwitter.database.primitives.DBFollower;
 import twitter4j.DirectMessage;
 import twitter4j.StallWarning;
@@ -34,11 +33,9 @@ public class FollowerStoreListener implements UserStreamListener
 {
 	@Inject
 	public FollowerStoreListener(
-		IDatabaseFollowers followersDB,
-		IDatabaseNumFollowers numFollowersDB)
+		IDatabaseFollowers followersDB)
 	{
 		this.followersDB = followersDB;
-		this.numFollowersDB = numFollowersDB;
 		
 		lastUpdated = null;
 		
@@ -433,8 +430,6 @@ public class FollowerStoreListener implements UserStreamListener
 	private Timestamp lastUpdated;
 	
 	private IDatabaseFollowers followersDB;
-	
-	private IDatabaseNumFollowers numFollowersDB;
 	
 	private Long userID;
 	

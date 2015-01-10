@@ -116,7 +116,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 	{
 		if (followerId < 1 || followedId < 1) { return SqlError.INVALID_PARAMS; }
 		
-		if (!isExists(followerId) || !isExists(followedId)) { return SqlError.DOES_NOT_EXIST; }
+		if (!isExists(followerId, followedId)) { return SqlError.DOES_NOT_EXIST; }
 		
 		try (
 			Connection con = connectionEstablisher.getConnection();
@@ -301,7 +301,7 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 	@Override
 	public ArrayList<Long> getFollowersId(long userId)
 	{
-		final ArrayList<Long> $ = new ArrayList<Long>();
+		final ArrayList<Long> $ = new ArrayList<Long>(); 
 		try (
 			Connection con = connectionEstablisher.getConnection();
 			PreparedStatement preparedStatement =
@@ -325,6 +325,35 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 			e.printStackTrace();
 		}
 		return $;
+	}
+	
+	/* (non-Javadoc) @see com.robotwitter.database.interfaces.IDatabaseFollowers
+	 * #getFollowers(com.robotwitter.database.primitives.DBFollower) */
+	@SuppressWarnings({ "boxing", "nls" })
+	@Override
+	public ArrayList<DBFollower> getFollowers(long userId){
+		final ArrayList<DBFollower> $ = new ArrayList<DBFollower>();
+		try (
+				Connection con = connectionEstablisher.getConnection();
+				PreparedStatement preparedStatement =
+					con.prepareStatement("SELECT * FROM " //$NON-NLS-1$
+						+ followersTable
+						+ " WHERE " //$NON-NLS-1$
+						+ Columns.FOLLOWED_ID.toString().toLowerCase()
+						+ "=?;")) //$NON-NLS-1$)
+			{
+				preparedStatement.setLong(1, userId);
+				resultSet = preparedStatement.executeQuery();
+				while (resultSet.next())
+				{
+					$.add(buildFollowerFromResultSet());
+				}
+				resultSet.close();
+			} catch (final SQLException e)
+			{
+				e.printStackTrace();
+			}
+			return $;
 	}
 	
 	

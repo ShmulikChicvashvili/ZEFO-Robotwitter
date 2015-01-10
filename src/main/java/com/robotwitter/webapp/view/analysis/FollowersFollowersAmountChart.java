@@ -1,32 +1,33 @@
+/**
+ *
+ */
 
 package com.robotwitter.webapp.view.analysis;
 
 
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.robotwitter.webapp.control.account.ITwitterAccountController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
-import com.robotwitter.webapp.util.AbstractPieChartComponent;
+import com.robotwitter.webapp.util.AbstractBarCharComponent;
 
 
 
 
 /**
- * Represents a chart of a Twitter account's followers language distribution.
+ * @author Eyal
  *
- * @author Hagai Akibayov
- * @author Eyal Tolchinsky
  */
-public class FollowersDisplayedLanguageChart extends AbstractPieChartComponent
+public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 {
-
 	/**
 	 * Instantiates a new followers displayed language chart.
 	 *
 	 * @param messages
 	 *            the container of messages to display
 	 */
-	public FollowersDisplayedLanguageChart(IMessagesContainer messages)
+	public FollowersFollowersAmountChart(IMessagesContainer messages)
 	{
 		super(messages);
 		initialiseLayout();
@@ -56,10 +57,22 @@ public class FollowersDisplayedLanguageChart extends AbstractPieChartComponent
 		ITwitterAccountController controller =
 			getUserSession().getAccountController().getActiveTwitterAccount();
 
-		Map<String, Integer> amountPerLanguage =
-			controller.getFollowersAmountByDisplayedLanguage();
+		List<Integer> separators = new ArrayList<>();
+		separators.add(1);
+		separators.add(5);
 
-		set(amountPerLanguage);
+		controller.getFollowersAmountByTheirFollowersAmount(separators);
+
+		List<String> ticks = new ArrayList<>();
+		List<Integer> amounts = new ArrayList<>();
+
+		ticks.add("First");
+		amounts.add(3);
+		ticks.add("Second");
+		amounts.add(0);
+		ticks.add("Third");
+		amounts.add(10);
+
+		set(ticks, amounts);
 	}
-
 }

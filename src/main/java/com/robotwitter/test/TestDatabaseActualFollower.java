@@ -220,6 +220,8 @@ public class TestDatabaseActualFollower {
 		assertTrue(followerNames.size() == 100);
 		followersById = db.getFollowersId(123456789);
 		assertTrue(followersById.size() == 100);
+		ArrayList<DBFollower> followers = db.getFollowers(123456789);
+		assertTrue(followers.size() == 100);
 
 		for (DBFollower follower : screenNameFollowers) {
 			assertFalse(db.isExists(follower.getFollowerId()));
@@ -233,6 +235,8 @@ public class TestDatabaseActualFollower {
 		assertTrue(followerScreenNames.size() == 100);
 		followersById = db.getFollowersId(123456789);
 		assertTrue(followersById.size() == 200);
+		followers = db.getFollowers(123456789);
+		assertTrue(followers.size() == 200);
 
 		for (DBFollower follower : updatedFollowers) {
 			assertEquals(SqlError.SUCCESS, db.update(follower));

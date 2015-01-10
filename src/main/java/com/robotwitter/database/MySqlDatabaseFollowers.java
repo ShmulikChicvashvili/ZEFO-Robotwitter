@@ -338,9 +338,15 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 				PreparedStatement preparedStatement =
 					con.prepareStatement("SELECT * FROM " //$NON-NLS-1$
 						+ followersTable
+						+ " INNER JOIN " //$NON-NLS-1$
+						+ "(SELECT * FROM " //$NON-NLS-1$
+						+ followingTable
 						+ " WHERE " //$NON-NLS-1$
 						+ Columns.FOLLOWED_ID.toString().toLowerCase()
-						+ "=?;")) //$NON-NLS-1$)
+						+ "=?)"
+						+ "USING ("
+						+ Columns.FOLLOWED_ID.toString().toLowerCase()
+						+");")) //$NON-NLS-1$)
 			{
 				preparedStatement.setLong(1, userId);
 				resultSet = preparedStatement.executeQuery();

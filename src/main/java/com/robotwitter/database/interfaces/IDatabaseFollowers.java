@@ -1,6 +1,7 @@
 package com.robotwitter.database.interfaces;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBFollower;
@@ -42,6 +43,7 @@ public interface IDatabaseFollowers {
 	 *         INVALID_PARAMS
 	 */
 	public SqlError deleteUserFollowersLinks(long followedId);
+	
 
 	/**
 	 * @param followerId
@@ -70,6 +72,13 @@ public interface IDatabaseFollowers {
 	 * @return The ids of the followers of this user
 	 */
 	public ArrayList<Long> getFollowersId(long userId);
+	
+	/**
+	 * @param userId
+	 *            The twitter id which his followers we should get
+	 * @return All of the followers associated with this Id in a list
+	 */
+	public List<DBFollower> getAllFollowers(long userId);
 	
 	/**
 	 * @param follower

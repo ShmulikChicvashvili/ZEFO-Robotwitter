@@ -3,6 +3,12 @@
 /*----------------------------------------------------------------------------*/
 
 @mixin AnalysisView { .AnalysisView {
+
+	padding: 10px;
+	
+	min-height: 900px;
+	overflow-y: auto;
+	overflow-x: hidden;
 	
 	/* Header */
 	.AnalysisView-header
@@ -10,6 +16,16 @@
 		text-align: center;
 		font-size: 3.3em;
 		font-weight: bold;
+	}
+
+	/* Panel */
+	.AnalysisView-panel
+	{
+		padding: 15px;
+		background: white;
+		border: 1px solid rgba(black, 0.2);
+		@include robotwitter-border-radius(5px);
+		@include robotwitter-box-shadow(0 0 5px 0 rgba(black, 0.05));
 	}
 
 } }

@@ -140,7 +140,7 @@ public class TwitterAccountController implements ITwitterAccountController
 	{
 		TwitterFollower follower1 =
 			new TwitterFollower(
-				1,
+				2910240756L,
 				"Hagai Akibayov",
 				"DonAkibayov",
 				"Some Description",
@@ -151,7 +151,7 @@ public class TwitterAccountController implements ITwitterAccountController
 				"Hebrew",
 				true,
 				Timestamp.valueOf(LocalDateTime.now()),
-				"http://pbs.twimg.com/profile_images/546786848849158145/wS82lZr8_normal.jpeg");
+				"https://pbs.twimg.com/profile_images/546786848849158145/wS82lZr8.jpeg");
 		TwitterFollower follower2 =
 			new TwitterFollower(
 				1,
@@ -165,18 +165,23 @@ public class TwitterAccountController implements ITwitterAccountController
 				"English",
 				false,
 				Timestamp.valueOf(LocalDateTime.now()),
-				"http://mkalty.org/wp-content/uploads/2014/06/3602836742_6f8c876e28.jpg");
+				"http://www.peanuts.com/wp-content/themes/desktop-theme-peanuts/images/characters/round/charliebrown.png");
 
 		List<TwitterFollower> list = new LinkedList<>();
 		list.add(follower1);
 		list.add(follower1);
 		list.add(follower1);
 		list.add(follower1);
+		list.add(follower2);
 		list.add(follower1);
 		list.add(follower1);
 		list.add(follower1);
 		list.add(follower1);
 		list.add(follower1);
+		list.add(follower2);
+		list.add(follower2);
+		list.add(follower2);
+		list.add(follower2);
 		list.add(follower2);
 		return list;
 	}

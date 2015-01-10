@@ -41,14 +41,14 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings("CD_CIRCULAR_DEPENDENCY")
 public class RobotwitterUI extends UI
 {
-
+	
 	/** Instantiates a new robotwitter UI. */
 	public RobotwitterUI()
 	{
 		isMainMenuShown = false;
 	}
-	
-	
+
+
 	/**
 	 * Activates a Twitter account.
 	 *
@@ -60,15 +60,15 @@ public class RobotwitterUI extends UI
 		mainMenu.activateTwitterAccount(id);
 		userSession.activateTwitterAccount(id);
 	}
-	
-	
+
+
 	/** @return the current user's browsing session. */
 	public final UserSession getUserSession()
 	{
 		return userSession;
 	}
-
-
+	
+	
 	/** Initialises the layout. */
 	private void initialiseLayout()
 	{
@@ -79,53 +79,53 @@ public class RobotwitterUI extends UI
 		mainMenuAndContentContainer.setExpandRatio(content, 1);
 		setContent(mainMenuAndContentContainer);
 	}
-	
-	
+
+
 	/** Initialises the main menu. */
 	private void initialiseMainMenu()
 	{
 		IMenuFactory menuFactory =
 			(IMenuFactory) VaadinServlet
-				.getCurrent()
-				.getServletContext()
-				.getAttribute(Configuration.MENU_FACTORY);
-
+			.getCurrent()
+			.getServletContext()
+			.getAttribute(Configuration.MENU_FACTORY);
+		
 		mainMenu = menuFactory.create(MainMenu.NAME);
 	}
-	
-	
+
+
 	/** Initialises the navigator (Vaadin's object). */
 	private void initialiseNavigator()
 	{
 		navigator = new Navigator(this, content);
-		
+
 		ViewProvider viewFactory =
 			(ViewProvider) VaadinServlet
-				.getCurrent()
-				.getServletContext()
-				.getAttribute(Configuration.VIEW_FACTORY);
-
+			.getCurrent()
+			.getServletContext()
+			.getAttribute(Configuration.VIEW_FACTORY);
+		
 		navigator.addProvider(viewFactory);
 		navigator.addViewChangeListener(new NavigationListener());
 	}
-	
-	
+
+
 	/** Initialises the current user's browsing session. */
 	private void initialiseUserSession()
 	{
 		Injector injector =
 			(Injector) VaadinServlet
-				.getCurrent()
-				.getServletContext()
-				.getAttribute(Configuration.INJECTOR);
-
+			.getCurrent()
+			.getServletContext()
+			.getAttribute(Configuration.INJECTOR);
+		
 		IAccountController controller =
 			injector.getInstance(IAccountController.class);
-
+		
 		userSession = new UserSession(getSession(), controller);
 	}
-	
-	
+
+
 	@Override
 	protected final void init(VaadinRequest request)
 	{
@@ -134,8 +134,8 @@ public class RobotwitterUI extends UI
 		initialiseUserSession();
 		initialiseMainMenu();
 	}
-	
-	
+
+
 	/** Hides the main menu. */
 	final void hideMainMenu()
 	{
@@ -143,8 +143,8 @@ public class RobotwitterUI extends UI
 		mainMenuAndContentContainer.removeComponent(mainMenu);
 		isMainMenuShown = false;
 	}
-
-
+	
+	
 	/** Shows the main menu. */
 	final void showMainMenu()
 	{
@@ -152,31 +152,31 @@ public class RobotwitterUI extends UI
 		mainMenuAndContentContainer.addComponentAsFirst(mainMenu);
 		isMainMenuShown = true;
 	}
-
-
-
+	
+	
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The container of the main-menu and the content. */
 	private VerticalLayout mainMenuAndContentContainer;
-
+	
 	/** The content, replaced by the {@link #navigator} on each view transition. */
 	ComponentContainer content;
-	
+
 	/**
 	 * <code>true</code> if the main menu is shown, <code>false</code> if its
 	 * hidden.
 	 */
 	boolean isMainMenuShown;
-	
+
 	/** The main menu. */
 	AbstractMenu mainMenu;
-	
+
 	/** The navigator that controls view-transition inside the application. */
 	Navigator navigator;
-	
+
 	/** The current user's browsing session. */
 	UserSession userSession;
-	
+
 }

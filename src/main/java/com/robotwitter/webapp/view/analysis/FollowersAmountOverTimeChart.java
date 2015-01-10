@@ -66,10 +66,10 @@ public class FollowersAmountOverTimeChart extends RobotwitterCustomComponent
 	{
 		Axes axes = new Axes();
 		axes.addAxis(new XYaxis()
-			.setRenderer(AxisRenderers.DATE)
-			.setTickOptions(
-				new CanvasAxisTickRenderer().setAngle(-30).setFormatString(
-					"%#d %b, %Y")));
+		.setRenderer(AxisRenderers.DATE)
+		.setTickOptions(
+			new CanvasAxisTickRenderer().setAngle(-30).setFormatString(
+				"%#d %b, %Y")));
 		axes.addAxis(new XYaxis(XYaxes.Y)
 		.setLabel(messages.get("AnalysisView.chart.label.followers"))
 		.setLabelRenderer(LabelRenderers.CANVAS)
@@ -86,9 +86,9 @@ public class FollowersAmountOverTimeChart extends RobotwitterCustomComponent
 		
 		Options options =
 			new Options()
-				.addOption(axes)
-				.addOption(highlighter)
-				.setAnimate(true);
+		.addOption(axes)
+		.addOption(highlighter)
+		.setAnimate(true);
 
 		chart = new DCharts().setOptions(options);
 		updateChart();
@@ -97,6 +97,8 @@ public class FollowersAmountOverTimeChart extends RobotwitterCustomComponent
 		UI.getCurrent().getPage().addBrowserWindowResizeListener(event -> {
 			chart.setSizeFull();
 		});
+		
+		setSizeFull();
 		
 		addStyleName(STYLENAME);
 

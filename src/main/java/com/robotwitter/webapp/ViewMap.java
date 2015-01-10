@@ -54,7 +54,7 @@ public class ViewMap extends HashMap<String, Class<? extends View>>
 	{
 		// default view
 		put("", LoginView.class);
-
+		
 		// other views. Add additional views here
 		put(LoginView.NAME, LoginView.class);
 		put(RegistrationView.NAME, RegistrationView.class);
@@ -62,9 +62,9 @@ public class ViewMap extends HashMap<String, Class<? extends View>>
 		put(DashboardView.NAME, DashboardView.class);
 		put(AnalysisView.NAME, AnalysisView.class);
 	}
-	
-	
-	
+
+
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

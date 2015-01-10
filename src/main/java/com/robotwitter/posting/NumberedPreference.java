@@ -12,6 +12,11 @@ import java.util.ArrayList;
 
 /**
  * @author Shmulik
+ * 
+ * @author Itay
+ * 
+ *         refactored a little and added that tweet generators only add numbers
+ *         if there is more then one tweet to post.
  *
  */
 public class NumberedPreference extends AbstractPreference
@@ -31,6 +36,7 @@ public class NumberedPreference extends AbstractPreference
 		
 		final ArrayList<String> tweets =
 			breakToTweets(tweet, tweetMaxLength - maximumNumberPrefixSize - 1);
+		if (tweets.size() <= 1) { return tweets; }
 		int prefix = 1;
 		for (final String breakedTweet : tweets)
 		{

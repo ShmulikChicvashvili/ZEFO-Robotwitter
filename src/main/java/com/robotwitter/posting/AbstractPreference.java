@@ -8,6 +8,7 @@ package com.robotwitter.posting;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 
 
@@ -52,7 +53,7 @@ public abstract class AbstractPreference
 	 */
 	@SuppressWarnings("nls")
 	protected static ArrayList<String> attachPostfixToEachTweet(
-		ArrayList<String> tweets,
+		List<String> tweets,
 		String postfix)
 	{
 		if (tweets == null || tweets.contains(null) || postfix == null) { return null; }
@@ -70,7 +71,7 @@ public abstract class AbstractPreference
 
 
 	/**
-	 * @param tweets
+	 * @param list
 	 *            The tweet list
 	 * @param prefix
 	 *            The prefix to set
@@ -78,14 +79,14 @@ public abstract class AbstractPreference
 	 */
 	@SuppressWarnings("nls")
 	protected static ArrayList<String> attachPrefixToEachTweet(
-		ArrayList<String> tweets,
+		List<String> list,
 		String prefix)
 	{
-		if (tweets == null || tweets.contains(null) || prefix == null) { return null; }
+		if (list == null || list.contains(null) || prefix == null) { return null; }
 
 		final ArrayList<String> $ = new ArrayList<>();
 
-		for (final String tweet : tweets)
+		for (final String tweet : list)
 		{
 			final String prefixedTweet = prefix + " " + tweet;
 			$.add(prefixedTweet);

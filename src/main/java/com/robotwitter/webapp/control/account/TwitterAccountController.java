@@ -2,8 +2,11 @@
 package com.robotwitter.webapp.control.account;
 
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -97,6 +100,41 @@ public class TwitterAccountController implements ITwitterAccountController
 	}
 	
 	
+	/* (non-Javadoc) @see
+	 * com.robotwitter.webapp.control.account.ITwitterAccountController
+	 * #getFollowersAmountByDisplayedLanguage() */
+	@Override
+	public Map<String, Integer> getFollowersAmountByDisplayedLanguage()
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/* (non-Javadoc) @see
+	 * com.robotwitter.webapp.control.account.ITwitterAccountController
+	 * #getFollowersAmountByTheirFollowersAmount(java.util.List) */
+	@Override
+	public List<Integer> getFollowersAmountByTheirFollowersAmount(
+		List<Integer> separators)
+		{
+		// TODO Auto-generated method stub
+		return null;
+		}
+
+
+	/* (non-Javadoc) @see
+	 * com.robotwitter.webapp.control.account.ITwitterAccountController
+	 * #getFollowersAmountByTheirFollowingAmount(java.util.List) */
+	@Override
+	public List<Integer> getFollowersAmountByTheirFollowingAmount(
+		List<Integer> separators)
+		{
+		// TODO Auto-generated method stub
+		return null;
+		}
+
+
 	@Override
 	public final long getID()
 	{
@@ -112,35 +150,103 @@ public class TwitterAccountController implements ITwitterAccountController
 	
 	
 	@Override
+	public final int getLastKnownAmountOfFollowers()
+	{
+		return 9000;
+	}
+
+
+	@Override
+	public final int getLastKnownAmountOfGainedFollowers()
+	{
+		return 42;
+	}
+
+
+	@Override
+	public final int getLastKnownAmountOfLostFollowers()
+	{
+		return 69;
+	}
+
+
+	@Override
+	public final List<TwitterFollower> getMostInfluentialFollowers()
+	{
+		TwitterFollower follower1 =
+			new TwitterFollower(
+				1,
+				"Hagai Akibayov",
+				"DonAkibayov",
+				"Some Description",
+				100,
+				30,
+				"Israel",
+				5,
+				"Hebrew",
+				true,
+				Timestamp.valueOf(LocalDateTime.now()),
+				"http://pbs.twimg.com/profile_images/546786848849158145/wS82lZr8_normal.jpeg");
+		TwitterFollower follower2 =
+			new TwitterFollower(
+				1,
+				"Eyal Tolchisnky",
+				"DonTasd",
+				"Somasdasdjasde Description",
+				1340,
+				3430,
+				"Haifa",
+				53,
+				"English",
+				false,
+				Timestamp.valueOf(LocalDateTime.now()),
+				"http://mkalty.org/wp-content/uploads/2014/06/3602836742_6f8c876e28.jpg");
+
+		List<TwitterFollower> list = new LinkedList<>();
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower1);
+		list.add(follower2);
+		return list;
+	}
+
+
+	@Override
 	public final String getName()
 	{
 		return name;
 	}
-	
-	
+
+
 	@Override
 	public final String getScreenname()
 	{
 		return screenname;
 	}
-	
-	
-	
+
+
+
 	/** The Twitter accounts' ID. */
 	public long id;
-	
+
 	/** The Twitter accounts' name. */
 	public String name;
-	
+
 	/** The Twitter accounts' screenname. */
 	public String screenname;
-	
+
 	/** The Twitter accounts' profile image. */
 	public String image;
-	
-	/** The Twtitter's account number of followers Database */
+
+	/** The Twtitter's account number of followers Database. */
 	public IDatabaseNumFollowers numFollowersDB;
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 	

@@ -12,17 +12,14 @@ import org.dussan.vaadin.dcharts.base.elements.PointLabels;
 import org.dussan.vaadin.dcharts.base.elements.XYaxis;
 import org.dussan.vaadin.dcharts.data.DataSeries;
 import org.dussan.vaadin.dcharts.data.Ticks;
-import org.dussan.vaadin.dcharts.metadata.SeriesToggles;
 import org.dussan.vaadin.dcharts.metadata.TooltipAxes;
 import org.dussan.vaadin.dcharts.metadata.renderers.AxisRenderers;
-import org.dussan.vaadin.dcharts.metadata.renderers.LegendRenderers;
 import org.dussan.vaadin.dcharts.metadata.renderers.SeriesRenderers;
 import org.dussan.vaadin.dcharts.options.Axes;
 import org.dussan.vaadin.dcharts.options.Highlighter;
 import org.dussan.vaadin.dcharts.options.Legend;
 import org.dussan.vaadin.dcharts.options.Options;
 import org.dussan.vaadin.dcharts.options.SeriesDefaults;
-import org.dussan.vaadin.dcharts.renderers.legend.EnhancedLegendRenderer;
 
 import com.robotwitter.webapp.messages.IMessagesContainer;
 
@@ -31,6 +28,7 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
 
 /**
  * @author Eyal
+ * @author Hagai
  *
  */
 public abstract class AbstractBarCharComponent
@@ -60,7 +58,7 @@ RobotwitterCustomComponent
 		.setHighlighter(highlighter)
 		.setLegend(legend);
 
-		barChart = new DCharts().setOptions(options);
+		barChart = new DCharts();
 
 		setCompositionRoot(barChart);
 	}
@@ -91,13 +89,12 @@ RobotwitterCustomComponent
 	 */
 	private Legend initialiseLegend()
 	{
-		Legend legend =
-			new Legend()
-		.setShow(true)
-		.setRenderer(LegendRenderers.ENHANCED)
-		.setRendererOptions(
-			new EnhancedLegendRenderer().setSeriesToggle(
-				SeriesToggles.SLOW).setSeriesToggleReplot(true));
+		Legend legend = new Legend().setShow(false);
+		// .setShow(true)
+		// .setRenderer(LegendRenderers.ENHANCED)
+		// .setRendererOptions(
+		// new EnhancedLegendRenderer().setSeriesToggle(
+		// SeriesToggles.SLOW).setSeriesToggleReplot(true));
 		return legend;
 	}
 
@@ -120,25 +117,20 @@ RobotwitterCustomComponent
 	/**
 	 * Sets the data for the chart.
 	 *
-	 * @param data
-	 *            the data
+	 * @param ticks the axes ticks
+	 * @param amounts the amounts
 	 */
 	protected final void set(List<String> ticks, List<Integer> amounts)
 	{
-		DataSeries dataSeries = new DataSeries().newSeries();
-		for (Integer amount : amounts)
-		{
-			dataSeries.add(amount);
-		}
 
 		Axes axes = new Axes();
 		axes.addAxis(new XYaxis().setRenderer(AxisRenderers.CATEGORY).setTicks(
-			new Ticks().add("23", "45", "67")));
-
+			new Ticks().add(ticks.toArray())));
 		options.setAxes(axes);
-		barChart.setDataSeries(dataSeries);
 
-		barChart.show();
+		DataSeries dataSeries = new DataSeries();
+		dataSeries.add(amounts.toArray());
+		barChart.setDataSeries(dataSeries);
 	}
 
 
@@ -151,13 +143,24 @@ RobotwitterCustomComponent
 	protected final void set(String label)
 	{
 		options.setTitle(label);
-		barChart.setCaption(label);
+	}
+
+
+	/**
+	 * Updates the options and shows the bar chart.
+	 */
+	protected final void show()
+	{
+		barChart.setOptions(options);
+		barChart.show();
 	}
 
 
 
+	/** The bar chart options. */
 	private Options options;
 
+	/** The bar chart. */
 	private DCharts barChart;
 
 }

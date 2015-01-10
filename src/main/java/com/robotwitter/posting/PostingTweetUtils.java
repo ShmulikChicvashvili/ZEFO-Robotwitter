@@ -41,28 +41,38 @@ public class PostingTweetUtils
 
 		ArrayList<String> tmp = new ArrayList<>();
 		final String[] tweetSplitedByWhiteSpaces = tweet.split(" ");
-		for (String s : tweetSplitedByWhiteSpaces)
+		for (final String s : tweetSplitedByWhiteSpaces)
 		{
 			if (s.length() > tweetMaxLength)
 			{
-				s = s.substring(0, tweetMaxLength - 1);
+				if (!tmp.isEmpty())
+				{
+					$.add(join(tmp, " "));
+				}
+				$.add(s.substring(0, tweetMaxLength));
+				tmp = new ArrayList<>();
+				continue;
 			}
-			if ((join(tmp, " ") + s).length() <= tweetMaxLength)
+			tmp.add(s);
+			if (join(tmp, " ").length() <= tweetMaxLength)
+			{ /* We already added s */} else
 			{
-				tmp.add(s);
-			} else
-			{
+				tmp.remove(s);
 				$.add(join(tmp, " "));
 				tmp = new ArrayList<>();
+				tmp.add(s);
 			}
 		}
-		
-		$.add(join(tmp, " "));
+
+		if (!tmp.isEmpty())
+		{
+			$.add(join(tmp, " "));
+		}
 
 		return $;
 	}
-	
-	
+
+
 	/**
 	 * @param longUrl
 	 *            The url which want to compress
@@ -98,11 +108,18 @@ public class PostingTweetUtils
 		{
 			return null;
 		}
-		
+
 		return $;
 	}
-	
-	
+
+
+	/**
+	 * @param s
+	 *            The collection contains the strings
+	 * @param delimiter
+	 *            The string to put between to string
+	 * @return The joined string
+	 */
 	private static String join(Collection<?> s, String delimiter)
 	{
 		final StringBuilder builder = new StringBuilder();

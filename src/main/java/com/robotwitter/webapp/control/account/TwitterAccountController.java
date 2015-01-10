@@ -153,8 +153,34 @@ public class TwitterAccountController implements ITwitterAccountController {
 	@Override
 	public List<Integer> getFollowersAmountByTheirFollowingAmount(
 			List<Integer> separators) {
-		// TODO Auto-generated method stub
-		return null;
+		boolean start = true;
+		Integer prev = separators.get(0);
+		for (final Integer sep : separators) {
+			if (start) {
+				start = false;
+			} else {
+				if (prev >= sep)
+					throw new RuntimeException(
+							"The list isn't strictly monotonically increasing");
+			}
+		}
+		prev = Integer.MIN_VALUE;
+		Integer count = 0;
+		Integer temp;
+		separators.add(Integer.MAX_VALUE);
+		List<Integer> followersAmount = new LinkedList<Integer>();
+		for (final Integer next : separators) {
+			for (final DBFollower follower : allfollowers) {
+				temp = (Integer) follower.getFollowing();
+				if (prev <= temp && temp < next) {
+					count++;
+				}
+			}
+			prev = next;
+			followersAmount.add(count);
+			count=0;
+		}
+		return followersAmount;
 	}
 
 	@Override

@@ -52,6 +52,7 @@ public class TwitterAccountController implements ITwitterAccountController {
 		this.numFollowersDB = numFollowersDB;
 		this.heavyhitterDB = heavyhitterDB;
 		this.followersDB = followersDB;
+		this.allfollowers.add(followersDB.get(this.id));//FIXME 
 	}
 
 	@Override
@@ -97,7 +98,12 @@ public class TwitterAccountController implements ITwitterAccountController {
 	 */
 	@Override
 	public Map<String, Integer> getFollowersAmountByDisplayedLanguage() {
-		// TODO Auto-generated method stub
+		Map<String, Integer> m = new HashMap<String, Integer>();
+		for (final DBFollower follower : allfollowers) {
+			String lang=follower.getLanguage();
+				Integer langCounter = m.get(lang);
+				m.put(lang, (langCounter == null) ? 1 : langCounter + 1);
+			}
 		return null;
 	}
 

@@ -14,6 +14,7 @@ import java.util.Map;
  * Controller of a single Twitter account of a user.
  *
  * @author Hagai Akibayov
+ * @author Eyal Tolchinsky
  */
 public interface ITwitterAccountController extends Serializable
 {
@@ -54,54 +55,81 @@ public interface ITwitterAccountController extends Serializable
 
 
 	/**
-	 * Gets a list with the amount of followers who have an amount of followers
-	 * in the corresponding range.
+	 * Gets a list of amounts of followers with a number of followers in the
+	 * corresponding ranges. the number of ranges is determined by
+	 * 'subdivisions' parameter.
+	 * <p>
+	 * If the amount of followers is between min and max, each range (exept the
+	 * end ones) should have approximately (max-min)/subdivisions numbers. <br>
+	 * if this number is i, then the ranges should be about:<br>
+	 * [-inf,min+i),[min+i,min+2i),...,[min+(subdivisions-1)*i,inf]<br>
+	 * the function will not return an impossible range (e.g [3,3)), and the
+	 * ranges will be disjoint and cover all the numbers
 	 * <p>
 	 * For example: given we have 3 followers: <br>
 	 * - one who has 5 followers<br>
 	 * - one who has 9 followers <br>
-	 * - one who has 15 followers.
+	 * - one who has 15 followers.<br>
+	 * Minimum and maximum amounts are 5 and 15.
 	 * <p>
-	 * - the list of separators [] will return [3] <br>
-	 * - the list of separators [5] will return [0,3] (right end is exclusive) <br>
-	 * - the list of separators [3,9,20] will return [0,2,1,0]
+	 * subdivisions 1 will return [3],[] <br>
+	 * subdivisions 2 will return subdivisions 2 will return [2,1],[10]<br>
+	 * subdivisions 3 will return [1,1,1],[8,11]
 	 *
+	 * @param subdivisions
+	 *            - the number of subdivisions
+	 * @param amounts
+	 *            - a list that will be filled with the amounts for each
+	 *            corresponding range
 	 * @param separators
-	 *            a sorted list of separators for the ranges. each two
-	 *            consecutive (except the end points) determine a range from the
-	 *            left (inclusive) to the right (exclusive).
-	 * @return a list with the followers amount whose number of accounts they
-	 *         are following is inside the given range. the ranges are
-	 *         determined by the list of separators. the list size should be one
-	 *         more the the separators list size.
+	 *            - a list that will be filled with the separators of the
+	 *            ranges. each consecutive pair determines a range from the left
+	 *            (inclusive) to the right (exclusive). for example for the
+	 *            ranges [-inf,5),[5,7),[7,inf) it will hold [5,7].
 	 */
-	List<Integer> getFollowersAmountByTheirFollowersAmount(
+	void getFollowersAmountByTheirFollowersAmount(
+		int subdivisions,
+		List<Integer> amounts,
 		List<Integer> separators);
 
 
 	/**
-	 * Gets a list with the amount of followers who have an amount of accounts
-	 * their following after in the corresponding range.
+	 * Gets a list of amounts of followers with a number of accounts they're
+	 * following in the corresponding ranges. the number of ranges is determined
+	 * by 'subdivisions' parameter.
+	 * <p>
+	 * If the amount of accounts they're following is between min and max, each
+	 * range (exept the end ones) should have approximately
+	 * (max-min)/subdivisions numbers. <br>
+	 * if this number is i, then the ranges should be about:<br>
+	 * [-inf,min+i),[min+i,min+2i),...,[min+(subdivisions-1)*i,inf]<br>
+	 * the function will not return an impossible range (e.g [3,3)), and the
+	 * ranges will be disjoint and cover all the numbers
 	 * <p>
 	 * For example: given we have 3 followers: <br>
-	 * - one who has follows 5 accounts<br>
-	 * - one who has follows 9 accounts <br>
-	 * - one who has follows 15 accounts.
+	 * - one who follows 5 accounts <br>
+	 * - one who follows 9 accounts <br>
+	 * - one who follows 15 accounts. <br>
+	 * Minimum and maximum amounts are 5 and 15.
 	 * <p>
-	 * - the list of separators [] will return [3] <br>
-	 * - the list of separators [5] will return [0,3] (right end is exclusive) <br>
-	 * - the list of separators [3,9,20] will return [0,2,1,0]
+	 * subdivisions 1 will return [3],[] <br>
+	 * subdivisions 2 will return subdivisions 2 will return [2,1],[10]<br>
+	 * subdivisions 3 will return [1,1,1],[8,11]
 	 *
+	 * @param subdivisions
+	 *            - the number of subdivisions
+	 * @param amounts
+	 *            - a list that will be filled with the amounts for each
+	 *            corresponding range
 	 * @param separators
-	 *            a sorted list of separators for the ranges. each two
-	 *            consecutive (except the end points) determine a range from the
-	 *            left (inclusive) to the right (exclusive).
-	 * @return a list with the followers amount who have a number of followers
-	 *         in the given range. the ranges are determined by the list of
-	 *         separators. the list size should be one more the the separators
-	 *         list size.
+	 *            - a list that will be filled with the separators of the
+	 *            ranges. each consecutive pair determines a range from the left
+	 *            (inclusive) to the right (exclusive). for example for the
+	 *            ranges [-inf,5),[5,7),[7,inf) it will hold [5,7].
 	 */
-	List<Integer> getFollowersAmountByTheirFollowingAmount(
+	void getFollowersAmountByTheirFollowingAmount(
+		int subdivisions,
+		List<Integer> amounts,
 		List<Integer> separators);
 
 

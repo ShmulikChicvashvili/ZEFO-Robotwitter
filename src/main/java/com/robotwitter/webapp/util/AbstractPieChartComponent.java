@@ -36,10 +36,10 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
  * @ahtuor Hagai
  */
 public abstract class AbstractPieChartComponent
-extends
-RobotwitterCustomComponent
+	extends
+		RobotwitterCustomComponent
 {
-
+	
 	/**
 	 * Instantiates a new abstract pie chart component.
 	 *
@@ -49,25 +49,25 @@ RobotwitterCustomComponent
 	public AbstractPieChartComponent(IMessagesContainer messages)
 	{
 		super(messages);
-
+		
 		SeriesDefaults seriesDefaults = initialiseSeriesDefaults();
-
+		
 		Legend legend = initialiseLegend();
-
+		
 		Highlighter highlighter = initialiseHighlighter();
-
+		
 		options =
 			new Options()
-		.setSeriesDefaults(seriesDefaults)
-		.setHighlighter(highlighter)
-		.setLegend(legend);
-
+				.setSeriesDefaults(seriesDefaults)
+				.setHighlighter(highlighter)
+				.setLegend(legend);
+		
 		pieChart = new DCharts().setOptions(options);
-
+		
 		setCompositionRoot(pieChart);
 	}
-
-
+	
+	
 	/**
 	 * Initialise highlighter.
 	 *
@@ -77,14 +77,14 @@ RobotwitterCustomComponent
 	{
 		Highlighter highlighter =
 			new Highlighter()
-		.setShow(true)
-		.setShowTooltip(true)
-		.setTooltipAlwaysVisible(true)
-		.setKeepTooltipInsideChart(true);
+				.setShow(true)
+				.setShowTooltip(true)
+				.setTooltipAlwaysVisible(true)
+				.setKeepTooltipInsideChart(true);
 		return highlighter;
 	}
-
-
+	
+	
 	/**
 	 * Initialise legend.
 	 *
@@ -94,15 +94,15 @@ RobotwitterCustomComponent
 	{
 		Legend legend =
 			new Legend()
-		.setShow(true)
-		.setRenderer(LegendRenderers.ENHANCED)
-		.setRendererOptions(
-			new EnhancedLegendRenderer().setSeriesToggle(
-				SeriesToggles.SLOW).setSeriesToggleReplot(true));
+				.setShow(true)
+				.setRenderer(LegendRenderers.ENHANCED)
+				.setRendererOptions(
+					new EnhancedLegendRenderer().setSeriesToggle(
+						SeriesToggles.SLOW).setSeriesToggleReplot(true));
 		return legend;
 	}
-
-
+	
+	
 	/**
 	 * Initialise series defaults.
 	 *
@@ -112,30 +112,30 @@ RobotwitterCustomComponent
 	{
 		SeriesDefaults seriesDefaults =
 			new SeriesDefaults()
-		.setRenderer(SeriesRenderers.PIE)
-		.setRendererOptions(new PieRenderer().setShowDataLabels(true));
+				.setRenderer(SeriesRenderers.PIE)
+				.setRendererOptions(new PieRenderer().setShowDataLabels(true));
 		return seriesDefaults;
 	}
-
-
+	
+	
 	/**
 	 * Sets the data for the chart.
 	 *
 	 * @param data
 	 *            the data
 	 */
-	protected final void set(Map<String, Long> data)
+	protected final void set(Map<String, Integer> data)
 	{
 		DataSeries dataSeries = new DataSeries();
-		for (Entry<String, Long> entry : data.entrySet())
+		for (Entry<String, Integer> entry : data.entrySet())
 		{
-			dataSeries.add(entry.getKey(), entry.getValue());
+			dataSeries.newSeries().add(entry.getKey(), entry.getValue());
 		}
-
 		pieChart.setDataSeries(dataSeries);
+		pieChart.show();
 	}
-
-
+	
+	
 	/**
 	 * Sets the label for the chart.
 	 *
@@ -146,10 +146,10 @@ RobotwitterCustomComponent
 	{
 		pieChart.setCaption(label);
 	}
-
-
-
+	
+	
+	
 	private Options options;
-
+	
 	private DCharts pieChart;
 }

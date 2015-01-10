@@ -44,14 +44,17 @@ public class FollowersDisplayedLanguageChart extends AbstractPieChartComponent
 	}
 	
 	
+	/**
+	 * Initialise layout.
+	 */
 	private void initialiseLayout()
 	{
-		set("Label");
+		set("!FollowersDisplayedLanguageChart!");
 		updateChart();
 	}
 	
 	
-	private final void updateChart()
+	private void updateChart()
 	{
 		ITwitterAccountController controller =
 			getUserSession().getAccountController().getActiveTwitterAccount();

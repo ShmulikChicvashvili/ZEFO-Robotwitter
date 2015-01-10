@@ -127,8 +127,12 @@ RobotwitterCustomComponent
 	{
 
 		Axes axes = new Axes();
-		axes.addAxis(new XYaxis().setRenderer(AxisRenderers.CATEGORY).setTicks(
-			new Ticks().add(ticks.toArray())));
+		XYaxis axis = new XYaxis().setRenderer(AxisRenderers.CATEGORY);
+		if (ticks.size() > 0)
+		{
+			axis.setTicks(new Ticks().add(ticks.toArray()));
+		}
+		axes.addAxis(axis);
 		options.setAxes(axes);
 
 		DataSeries dataSeries = new DataSeries();
@@ -164,14 +168,19 @@ RobotwitterCustomComponent
 	{
 		assert amounts.size() == separators.size() + 1;
 		List<String> ticks = new ArrayList<>();
-		ticks.add("< " + separators.get(0));
-		for (int i = 0; i < separators.size() - 1; i++)
+		if (separators.size() == 0)
 		{
-			ticks.add(separators.get(i) + "-" + separators.get(i + 1));
+			// ticks.add("All");
+		} else
+		{
+			ticks.add("< " + separators.get(0));
+			for (int i = 0; i < separators.size() - 1; i++)
+			{
+				ticks.add(separators.get(i) + "-" + separators.get(i + 1));
+			}
+			ticks.add("&ge; " + separators.get(separators.size() - 1));
+			assert ticks.size() == amounts.size();
 		}
-		ticks.add(">= " + separators.get(separators.size() - 1));
-
-		assert ticks.size() == amounts.size();
 
 		set(ticks, amounts);
 	}

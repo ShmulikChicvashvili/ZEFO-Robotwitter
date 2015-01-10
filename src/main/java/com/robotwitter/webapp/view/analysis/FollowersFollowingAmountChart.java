@@ -16,27 +16,31 @@ import com.robotwitter.webapp.util.AbstractBarCharComponent;
 
 
 /**
- * Represents a chart showing followers amount by their number of followers.
+ * Represents a chart showing followers amount by the number of accounts they are
+ * following.
  *
  * @author Eyal
  * @author Hagai
+ *
  */
-public class FollowersFollowersAmountChart extends AbstractBarCharComponent
+public class FollowersFollowingAmountChart extends AbstractBarCharComponent
 {
+	
 	/**
-	 * Instantiates a new followers displayed language chart.
+	 * Instantiates a new followers following amount chart.
 	 *
 	 * @param messages
-	 *            the container of messages to display
+	 *            the messages
 	 */
-	public FollowersFollowersAmountChart(IMessagesContainer messages)
+	public FollowersFollowingAmountChart(IMessagesContainer messages)
 	{
+		
 		super(messages);
 		initialiseLayout();
 		getUserSession().observeActiveTwitterAccount(this);
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.util.RobotwitterCustomComponent#
 	 * activateTwitterAccount(long) */
@@ -45,18 +49,18 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 	{
 		updateChart();
 	}
-
-
+	
+	
 	/**
 	 * Initialise layout.
 	 */
 	private void initialiseLayout()
 	{
-		set("!FollowersFollowersAmountChart!");
+		set("!FollowersFollowingAmountChart!");
 		updateChart();
 	}
-
-
+	
+	
 	/**
 	 * Update chart.
 	 */
@@ -64,14 +68,14 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 	{
 		ITwitterAccountController controller =
 			getUserSession().getAccountController().getActiveTwitterAccount();
-
+		
 		List<Integer> separators = new ArrayList<>();
 		List<Integer> amounts = new ArrayList<>();
-		controller.getFollowersAmountByTheirFollowingAmount(
+		controller.getFollowersAmountByTheirFollowersAmount(
 			5,
 			amounts,
 			separators);
-
+		
 		setBySeperators(separators, amounts);
 		show();
 	}

@@ -7,9 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.google.inject.Inject;
-
 import com.robotwitter.database.interfaces.ConnectionEstablisher;
 import com.robotwitter.database.interfaces.IDatabaseFollowers;
 import com.robotwitter.database.interfaces.returnValues.SqlError;
@@ -672,4 +672,10 @@ public class MySqlDatabaseFollowers extends AbstractMySqlDatabase
 	 * The table name.
 	 */
 	private final String followersTable = schema + "." + "`followers`"; //$NON-NLS-1$ //$NON-NLS-2$
+
+	@Override
+	public List<DBFollower> getAllFollowers(long userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

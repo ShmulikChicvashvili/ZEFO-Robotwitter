@@ -18,7 +18,7 @@ public class NumberedPreference extends AbstractPreference
 	implements
 		Preference
 {
-
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.posting.Preference#generateTweet(java.lang.String) */
 	@SuppressWarnings("nls")
@@ -34,7 +34,9 @@ public class NumberedPreference extends AbstractPreference
 		int prefix = 1;
 		for (final String breakedTweet : tweets)
 		{
-			$.add(new Integer(prefix).toString() + " " + breakedTweet);
+			$.add(generateNumberedPrefix(prefix, tweets.size())
+				+ " "
+				+ breakedTweet);
 			prefix++;
 		}
 		
@@ -42,9 +44,15 @@ public class NumberedPreference extends AbstractPreference
 	}
 	
 	
+	private String generateNumberedPrefix(int current, int max)
+	{
+		return "(" + current + "/" + max + ")";
+	}
+	
+	
 	
 	/**
 	 * We allow maximum of 9999 tweets, that means that the prefix is of size 4
 	 */
-	private final int maximumNumberPrefixSize = 4;
+	private final int maximumNumberPrefixSize = "(10/10)".length();
 }

@@ -5,6 +5,7 @@
 package com.robotwitter.webapp.util;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.dussan.vaadin.dcharts.DCharts;
@@ -117,8 +118,10 @@ RobotwitterCustomComponent
 	/**
 	 * Sets the data for the chart.
 	 *
-	 * @param ticks the axes ticks
-	 * @param amounts the amounts
+	 * @param ticks
+	 *            the axes ticks
+	 * @param amounts
+	 *            the amounts
 	 */
 	protected final void set(List<String> ticks, List<Integer> amounts)
 	{
@@ -143,6 +146,34 @@ RobotwitterCustomComponent
 	protected final void set(String label)
 	{
 		options.setTitle(label);
+	}
+
+
+	/**
+	 * Sets the data according to the amounts list, and the ticks according to
+	 * the separators.
+	 *
+	 * @param separators
+	 *            the separators
+	 * @param amounts
+	 *            the amounts
+	 */
+	protected final void setBySeperators(
+		List<Integer> separators,
+		List<Integer> amounts)
+	{
+		assert amounts.size() == separators.size() + 1;
+		List<String> ticks = new ArrayList<>();
+		ticks.add("< " + separators.get(0));
+		for (int i = 0; i < separators.size() - 1; i++)
+		{
+			ticks.add(separators.get(i) + "-" + separators.get(i + 1));
+		}
+		ticks.add(">= " + separators.get(separators.size() - 1));
+
+		assert ticks.size() == amounts.size();
+
+		set(ticks, amounts);
 	}
 
 

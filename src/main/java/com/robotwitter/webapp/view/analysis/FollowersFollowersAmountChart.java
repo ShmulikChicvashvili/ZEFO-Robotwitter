@@ -16,8 +16,10 @@ import com.robotwitter.webapp.util.AbstractBarCharComponent;
 
 
 /**
- * @author Eyal
+ * The Class FollowersFollowersAmountChart.
  *
+ * @author Eyal
+ * @author Hagai
  */
 public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 {
@@ -45,33 +47,32 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 	}
 
 
+	/**
+	 * Initialise layout.
+	 */
 	private void initialiseLayout()
 	{
-		set("Label");
+		set("!FollowersAmountChart!");
 		updateChart();
 	}
 
 
+	/**
+	 * Update chart.
+	 */
 	private final void updateChart()
 	{
 		ITwitterAccountController controller =
 			getUserSession().getAccountController().getActiveTwitterAccount();
 
 		List<Integer> separators = new ArrayList<>();
-		separators.add(1);
-		separators.add(5);
-
-		List<String> ticks = new ArrayList<>();
 		List<Integer> amounts = new ArrayList<>();
+		controller.getFollowersAmountByTheirFollowersAmount(
+			5,
+			amounts,
+			separators);
 
-		ticks.add("First");
-		amounts.add(3);
-		ticks.add("Second");
-		amounts.add(0);
-		ticks.add("Third");
-		amounts.add(10);
-
-		set(ticks, amounts);
+		setBySeperators(separators, amounts);
 		show();
 	}
 }

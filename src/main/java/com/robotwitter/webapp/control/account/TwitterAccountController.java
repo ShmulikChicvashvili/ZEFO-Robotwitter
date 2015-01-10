@@ -23,7 +23,7 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
  */
 public class TwitterAccountController implements ITwitterAccountController
 {
-	
+
 	/**
 	 * Instantiates a new twitter account controller.
 	 *
@@ -51,12 +51,12 @@ public class TwitterAccountController implements ITwitterAccountController
 		this.image = image;
 		this.numFollowersDB = numFollowersDB;
 	}
-	
-	
+
+
 	@Override
 	public final Map<Date, Integer> getAmountOfFollowers(Date from, Date to)
 	{
-		
+
 		final Map<Date, Integer> followersBetween = new HashMap<>();
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
 		if (dbfollowers == null) { return followersBetween; }
@@ -96,24 +96,71 @@ public class TwitterAccountController implements ITwitterAccountController
 			}
 		}
 		return followersBetween;
-		
+
 	}
-	
-	
+
+
+	/* (non-Javadoc) @see
+	 * com.robotwitter.webapp.control.account.ITwitterAccountController
+	 * #getFollowersAmountByDisplayedLanguage() */
+	@Override
+	public Map<String, Integer> getFollowersAmountByDisplayedLanguage()
+	{
+		// TODO Auto-generated method stub
+		Map<String, Integer> map = new HashMap<>();
+		map.put("Hebrew", 3);
+		map.put("English", 10);
+		map.put("Java", 6);
+		map.put("Vaadin", 2);
+
+		return map;
+	}
+
+
+	/* (non-Javadoc) @see
+	 * com.robotwitter.webapp.control.account.ITwitterAccountController
+	 * #getFollowersAmountByTheirFollowersAmount(int, java.util.List,
+	 * java.util.List) */
+	@Override
+	public void getFollowersAmountByTheirFollowersAmount(
+		int subdivisions,
+		List<Integer> amounts,
+		List<Integer> separators)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+
+	/* (non-Javadoc) @see
+	 * com.robotwitter.webapp.control.account.ITwitterAccountController
+	 * #getFollowersAmountByTheirFollowingAmount(int, java.util.List,
+	 * java.util.List) */
+	@Override
+	public void getFollowersAmountByTheirFollowingAmount(
+		int subdivisions,
+		List<Integer> amounts,
+		List<Integer> separators)
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+
 	@Override
 	public final long getID()
 	{
 		return id;
 	}
-	
-	
+
+
 	@Override
 	public final String getImage()
 	{
 		return image;
 	}
-	
-	
+
+
 	@Override
 	public final int getLastKnownAmountOfFollowers()
 	{
@@ -219,5 +266,5 @@ public class TwitterAccountController implements ITwitterAccountController
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 }

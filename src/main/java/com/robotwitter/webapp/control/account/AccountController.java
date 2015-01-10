@@ -14,7 +14,8 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 
 import com.google.inject.Inject;
-
+import com.robotwitter.database.interfaces.IDatabaseFollowers;
+import com.robotwitter.database.interfaces.IDatabaseHeavyHitters;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
 import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
@@ -34,6 +35,8 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class AccountController implements IAccountController
 {
 	
+
+
 	/**
 	 * Instantiates a new account controller stub.
 	 *
@@ -50,11 +53,15 @@ public class AccountController implements IAccountController
 		IDatabaseUsers usersDB,
 		IDatabaseTwitterAccounts twitterAccountsDB,
 		IDatabaseNumFollowers numFollowersDB,
+		IDatabaseHeavyHitters heavyhitterDB,
+		IDatabaseFollowers followersDB,
 		TwitterAppConfiguration conf)
 	{
 		this.usersDB = usersDB;
 		this.twitterAccountsDB = twitterAccountsDB;
 		this.numFollowersDB = numFollowersDB;
+		this.heavyhitterDB=heavyhitterDB;
+		this.followersDB=followersDB;
 		appConnector =
 			new TwitterFactory(conf.getAppConfiguration()).getInstance();
 		email = null;
@@ -171,7 +178,9 @@ public class AccountController implements IAccountController
 					user.getName(),
 					user.getScreenName(),
 					user.getProfileImageURL(),
-					numFollowersDB);
+					numFollowersDB,
+					heavyhitterDB,
+					followersDB);
 			twitterAccounts.put(currAccount.id, currAccount);
 		}
 		
@@ -204,6 +213,14 @@ public class AccountController implements IAccountController
 	/** The currently active Twitter account. */
 	private ITwitterAccountController activeTwitterAccount;
 	
+	/** The database of heavy hitters */
+	@SuppressFBWarnings("SE_BAD_FIELD")
+	private IDatabaseHeavyHitters heavyhitterDB;
+
+	/** The database of followers */
+	@SuppressFBWarnings("SE_BAD_FIELD")
+	private IDatabaseFollowers followersDB;
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

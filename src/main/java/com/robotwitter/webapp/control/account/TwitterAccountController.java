@@ -52,7 +52,7 @@ public class TwitterAccountController implements ITwitterAccountController {
 		this.numFollowersDB = numFollowersDB;
 		this.heavyhitterDB = heavyhitterDB;
 		this.followersDB = followersDB;
-		this.allfollowers.add(followersDB.get(this.id));//FIXME 
+		this.allfollowers = followersDB.getAllFollowers(this.id);
 	}
 
 	@Override
@@ -100,10 +100,10 @@ public class TwitterAccountController implements ITwitterAccountController {
 	public Map<String, Integer> getFollowersAmountByDisplayedLanguage() {
 		Map<String, Integer> m = new HashMap<String, Integer>();
 		for (final DBFollower follower : allfollowers) {
-			String lang=follower.getLanguage();
-				Integer langCounter = m.get(lang);
-				m.put(lang, (langCounter == null) ? 1 : langCounter + 1);
-			}
+			String lang = follower.getLanguage();
+			Integer langCounter = m.get(lang);
+			m.put(lang, (langCounter == null) ? 1 : langCounter + 1);
+		}
 		return null;
 	}
 
@@ -115,8 +115,34 @@ public class TwitterAccountController implements ITwitterAccountController {
 	@Override
 	public List<Integer> getFollowersAmountByTheirFollowersAmount(
 			List<Integer> separators) {
-		// TODO Auto-generated method stub
-		return null;
+		boolean start = true;
+		Integer prev = separators.get(0);
+		for (final Integer sep : separators) {
+			if (start) {
+				start = false;
+			} else {
+				if (prev >= sep)
+					throw new RuntimeException(
+							"The list isn't strictly monotonically increasing");
+			}
+		}
+		prev = Integer.MIN_VALUE;
+		Integer count = 0;
+		Integer temp;
+		separators.add(Integer.MAX_VALUE);
+		List<Integer> followersAmount = new LinkedList<Integer>();
+		for (final Integer next : separators) {
+			for (final DBFollower follower : allfollowers) {
+				temp = (Integer) follower.getFollowers();
+				if (prev <= temp && temp < next) {
+					count++;
+				}
+			}
+			prev = next;
+			followersAmount.add(count);
+			count=0;
+		}
+		return followersAmount;
 	}
 
 	/*

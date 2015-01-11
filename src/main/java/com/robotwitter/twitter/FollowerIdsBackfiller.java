@@ -35,7 +35,7 @@ import com.robotwitter.database.primitives.DBTwitterAccount;
  *         meaning that once per day, it will wake up, and retrieve the
  *         followers id's of the user, and update the database accordingly.
  */
-public class FollowerIdsBackfiller
+public class FollowerIdsBackfiller implements IUserBackfiller
 {
 	/**
 	 * @param followersDB
@@ -63,6 +63,8 @@ public class FollowerIdsBackfiller
 	}
 	
 	
+	/* (non-Javadoc) @see com.robotwitter.twitter.UserBackfiller#setUser(java.lang.Long) */
+	@Override
 	public void setUser(Long userID)
 	{
 		userAccount = accountsDB.get(userID);
@@ -91,6 +93,8 @@ public class FollowerIdsBackfiller
 	}
 	
 	
+	/* (non-Javadoc) @see com.robotwitter.twitter.UserBackfiller#start() */
+	@Override
 	public void start()
 	{
 		workTimer = new Timer(true);
@@ -107,6 +111,8 @@ public class FollowerIdsBackfiller
 	}
 	
 	
+	/* (non-Javadoc) @see com.robotwitter.twitter.UserBackfiller#stop() */
+	@Override
 	public void stop()
 	{
 		workTimer.cancel();

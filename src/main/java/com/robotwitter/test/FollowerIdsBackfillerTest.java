@@ -15,6 +15,7 @@ import com.google.inject.Injector;
 import com.robotwitter.database.MySqlDBModule;
 import com.robotwitter.statistics.UserListenerModule;
 import com.robotwitter.twitter.FollowerIdsBackfiller;
+import com.robotwitter.twitter.IUserBackfiller;
 import com.robotwitter.twitter.UserTrackerModule;
 
 
@@ -71,7 +72,7 @@ public class FollowerIdsBackfillerTest
 	
 	
 	
-	private FollowerIdsBackfiller backfiller;
+	private IUserBackfiller backfiller;
 	
 	private Long trackedUser;
 	

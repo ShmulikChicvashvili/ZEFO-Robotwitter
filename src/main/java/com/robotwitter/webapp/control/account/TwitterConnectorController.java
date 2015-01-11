@@ -6,12 +6,21 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.Injector;
 import com.google.inject.name.Named;
 
+import com.vaadin.server.VaadinServlet;
+
 import com.robotwitter.management.ITwitterTracker;
+import com.robotwitter.twitter.FollowerIdsBackfiller;
+import com.robotwitter.twitter.FollowerStoreListener;
+import com.robotwitter.twitter.HeavyHittersListener;
 import com.robotwitter.twitter.ITwitterAttacher;
+import com.robotwitter.twitter.IUserTracker;
 import com.robotwitter.twitter.IllegalPinException;
 import com.robotwitter.twitter.TwitterAccount;
+import com.robotwitter.twitter.UserTracker;
+import com.robotwitter.webapp.Configuration;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -33,7 +42,8 @@ public class TwitterConnectorController implements ITwitterConnectorController
 	 *            the tracker that gets information from twitter
 	 * @param attacher
 	 *            the attacher
-	 * @param factory the factory that creates new Twitter instances
+	 * @param factory
+	 *            the factory that creates new Twitter instances
 	 */
 	@Inject
 	public TwitterConnectorController(
@@ -75,7 +85,7 @@ public class TwitterConnectorController implements ITwitterConnectorController
 		{
 			id = twitterAccount.getTwitter().getId();
 			screenname = twitterAccount.getTwitter().getScreenName();
-			// TODO: add the tracking of the user here! 
+			track();
 		} catch (IllegalStateException | TwitterException e)
 		{
 			e.printStackTrace();
@@ -105,6 +115,32 @@ public class TwitterConnectorController implements ITwitterConnectorController
 	public final String getScreenname()
 	{
 		return screenname;
+	}
+	
+	
+	private void track()
+	{
+		System.out.println("trying to track " + id);
+		Injector injector =
+			(Injector) VaadinServlet
+				.getCurrent()
+				.getServletContext()
+				.getAttribute(Configuration.INJECTOR);
+		IUserTracker userTracker = injector.getInstance(IUserTracker.class);
+		((UserTracker) tracker).setUser(id);
+		
+		HeavyHittersListener hhListener =
+			injector.getInstance(HeavyHittersListener.class);
+		hhListener.setUser(id);
+		FollowerStoreListener dbListener =
+			injector.getInstance(FollowerStoreListener.class);
+		dbListener.setUser(id);
+		
+		FollowerIdsBackfiller backfiller = injector.getInstance(FollowerIdsBackfiller.class);
+		
+		userTracker.addListener(dbListener);
+		userTracker.addListener(hhListener);
+		userTracker.addBackfiller(backfiller);
 	}
 	
 	

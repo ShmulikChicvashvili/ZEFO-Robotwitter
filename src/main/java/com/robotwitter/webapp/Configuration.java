@@ -21,6 +21,7 @@ import com.robotwitter.management.RetrievalMailBuilderModule;
 import com.robotwitter.management.TwitterTracker;
 import com.robotwitter.miscellaneous.GmailSenderModule;
 import com.robotwitter.statistics.UserListenerModule;
+import com.robotwitter.twitter.FollowerIdsBackfiller;
 import com.robotwitter.twitter.FollowerStoreListener;
 import com.robotwitter.twitter.HeavyHittersListener;
 import com.robotwitter.twitter.IUserTracker;
@@ -159,6 +160,11 @@ public class Configuration implements ServletContextListener
 			injector.getInstance(FollowerStoreListener.class);
 		dbListener.setUser(account.getUserId());
 		
+		FollowerIdsBackfiller backfiller = injector.getInstance(FollowerIdsBackfiller.class);
+		
+		tracker.addListener(dbListener);
+		tracker.addListener(hhListener);
+		tracker.addBackfiller(backfiller);
 		accountsTracker.startTracker(account.getUserId());
 	}
 	

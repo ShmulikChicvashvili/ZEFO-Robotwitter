@@ -21,7 +21,6 @@ public class UserListenerModule extends AbstractModule
 		bind(Integer.class).annotatedWith(Names.named("Heavy Hitters Counter Number")).toInstance(new Integer(200));
 		bind(Integer.class).annotatedWith(Names.named("Heavy Hitters Number")).toInstance(new Integer(10));
 		bind(IHeavyHitters.class).to(HeavyHitters.class);
-		
 	}	
 	
 }

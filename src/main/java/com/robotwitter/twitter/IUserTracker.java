@@ -17,6 +17,12 @@ public interface IUserTracker
 {
 	
 	/**
+	 * @param backfiller a REST API backfiller to listen on the user
+	 * @return the success status of the action performed
+	 */
+	void addBackfiller(IUserBackfiller backfiller);
+	
+	/**
 	 * @param listener a stream listener to listen on the user stream
 	 * @return the success status of the action performed
 	 */
@@ -31,6 +37,12 @@ public interface IUserTracker
 	 * @return the account id of the user the tracker is tracking
 	 */
 	Long getTrackedUser();
+	
+	/**
+	 * @param backfiller a REST API backfiller to listen on the user
+	 * @return the success status of the action performed
+	 */
+	void removeBackfiller(IUserBackfiller backfiller);
 	
 	/**
 	 * @param listener a stream listener to listen on the user stream

@@ -33,8 +33,22 @@
 			/* When character count is overflow */
 			&.TweetComposer-characters-overflown
 			{
-				.count { color: red; }
+				.count { color: $v-error-indicator-color; }
 			}
+		}
+	
+		/* Error message */
+		.TweetComposer-error
+		{
+			color: $v-error-indicator-color;
+			font-weight: bold;
+			font-size: 0.85em;
+		}
+	
+		/* Fix textarea focus glow effect colour on textareas with errors. */
+		.v-textarea-error.v-textarea
+		{
+			@include robotwitter-box-shadow(0 0 0 2px rgba($v-error-indicator-color, 0.25));
 		}
 		
 		/* Toolbar */

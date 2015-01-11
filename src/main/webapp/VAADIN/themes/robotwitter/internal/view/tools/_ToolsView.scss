@@ -17,6 +17,7 @@
 	{
 		$padding: 15px;
 		padding: $padding;
+		margin: 10px;
 		background: white;
 		border: 1px solid rgba(black, 0.2);
 		@include robotwitter-border-radius(5px);

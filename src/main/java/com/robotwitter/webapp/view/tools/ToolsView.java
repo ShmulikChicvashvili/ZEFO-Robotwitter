@@ -10,6 +10,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
+import com.robotwitter.webapp.control.tools.ITweetingController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.AbstractView;
 
@@ -26,15 +27,41 @@ public class ToolsView extends AbstractView
 {
 	
 	/**
+	 * Wrap the given component in a panel.
+	 *
+	 * @param component
+	 *            the component to wrap
+	 * @param title
+	 *            the panel's title
+	 *
+	 * @return a newly created panel wrapper, wrapping the given component
+	 */
+	private static Component wrapInPanel(Component component, String title)
+	{
+		Label titleLabel = new Label(title);
+		VerticalLayout panel = new VerticalLayout(titleLabel, component);
+		panel.setWidthUndefined();
+		titleLabel.addStyleName(PANEL_TITLE_STYLENAME);
+		panel.addStyleName(PANEL_STYLENAME);
+		return panel;
+	}
+	
+	
+	/**
 	 * Instantiates a new tools view.
 	 *
 	 * @param messages
 	 *            the container of messages to display
+	 * @param tweetingController
+	 *            the tweeting controller
 	 */
 	@Inject
-	public ToolsView(@Named(NAME) IMessagesContainer messages)
+	public ToolsView(
+		@Named(NAME) IMessagesContainer messages,
+		ITweetingController tweetingController)
 	{
 		super(messages, messages.get("ToolsView.page.title"));
+		this.tweetingController = tweetingController;
 	}
 	
 	
@@ -52,32 +79,12 @@ public class ToolsView extends AbstractView
 	}
 	
 	
-	/**
-	 * Wrap the given component in a panel.
-	 *
-	 * @param component
-	 *            the component to wrap
-	 * @param title
-	 *            the panel's title
-	 *
-	 * @return a newly created panel wrapper, wrapping the given component
-	 */
-	private Component wrapInPanel(Component component, String title)
-	{
-		Label titleLabel = new Label(title);
-		VerticalLayout panel = new VerticalLayout(titleLabel, component);
-		panel.setWidthUndefined();
-		titleLabel.addStyleName(PANEL_TITLE_STYLENAME);
-		panel.addStyleName(PANEL_STYLENAME);
-		return panel;
-	}
-
-
 	@Override
 	protected final void initialise()
 	{
 		Label header = new Label(messages.get("ToolsView.label.header"));
-		TweetComposer composer = new TweetComposer(messages);
+		TweetComposer composer =
+			new TweetComposer(messages, tweetingController);
 		
 		Component composerPanel =
 			wrapInPanel(
@@ -101,6 +108,9 @@ public class ToolsView extends AbstractView
 	}
 	
 	
+	
+	/** The tweeting controller. */
+	ITweetingController tweetingController;
 	
 	/** The view's name. */
 	public static final String NAME = "tools";

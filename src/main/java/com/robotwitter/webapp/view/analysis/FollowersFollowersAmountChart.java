@@ -32,12 +32,12 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 	public FollowersFollowersAmountChart(IMessagesContainer messages)
 	{
 		super(messages, messages
-			.get("AnalysisView.FollowersAmountChart.error.no-data"));
+			.get("FollowersFollowersAmountChart.error.no-data"));
 		initialiseLayout();
 		getUserSession().observeActiveTwitterAccount(this);
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.util.RobotwitterCustomComponent#
 	 * activateTwitterAccount(long) */
@@ -46,8 +46,8 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 	{
 		updateChart();
 	}
-	
-	
+
+
 	/**
 	 * Initialise layout.
 	 */
@@ -55,8 +55,8 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 	{
 		updateChart();
 	}
-	
-	
+
+
 	/**
 	 * Update chart.
 	 */
@@ -64,14 +64,14 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 	{
 		ITwitterAccountController controller =
 			getUserSession().getAccountController().getActiveTwitterAccount();
-		
+
 		List<Integer> separators = new ArrayList<>();
 		List<Integer> amounts = new ArrayList<>();
 		controller.getFollowersAmountByTheirFollowersAmount(
 			5,
 			amounts,
 			separators);
-		
+
 		setBySeperators(separators, amounts);
 		show();
 	}

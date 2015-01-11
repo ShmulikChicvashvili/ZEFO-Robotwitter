@@ -21,6 +21,7 @@ import org.dussan.vaadin.dcharts.options.Options;
 import org.dussan.vaadin.dcharts.renderers.tick.AxisTickRenderer;
 import org.dussan.vaadin.dcharts.renderers.tick.CanvasAxisTickRenderer;
 
+import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 import com.robotwitter.webapp.control.account.ITwitterAccountController;
@@ -39,7 +40,7 @@ import com.robotwitter.webapp.util.RobotwitterCustomComponent;
  */
 public class FollowersAmountOverTimeChart extends RobotwitterCustomComponent
 {
-
+	
 	/**
 	 * Instantiates a new followers over time chart.
 	 *
@@ -52,87 +53,94 @@ public class FollowersAmountOverTimeChart extends RobotwitterCustomComponent
 		initialiseLayout();
 		getUserSession().observeActiveTwitterAccount(this);
 	}
-	
-	
+
+
 	@Override
 	public final void activateTwitterAccount(long id)
 	{
 		updateChart();
 	}
-
-
+	
+	
 	/** Initialises the layout. */
 	private void initialiseLayout()
 	{
 		Axes axes = new Axes();
 		axes.addAxis(new XYaxis()
-			.setRenderer(AxisRenderers.DATE)
-			.setTickOptions(
-				new CanvasAxisTickRenderer().setFormatString("%m/%#d/%Y")));
+		.setRenderer(AxisRenderers.DATE)
+		.setTickOptions(
+			new CanvasAxisTickRenderer().setFormatString("%m/%#d/%Y")));
 		axes.addAxis(new XYaxis(XYaxes.Y).setLabelRenderer(
 			LabelRenderers.CANVAS).setTickOptions(
-				new AxisTickRenderer().setFormatString("%d")));
-		
+			new AxisTickRenderer().setFormatString("%d")));
+
 		Highlighter highlighter =
 			new Highlighter()
-				.setShow(true)
-				.setSizeAdjust(10)
-				.setTooltipLocation(TooltipLocations.NORTH)
-				.setTooltipAxes(TooltipAxes.YX)
-				.setUseAxesFormatters(true)
-				.setFormatString("%s followers on %s");
-
+		.setShow(true)
+		.setSizeAdjust(10)
+		.setTooltipLocation(TooltipLocations.NORTH)
+		.setTooltipAxes(TooltipAxes.YX)
+		.setUseAxesFormatters(true)
+		.setFormatString("%s followers on %s");
+		
 		Options options =
 			new Options()
-				.addOption(axes)
-				.addOption(highlighter)
-				.setAnimate(true);
-		
+		.addOption(axes)
+		.addOption(highlighter)
+		.setAnimate(true);
+
 		chart = new DCharts().setOptions(options);
-		updateChart();
-		
+
 		// FIXME this should be done on the client-side
 		UI.getCurrent().getPage().addBrowserWindowResizeListener(event -> {
 			chart.setSizeFull();
 		});
-
+		
 		setSizeFull();
-
+		
 		addStyleName(STYLENAME);
 		
-		setCompositionRoot(chart);
+		updateChart();
 	}
-
-
+	
+	
 	/** Update the followers over time chart. */
 	private void updateChart()
 	{
 		ITwitterAccountController controller =
 			getUserSession().getAccountController().getActiveTwitterAccount();
-
+		
 		Map<Date, Integer> followers =
 			controller.getAmountOfFollowers(null, null);
 
+		if (followers.isEmpty())
+		{
+			setCompositionRoot(new Label(
+				messages.get("FollowersAmountOverTimeChart.error.no-data")));
+			return;
+		}
+		setCompositionRoot(chart);
+		
 		DataSeries dataSeries = new DataSeries().newSeries();
-
+		
 		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-
+		
 		for (Map.Entry<Date, Integer> entry : followers.entrySet())
 		{
 			dataSeries.add(df.format(entry.getKey()), entry.getValue());
 		}
-
+		
 		chart.setDataSeries(dataSeries).show();
 	}
-
-
-
+	
+	
+	
 	/** The followers over time chart. */
 	DCharts chart;
-
+	
 	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "FollowersOverTimeChart";
-
+	private static final String STYLENAME = "FollowersAmountOverTimeChart";
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

@@ -19,9 +19,9 @@ import com.vaadin.ui.Button;
  *
  * @author Hagai Akibayov
  */
-class ButtonClickOnEnterListener extends Button.ClickShortcut
+public class ButtonClickOnEnterListener extends Button.ClickShortcut
 {
-
+	
 	/**
 	 * Instantiates a new enter listener.
 	 *
@@ -38,8 +38,8 @@ class ButtonClickOnEnterListener extends Button.ClickShortcut
 		super(button, KeyCode.ENTER);
 		this.components = components;
 	}
-	
-	
+
+
 	@Override
 	public void handleAction(final Object sender, final Object target)
 	{
@@ -48,12 +48,12 @@ class ButtonClickOnEnterListener extends Button.ClickShortcut
 			button.click();
 		}
 	}
-
-
-
+	
+	
+	
 	/** The components that must be focused for the event to fire. */
 	final Collection<? extends AbstractComponent> components;
-
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

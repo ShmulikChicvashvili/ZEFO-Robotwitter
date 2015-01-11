@@ -114,7 +114,7 @@
 		{
 			position: absolute;
 			top: $left-width / 40;
-			left: -$left-width / 10;
+			left: -$left-width / 7.5;
 					
 			font-size: 1.5em;
 			font-weight: lighter;
@@ -131,9 +131,10 @@
 		/* Right side */
 		.v-slot-MostInfluentialFollowers-information-right
 		{
-			width: $right-width !important;
+			$padding-left: $left-width / 7.5;
+			width: $right-width - $padding-left !important;
 			
-			padding-left: $left-width / 7.5;
+			padding-left: $padding-left;
 			
 			/* More spacing between properties */
 			.v-spacing { width: 1.5em; height: 1.5em; }

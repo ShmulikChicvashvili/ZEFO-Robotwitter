@@ -68,8 +68,7 @@ public class FollowersAmountOverTimeChart extends RobotwitterCustomComponent
 		axes.addAxis(new XYaxis()
 			.setRenderer(AxisRenderers.DATE)
 			.setTickOptions(
-				new CanvasAxisTickRenderer().setAngle(-30).setFormatString(
-					"%#d %b, %Y")));
+				new CanvasAxisTickRenderer().setFormatString("%m/%#d/%Y")));
 		axes.addAxis(new XYaxis(XYaxes.Y).setLabelRenderer(
 			LabelRenderers.CANVAS).setTickOptions(
 				new AxisTickRenderer().setFormatString("%d")));

@@ -1,5 +1,5 @@
 
-package com.robotwitter.webapp.view.dashboard;
+package com.robotwitter.webapp.view.tools;
 
 
 import com.google.inject.Inject;
@@ -14,19 +14,19 @@ import com.robotwitter.webapp.view.AbstractView;
 
 
 /** Dashboard view. */
-public class DashboardView extends AbstractView
+public class ToolsView extends AbstractView
 {
 
 	/**
-	 * Instantiates a new dashboard view.
+	 * Instantiates a new tools view.
 	 *
 	 * @param messages
 	 *            the container of messages to display
 	 */
 	@Inject
-	public DashboardView(@Named(NAME) IMessagesContainer messages)
+	public ToolsView(@Named(NAME) IMessagesContainer messages)
 	{
-		super(messages, messages.get("DashboardView.page.title"));
+		super(messages, messages.get("ToolsView.page.title"));
 	}
 
 
@@ -55,7 +55,7 @@ public class DashboardView extends AbstractView
 	
 	
 	/** The view's name. */
-	public static final String NAME = "dashboard";
+	public static final String NAME = "tools";
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

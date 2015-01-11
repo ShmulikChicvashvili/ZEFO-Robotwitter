@@ -78,6 +78,9 @@ public class RobotwitterUI extends UI
 		mainMenuAndContentContainer.setSizeFull();
 		mainMenuAndContentContainer.setExpandRatio(content, 1);
 		setContent(mainMenuAndContentContainer);
+
+		content.addStyleName(CONTENT_STYLENAME);
+		addStyleName(STYLENAME);
 	}
 
 
@@ -157,7 +160,13 @@ public class RobotwitterUI extends UI
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
+	/** The CSS class name to apply the UI's root. */
+	private static final String STYLENAME = "RobotwitterUI";
+	
+	/** The CSS class name to apply to the content's wrapper. */
+	private static final String CONTENT_STYLENAME = "RobotwitterUI-content";
+	
 	/** The container of the main-menu and the content. */
 	private VerticalLayout mainMenuAndContentContainer;
 	

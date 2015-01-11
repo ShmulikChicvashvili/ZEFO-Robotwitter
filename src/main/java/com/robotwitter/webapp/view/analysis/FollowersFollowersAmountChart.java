@@ -52,7 +52,6 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 	 */
 	private void initialiseLayout()
 	{
-		set("!FollowersFollowersAmountChart!");
 		updateChart();
 	}
 

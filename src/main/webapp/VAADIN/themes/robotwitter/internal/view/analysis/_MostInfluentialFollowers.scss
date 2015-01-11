@@ -4,18 +4,18 @@
 
 @mixin MostInfluentialFollowers { .MostInfluentialFollowers {
 	
-	$width: 250px;
+	$list-width: 250px;
+	$left-width: 150px;
+	$right-width: 260px;
+	
+	width: $list-width + $left-width + $right-width;
 		
 	position: relative;
 
 	/* The list of followers component. */
 	.v-slot-MostInfluentialFollowers-followers-list
 	{		
-		position: absolute;
-		top: 0;
-		right: 0;
-		
-		width: $width !important;
+		width: $list-width !important;
 		
 		overflow-y: scroll;
 		overflow-x: visible;
@@ -73,29 +73,19 @@
 	/* The active follower's information. */
 	.v-slot-MostInfluentialFollowers-information
 	{
-		position: absolute;
-		top: 0;
-		left: 0;
-		right: $width;
-		width: auto !important;
-		
-		$left-width: 150px;
-		$border-width: $left-width / 30;
+		width: $left-width + $right-width !important;
 		
 		/* Left side */
 		.v-slot-MostInfluentialFollowers-information-left
 		{
-			position: absolute;
-			top: 0;
-			left: 0;
 			width: $left-width !important;
-			float: left;
 			
 			/* Profile picture */
 			.v-slot-MostInfluentialFollowers-information-picture
 			{
-				width: $left-width;
-				height: $left-width;
+				$border-width: $left-width / 30;
+				width: $left-width - 2 * $border-width;
+				height: $left-width - 2 * $border-width;
 				border: $border-width solid $robotwitter-neutral-color;
 				@include robotwitter-border-radius($left-width / 10);
 				
@@ -141,11 +131,7 @@
 		/* Right side */
 		.v-slot-MostInfluentialFollowers-information-right
 		{
-			position: absolute;
-			top: 0;
-			left: $left-width + 2 * $border-width;
-			right: 0;
-			width: auto !important;
+			width: $right-width !important;
 			
 			padding-left: $left-width / 7.5;
 			

@@ -5,9 +5,8 @@ package com.robotwitter.webapp.view.analysis;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
@@ -25,7 +24,7 @@ import com.robotwitter.webapp.view.AbstractView;
  */
 public class AnalysisView extends AbstractView
 {
-
+	
 	/**
 	 * Instantiates a new login view.
 	 *
@@ -37,109 +36,143 @@ public class AnalysisView extends AbstractView
 	{
 		super(messages, messages.get("AnalysisView.page.title"));
 	}
-	
-	
+
+
 	@Override
 	public final boolean isSignedInProhibited()
 	{
 		return false;
 	}
-
-
+	
+	
 	@Override
 	public final boolean isSignedInRequired()
 	{
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Wrap the given component in a panel.
 	 *
 	 * @param component
 	 *            the component to wrap
+	 * @param title
+	 *            the panel's title
 	 *
 	 * @return a newly created panel wrapper, wrapping the given component
 	 */
-	private Component wrapInPanel(Component component)
+	private Component wrapInPanel(Component component, String title)
 	{
-		VerticalLayout panel = new VerticalLayout(component);
+		Label titleLabel = new Label(title);
+		VerticalLayout panel = new VerticalLayout(titleLabel, component);
 		panel.setSizeFull();
+		panel.setExpandRatio(component, 1);
+		titleLabel.addStyleName(PANEL_TITLE_STYLENAME);
 		panel.addStyleName(PANEL_STYLENAME);
 		return panel;
 	}
-	
-	
+
+
 	@Override
 	protected final void initialise()
 	{
 		Label header = new Label(messages.get("AnalysisView.label.header"));
 		FollowersAmountOverview overview =
 			new FollowersAmountOverview(messages);
-		
+
 		FollowersAmountOverTimeChart followersChart =
 			new FollowersAmountOverTimeChart(messages);
 		MostInfluentialFollowers influentialFollowers =
 			new MostInfluentialFollowers(messages);
-		// FollowersAmountOverTimeChart followersChart2 =
-		// new FollowersAmountOverTimeChart(messages);
-		// MostInfluentialFollowers influentialFollowers2 =
-		// new MostInfluentialFollowers(messages);
 		
-		Button pie1 = new Button("Pie 1");
-		Button pie2 = new Button("Pie 1");
-		Button pie3 = new Button("Pie 1");
-		
+		FollowersDisplayedLanguageChart followersDisplayedLanguageChart =
+			new FollowersDisplayedLanguageChart(messages);
+		FollowersFollowersAmountChart followersFollowersAmountChart =
+			new FollowersFollowersAmountChart(messages);
+		FollowersFollowingAmountChart followersFollowingAmountChart =
+			new FollowersFollowingAmountChart(messages);
+
 		followersChart.setSizeFull();
 		influentialFollowers.setSizeFull();
-		pie1.setSizeFull();
-		pie2.setSizeFull();
-		pie3.setSizeFull();
+		followersDisplayedLanguageChart.setSizeFull();
+		followersFollowersAmountChart.setSizeFull();
+		followersFollowingAmountChart.setSizeFull();
 
-		GridLayout layout = new GridLayout(6, 4);
+		Component followersChartPanel =
+			wrapInPanel(
+				followersChart,
+				messages.get("AnalysisView.caption.followers-amount-over-time"));
+		Component influentialFollowersPanel =
+			wrapInPanel(
+				influentialFollowers,
+				messages.get("AnalysisView.caption.most-influential-followers"));
+		Component followersDisplayedLanguageChartPanel =
+			wrapInPanel(
+				followersDisplayedLanguageChart,
+				messages
+					.get("AnalysisView.caption.followers-displayed-language"));
+		Component followersFollowersAmountChartPanel =
+			wrapInPanel(
+				followersFollowersAmountChart,
+				messages.get("AnalysisView.caption.followers-followers-amount"));
+		Component followersFollowingAmountChartPanel =
+			wrapInPanel(
+				followersFollowingAmountChart,
+				messages.get("AnalysisView.caption.followers-following-amount"));
+		
+		// TODO this should be in CSS
+		influentialFollowersPanel.setWidth("690px");
+		
+		HorizontalLayout firstRow = new HorizontalLayout(header, overview);
+		firstRow.setWidth("100%");
+		firstRow.setSpacing(true);
+
+		HorizontalLayout secondRow =
+			new HorizontalLayout(influentialFollowersPanel, followersChartPanel);
+		secondRow.setSizeFull();
+		secondRow.setSpacing(true);
+		secondRow.setExpandRatio(followersChartPanel, 1);
+
+		HorizontalLayout thirdRow =
+			new HorizontalLayout(
+				followersDisplayedLanguageChartPanel,
+				followersFollowersAmountChartPanel,
+				followersFollowingAmountChartPanel);
+		thirdRow.setSizeFull();
+		thirdRow.setSpacing(true);
+		
+		VerticalLayout layout =
+			new VerticalLayout(firstRow, secondRow, thirdRow);
 		layout.setSizeFull();
 		layout.setSpacing(true);
+		layout.setExpandRatio(secondRow, 1);
+		layout.setExpandRatio(thirdRow, 1);
 
-		layout.addComponent(header, 0, 0, 5, 0);
-		layout.addComponent(overview, 0, 1, 5, 1);
-		layout.addComponent(wrapInPanel(influentialFollowers), 0, 2, 3, 2);
-		layout.addComponent(wrapInPanel(followersChart), 4, 2, 5, 2);
-		layout.addComponent(wrapInPanel(pie1), 0, 3, 1, 3);
-		layout.addComponent(wrapInPanel(pie2), 2, 3, 3, 3);
-		layout.addComponent(wrapInPanel(pie3), 4, 3, 5, 3);
-		
-		layout.setRowExpandRatio(2, 2);
-		layout.setRowExpandRatio(3, 3);
-
-		layout.setColumnExpandRatio(0, 1);
-		layout.setColumnExpandRatio(1, 1);
-		layout.setColumnExpandRatio(2, 1);
-		layout.setColumnExpandRatio(3, 1);
-		layout.setColumnExpandRatio(4, 1);
-		layout.setColumnExpandRatio(5, 1);
-
-		followersChart.chart.setWidth("50%");
-		
 		header.addStyleName(HEADER_STYLENAME);
 		addStyleName(STYLENAME);
-
+		
 		setCompositionRoot(layout);
 	}
-
-
-
+	
+	
+	
 	/** The view's name. */
 	public static final String NAME = "analysis";
-
+	
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "AnalysisView";
-	
+
 	/** The CSS class name to apply to each panel component. */
 	private static final String PANEL_STYLENAME = "AnalysisView-panel";
-	
+
+	/** The CSS class name to apply to each panel title label. */
+	private static final String PANEL_TITLE_STYLENAME =
+		"AnalysisView-panel-title";
+
 	/** The CSS class name to apply to this component. */
 	private static final String HEADER_STYLENAME = "AnalysisView-header";
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

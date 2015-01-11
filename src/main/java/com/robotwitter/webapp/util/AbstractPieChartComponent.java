@@ -20,6 +20,8 @@ import org.dussan.vaadin.dcharts.options.SeriesDefaults;
 import org.dussan.vaadin.dcharts.renderers.legend.EnhancedLegendRenderer;
 import org.dussan.vaadin.dcharts.renderers.series.PieRenderer;
 
+import com.vaadin.ui.UI;
+
 import com.robotwitter.webapp.messages.IMessagesContainer;
 
 
@@ -36,10 +38,10 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
  * @author Hagai
  */
 public abstract class AbstractPieChartComponent
-extends
-RobotwitterCustomComponent
+	extends
+		RobotwitterCustomComponent
 {
-
+	
 	/**
 	 * Instantiates a new abstract pie chart component.
 	 *
@@ -49,24 +51,29 @@ RobotwitterCustomComponent
 	public AbstractPieChartComponent(IMessagesContainer messages)
 	{
 		super(messages);
-
+		
 		SeriesDefaults seriesDefaults = initialiseSeriesDefaults();
-
+		
 		Legend legend = initialiseLegend();
-
+		
 		Highlighter highlighter = initialiseHighlighter();
-
+		
 		options =
 			new Options()
-		.setSeriesDefaults(seriesDefaults)
-		.setHighlighter(highlighter)
-		.setLegend(legend);
-
+				.setSeriesDefaults(seriesDefaults)
+				.setHighlighter(highlighter)
+				.setLegend(legend);
+		
 		pieChart = new DCharts();
 		setCompositionRoot(pieChart);
+		
+		// FIXME this should be done on the client-side
+		UI.getCurrent().getPage().addBrowserWindowResizeListener(event -> {
+			pieChart.setSizeFull();
+		});
 	}
-
-
+	
+	
 	/**
 	 * Initialise highlighter.
 	 *
@@ -76,14 +83,14 @@ RobotwitterCustomComponent
 	{
 		Highlighter highlighter =
 			new Highlighter()
-		.setShow(true)
-		.setShowTooltip(true)
-		.setTooltipAlwaysVisible(true)
-		.setKeepTooltipInsideChart(true);
+				.setShow(true)
+				.setShowTooltip(true)
+				.setTooltipAlwaysVisible(true)
+				.setKeepTooltipInsideChart(true);
 		return highlighter;
 	}
-
-
+	
+	
 	/**
 	 * Initialise legend.
 	 *
@@ -93,15 +100,15 @@ RobotwitterCustomComponent
 	{
 		Legend legend =
 			new Legend()
-		.setShow(true)
-		.setRenderer(LegendRenderers.ENHANCED)
-		.setRendererOptions(
-			new EnhancedLegendRenderer().setSeriesToggle(
-				SeriesToggles.SLOW).setSeriesToggleReplot(true));
+				.setShow(true)
+				.setRenderer(LegendRenderers.ENHANCED)
+				.setRendererOptions(
+					new EnhancedLegendRenderer().setSeriesToggle(
+						SeriesToggles.SLOW).setSeriesToggleReplot(true));
 		return legend;
 	}
-
-
+	
+	
 	/**
 	 * Initialise series defaults.
 	 *
@@ -111,12 +118,12 @@ RobotwitterCustomComponent
 	{
 		SeriesDefaults seriesDefaults =
 			new SeriesDefaults()
-		.setRenderer(SeriesRenderers.PIE)
-		.setRendererOptions(new PieRenderer().setShowDataLabels(true));
+				.setRenderer(SeriesRenderers.PIE)
+				.setRendererOptions(new PieRenderer().setShowDataLabels(true));
 		return seriesDefaults;
 	}
-
-
+	
+	
 	/**
 	 * Sets the data for the chart.
 	 *
@@ -132,8 +139,8 @@ RobotwitterCustomComponent
 		}
 		pieChart.setDataSeries(dataSeries);
 	}
-
-
+	
+	
 	/**
 	 * Sets the label for the chart.
 	 *
@@ -144,8 +151,8 @@ RobotwitterCustomComponent
 	{
 		options.setTitle(label);
 	}
-
-
+	
+	
 	/**
 	 * Updates the options and shows the pie chart.
 	 */
@@ -154,12 +161,12 @@ RobotwitterCustomComponent
 		pieChart.setOptions(options);
 		pieChart.show();
 	}
-
-
-
+	
+	
+	
 	/** The pie chart options. */
 	private Options options;
-
+	
 	/** The pie chart. */
 	private DCharts pieChart;
 }

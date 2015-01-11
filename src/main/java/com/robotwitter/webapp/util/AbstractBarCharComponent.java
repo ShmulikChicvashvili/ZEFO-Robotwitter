@@ -22,6 +22,8 @@ import org.dussan.vaadin.dcharts.options.Legend;
 import org.dussan.vaadin.dcharts.options.Options;
 import org.dussan.vaadin.dcharts.options.SeriesDefaults;
 
+import com.vaadin.ui.UI;
+
 import com.robotwitter.webapp.messages.IMessagesContainer;
 
 
@@ -33,10 +35,10 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
  *
  */
 public abstract class AbstractBarCharComponent
-extends
-RobotwitterCustomComponent
+	extends
+		RobotwitterCustomComponent
 {
-
+	
 	/**
 	 * Instantiates a new abstract bar char component.
 	 *
@@ -46,25 +48,30 @@ RobotwitterCustomComponent
 	public AbstractBarCharComponent(IMessagesContainer messages)
 	{
 		super(messages);
-
+		
 		SeriesDefaults seriesDefaults = initialiseSeriesDefaults();
-
+		
 		Legend legend = initialiseLegend();
-
+		
 		Highlighter highlighter = initialiseHighlighter();
-
+		
 		options =
 			new Options()
-		.setSeriesDefaults(seriesDefaults)
-		.setHighlighter(highlighter)
-		.setLegend(legend);
-
+				.setSeriesDefaults(seriesDefaults)
+				.setHighlighter(highlighter)
+				.setLegend(legend);
+		
 		barChart = new DCharts();
-
+		
 		setCompositionRoot(barChart);
+		
+		// FIXME this should be done on the client-side
+		UI.getCurrent().getPage().addBrowserWindowResizeListener(event -> {
+			barChart.setSizeFull();
+		});
 	}
-
-
+	
+	
 	/**
 	 * Initialise highlighter.
 	 *
@@ -74,15 +81,15 @@ RobotwitterCustomComponent
 	{
 		Highlighter highlighter =
 			new Highlighter()
-		.setShow(true)
-		.setShowTooltip(true)
-		.setTooltipAlwaysVisible(true)
-		.setKeepTooltipInsideChart(true)
-		.setTooltipAxes(TooltipAxes.XY_BAR);
+				.setShow(true)
+				.setShowTooltip(true)
+				.setTooltipAlwaysVisible(true)
+				.setKeepTooltipInsideChart(true)
+				.setTooltipAxes(TooltipAxes.XY_BAR);
 		return highlighter;
 	}
-
-
+	
+	
 	/**
 	 * Initialise legend.
 	 *
@@ -98,8 +105,8 @@ RobotwitterCustomComponent
 		// SeriesToggles.SLOW).setSeriesToggleReplot(true));
 		return legend;
 	}
-
-
+	
+	
 	/**
 	 * Initialise series defaults.
 	 *
@@ -109,12 +116,12 @@ RobotwitterCustomComponent
 	{
 		SeriesDefaults seriesDefaults =
 			new SeriesDefaults()
-		.setRenderer(SeriesRenderers.BAR)
-		.setPointLabels(new PointLabels().setShow(true));
+				.setRenderer(SeriesRenderers.BAR)
+				.setPointLabels(new PointLabels().setShow(true));
 		return seriesDefaults;
 	}
-
-
+	
+	
 	/**
 	 * Sets the data for the chart.
 	 *
@@ -125,7 +132,7 @@ RobotwitterCustomComponent
 	 */
 	protected final void set(List<String> ticks, List<Integer> amounts)
 	{
-
+		
 		Axes axes = new Axes();
 		XYaxis axis = new XYaxis().setRenderer(AxisRenderers.CATEGORY);
 		if (ticks.size() > 0)
@@ -134,13 +141,13 @@ RobotwitterCustomComponent
 		}
 		axes.addAxis(axis);
 		options.setAxes(axes);
-
+		
 		DataSeries dataSeries = new DataSeries();
 		dataSeries.add(amounts.toArray());
 		barChart.setDataSeries(dataSeries);
 	}
-
-
+	
+	
 	/**
 	 * Sets the label for the chart.
 	 *
@@ -151,8 +158,8 @@ RobotwitterCustomComponent
 	{
 		options.setTitle(label);
 	}
-
-
+	
+	
 	/**
 	 * Sets the data according to the amounts list, and the ticks according to
 	 * the separators.
@@ -181,11 +188,11 @@ RobotwitterCustomComponent
 			ticks.add("&ge; " + separators.get(separators.size() - 1));
 			assert ticks.size() == amounts.size();
 		}
-
+		
 		set(ticks, amounts);
 	}
-
-
+	
+	
 	/**
 	 * Updates the options and shows the bar chart.
 	 */
@@ -194,13 +201,13 @@ RobotwitterCustomComponent
 		barChart.setOptions(options);
 		barChart.show();
 	}
-
-
-
+	
+	
+	
 	/** The bar chart options. */
 	private Options options;
-
+	
 	/** The bar chart. */
 	private DCharts barChart;
-
+	
 }

@@ -2,30 +2,40 @@
 @import "../../../config";
 /*----------------------------------------------------------------------------*/
 
+/* Fix min-height */
+.v-slot-AnalysisView { position: relative; min-height: 650px; }
+
 @mixin AnalysisView { .AnalysisView {
 
-	padding: 10px;
+	position: absolute;
 	
-	min-height: 900px;
-	overflow-y: auto;
-	overflow-x: hidden;
+	padding: 10px;
 	
 	/* Header */
 	.AnalysisView-header
 	{
-		text-align: center;
-		font-size: 3.3em;
-		font-weight: bold;
+		font-size: 3.3em; padding-left: 15px; line-height: 1em;
 	}
 
 	/* Panel */
 	.AnalysisView-panel
 	{
-		padding: 15px;
+		$padding: 15px;
+		padding: $padding;
 		background: white;
 		border: 1px solid rgba(black, 0.2);
 		@include robotwitter-border-radius(5px);
 		@include robotwitter-box-shadow(0 0 5px 0 rgba(black, 0.05));
+		
+		/* Title */
+		.AnalysisView-panel-title
+		{
+			position: relative;
+			font-size: 1.5em;
+			top: -$padding / 2;
+			color: #2E6C96;
+			text-align: center;
+		}
 	}
 
 } }

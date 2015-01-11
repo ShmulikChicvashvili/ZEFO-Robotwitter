@@ -61,8 +61,6 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 		separators.add(1);
 		separators.add(5);
 
-		controller.getFollowersAmountByTheirFollowersAmount(separators);
-
 		List<String> ticks = new ArrayList<>();
 		List<Integer> amounts = new ArrayList<>();
 
@@ -74,5 +72,6 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 		amounts.add(10);
 
 		set(ticks, amounts);
+		show();
 	}
 }

@@ -29,17 +29,17 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
  * Represents an abstract pie chart component.
  *
  *
- * V pie chart is divided into sectors that each represents a proportion of the
+ * A pie chart is divided into sectors that each represents a proportion of the
  * whole.
  *
  * @author Eyal
- * @ahtuor Hagai
+ * @author Hagai
  */
 public abstract class AbstractPieChartComponent
 extends
 RobotwitterCustomComponent
 {
-	
+
 	/**
 	 * Instantiates a new abstract pie chart component.
 	 *
@@ -49,25 +49,24 @@ RobotwitterCustomComponent
 	public AbstractPieChartComponent(IMessagesContainer messages)
 	{
 		super(messages);
-		
+
 		SeriesDefaults seriesDefaults = initialiseSeriesDefaults();
-		
+
 		Legend legend = initialiseLegend();
-		
+
 		Highlighter highlighter = initialiseHighlighter();
-		
+
 		options =
 			new Options()
 		.setSeriesDefaults(seriesDefaults)
 		.setHighlighter(highlighter)
 		.setLegend(legend);
-		
-		pieChart = new DCharts().setOptions(options);
-		
+
+		pieChart = new DCharts();
 		setCompositionRoot(pieChart);
 	}
-	
-	
+
+
 	/**
 	 * Initialise highlighter.
 	 *
@@ -83,8 +82,8 @@ RobotwitterCustomComponent
 		.setKeepTooltipInsideChart(true);
 		return highlighter;
 	}
-	
-	
+
+
 	/**
 	 * Initialise legend.
 	 *
@@ -101,8 +100,8 @@ RobotwitterCustomComponent
 				SeriesToggles.SLOW).setSeriesToggleReplot(true));
 		return legend;
 	}
-	
-	
+
+
 	/**
 	 * Initialise series defaults.
 	 *
@@ -116,8 +115,8 @@ RobotwitterCustomComponent
 		.setRendererOptions(new PieRenderer().setShowDataLabels(true));
 		return seriesDefaults;
 	}
-	
-	
+
+
 	/**
 	 * Sets the data for the chart.
 	 *
@@ -132,11 +131,9 @@ RobotwitterCustomComponent
 			dataSeries.newSeries().add(entry.getKey(), entry.getValue());
 		}
 		pieChart.setDataSeries(dataSeries);
-		pieChart.setCaption("CAPTION");
-		pieChart.show();
 	}
-	
-	
+
+
 	/**
 	 * Sets the label for the chart.
 	 *
@@ -146,12 +143,23 @@ RobotwitterCustomComponent
 	protected final void set(String label)
 	{
 		options.setTitle(label);
-		pieChart.setCaption(label);
 	}
-	
-	
-	
+
+
+	/**
+	 * Updates the options and shows the pie chart.
+	 */
+	protected final void show()
+	{
+		pieChart.setOptions(options);
+		pieChart.show();
+	}
+
+
+
+	/** The pie chart options. */
 	private Options options;
-	
+
+	/** The pie chart. */
 	private DCharts pieChart;
 }

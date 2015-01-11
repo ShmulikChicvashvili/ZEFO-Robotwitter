@@ -27,7 +27,7 @@ import com.robotwitter.posting.PrefixPreference;
  *         a unit test for the preferences classes.
  *
  */
-public class preferenceTest
+public class PreferenceTest
 {
 	
 	/**
@@ -81,6 +81,8 @@ public class preferenceTest
 		assertEquals(
 			basicPrefBreakdown.get(1),
 			"its way longer then that! its actually this long!");
+		assertTrue(basicPrefBreakdown.get(0).length() < 140);
+		assertTrue(basicPrefBreakdown.get(1).length() < 140);
 		
 		ArrayList<String> prefixPrefBreakdown =
 			prefixPref.generateTweet(longTweet);
@@ -93,6 +95,8 @@ public class preferenceTest
 		assertEquals(
 			prefixPrefBreakdown.get(1),
 			"(Continued) >> just kidding, its way longer then that! its actually this long!");
+		assertTrue(prefixPrefBreakdown.get(0).length() < 140);
+		assertTrue(prefixPrefBreakdown.get(1).length() < 140);
 		
 		ArrayList<String> postfixPrefBreakdown =
 			postfixPref.generateTweet(longTweet);
@@ -105,6 +109,8 @@ public class preferenceTest
 		assertEquals(
 			postfixPrefBreakdown.get(1),
 			"kidding, its way longer then that! its actually this long!");
+		assertTrue(postfixPrefBreakdown.get(0).length() < 140);
+		assertTrue(postfixPrefBreakdown.get(1).length() < 140);
 		
 		ArrayList<String> numberedPrefBreakdown =
 			numberedPref.generateTweet(longTweet);
@@ -117,6 +123,8 @@ public class preferenceTest
 		assertEquals(
 			numberedPrefBreakdown.get(1),
 			"(2/2) kidding, its way longer then that! its actually this long!");
+		assertTrue(numberedPrefBreakdown.get(0).length() < 140);
+		assertTrue(numberedPrefBreakdown.get(1).length() < 140);
 	}
 	
 	

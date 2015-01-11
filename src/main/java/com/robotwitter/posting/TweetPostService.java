@@ -6,7 +6,6 @@ package com.robotwitter.posting;
 
 
 import java.util.ArrayList;
-
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
 import twitter4j.TwitterException;
@@ -24,6 +23,17 @@ import com.robotwitter.twitter.TwitterAccount;
  */
 public class TweetPostService
 {
+	public enum ReturnStatus
+	{
+		SUCCESS,
+		OUT_OF_RATES,
+		UNATTACHED_ACCOUNT,
+		INVALID_PARAMS,
+		FAILURE
+	}
+	
+	
+	
 	/**
 	 * @param preference
 	 *            The preference for the tweets
@@ -43,39 +53,40 @@ public class TweetPostService
 	 * TODO: add an error value to the function.
 	 */
 	@SuppressWarnings({ "nls", "boxing" })
-	public void post()
+	public ReturnStatus post()
 	{
-		if (tweet == null) { return; }
+		if (tweet == null) { return ReturnStatus.INVALID_PARAMS; }
 		final ArrayList<String> tweetsToPost = preference.generateTweet(tweet);
 		Status latestStatus = null;
 		StatusUpdate latestUpdate = null;
 		try
 		{
-			if (twitterAccount != null
-				&& twitterAccount.isAttached()
-				&& getTweetingRemainingLimit() <= tweetsToPost.size())
+			if (twitterAccount == null || !twitterAccount.isAttached()) { return ReturnStatus.UNATTACHED_ACCOUNT; }
+			if (getTweetingRemainingLimit() < tweetsToPost.size()) { return ReturnStatus.OUT_OF_RATES; }
+			
+			for (final String tweetPost : tweetsToPost)
 			{
-				for (final String tweetPost : tweetsToPost)
+				if (latestStatus == null)
 				{
-					if (latestStatus == null)
-					{
-						latestStatus =
-							twitterAccount.getTwitter().updateStatus(tweetPost);
-					} else
-					{
-						latestUpdate = new StatusUpdate(tweetPost);
-						latestStatus =
-							twitterAccount.getTwitter().updateStatus(
+					latestStatus =
+						twitterAccount.getTwitter().updateStatus(tweetPost);
+				} else
+				{
+					latestUpdate = new StatusUpdate(tweetPost);
+					latestStatus =
+						twitterAccount
+							.getTwitter()
+							.updateStatus(
 								latestUpdate.inReplyToStatusId(latestStatus
 									.getId()));
-					}
 				}
 			}
 		} catch (TwitterException e)
 		{
 			e.printStackTrace();
-			throw new RuntimeException("Failed to post tweet");
+			return ReturnStatus.FAILURE;
 		}
+		return ReturnStatus.SUCCESS;
 	}
 	
 	
@@ -105,11 +116,7 @@ public class TweetPostService
 	 */
 	private int getTweetingRemainingLimit() throws TwitterException
 	{
-		return twitterAccount
-			.getTwitter()
-			.getRateLimitStatus()
-			.get("statuses")
-			.getRemaining();
+		return 15; //FIXME: get the real limits!
 	}
 	
 	

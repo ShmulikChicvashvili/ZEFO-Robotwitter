@@ -17,7 +17,6 @@ import com.robotwitter.database.MySqlDBModule;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.management.EmailPasswordRetrieverModule;
-import com.robotwitter.management.ITwitterTracker.Status;
 import com.robotwitter.management.RetrievalMailBuilderModule;
 import com.robotwitter.management.TwitterTracker;
 import com.robotwitter.miscellaneous.GmailSenderModule;
@@ -120,9 +119,6 @@ public class Configuration implements ServletContextListener
 	/**
 	 * Created and guiced up by Itay and Shmulik. Initialises the user trackers
 	 * and starts them.
-	 * 
-	 * TODO: put accountsTracker in servlet context so we can add trackers when
-	 * we attach new accounts.
 	 */
 	private void initialiseUserTracking()
 	{
@@ -156,40 +152,12 @@ public class Configuration implements ServletContextListener
 		IUserTracker tracker = injector.getInstance(IUserTracker.class);
 		((UserTracker) tracker).setUser(account.getUserId());
 		
-		Status result = accountsTracker.addUserTracker(tracker);
-		if (result != Status.SUCCESS)
-		{
-			System.err.println("woops, everything is horrible!");
-			return;
-		}
-		
 		HeavyHittersListener hhListener =
 			injector.getInstance(HeavyHittersListener.class);
 		hhListener.setUser(account.getUserId());
 		FollowerStoreListener dbListener =
 			injector.getInstance(FollowerStoreListener.class);
 		dbListener.setUser(account.getUserId());
-		
-		result =
-			accountsTracker.addListenerToTracker(
-				account.getUserId(),
-				hhListener);
-		if (result != Status.SUCCESS)
-		{
-			System.err.println("woops, everything is horrible!");
-			accountsTracker.removeUserTracker(account.getUserId());
-			return;
-		}
-		result =
-			accountsTracker.addListenerToTracker(
-				account.getUserId(),
-				dbListener);
-		if (result != Status.SUCCESS)
-		{
-			System.err.println("woops, everything is horrible!");
-			accountsTracker.removeUserTracker(account.getUserId());
-			return;
-		}
 		
 		accountsTracker.startTracker(account.getUserId());
 	}

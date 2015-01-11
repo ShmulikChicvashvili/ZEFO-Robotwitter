@@ -6,12 +6,12 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 import com.robotwitter.management.ITwitterTracker;
 import com.robotwitter.twitter.ITwitterAttacher;
 import com.robotwitter.twitter.IllegalPinException;
 import com.robotwitter.twitter.TwitterAccount;
-import com.robotwitter.twitter.TwitterAppConfiguration;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -33,20 +33,18 @@ public class TwitterConnectorController implements ITwitterConnectorController
 	 *            the tracker that gets information from twitter
 	 * @param attacher
 	 *            the attacher
-	 * @param conf
-	 *            the configuration of the application, to communicate with
-	 *            twitter
+	 * @param factory the factory that creates new Twitter instances
 	 */
 	@Inject
 	public TwitterConnectorController(
 		ITwitterTracker tracker,
 		ITwitterAttacher attacher,
-		TwitterAppConfiguration conf)
+		@Named("User based factory") TwitterFactory factory)
 	{
 		this.attacher = attacher;
 		this.tracker = tracker;
 		
-		tf = new TwitterFactory(conf.getUserConfiguration());
+		tf = factory;
 		twitterAccount = null;
 		id = -1;
 		screenname = null;
@@ -111,6 +109,7 @@ public class TwitterConnectorController implements ITwitterConnectorController
 	
 	
 	
+	/** The tracker. */
 	private ITwitterTracker tracker;
 	
 	/** The tf. */

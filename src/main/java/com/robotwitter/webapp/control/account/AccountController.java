@@ -12,14 +12,17 @@ import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
+import twitter4j.auth.AccessToken;
 
 import com.google.inject.Inject;
+
 import com.robotwitter.database.interfaces.IDatabaseFollowers;
 import com.robotwitter.database.interfaces.IDatabaseHeavyHitters;
+import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
-import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
 import com.robotwitter.database.primitives.DBTwitterAccount;
+import com.robotwitter.twitter.TwitterAccount;
 import com.robotwitter.twitter.TwitterAppConfiguration;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -35,8 +38,6 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class AccountController implements IAccountController
 {
 	
-
-
 	/**
 	 * Instantiates a new account controller stub.
 	 *
@@ -60,8 +61,8 @@ public class AccountController implements IAccountController
 		this.usersDB = usersDB;
 		this.twitterAccountsDB = twitterAccountsDB;
 		this.numFollowersDB = numFollowersDB;
-		this.heavyhitterDB=heavyhitterDB;
-		this.followersDB=followersDB;
+		this.heavyhitterDB = heavyhitterDB;
+		this.followersDB = followersDB;
 		appConnector =
 			new TwitterFactory(conf.getAppConfiguration()).getInstance();
 		email = null;
@@ -75,7 +76,7 @@ public class AccountController implements IAccountController
 	public final Status activateTwitterAccount(long id)
 	{
 		if (email == null) { return null; }
-		ITwitterAccountController account = twitterAccounts.get(id);
+		final ITwitterAccountController account = twitterAccounts.get(id);
 		if (account == null) { return Status.TWITTER_ACCOUNT_DOESNT_EXIST; }
 		activeTwitterAccount = account;
 		return Status.SUCCESS;
@@ -150,12 +151,12 @@ public class AccountController implements IAccountController
 	@SuppressWarnings("boxing")
 	private boolean updateTwitterAccounts()
 	{
-		ArrayList<DBTwitterAccount> attachedAccounts =
+		final ArrayList<DBTwitterAccount> attachedAccounts =
 			twitterAccountsDB.get(email);
 		
 		if (attachedAccounts == null) { return true; }
 		
-		long[] ids = new long[attachedAccounts.size()];
+		final long[] ids = new long[attachedAccounts.size()];
 		for (int i = 0; i < attachedAccounts.size(); i++)
 		{
 			ids[i] = attachedAccounts.get(i).getUserId();
@@ -165,14 +166,14 @@ public class AccountController implements IAccountController
 		try
 		{
 			userList = appConnector.lookupUsers(ids);
-		} catch (TwitterException e)
+		} catch (final TwitterException e)
 		{
 			e.printStackTrace();
 			return false;
 		}
-		for (User user : userList)
+		for (final User user : userList)
 		{
-			TwitterAccountController currAccount =
+			final TwitterAccountController currAccount =
 				new TwitterAccountController(
 					user.getId(),
 					user.getName(),
@@ -181,6 +182,18 @@ public class AccountController implements IAccountController
 					numFollowersDB,
 					heavyhitterDB,
 					followersDB);
+			final TwitterFactory tf =
+				new TwitterFactory(
+					new TwitterAppConfiguration().getUserConfiguration());
+			final TwitterAccount userAccount = new TwitterAccount(tf);
+			final Twitter connector = tf.getInstance();
+			final DBTwitterAccount account =
+				twitterAccountsDB.get(user.getId());
+			connector.setOAuthAccessToken(new AccessToken(
+				account.getToken(),
+				account.getPrivateToken()));
+			userAccount.setTwitter(connector);
+			currAccount.setTwitterAccount(userAccount);
 			twitterAccounts.put(currAccount.id, currAccount);
 		}
 		
@@ -190,22 +203,22 @@ public class AccountController implements IAccountController
 	
 	
 	/** The app connector. */
-	private Twitter appConnector;
+	private final Twitter appConnector;
 	
 	/** <code>null</code> if a user isn't connected, else his email. */
 	private String email;
 	
 	/** The users database. */
 	@SuppressFBWarnings("SE_BAD_FIELD")
-	private IDatabaseUsers usersDB;
+	private final IDatabaseUsers usersDB;
 	
 	/** The twitter accounts database. */
 	@SuppressFBWarnings("SE_BAD_FIELD")
-	private IDatabaseTwitterAccounts twitterAccountsDB;
+	private final IDatabaseTwitterAccounts twitterAccountsDB;
 	
 	/** The twitter accounts num of followers database. */
 	@SuppressFBWarnings("SE_BAD_FIELD")
-	private IDatabaseNumFollowers numFollowersDB;
+	private final IDatabaseNumFollowers numFollowersDB;
 	
 	/** The Twitter accounts connected to the user, mapped by their IDs. */
 	private Map<Long, ITwitterAccountController> twitterAccounts;
@@ -215,12 +228,12 @@ public class AccountController implements IAccountController
 	
 	/** The database of heavy hitters */
 	@SuppressFBWarnings("SE_BAD_FIELD")
-	private IDatabaseHeavyHitters heavyhitterDB;
-
+	private final IDatabaseHeavyHitters heavyhitterDB;
+	
 	/** The database of followers */
 	@SuppressFBWarnings("SE_BAD_FIELD")
-	private IDatabaseFollowers followersDB;
-
+	private final IDatabaseFollowers followersDB;
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

@@ -32,22 +32,22 @@ public class TweetPostService
 		INVALID_PARAMS,
 		FAILURE
 	}
-
-
-
+	
+	
+	
 	/**
 	 * @param preference
 	 *            The preference for the tweets
 	 */
 	@Inject
 	public TweetPostService(
-		/* Preference preference */TwitterAccount twitterAccount)
+	/* Preference preference */TwitterAccount twitterAccount)
 	{
 		this.twitterAccount = twitterAccount;
 		// this.preference = preference;
 	}
-
-
+	
+	
 	/**
 	 * The method which will post the tweet which has been set. The method will
 	 * not post anything if the twitterAccount isn't set to an attached account
@@ -65,7 +65,7 @@ public class TweetPostService
 		{
 			if (twitterAccount == null || !twitterAccount.isAttached()) { return ReturnStatus.UNATTACHED_ACCOUNT; }
 			if (getTweetingRemainingLimit() < tweetsToPost.size()) { return ReturnStatus.OUT_OF_RATES; }
-
+			
 			for (final String tweetPost : tweetsToPost)
 			{
 				if (latestStatus == null)
@@ -90,8 +90,8 @@ public class TweetPostService
 		}
 		return ReturnStatus.SUCCESS;
 	}
-
-
+	
+	
 	/**
 	 * @param tweet
 	 *            The tweet to publish
@@ -100,8 +100,8 @@ public class TweetPostService
 	{
 		this.tweet = tweet;
 	}
-
-
+	
+	
 	/**
 	 * @param twitterAccount
 	 *            The twitter account which posts the tweet
@@ -110,8 +110,8 @@ public class TweetPostService
 	{
 		this.twitterAccount = twitterAccount;
 	}
-
-
+	
+	
 	/**
 	 * @return
 	 * @throws TwitterException
@@ -120,19 +120,19 @@ public class TweetPostService
 	{
 		return 15; // FIXME: get the real limits!
 	}
-
-
-
+	
+	
+	
 	/**
 	 * The preference for posting
 	 */
 	// Preference preference;
-
+	
 	/**
 	 * The account for posting
 	 */
 	TwitterAccount twitterAccount;
-
+	
 	/**
 	 * The tweet to post
 	 */

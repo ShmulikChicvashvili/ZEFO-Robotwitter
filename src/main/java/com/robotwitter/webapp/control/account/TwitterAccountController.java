@@ -23,6 +23,8 @@ import com.robotwitter.database.interfaces.IDatabaseFollowers;
 public class TwitterAccountController implements ITwitterAccountController {
 	private List<DBFollower> allfollowers;
 	private static final int NOFOLLOWERSINFO = -1;
+	private static final int FINDFOLLOWERS = 0;
+	private static final int FINDFOLLOWING = 1;
 
 	/**
 	 * Instantiates a new twitter account controller.
@@ -57,7 +59,6 @@ public class TwitterAccountController implements ITwitterAccountController {
 
 	@Override
 	public final Map<Date, Integer> getAmountOfFollowers(Date from, Date to) {
-
 		final Map<Date, Integer> followersBetween = new HashMap<>();
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
 		if (dbfollowers == null) {
@@ -88,7 +89,6 @@ public class TwitterAccountController implements ITwitterAccountController {
 			}
 		}
 		return followersBetween;
-
 	}
 
 	/*
@@ -104,17 +104,59 @@ public class TwitterAccountController implements ITwitterAccountController {
 			Integer langCounter = m.get(lang);
 			m.put(lang, (langCounter == null) ? 1 : langCounter + 1);
 		}
-		return null;
+		return m;
+	}
+
+	@Override
+	public void getFollowersAmountByTheirFollowersAmount(int subdivisions,
+			List<Integer> amounts, List<Integer> separators) {
+		separatorsByPath(subdivisions, separators, FINDFOLLOWERS);
+		followersAmountByPath(separators, amounts, FINDFOLLOWERS);
+	}
+
+	@Override
+	public void getFollowersAmountByTheirFollowingAmount(int subdivisions,
+			List<Integer> amounts, List<Integer> separators) {
+		separatorsByPath(subdivisions, separators, FINDFOLLOWING);
+		followersAmountByPath(separators, amounts, FINDFOLLOWING);
+
 	}
 
 	/*
-	 * (non-Javadoc) @see
-	 * com.robotwitter.webapp.control.account.ITwitterAccountController
-	 * #getFollowersAmountByTheirFollowersAmount(java.util.List)
+	 * This function will create the separators and will insert them into
+	 * separators array
 	 */
-	@Override
-	public List<Integer> getFollowersAmountByTheirFollowersAmount(
-			List<Integer> separators) {
+	private void separatorsByPath(int subdivision, List<Integer> separators,
+			int path) {
+		Integer minCount, maxCount;
+		maxCount = Integer.MIN_VALUE;
+		minCount = Integer.MAX_VALUE;
+		for (DBFollower follower : allfollowers) {
+			Integer temp;
+			if (path == FINDFOLLOWERS) {
+				temp = follower.getFollowers();
+			} else {
+				temp = follower.getFollowing();
+			}
+			if (maxCount < temp)
+				maxCount = temp;
+			if (minCount > temp)
+				minCount = temp;
+		}
+		int listSize = allfollowers.size();
+		int divide = (int) listSize / subdivision;
+		for (int count = minCount; count < maxCount; count += divide) {
+			separators.add(count);
+		}
+		separators.add(maxCount);
+	}
+
+	/*
+	 * This function will create a list that will say how many followers are
+	 * there for each separator
+	 */
+	private void followersAmountByPath(List<Integer> separators,List<Integer> followersAmount,
+			int path) {
 		boolean start = true;
 		Integer prev = separators.get(0);
 		for (final Integer sep : separators) {
@@ -130,57 +172,21 @@ public class TwitterAccountController implements ITwitterAccountController {
 		Integer count = 0;
 		Integer temp;
 		separators.add(Integer.MAX_VALUE);
-		List<Integer> followersAmount = new LinkedList<Integer>();
 		for (final Integer next : separators) {
 			for (final DBFollower follower : allfollowers) {
-				temp = (Integer) follower.getFollowers();
+				if (path == FINDFOLLOWERS) {
+					temp = (Integer) follower.getFollowers();
+				} else {
+					temp = (Integer) follower.getFollowing();
+				}
 				if (prev <= temp && temp < next) {
 					count++;
 				}
 			}
 			prev = next;
 			followersAmount.add(count);
-			count=0;
+			count = 0;
 		}
-		return followersAmount;
-	}
-
-	/*
-	 * (non-Javadoc) @see
-	 * com.robotwitter.webapp.control.account.ITwitterAccountController
-	 * #getFollowersAmountByTheirFollowingAmount(java.util.List)
-	 */
-	@Override
-	public List<Integer> getFollowersAmountByTheirFollowingAmount(
-			List<Integer> separators) {
-		boolean start = true;
-		Integer prev = separators.get(0);
-		for (final Integer sep : separators) {
-			if (start) {
-				start = false;
-			} else {
-				if (prev >= sep)
-					throw new RuntimeException(
-							"The list isn't strictly monotonically increasing");
-			}
-		}
-		prev = Integer.MIN_VALUE;
-		Integer count = 0;
-		Integer temp;
-		separators.add(Integer.MAX_VALUE);
-		List<Integer> followersAmount = new LinkedList<Integer>();
-		for (final Integer next : separators) {
-			for (final DBFollower follower : allfollowers) {
-				temp = (Integer) follower.getFollowing();
-				if (prev <= temp && temp < next) {
-					count++;
-				}
-			}
-			prev = next;
-			followersAmount.add(count);
-			count=0;
-		}
-		return followersAmount;
 	}
 
 	@Override
@@ -193,7 +199,6 @@ public class TwitterAccountController implements ITwitterAccountController {
 		return image;
 	}
 
-	// DORON
 	@Override
 	public final int getLastKnownAmountOfFollowers() {
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
@@ -203,7 +208,6 @@ public class TwitterAccountController implements ITwitterAccountController {
 		return lastUpdateInDatabase().getNumFollowers();
 	}
 
-	// DORON
 	@Override
 	public final int getLastKnownAmountOfGainedFollowers() {
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
@@ -213,7 +217,6 @@ public class TwitterAccountController implements ITwitterAccountController {
 		return lastUpdateInDatabase().getNumJoined();
 	}
 
-	// DORON
 	@Override
 	public final int getLastKnownAmountOfLostFollowers() {
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
@@ -223,7 +226,6 @@ public class TwitterAccountController implements ITwitterAccountController {
 		return lastUpdateInDatabase().getNumLeft();
 	}
 
-	// DORON
 	@Override
 	public final List<TwitterFollower> getMostInfluentialFollowers() {
 		List<TwitterFollower> list = new LinkedList<>();
@@ -283,7 +285,7 @@ public class TwitterAccountController implements ITwitterAccountController {
 	/** The Twitter accounts' name. */
 	public String name;
 
-	/** The Twitter accounts' screenname. */
+	/** The Twitter accounts' screen name. */
 	public String screenname;
 
 	/** The Twitter accounts' profile image. */
@@ -292,10 +294,10 @@ public class TwitterAccountController implements ITwitterAccountController {
 	/** The Twtitter's account number of followers Database. */
 	public IDatabaseNumFollowers numFollowersDB;
 
-	/** Serialisation version unique ID. */
+	/** Serialization version unique ID. */
 	private static final long serialVersionUID = 1L;
 
-	/** The heavyhitters database */
+	/** The heavy hitters database */
 	private IDatabaseHeavyHitters heavyhitterDB;
 
 	/** The followers DB */

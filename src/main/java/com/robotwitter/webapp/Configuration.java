@@ -161,10 +161,12 @@ public class Configuration implements ServletContextListener
 		dbListener.setUser(account.getUserId());
 		
 		FollowerIdsBackfiller backfiller = injector.getInstance(FollowerIdsBackfiller.class);
+		backfiller.setUser(account.getUserId());
 		
 		tracker.addListener(dbListener);
 		tracker.addListener(hhListener);
 		tracker.addBackfiller(backfiller);
+		accountsTracker.addUserTracker(tracker);
 		accountsTracker.startTracker(account.getUserId());
 	}
 	

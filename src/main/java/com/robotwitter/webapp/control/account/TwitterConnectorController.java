@@ -141,6 +141,9 @@ public class TwitterConnectorController implements ITwitterConnectorController
 		userTracker.addListener(dbListener);
 		userTracker.addListener(hhListener);
 		userTracker.addBackfiller(backfiller);
+		
+		tracker.addUserTracker(userTracker);
+		tracker.startTracker(id);
 	}
 	
 	

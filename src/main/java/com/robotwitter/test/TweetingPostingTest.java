@@ -1,15 +1,18 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.test;
 
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
@@ -37,13 +40,13 @@ public class TweetingPostingTest
 	@Before
 	public void setUp() throws Exception
 	{
-		Preference pref = new NumberedPreference();
-		twitterPoster = new TweetPostService(pref);
+		// final Preference pref = new NumberedPreference();
+		// twitterPoster = new TweetPostService(pref);
 		
-		TwitterFactory tf =
+		final TwitterFactory tf =
 			new TwitterFactory(
 				new TwitterAppConfiguration().getUserConfiguration());
-		Twitter connector = tf.getInstance();
+		final Twitter connector = tf.getInstance();
 		
 		connector.setOAuthAccessToken(new AccessToken(
 			"248335762-hzlfNjWvIn1OJgV2d6szoVQxVFVfdlAcR36eB6Pa",
@@ -52,6 +55,9 @@ public class TweetingPostingTest
 		shmulikAccout = new TwitterAccount(tf);
 		shmulikAccout.setTwitter(connector);
 		shmulikAccout.setAttached(true);
+
+		preference = new NumberedPreference();
+		twitterPoster = new TweetPostService(shmulikAccout);
 	}
 	
 	
@@ -69,18 +75,22 @@ public class TweetingPostingTest
 	@Test
 	public void testSuccess()
 	{
-		String tweet =
-			"Hi my name is Merabi Shmulik Chicvashvili, currently working for a "
+		final String tweet =
+			"Hi my name is Merabi Shmulik Chicvashvililili, currently working for a "
 				+ "Robotwitter ltd. We are developing the future of tweeting and shit."
-				+ "McGonogol ya' wrinkley bitch ill gnaw your arm off harry yr a wizzard.";
-		twitterPoster.setTweet(tweet);
-		twitterPoster.setTwitterAccount(shmulikAccout);
-		assertEquals(twitterPoster.post(), ReturnStatus.SUCCESS);
+				+ "McGonogol ya' wrinkley bitch ill gnaw your arm off harry yr a wizzardddd.";
+		// twitterPoster.setTweet(tweet);
+		// twitterPoster.setTwitterAccount(shmulikAccout);
+
+		final ArrayList<String> tweetToPost = preference.generateTweet(tweet);
+		assertEquals(twitterPoster.post(tweetToPost), ReturnStatus.SUCCESS);
 	}
 	
 	
 	
 	private TwitterAccount shmulikAccout;
+	
+	private Preference preference;
 	
 	private TweetPostService twitterPoster;
 	

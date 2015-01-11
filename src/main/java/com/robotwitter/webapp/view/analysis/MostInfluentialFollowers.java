@@ -94,10 +94,13 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 		followersStat.setValue(String.valueOf(follower.getNumFollowers()));
 		favouritesStat.setValue(String.valueOf(follower.getNumFavorites()));
 		
-		BrowserWindowOpener opener =
+		if (opener != null)
+		{
+			link.removeExtension(opener);
+		}
+		opener =
 			new BrowserWindowOpener("https://twitter.com/"
 				+ follower.getScreenName());
-		
 		opener.extend(link);
 	}
 	
@@ -122,6 +125,7 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 				messages
 					.get("MostInfluentialFollowers.link.to-follower-twitter"));
 		link.addStyleName(ValoTheme.BUTTON_LINK);
+		opener = null;
 		
 		// Captions
 		description.setCaption(messages
@@ -282,6 +286,9 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 
 	/** The active Twitter follower's link to Twitter account. */
 	Button link;
+	
+	/** Link browser window opener. */
+	private BrowserWindowOpener opener;
 
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "MostInfluentialFollowers";

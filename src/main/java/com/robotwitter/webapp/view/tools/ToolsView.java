@@ -5,6 +5,9 @@ package com.robotwitter.webapp.view.tools;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 import com.robotwitter.webapp.messages.IMessagesContainer;
@@ -13,10 +16,15 @@ import com.robotwitter.webapp.view.AbstractView;
 
 
 
-/** Dashboard view. */
+/**
+ * Tools view.
+ *
+ * @author Hagai Akibayov
+ * @author Eyal Tolchinsky
+ */
 public class ToolsView extends AbstractView
 {
-
+	
 	/**
 	 * Instantiates a new tools view.
 	 *
@@ -28,15 +36,15 @@ public class ToolsView extends AbstractView
 	{
 		super(messages, messages.get("ToolsView.page.title"));
 	}
-
-
+	
+	
 	@Override
 	public final boolean isSignedInProhibited()
 	{
 		return false;
 	}
-
-
+	
+	
 	@Override
 	public final boolean isSignedInRequired()
 	{
@@ -44,19 +52,72 @@ public class ToolsView extends AbstractView
 	}
 	
 	
+	/**
+	 * Wrap the given component in a panel.
+	 *
+	 * @param component
+	 *            the component to wrap
+	 * @param title
+	 *            the panel's title
+	 *
+	 * @return a newly created panel wrapper, wrapping the given component
+	 */
+	private Component wrapInPanel(Component component, String title)
+	{
+		Label titleLabel = new Label(title);
+		VerticalLayout panel = new VerticalLayout(titleLabel, component);
+		panel.setWidthUndefined();
+		titleLabel.addStyleName(PANEL_TITLE_STYLENAME);
+		panel.addStyleName(PANEL_STYLENAME);
+		return panel;
+	}
+
+
 	@Override
 	protected final void initialise()
 	{
-		VerticalLayout temp = new VerticalLayout();
-		temp.setSizeFull();
-		setCompositionRoot(temp);
+		Label header = new Label(messages.get("ToolsView.label.header"));
+		TweetComposer composer = new TweetComposer(messages);
+		
+		Component composerPanel =
+			wrapInPanel(
+				composer,
+				messages.get("ToolsView.caption.tweet-composer"));
+		VerticalLayout composerPanelWrapper = new VerticalLayout(composerPanel);
+		composerPanelWrapper.setSizeFull();
+		composerPanelWrapper.setComponentAlignment(
+			composerPanel,
+			Alignment.MIDDLE_CENTER);
+
+		VerticalLayout layout =
+			new VerticalLayout(header, composerPanelWrapper);
+		layout.setSizeFull();
+		layout.setExpandRatio(composerPanelWrapper, 1);
+		
+		header.addStyleName(HEADER_STYLENAME);
+		addStyleName(STYLENAME);
+		
+		setCompositionRoot(layout);
 	}
 	
 	
 	
 	/** The view's name. */
 	public static final String NAME = "tools";
+
+	/** The CSS class name to apply to this component. */
+	private static final String STYLENAME = "ToolsView";
 	
+	/** The CSS class name to apply to the header component. */
+	private static final String HEADER_STYLENAME = "ToolsView-header";
+	
+	/** The CSS class name to apply to each panel component. */
+	private static final String PANEL_STYLENAME = "AnalysisView-panel";
+	
+	/** The CSS class name to apply to each panel title label. */
+	private static final String PANEL_TITLE_STYLENAME =
+		"AnalysisView-panel-title";
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

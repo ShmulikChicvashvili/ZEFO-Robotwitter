@@ -112,6 +112,8 @@ public class TwitterAccountController implements ITwitterAccountController {
 	@Override
 	public void getFollowersAmountByTheirFollowersAmount(int subdivisions,
 			List<Integer> amounts, List<Integer> separators) {
+		amounts.clear();
+		separators.clear();
 		separatorsByPath(subdivisions, separators, FINDFOLLOWERS);
 		followersAmountByPath(separators, amounts, FINDFOLLOWERS);
 	}
@@ -119,6 +121,8 @@ public class TwitterAccountController implements ITwitterAccountController {
 	@Override
 	public void getFollowersAmountByTheirFollowingAmount(int subdivisions,
 			List<Integer> amounts, List<Integer> separators) {
+		amounts.clear();
+		separators.clear();
 		separatorsByPath(subdivisions, separators, FINDFOLLOWING);
 		followersAmountByPath(separators, amounts, FINDFOLLOWING);
 
@@ -133,7 +137,7 @@ public class TwitterAccountController implements ITwitterAccountController {
 		Integer minCount, maxCount;
 		maxCount = Integer.MIN_VALUE;
 		minCount = Integer.MAX_VALUE;
-		if (allfollowers != null) {
+		if (allfollowers != null && allfollowers.size() != 0) {
 			for (DBFollower follower : allfollowers) {
 				Integer temp;
 				if (path == FINDFOLLOWERS) {
@@ -152,17 +156,16 @@ public class TwitterAccountController implements ITwitterAccountController {
 		if (maxCount.equals(minCount)) {
 			return;
 		}
-		double divide = ((double) (maxCount - minCount + 1)) / subdivision;
-		for (int count = minCount; count < maxCount; count += divide) {
-			separators.add(count);
-		}
+		double divide = ((double) (maxCount - minCount)) / subdivision;
+
 		for (int i = 1; i < subdivision; i++) {
 			int addNew = (int) (minCount + i * divide);
-			if (!separators.isEmpty()) {
-				if (addNew != separators.get(separators.size()))
-					separators.add(addNew);
-			}
+			if (separators.isEmpty()) {
+				separators.add(addNew);
+			} else if (addNew != separators.get(separators.size() - 1))
+				separators.add(addNew);
 		}
+		assert (separators.size() < subdivision);
 	}
 
 	/*
@@ -172,6 +175,17 @@ public class TwitterAccountController implements ITwitterAccountController {
 	private void followersAmountByPath(List<Integer> separators,
 			List<Integer> followersAmount, int path) {
 		boolean start = true;
+		if (separators.size() == 0) {
+			if (this.allfollowers != null && this.allfollowers.size() != 0) {
+				if (path == FINDFOLLOWERS) {
+					separators.add(this.allfollowers.get(0).getFollowers());
+				}else{
+					separators.add(this.allfollowers.get(0).getFollowing());					
+				}
+				followersAmount.add(this.allfollowers.size());
+			}
+			return;
+		}
 		Integer prev = separators.get(0);
 		for (final Integer sep : separators) {
 			if (start) {
@@ -205,7 +219,7 @@ public class TwitterAccountController implements ITwitterAccountController {
 				break;
 			}
 		}
-
+		separators.remove(separators.size() - 1);
 	}
 
 	@Override

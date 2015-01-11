@@ -128,6 +128,7 @@ RobotwitterCustomComponent
 
 		Axes axes = new Axes();
 		XYaxis axis = new XYaxis().setRenderer(AxisRenderers.CATEGORY);
+		// if there are ticks set them, else leave it empty
 		if (ticks.size() > 0)
 		{
 			axis.setTicks(new Ticks().add(ticks.toArray()));
@@ -136,7 +137,15 @@ RobotwitterCustomComponent
 		options.setAxes(axes);
 
 		DataSeries dataSeries = new DataSeries();
-		dataSeries.add(amounts.toArray());
+		// if there is data set it, else set the data to empty
+		if (amounts.size() > 0)
+		{
+			dataSeries.add(amounts.toArray());
+		} else
+		{
+			Object[] empty = {null};
+			dataSeries.newSeries().add(empty);
+		}
 		barChart.setDataSeries(dataSeries);
 	}
 
@@ -166,13 +175,21 @@ RobotwitterCustomComponent
 		List<Integer> separators,
 		List<Integer> amounts)
 	{
-		assert amounts.size() == separators.size() + 1;
+		assert amounts.size() == 0
+			&& separators.size() == 0
+			|| amounts.size() == separators.size() + 1;
 		List<String> ticks = new ArrayList<>();
-		if (separators.size() == 0)
+
+		if (amounts.size() == 0)
 		{
-			// ticks.add("All");
-		} else
+			// sets the data with empty data
+			set(ticks, amounts);
+			return;
+		}
+
+		if (separators.size() > 0)
 		{
+			// set ticks to show the ranges
 			ticks.add("< " + separators.get(0));
 			for (int i = 0; i < separators.size() - 1; i++)
 			{

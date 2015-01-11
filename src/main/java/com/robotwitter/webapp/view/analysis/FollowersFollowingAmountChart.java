@@ -25,7 +25,7 @@ import com.robotwitter.webapp.util.AbstractBarCharComponent;
  */
 public class FollowersFollowingAmountChart extends AbstractBarCharComponent
 {
-	
+
 	/**
 	 * Instantiates a new followers following amount chart.
 	 *
@@ -34,13 +34,13 @@ public class FollowersFollowingAmountChart extends AbstractBarCharComponent
 	 */
 	public FollowersFollowingAmountChart(IMessagesContainer messages)
 	{
-		
+
 		super(messages);
 		initialiseLayout();
 		getUserSession().observeActiveTwitterAccount(this);
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.util.RobotwitterCustomComponent#
 	 * activateTwitterAccount(long) */
@@ -49,8 +49,8 @@ public class FollowersFollowingAmountChart extends AbstractBarCharComponent
 	{
 		updateChart();
 	}
-	
-	
+
+
 	/**
 	 * Initialise layout.
 	 */
@@ -59,8 +59,8 @@ public class FollowersFollowingAmountChart extends AbstractBarCharComponent
 		set("!FollowersFollowingAmountChart!");
 		updateChart();
 	}
-	
-	
+
+
 	/**
 	 * Update chart.
 	 */
@@ -68,14 +68,14 @@ public class FollowersFollowingAmountChart extends AbstractBarCharComponent
 	{
 		ITwitterAccountController controller =
 			getUserSession().getAccountController().getActiveTwitterAccount();
-		
+
 		List<Integer> separators = new ArrayList<>();
 		List<Integer> amounts = new ArrayList<>();
-		controller.getFollowersAmountByTheirFollowersAmount(
+		controller.getFollowersAmountByTheirFollowingAmount(
 			5,
 			amounts,
 			separators);
-		
+
 		setBySeperators(separators, amounts);
 		show();
 	}

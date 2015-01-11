@@ -50,6 +50,10 @@ public class TwitterAccount
 		
 	}
 	
+	public void setTwitter(final Twitter twitterConnector) {
+		this.twitterConnector = twitterConnector;
+	}
+	
 	
 	
 	Twitter twitterConnector;

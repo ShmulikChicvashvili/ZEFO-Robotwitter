@@ -11,6 +11,9 @@ import twitter4j.TwitterStreamFactory;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
+import com.robotwitter.management.ITwitterTracker;
+import com.robotwitter.management.TwitterTracker;
+
 
 
 
@@ -37,6 +40,8 @@ public class UserTrackerModule extends AbstractModule
 				.getUserConfiguration()));
 		
 		bind(IUserTracker.class).to(UserTracker.class);
+		
+		bind(ITwitterTracker.class).to(TwitterTracker.class);
 	}
 	
 }

@@ -1,0 +1,15 @@
+@import "common";
+@import "../config";
+/*----------------------------------------------------------------------------*/
+
+@mixin RobotwitterUI { .RobotwitterUI {
+	
+	/* Enable scrolling */
+	.RobotwitterUI-content > .v-expand
+	{
+		overflow-y: auto;
+		overflow-x: hidden;
+	}
+
+} }
+

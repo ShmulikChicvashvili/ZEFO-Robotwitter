@@ -20,6 +20,9 @@ import org.dussan.vaadin.dcharts.options.SeriesDefaults;
 import org.dussan.vaadin.dcharts.renderers.legend.EnhancedLegendRenderer;
 import org.dussan.vaadin.dcharts.renderers.series.PieRenderer;
 
+import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
+
 import com.robotwitter.webapp.messages.IMessagesContainer;
 
 
@@ -29,11 +32,11 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
  * Represents an abstract pie chart component.
  *
  *
- * V pie chart is divided into sectors that each represents a proportion of the
+ * A pie chart is divided into sectors that each represents a proportion of the
  * whole.
  *
  * @author Eyal
- * @ahtuor Hagai
+ * @author Hagai
  */
 public abstract class AbstractPieChartComponent
 extends
@@ -46,7 +49,9 @@ RobotwitterCustomComponent
 	 * @param messages
 	 *            the messages
 	 */
-	public AbstractPieChartComponent(IMessagesContainer messages)
+	public AbstractPieChartComponent(
+		IMessagesContainer messages,
+		String noDataMessage)
 	{
 		super(messages);
 		
@@ -62,9 +67,18 @@ RobotwitterCustomComponent
 		.setHighlighter(highlighter)
 		.setLegend(legend);
 		
-		pieChart = new DCharts().setOptions(options);
+		dataSeries = new DataSeries();
 		
-		setCompositionRoot(pieChart);
+		pieChart = new DCharts();
+		
+		noDataLabel = new Label(noDataMessage);
+		
+		// setCompositionRoot(pieChart);
+		
+		// FIXME this should be done on the client-side
+		UI.getCurrent().getPage().addBrowserWindowResizeListener(event -> {
+			pieChart.setSizeFull();
+		});
 	}
 	
 	
@@ -126,14 +140,12 @@ RobotwitterCustomComponent
 	 */
 	protected final void set(Map<String, Integer> data)
 	{
-		DataSeries dataSeries = new DataSeries();
+		dataSeries = new DataSeries();
 		for (Entry<String, Integer> entry : data.entrySet())
 		{
 			dataSeries.newSeries().add(entry.getKey(), entry.getValue());
 		}
-		pieChart.setDataSeries(dataSeries);
-		pieChart.setCaption("CAPTION");
-		pieChart.show();
+		// pieChart.setDataSeries(dataSeries);
 	}
 	
 	
@@ -146,12 +158,37 @@ RobotwitterCustomComponent
 	protected final void set(String label)
 	{
 		options.setTitle(label);
-		pieChart.setCaption(label);
+	}
+	
+	
+	/**
+	 * Updates the options and shows the pie chart.
+	 */
+	protected final void show()
+	{
+		if (dataSeries.isEmpty())
+		{
+			setCompositionRoot(noDataLabel);
+		} else
+		{
+			pieChart.setDataSeries(dataSeries);
+			pieChart.setOptions(options);
+			pieChart.show();
+			setCompositionRoot(pieChart);
+		}
 	}
 	
 	
 	
+	/** The data series. */
+	private DataSeries dataSeries;
+	
+	/** The pie chart options. */
 	private Options options;
 	
+	/** The pie chart. */
 	private DCharts pieChart;
+	
+	/** The no data label. */
+	private Label noDataLabel;
 }

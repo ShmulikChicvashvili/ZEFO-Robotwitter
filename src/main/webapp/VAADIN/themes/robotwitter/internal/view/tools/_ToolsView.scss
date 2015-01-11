@@ -2,17 +2,12 @@
 @import "../../../config";
 /*----------------------------------------------------------------------------*/
 
-/* Fix min-height */
-.v-slot-AnalysisView { position: relative; min-height: 650px; }
-
-@mixin AnalysisView { .AnalysisView {
-
-	position: absolute;
+@mixin ToolsView { .ToolsView {
 	
 	padding: 10px;
 	
 	/* Header */
-	.AnalysisView-header
+	.ToolsView-header
 	{
 		font-size: 3.3em; padding-left: 15px; line-height: 1em;
 	}
@@ -22,6 +17,7 @@
 	{
 		$padding: 15px;
 		padding: $padding;
+		margin: 10px;
 		background: white;
 		border: 1px solid rgba(black, 0.2);
 		@include robotwitter-border-radius(5px);

@@ -19,7 +19,7 @@ import com.robotwitter.webapp.util.AbstractPieChartComponent;
  */
 public class FollowersDisplayedLanguageChart extends AbstractPieChartComponent
 {
-
+	
 	/**
 	 * Instantiates a new followers displayed language chart.
 	 *
@@ -28,12 +28,13 @@ public class FollowersDisplayedLanguageChart extends AbstractPieChartComponent
 	 */
 	public FollowersDisplayedLanguageChart(IMessagesContainer messages)
 	{
-		super(messages);
+		super(messages, messages
+			.get("FollowersDisplayedLanguageChart.error.no-data"));
 		initialiseLayout();
 		getUserSession().observeActiveTwitterAccount(this);
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.util.RobotwitterCustomComponent#
 	 * activateTwitterAccount(long) */
@@ -42,24 +43,27 @@ public class FollowersDisplayedLanguageChart extends AbstractPieChartComponent
 	{
 		updateChart();
 	}
-
-
+	
+	
+	/**
+	 * Initialise layout.
+	 */
 	private void initialiseLayout()
 	{
-		set("Label");
 		updateChart();
 	}
-
-
-	private final void updateChart()
+	
+	
+	private void updateChart()
 	{
 		ITwitterAccountController controller =
 			getUserSession().getAccountController().getActiveTwitterAccount();
-
+		
 		Map<String, Integer> amountPerLanguage =
 			controller.getFollowersAmountByDisplayedLanguage();
-
+		
 		set(amountPerLanguage);
+		show();
 	}
-
+	
 }

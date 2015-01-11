@@ -21,6 +21,7 @@ import org.dussan.vaadin.dcharts.options.Options;
 import org.dussan.vaadin.dcharts.renderers.tick.AxisTickRenderer;
 import org.dussan.vaadin.dcharts.renderers.tick.CanvasAxisTickRenderer;
 
+import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 import com.robotwitter.webapp.control.account.ITwitterAccountController;
@@ -66,14 +67,12 @@ public class FollowersAmountOverTimeChart extends RobotwitterCustomComponent
 	{
 		Axes axes = new Axes();
 		axes.addAxis(new XYaxis()
-			.setRenderer(AxisRenderers.DATE)
-			.setTickOptions(
-				new CanvasAxisTickRenderer().setAngle(-30).setFormatString(
-					"%#d %b, %Y")));
-		axes.addAxis(new XYaxis(XYaxes.Y)
-		.setLabel(messages.get("AnalysisView.chart.label.followers"))
-		.setLabelRenderer(LabelRenderers.CANVAS)
-		.setTickOptions(new AxisTickRenderer().setFormatString("%d")));
+		.setRenderer(AxisRenderers.DATE)
+		.setTickOptions(
+			new CanvasAxisTickRenderer().setFormatString("%m/%#d/%Y")));
+		axes.addAxis(new XYaxis(XYaxes.Y).setLabelRenderer(
+			LabelRenderers.CANVAS).setTickOptions(
+			new AxisTickRenderer().setFormatString("%d")));
 
 		Highlighter highlighter =
 			new Highlighter()
@@ -86,21 +85,22 @@ public class FollowersAmountOverTimeChart extends RobotwitterCustomComponent
 		
 		Options options =
 			new Options()
-				.addOption(axes)
-				.addOption(highlighter)
-				.setAnimate(true);
+		.addOption(axes)
+		.addOption(highlighter)
+		.setAnimate(true);
 
 		chart = new DCharts().setOptions(options);
-		updateChart();
 
 		// FIXME this should be done on the client-side
 		UI.getCurrent().getPage().addBrowserWindowResizeListener(event -> {
 			chart.setSizeFull();
 		});
 		
+		setSizeFull();
+		
 		addStyleName(STYLENAME);
-
-		setCompositionRoot(chart);
+		
+		updateChart();
 	}
 	
 	
@@ -112,6 +112,14 @@ public class FollowersAmountOverTimeChart extends RobotwitterCustomComponent
 		
 		Map<Date, Integer> followers =
 			controller.getAmountOfFollowers(null, null);
+
+		if (followers.isEmpty())
+		{
+			setCompositionRoot(new Label(
+				messages.get("FollowersAmountOverTimeChart.error.no-data")));
+			return;
+		}
+		setCompositionRoot(chart);
 		
 		DataSeries dataSeries = new DataSeries().newSeries();
 		
@@ -131,7 +139,7 @@ public class FollowersAmountOverTimeChart extends RobotwitterCustomComponent
 	DCharts chart;
 	
 	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "FollowersOverTimeChart";
+	private static final String STYLENAME = "FollowersAmountOverTimeChart";
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

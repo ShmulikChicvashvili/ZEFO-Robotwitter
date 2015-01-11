@@ -99,10 +99,12 @@ public class TwitterAccountController implements ITwitterAccountController {
 	@Override
 	public Map<String, Integer> getFollowersAmountByDisplayedLanguage() {
 		Map<String, Integer> m = new HashMap<String, Integer>();
-		for (final DBFollower follower : allfollowers) {
-			String lang = follower.getLanguage();
-			Integer langCounter = m.get(lang);
-			m.put(lang, (langCounter == null) ? 1 : langCounter + 1);
+		if (allfollowers != null) {
+			for (final DBFollower follower : allfollowers) {
+				String lang = follower.getLanguage();
+				Integer langCounter = m.get(lang);
+				m.put(lang, (langCounter == null) ? 1 : langCounter + 1);
+			}
 		}
 		return m;
 	}
@@ -131,32 +133,44 @@ public class TwitterAccountController implements ITwitterAccountController {
 		Integer minCount, maxCount;
 		maxCount = Integer.MIN_VALUE;
 		minCount = Integer.MAX_VALUE;
-		for (DBFollower follower : allfollowers) {
-			Integer temp;
-			if (path == FINDFOLLOWERS) {
-				temp = follower.getFollowers();
-			} else {
-				temp = follower.getFollowing();
+		if (allfollowers != null) {
+			for (DBFollower follower : allfollowers) {
+				Integer temp;
+				if (path == FINDFOLLOWERS) {
+					temp = follower.getFollowers();
+				} else {
+					temp = follower.getFollowing();
+				}
+				if (maxCount < temp)
+					maxCount = temp;
+				if (minCount > temp)
+					minCount = temp;
 			}
-			if (maxCount < temp)
-				maxCount = temp;
-			if (minCount > temp)
-				minCount = temp;
+		} else {
+			return;
 		}
-		int listSize = allfollowers.size();
-		int divide = (int) listSize / subdivision;
+		if (maxCount.equals(minCount)) {
+			return;
+		}
+		double divide = ((double) (maxCount - minCount + 1)) / subdivision;
 		for (int count = minCount; count < maxCount; count += divide) {
 			separators.add(count);
 		}
-		separators.add(maxCount);
+		for (int i = 1; i < subdivision; i++) {
+			int addNew = (int) (minCount + i * divide);
+			if (!separators.isEmpty()) {
+				if (addNew != separators.get(separators.size()))
+					separators.add(addNew);
+			}
+		}
 	}
 
 	/*
 	 * This function will create a list that will say how many followers are
 	 * there for each separator
 	 */
-	private void followersAmountByPath(List<Integer> separators,List<Integer> followersAmount,
-			int path) {
+	private void followersAmountByPath(List<Integer> separators,
+			List<Integer> followersAmount, int path) {
 		boolean start = true;
 		Integer prev = separators.get(0);
 		for (final Integer sep : separators) {
@@ -173,20 +187,25 @@ public class TwitterAccountController implements ITwitterAccountController {
 		Integer temp;
 		separators.add(Integer.MAX_VALUE);
 		for (final Integer next : separators) {
-			for (final DBFollower follower : allfollowers) {
-				if (path == FINDFOLLOWERS) {
-					temp = (Integer) follower.getFollowers();
-				} else {
-					temp = (Integer) follower.getFollowing();
+			if (allfollowers != null) {
+				for (final DBFollower follower : allfollowers) {
+					if (path == FINDFOLLOWERS) {
+						temp = (Integer) follower.getFollowers();
+					} else {
+						temp = (Integer) follower.getFollowing();
+					}
+					if (prev <= temp && temp < next) {
+						count++;
+					}
 				}
-				if (prev <= temp && temp < next) {
-					count++;
-				}
+				prev = next;
+				followersAmount.add(count);
+				count = 0;
+			} else {
+				break;
 			}
-			prev = next;
-			followersAmount.add(count);
-			count = 0;
 		}
+
 	}
 
 	@Override
@@ -202,7 +221,7 @@ public class TwitterAccountController implements ITwitterAccountController {
 	@Override
 	public final int getLastKnownAmountOfFollowers() {
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
-		if (dbfollowers.isEmpty()) {
+		if (dbfollowers == null || dbfollowers.isEmpty()) {
 			return NOFOLLOWERSINFO;
 		}
 		return lastUpdateInDatabase().getNumFollowers();
@@ -211,7 +230,7 @@ public class TwitterAccountController implements ITwitterAccountController {
 	@Override
 	public final int getLastKnownAmountOfGainedFollowers() {
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
-		if (dbfollowers.isEmpty()) {
+		if (dbfollowers == null || dbfollowers.isEmpty()) {
 			return NOFOLLOWERSINFO;
 		}
 		return lastUpdateInDatabase().getNumJoined();
@@ -220,7 +239,8 @@ public class TwitterAccountController implements ITwitterAccountController {
 	@Override
 	public final int getLastKnownAmountOfLostFollowers() {
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
-		if (dbfollowers.isEmpty()) {
+
+		if (dbfollowers == null || dbfollowers.isEmpty()) {
 			return NOFOLLOWERSINFO;
 		}
 		return lastUpdateInDatabase().getNumLeft();
@@ -230,27 +250,28 @@ public class TwitterAccountController implements ITwitterAccountController {
 	public final List<TwitterFollower> getMostInfluentialFollowers() {
 		List<TwitterFollower> list = new LinkedList<>();
 		ArrayList<Long> list2 = heavyhitterDB.get(this.id);
-		for (final Long iterator : list2) {
-			DBFollower follower = followersDB.get(iterator);
-			if ((follower) != null) {
-				TwitterFollower tempfollower = new TwitterFollower(iterator,
-						follower.getName(), follower.getScreenName(),
-						follower.getDescription(), follower.getFollowers(),
-						follower.getFollowing(), follower.getLocation(),
-						follower.getFavorites(), follower.getLanguage(),
-						follower.getIsCelebrity(), follower.getJoined(),
-						follower.getPicture());
-				list.add(tempfollower);
+		if (list2 != null) {
+			for (final Long iterator : list2) {
+				DBFollower follower = followersDB.get(iterator);
+				if ((follower) != null) {
+					TwitterFollower tempfollower = new TwitterFollower(
+							iterator, follower.getName(),
+							follower.getScreenName(),
+							follower.getDescription(), follower.getFollowers(),
+							follower.getFollowing(), follower.getLocation(),
+							follower.getFavorites(), follower.getLanguage(),
+							follower.getIsCelebrity(), follower.getJoined(),
+							follower.getPicture());
+					list.add(tempfollower);
+				}
 			}
 		}
-
 		return list;
 	}
 
 	private final DBFollowersNumber lastUpdateInDatabase() {
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
-		if (dbfollowers.isEmpty()) {// Should be checked before calling but
-									// returns null
+		if (dbfollowers.isEmpty()) {
 			return null;
 		}
 		DBFollowersNumber latest = null;

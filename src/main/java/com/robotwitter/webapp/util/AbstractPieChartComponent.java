@@ -20,6 +20,8 @@ import org.dussan.vaadin.dcharts.options.SeriesDefaults;
 import org.dussan.vaadin.dcharts.renderers.legend.EnhancedLegendRenderer;
 import org.dussan.vaadin.dcharts.renderers.series.PieRenderer;
 
+import com.vaadin.ui.Label;
+
 import com.robotwitter.webapp.messages.IMessagesContainer;
 
 
@@ -39,14 +41,15 @@ public abstract class AbstractPieChartComponent
 extends
 RobotwitterCustomComponent
 {
-
 	/**
 	 * Instantiates a new abstract pie chart component.
 	 *
 	 * @param messages
 	 *            the messages
 	 */
-	public AbstractPieChartComponent(IMessagesContainer messages)
+	public AbstractPieChartComponent(
+		IMessagesContainer messages,
+		String noDataMessage)
 	{
 		super(messages);
 
@@ -63,7 +66,10 @@ RobotwitterCustomComponent
 		.setLegend(legend);
 
 		pieChart = new DCharts();
-		setCompositionRoot(pieChart);
+
+		noDataLabel = new Label(noDataMessage);
+
+		// setCompositionRoot(pieChart);
 	}
 
 
@@ -130,15 +136,6 @@ RobotwitterCustomComponent
 		{
 			dataSeries.newSeries().add(entry.getKey(), entry.getValue());
 		}
-		if (dataSeries.isEmpty())
-		{
-			options.getLegend().setShow(false);
-			Object[] empty = { null, null };
-			dataSeries.newSeries().add(empty);
-		} else
-		{
-			options.getLegend().setShow(true);
-		}
 		pieChart.setDataSeries(dataSeries);
 	}
 
@@ -160,11 +157,21 @@ RobotwitterCustomComponent
 	 */
 	protected final void show()
 	{
-		pieChart.setOptions(options);
-		pieChart.show();
+		if (pieChart.getDataSeries().isEmpty())
+		{
+			setCompositionRoot(noDataLabel);
+		} else
+		{
+			setCompositionRoot(pieChart);
+			pieChart.setOptions(options);
+			pieChart.show();
+		}
 	}
 
 
+
+	/** The no data label. */
+	private Label noDataLabel;
 
 	/** The pie chart options. */
 	private Options options;

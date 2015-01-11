@@ -22,6 +22,8 @@ import org.dussan.vaadin.dcharts.options.Legend;
 import org.dussan.vaadin.dcharts.options.Options;
 import org.dussan.vaadin.dcharts.options.SeriesDefaults;
 
+import com.vaadin.ui.Label;
+
 import com.robotwitter.webapp.messages.IMessagesContainer;
 
 
@@ -43,7 +45,9 @@ RobotwitterCustomComponent
 	 * @param messages
 	 *            the messages
 	 */
-	public AbstractBarCharComponent(IMessagesContainer messages)
+	public AbstractBarCharComponent(
+		IMessagesContainer messages,
+		String noDataMessage)
 	{
 		super(messages);
 
@@ -61,7 +65,9 @@ RobotwitterCustomComponent
 
 		barChart = new DCharts();
 
-		setCompositionRoot(barChart);
+		noDataLabel = new Label(noDataMessage);
+
+		// setCompositionRoot(barChart);
 	}
 
 
@@ -137,14 +143,10 @@ RobotwitterCustomComponent
 		options.setAxes(axes);
 
 		DataSeries dataSeries = new DataSeries();
-		// if there is data set it, else set the data to empty
+		// if there is data set it, else leave it empty
 		if (amounts.size() > 0)
 		{
 			dataSeries.add(amounts.toArray());
-		} else
-		{
-			Object[] empty = {null};
-			dataSeries.newSeries().add(empty);
 		}
 		barChart.setDataSeries(dataSeries);
 	}
@@ -178,26 +180,23 @@ RobotwitterCustomComponent
 		assert amounts.size() == 0
 			&& separators.size() == 0
 			|| amounts.size() == separators.size() + 1;
-		List<String> ticks = new ArrayList<>();
 
-		if (amounts.size() == 0)
-		{
-			// sets the data with empty data
-			set(ticks, amounts);
-			return;
-		}
+		List<String> ticks = new ArrayList<>();
 
 		if (separators.size() > 0)
 		{
 			// set ticks to show the ranges
-			ticks.add("< " + separators.get(0));
+			ticks.add("<" + separators.get(0));
 			for (int i = 0; i < separators.size() - 1; i++)
 			{
 				ticks.add(separators.get(i) + "-" + separators.get(i + 1));
 			}
-			ticks.add("&ge; " + separators.get(separators.size() - 1));
+			ticks.add("&ge;" + separators.get(separators.size() - 1));
 			assert ticks.size() == amounts.size();
 		}
+		// set the ticks and data. they both might be empty (if there is no
+		// data).
+		// 'set' should handle this.
 
 		set(ticks, amounts);
 	}
@@ -208,8 +207,15 @@ RobotwitterCustomComponent
 	 */
 	protected final void show()
 	{
-		barChart.setOptions(options);
-		barChart.show();
+		if (barChart.getDataSeries().isEmpty())
+		{
+			setCompositionRoot(noDataLabel);
+		} else
+		{
+			setCompositionRoot(barChart);
+			barChart.setOptions(options);
+			barChart.show();
+		}
 	}
 
 
@@ -219,5 +225,8 @@ RobotwitterCustomComponent
 
 	/** The bar chart. */
 	private DCharts barChart;
+
+	/** The no data label. */
+	private Label noDataLabel;
 
 }

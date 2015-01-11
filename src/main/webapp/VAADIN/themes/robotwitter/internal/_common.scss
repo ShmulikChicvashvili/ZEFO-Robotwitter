@@ -39,6 +39,16 @@
           transition: $transition;
 }
 
+/* Cross-platform transform. */
+@mixin robotwitter-transform($transform)
+{
+  -webkit-transform: $transform;
+     -moz-transform: $transform;
+      -ms-transform: $transform;
+       -o-transform: $transform;
+          transform: $transform;
+}
+
 /* Cross-platform keyframes. */
 @mixin robotwitter-keyframes($animation-name)
 {

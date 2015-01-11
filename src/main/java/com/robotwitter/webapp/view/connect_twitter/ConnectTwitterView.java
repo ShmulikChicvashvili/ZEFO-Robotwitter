@@ -27,7 +27,7 @@ import com.robotwitter.webapp.view.AbstractView;
  */
 public class ConnectTwitterView extends AbstractView
 {
-	
+
 	/**
 	 * Instantiates a new connect Twitter account view.
 	 *
@@ -48,63 +48,63 @@ public class ConnectTwitterView extends AbstractView
 		twitterConnectorWindow =
 			new TwitterConnectorWindow(connectorMessages, connectorController);
 	}
-	
-	
+
+
 	@Override
 	public final boolean isSignedInProhibited()
 	{
 		return false;
 	}
-	
-	
+
+
 	@Override
 	public final boolean isSignedInRequired()
 	{
 		return true;
 	}
-
-
+	
+	
 	@Override
 	protected final void initialise()
 	{
 		Label header =
 			new Label(messages.get("ConnectTwitterView.label.before-we-begin"));
-		
+
 		Button connect =
 			new Button(
 				messages.get("ConnectTwitterView.button.connect"),
 				event -> UI.getCurrent().addWindow(twitterConnectorWindow));
 		connect.setIcon(FontAwesome.TWITTER);
-
+		
 		VerticalLayout layout = new VerticalLayout(header, connect);
-		layout.setSizeFull();
-
+		layout.setWidth("100%");
+		
 		// Set styles
 		header.addStyleName(HEADER_STYLENAME);
 		connect.addStyleName(CONNECT_STYLENAME);
 		addStyleName(STYLENAME);
-		
+
 		setCompositionRoot(layout);
 	}
-
-
-
+	
+	
+	
 	/** The view's name. */
 	public static final String NAME = "connect-twitter";
-	
+
 	/** The CSS class name to apply to the header. */
 	private static final String HEADER_STYLENAME = "ConnectTwitterView-header";
-	
+
 	/** The CSS class name to apply to the connect button. */
 	private static final String CONNECT_STYLENAME =
 		"ConnectTwitterView-connect";
-	
+
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "ConnectTwitterView";
-	
+
 	/** The Twitter account connector window. */
 	private TwitterConnectorWindow twitterConnectorWindow;
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

@@ -4,11 +4,18 @@ package com.robotwitter.webapp.view.analysis;
 
 import java.util.List;
 
+import com.vaadin.server.BrowserWindowOpener;
+import com.vaadin.server.ExternalResource;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 import com.robotwitter.webapp.control.account.ITwitterAccountController;
 import com.robotwitter.webapp.control.account.TwitterFollower;
@@ -37,24 +44,11 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 	public MostInfluentialFollowers(IMessagesContainer messages)
 	{
 		super(messages);
-		activeCardWrapper = null;
 		initialiseLayout();
 		getUserSession().observeActiveTwitterAccount(this);
 	}
 	
 	
-	/**
-	 * Activates the given follower.
-	 *
-	 * @param id
-	 *            the follower's Twitter account ID
-	 */
-	public void activateFollower(long id)
-	{
-
-	}
-
-
 	@Override
 	public final void activateTwitterAccount(long id)
 	{
@@ -62,18 +56,155 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 	}
 
 
-	/** Initialises the layout. */
-	private void initialiseLayout()
+	/**
+	 * Activates the given follower given its follower's card.
+	 *
+	 * @param follower
+	 *            the follower
+	 * @param followerCard
+	 *            the follower's card
+	 */
+	private void activateFollower(
+		TwitterFollower follower,
+		Component followerCard)
 	{
-		followers = new VerticalLayout();
-		updateList();
-
-		addStyleName(STYLENAME);
+		if (activeCardWrapper != null)
+		{
+			activeCardWrapper.removeStyleName(ACTIVE_CARD_WRAPPER_STYLENAME);
+		}
+		activeCardWrapper = followerCard;
+		activeCardWrapper.addStyleName(ACTIVE_CARD_WRAPPER_STYLENAME);
 		
-		setCompositionRoot(followers);
+		picture.setSource(new ExternalResource(follower.getPicture()));
+		picture.setAlternateText(follower.getName());
+		name.setValue(follower.getName());
+		screenname.setValue('@' + follower.getScreenName());
+		description.setValue(follower.getDescription());
+		location.setValue(follower.getLocation());
+		language.setValue(follower.getLanguage());
+		
+		celebrity.setValue("");
+		if (follower.getIsCelebrity())
+		{
+			celebrity.setValue(messages
+				.get("MostInfluentialFollowers.label.celebrity"));
+		}
+
+		followingStat.setValue(String.valueOf(follower.getNumFollowing()));
+		followersStat.setValue(String.valueOf(follower.getNumFollowers()));
+		favouritesStat.setValue(String.valueOf(follower.getNumFavorites()));
+		
+		if (opener != null)
+		{
+			link.removeExtension(opener);
+		}
+		opener =
+			new BrowserWindowOpener("https://twitter.com/"
+				+ follower.getScreenName());
+		opener.extend(link);
 	}
 	
 	
+	/** @return A newly created follower information component. */
+	private Component createFollowerInformationComponent()
+	{
+		picture = new Image();
+		name = new Label();
+		screenname = new Label();
+		description = new Label();
+		location = new Label();
+		language = new Label();
+		celebrity = new Label();
+		
+		followingStat = new Label();
+		followersStat = new Label();
+		favouritesStat = new Label();
+
+		link =
+			new Button(
+				messages
+					.get("MostInfluentialFollowers.link.to-follower-twitter"));
+		link.addStyleName(ValoTheme.BUTTON_LINK);
+		opener = null;
+		
+		// Captions
+		description.setCaption(messages
+			.get("MostInfluentialFollowers.caption.bio"));
+		location.setCaption(messages
+			.get("MostInfluentialFollowers.caption.location"));
+		language.setCaption(messages
+			.get("MostInfluentialFollowers.caption.language"));
+		followingStat.setCaption(messages
+			.get("MostInfluentialFollowers.caption.following"));
+		followersStat.setCaption(messages
+			.get("MostInfluentialFollowers.caption.followers"));
+		favouritesStat.setCaption(messages
+			.get("MostInfluentialFollowers.caption.favourites"));
+
+		// Tooltips
+		celebrity.setDescription(messages
+			.get("MostInfluentialFollowers.tooltip.celebrity"));
+
+		// Icons
+		location.setIcon(FontAwesome.GLOBE);
+		link.setIcon(FontAwesome.TWITTER);
+		
+		HorizontalLayout stats =
+			new HorizontalLayout(followingStat, followersStat, favouritesStat);
+		stats.setSpacing(true);
+		
+		HorizontalLayout locationLanguage =
+			new HorizontalLayout(location, language);
+		locationLanguage.setSpacing(true);
+		
+		VerticalLayout left =
+			new VerticalLayout(picture, name, screenname, celebrity, link);
+		VerticalLayout right =
+			new VerticalLayout(stats, description, locationLanguage);
+		right.setSpacing(true);
+
+		HorizontalLayout layout = new HorizontalLayout(left, right);
+		layout.setSizeFull();
+		
+		picture.addStyleName(INFORMATION_PICTURE_STYLENAME);
+		name.addStyleName(INFORMATION_NAME_STYLENAME);
+		screenname.addStyleName(INFORMATION_SCREENNAME_STYLENAME);
+		description.addStyleName(INFORMATION_DESCRIPTION_STYLENAME);
+		location.addStyleName(INFORMATION_LOCATION_STYLENAME);
+		language.addStyleName(INFORMATION_LANGUAGE_STYLENAME);
+		locationLanguage.addStyleName(INFORMATION_LOCATION_LANGUAGE_STYLENAME);
+		celebrity.addStyleName(INFORMATION_CELEBRITY_STYLENAME);
+		followingStat.addStyleName(INFORMATION_STAT_STYLENAME);
+		followersStat.addStyleName(INFORMATION_STAT_STYLENAME);
+		favouritesStat.addStyleName(INFORMATION_STAT_STYLENAME);
+		stats.addStyleName(INFORMATION_STATS_STYLENAME);
+		left.addStyleName(INFORMATION_LEFT_STYLENAME);
+		right.addStyleName(INFORMATION_RIGHT_STYLENAME);
+		layout.addStyleName(INFORMATION_STYLENAME);
+		
+		return layout;
+	}
+	
+	
+	/** Initialises the layout. */
+	private void initialiseLayout()
+	{
+		Component followerInformation = createFollowerInformationComponent();
+		followers = new VerticalLayout();
+		updateList();
+		
+		HorizontalLayout layout =
+			new HorizontalLayout(followerInformation, followers);
+		followers.setSizeFull();
+		layout.setSizeFull();
+		
+		followers.addStyleName(FOLLOWERS_LIST_STYLENAME);
+		addStyleName(STYLENAME);
+		
+		setCompositionRoot(layout);
+	}
+
+
 	/** Update the followers over time chart. */
 	private void updateList()
 	{
@@ -83,6 +214,7 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 		influentialFollowers = controller.getMostInfluentialFollowers();
 
 		followers.removeAllComponents();
+		activeCardWrapper = null;
 		for (TwitterFollower follower : influentialFollowers)
 		{
 			Label card =
@@ -97,17 +229,17 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 			cardWrapper
 				.addLayoutClickListener(event -> {
 					if (event.getButton().compareTo(MouseButton.LEFT) != 0) { return; }
-					if (activeCardWrapper != null)
-				{
-					activeCardWrapper
-					.removeStyleName(ACTIVE_CARD_WRAPPER_STYLENAME);
-				}
-					event.getClickedComponent().addStyleName(
-					ACTIVE_CARD_WRAPPER_STYLENAME);
-					activeCardWrapper = event.getClickedComponent();
+					activateFollower(follower, cardWrapper);
 				});
 
 			followers.addComponent(cardWrapper);
+		}
+
+		if (!influentialFollowers.isEmpty())
+		{
+			activateFollower(
+				influentialFollowers.get(0),
+				followers.getComponent(0));
 		}
 	}
 
@@ -121,9 +253,101 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 	
 	/** The current active Twitter account card wrapper component. */
 	Component activeCardWrapper;
+	
+	/** The active Twitter follower's picture image. */
+	Image picture;
+	
+	/** The active Twitter follower's name label. */
+	Label name;
+	
+	/** The active Twitter follower's screenname label. */
+	Label screenname;
+	
+	/** The active Twitter follower's description label. */
+	Label description;
+	
+	/** The active Twitter follower's location label. */
+	Label location;
+	
+	/** The active Twitter follower's language label. */
+	Label language;
+	
+	/** The active Twitter follower's celebrity label. */
+	Label celebrity;
+	
+	/** The active Twitter follower's following stat label. */
+	Label followingStat;
+	
+	/** The active Twitter follower's followers stat label. */
+	Label followersStat;
+	
+	/** The active Twitter follower's favourites stat label. */
+	Label favouritesStat;
+
+	/** The active Twitter follower's link to Twitter account. */
+	Button link;
+	
+	/** Link browser window opener. */
+	private BrowserWindowOpener opener;
 
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "MostInfluentialFollowers";
+
+	/** The CSS class name to apply to the followers list component. */
+	private static final String FOLLOWERS_LIST_STYLENAME =
+		"MostInfluentialFollowers-followers-list";
+
+	/** The CSS class name to apply to the active follower information. */
+	private static final String INFORMATION_STYLENAME =
+		"MostInfluentialFollowers-information";
+
+	/** The CSS class name to apply to the information left side. */
+	private static final String INFORMATION_LEFT_STYLENAME =
+		"MostInfluentialFollowers-information-left";
+
+	/** The CSS class name to apply to the information right side. */
+	private static final String INFORMATION_RIGHT_STYLENAME =
+		"MostInfluentialFollowers-information-right";
+
+	/** The CSS class name to apply to a picture in the information. */
+	private static final String INFORMATION_PICTURE_STYLENAME =
+		"MostInfluentialFollowers-information-picture";
+
+	/** The CSS class name to apply to a name in the information. */
+	private static final String INFORMATION_NAME_STYLENAME =
+		"MostInfluentialFollowers-information-name";
+
+	/** The CSS class name to apply to a screenname in the information. */
+	private static final String INFORMATION_SCREENNAME_STYLENAME =
+		"MostInfluentialFollowers-information-screenname";
+
+	/** The CSS class name to apply to a stat in the information. */
+	private static final String INFORMATION_STAT_STYLENAME =
+		"MostInfluentialFollowers-information-stat";
+
+	/** The CSS class name to apply to the stats wrapper in the information. */
+	private static final String INFORMATION_STATS_STYLENAME =
+		"MostInfluentialFollowers-information-stats";
+
+	/** The CSS class name to apply to a description in the information. */
+	private static final String INFORMATION_DESCRIPTION_STYLENAME =
+		"MostInfluentialFollowers-information-description";
+
+	/** The CSS class name to apply to a location in the information. */
+	private static final String INFORMATION_LOCATION_STYLENAME =
+		"MostInfluentialFollowers-information-location";
+
+	/** The CSS class name to apply to a language in the information. */
+	private static final String INFORMATION_LANGUAGE_STYLENAME =
+		"MostInfluentialFollowers-information-language";
+
+	/** The CSS class name to apply to a location-language wrapper. */
+	private static final String INFORMATION_LOCATION_LANGUAGE_STYLENAME =
+		"MostInfluentialFollowers-information-location-language";
+
+	/** The CSS class name to apply to a celebrity in the information. */
+	private static final String INFORMATION_CELEBRITY_STYLENAME =
+		"MostInfluentialFollowers-information-celebrity";
 
 	/** The CSS class name to apply to the active card wrapper component. */
 	private static final String ACTIVE_CARD_WRAPPER_STYLENAME =
@@ -131,7 +355,7 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 	
 	/** The CSS class name to apply to a card wrapper. */
 	private static final String CARD_WRAPPER_STYLENAME =
-		"AccountInformationPopup-card-wrapper";
+		"MostInfluentialFollowers-card-wrapper";
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

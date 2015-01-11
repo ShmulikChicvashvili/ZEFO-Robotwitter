@@ -17,6 +17,7 @@ import com.robotwitter.webapp.control.account.ITwitterConnectorController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.analysis.AnalysisView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
+import com.robotwitter.webapp.view.tools.ToolsView;
 
 
 
@@ -32,7 +33,7 @@ import com.robotwitter.webapp.view.dashboard.DashboardView;
  */
 public class MainMenu extends AbstractMenu
 {
-	
+
 	/**
 	 * Instantiates a main menu.
 	 *
@@ -52,15 +53,15 @@ public class MainMenu extends AbstractMenu
 		setCompositionRoot(createMenu());
 		setStyleName(STYLENAME);
 	}
-	
-	
+
+
 	@Override
 	public final void activateTwitterAccount(long id)
 	{
 		accountInformation.markAsDirty();
 	}
-	
-	
+
+
 	/**
 	 * Creates the account information component.
 	 *
@@ -70,15 +71,15 @@ public class MainMenu extends AbstractMenu
 	{
 		PopupView account = new PopupView(accountInfoPopup);
 		accountInfoPopup.setOwner(account);
-		
+
 		// Set properties and styles
 		account.setHideOnMouseOut(false);
 		account.addStyleName(ACCOUNT_STYLENAME);
-		
+
 		return account;
 	}
-	
-	
+
+
 	/**
 	 * Creates the navigation links component.
 	 *
@@ -87,46 +88,46 @@ public class MainMenu extends AbstractMenu
 	private Component createLinks()
 	{
 		MenuBar links = new MenuBar();
-		
+
 		// Add home button
 		links.addItem(
 			messages.get("MainMenu.link.home"),
 			null,
 			item -> navigate(DashboardView.NAME));
-		
+
 		// Add analyse button
 		links.addItem(
 			messages.get("MainMenu.link.analyse"),
 			FontAwesome.BAR_CHART_O,
 			item -> navigate(AnalysisView.NAME));
-		
+
 		// Add tools button
 		links.addItem(
 			messages.get("MainMenu.link.tools"),
 			FontAwesome.WRENCH,
-			null).setEnabled(false);
-
+			item -> navigate(ToolsView.NAME));
+		
 		// Add schedule button
 		links.addItem(
 			messages.get("MainMenu.link.schedule"),
 			FontAwesome.CALENDAR,
 			null).setEnabled(false);
-
+		
 		// Add automate button
 		links.addItem(
 			messages.get("MainMenu.link.automate"),
 			FontAwesome.COGS,
 			null).setEnabled(false);
-
+		
 		// Set properties and styles
 		links.setAutoOpen(true);
 		links.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
 		links.addStyleName(LINKS_STYLENAME);
-
+		
 		return links;
 	}
-	
-	
+
+
 	/** @return a newly created main menu component. */
 	private Component createMenu()
 	{
@@ -138,27 +139,27 @@ public class MainMenu extends AbstractMenu
 		menu.setSizeFull();
 		return menu;
 	}
-	
-	
-	
+
+
+
 	/** The menu's name. */
 	public static final String NAME = "main-menu";
-	
+
 	/** The CSS class name to apply to the account information component. */
 	private static final String ACCOUNT_STYLENAME = "MainMenu-account";
-	
+
 	/** The CSS class name to apply to the navigation links component. */
 	private static final String LINKS_STYLENAME = "MainMenu-links";
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "MainMenu";
-	
+
 	/** The account information pop-up. */
 	AccountInformationPopup accountInfoPopup;
-	
+
 	/** The account information component. */
 	Component accountInformation;
 }

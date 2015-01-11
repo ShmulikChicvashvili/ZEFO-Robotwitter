@@ -11,6 +11,7 @@ scss
 shebang
 mappers
 refractored
+chachamovitz
 refractoring
 guice
 injector
@@ -35,3 +36,9 @@ eyal
 tolchinsky
 doron
 hogery
+stat
+tooltips
+tweet
+toolbar
+overflown
+tweeting

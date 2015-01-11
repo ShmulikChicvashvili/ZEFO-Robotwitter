@@ -22,7 +22,7 @@ import org.dussan.vaadin.dcharts.options.Legend;
 import org.dussan.vaadin.dcharts.options.Options;
 import org.dussan.vaadin.dcharts.options.SeriesDefaults;
 
-import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 
 import com.robotwitter.webapp.messages.IMessagesContainer;
 
@@ -35,42 +35,43 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
  *
  */
 public abstract class AbstractBarCharComponent
-extends
-RobotwitterCustomComponent
+	extends
+		RobotwitterCustomComponent
 {
-
+	
 	/**
 	 * Instantiates a new abstract bar char component.
 	 *
 	 * @param messages
 	 *            the messages
 	 */
-	public AbstractBarCharComponent(
-		IMessagesContainer messages,
-		String noDataMessage)
+	public AbstractBarCharComponent(IMessagesContainer messages)
 	{
 		super(messages);
-
+		
 		SeriesDefaults seriesDefaults = initialiseSeriesDefaults();
-
+		
 		Legend legend = initialiseLegend();
-
+		
 		Highlighter highlighter = initialiseHighlighter();
-
+		
 		options =
 			new Options()
-		.setSeriesDefaults(seriesDefaults)
-		.setHighlighter(highlighter)
-		.setLegend(legend);
-
+				.setSeriesDefaults(seriesDefaults)
+				.setHighlighter(highlighter)
+				.setLegend(legend);
+		
 		barChart = new DCharts();
-
-		noDataLabel = new Label(noDataMessage);
-
-		// setCompositionRoot(barChart);
+		
+		setCompositionRoot(barChart);
+		
+		// FIXME this should be done on the client-side
+		UI.getCurrent().getPage().addBrowserWindowResizeListener(event -> {
+			barChart.setSizeFull();
+		});
 	}
-
-
+	
+	
 	/**
 	 * Initialise highlighter.
 	 *
@@ -80,15 +81,15 @@ RobotwitterCustomComponent
 	{
 		Highlighter highlighter =
 			new Highlighter()
-		.setShow(true)
-		.setShowTooltip(true)
-		.setTooltipAlwaysVisible(true)
-		.setKeepTooltipInsideChart(true)
-		.setTooltipAxes(TooltipAxes.XY_BAR);
+				.setShow(true)
+				.setShowTooltip(true)
+				.setTooltipAlwaysVisible(true)
+				.setKeepTooltipInsideChart(true)
+				.setTooltipAxes(TooltipAxes.XY_BAR);
 		return highlighter;
 	}
-
-
+	
+	
 	/**
 	 * Initialise legend.
 	 *
@@ -104,8 +105,8 @@ RobotwitterCustomComponent
 		// SeriesToggles.SLOW).setSeriesToggleReplot(true));
 		return legend;
 	}
-
-
+	
+	
 	/**
 	 * Initialise series defaults.
 	 *
@@ -115,12 +116,12 @@ RobotwitterCustomComponent
 	{
 		SeriesDefaults seriesDefaults =
 			new SeriesDefaults()
-		.setRenderer(SeriesRenderers.BAR)
-		.setPointLabels(new PointLabels().setShow(true));
+				.setRenderer(SeriesRenderers.BAR)
+				.setPointLabels(new PointLabels().setShow(true));
 		return seriesDefaults;
 	}
-
-
+	
+	
 	/**
 	 * Sets the data for the chart.
 	 *
@@ -131,7 +132,7 @@ RobotwitterCustomComponent
 	 */
 	protected final void set(List<String> ticks, List<Integer> amounts)
 	{
-
+		
 		Axes axes = new Axes();
 		XYaxis axis = new XYaxis().setRenderer(AxisRenderers.CATEGORY);
 		// if there are ticks set them, else leave it empty
@@ -141,17 +142,21 @@ RobotwitterCustomComponent
 		}
 		axes.addAxis(axis);
 		options.setAxes(axes);
-
+		
 		DataSeries dataSeries = new DataSeries();
-		// if there is data set it, else leave it empty
+		// if there is data set it, else set the data to empty
 		if (amounts.size() > 0)
 		{
 			dataSeries.add(amounts.toArray());
+		} else
+		{
+			Object[] empty = {null};
+			dataSeries.newSeries().add(empty);
 		}
 		barChart.setDataSeries(dataSeries);
 	}
-
-
+	
+	
 	/**
 	 * Sets the label for the chart.
 	 *
@@ -162,8 +167,8 @@ RobotwitterCustomComponent
 	{
 		options.setTitle(label);
 	}
-
-
+	
+	
 	/**
 	 * Sets the data according to the amounts list, and the ticks according to
 	 * the separators.
@@ -180,53 +185,46 @@ RobotwitterCustomComponent
 		assert amounts.size() == 0
 			&& separators.size() == 0
 			|| amounts.size() == separators.size() + 1;
-
 		List<String> ticks = new ArrayList<>();
+
+		if (amounts.size() == 0)
+		{
+			// sets the data with empty data
+			set(ticks, amounts);
+			return;
+		}
 
 		if (separators.size() > 0)
 		{
 			// set ticks to show the ranges
-			ticks.add("<" + separators.get(0));
+			ticks.add("< " + separators.get(0));
 			for (int i = 0; i < separators.size() - 1; i++)
 			{
 				ticks.add(separators.get(i) + "-" + separators.get(i + 1));
 			}
-			ticks.add("&ge;" + separators.get(separators.size() - 1));
+			ticks.add("&ge; " + separators.get(separators.size() - 1));
 			assert ticks.size() == amounts.size();
 		}
-		// set the ticks and data. they both might be empty (if there is no
-		// data).
-		// 'set' should handle this.
-
+		
 		set(ticks, amounts);
 	}
-
-
+	
+	
 	/**
 	 * Updates the options and shows the bar chart.
 	 */
 	protected final void show()
 	{
-		if (barChart.getDataSeries().isEmpty())
-		{
-			setCompositionRoot(noDataLabel);
-		} else
-		{
-			setCompositionRoot(barChart);
-			barChart.setOptions(options);
-			barChart.show();
-		}
+		barChart.setOptions(options);
+		barChart.show();
 	}
-
-
-
+	
+	
+	
 	/** The bar chart options. */
 	private Options options;
-
+	
 	/** The bar chart. */
 	private DCharts barChart;
-
-	/** The no data label. */
-	private Label noDataLabel;
-
+	
 }

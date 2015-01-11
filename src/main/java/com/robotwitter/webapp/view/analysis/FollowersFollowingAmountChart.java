@@ -16,8 +16,8 @@ import com.robotwitter.webapp.util.AbstractBarCharComponent;
 
 
 /**
- * Represents a chart showing followers amount by the number of accounts they are
- * following.
+ * Represents a chart showing followers amount by the number of accounts they
+ * are following.
  *
  * @author Eyal
  * @author Hagai
@@ -56,7 +56,6 @@ public class FollowersFollowingAmountChart extends AbstractBarCharComponent
 	 */
 	private void initialiseLayout()
 	{
-		set("!FollowersFollowingAmountChart!");
 		updateChart();
 	}
 

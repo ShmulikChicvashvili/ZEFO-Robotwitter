@@ -23,7 +23,7 @@ import com.robotwitter.database.primitives.DBFollowersNumber;
  */
 public class TwitterAccountController implements ITwitterAccountController
 {
-
+	
 	/**
 	 * Instantiates a new twitter account controller.
 	 *
@@ -51,12 +51,12 @@ public class TwitterAccountController implements ITwitterAccountController
 		this.image = image;
 		this.numFollowersDB = numFollowersDB;
 	}
-
-
+	
+	
 	@Override
 	public final Map<Date, Integer> getAmountOfFollowers(Date from, Date to)
 	{
-
+		
 		final Map<Date, Integer> followersBetween = new HashMap<>();
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
 		if (dbfollowers == null) { return followersBetween; }
@@ -96,10 +96,10 @@ public class TwitterAccountController implements ITwitterAccountController
 			}
 		}
 		return followersBetween;
-
+		
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.account.ITwitterAccountController
 	 * #getFollowersAmountByDisplayedLanguage() */
@@ -115,79 +115,95 @@ public class TwitterAccountController implements ITwitterAccountController
 
 		return map;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.account.ITwitterAccountController
 	 * #getFollowersAmountByTheirFollowersAmount(int, java.util.List,
 	 * java.util.List) */
 	@Override
-	public void getFollowersAmountByTheirFollowersAmount(
+	public final void getFollowersAmountByTheirFollowersAmount(
 		int subdivisions,
 		List<Integer> amounts,
 		List<Integer> separators)
 	{
 		// TODO Auto-generated method stub
-
+		amounts.clear();
+		separators.clear();
+		amounts.add(1);
+		separators.add(10);
+		amounts.add(3);
+		separators.add(15);
+		amounts.add(20);
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.account.ITwitterAccountController
 	 * #getFollowersAmountByTheirFollowingAmount(int, java.util.List,
 	 * java.util.List) */
 	@Override
-	public void getFollowersAmountByTheirFollowingAmount(
+	public final void getFollowersAmountByTheirFollowingAmount(
 		int subdivisions,
 		List<Integer> amounts,
 		List<Integer> separators)
 	{
 		// TODO Auto-generated method stub
-
+		amounts.clear();
+		separators.clear();
+		amounts.add(37);
+		separators.add(15);
+		amounts.add(3);
+		separators.add(30);
+		amounts.add(102);
+		separators.add(45);
+		amounts.add(0);
+		separators.add(60);
+		amounts.add(15);
 	}
-
-
+	
+	
 	@Override
 	public final long getID()
 	{
 		return id;
 	}
-
-
+	
+	
 	@Override
 	public final String getImage()
 	{
 		return image;
 	}
-
-
+	
+	
 	@Override
 	public final int getLastKnownAmountOfFollowers()
 	{
 		return 9000;
 	}
-
-
+	
+	
 	@Override
 	public final int getLastKnownAmountOfGainedFollowers()
 	{
 		return 42;
 	}
-
-
+	
+	
 	@Override
 	public final int getLastKnownAmountOfLostFollowers()
 	{
 		return 69;
 	}
-
-
+	
+	
 	@Override
 	public final List<TwitterFollower> getMostInfluentialFollowers()
 	{
 		TwitterFollower follower1 =
 			new TwitterFollower(
-				1,
+				2910240756L,
 				"Hagai Akibayov",
 				"DonAkibayov",
 				"Some Description",
@@ -198,7 +214,7 @@ public class TwitterAccountController implements ITwitterAccountController
 				"Hebrew",
 				true,
 				Timestamp.valueOf(LocalDateTime.now()),
-				"http://pbs.twimg.com/profile_images/546786848849158145/wS82lZr8_normal.jpeg");
+				"https://pbs.twimg.com/profile_images/546786848849158145/wS82lZr8.jpeg");
 		TwitterFollower follower2 =
 			new TwitterFollower(
 				1,
@@ -212,54 +228,59 @@ public class TwitterAccountController implements ITwitterAccountController
 				"English",
 				false,
 				Timestamp.valueOf(LocalDateTime.now()),
-				"http://mkalty.org/wp-content/uploads/2014/06/3602836742_6f8c876e28.jpg");
-
+				"http://www.peanuts.com/wp-content/themes/desktop-theme-peanuts/images/characters/round/charliebrown.png");
+		
 		List<TwitterFollower> list = new LinkedList<>();
 		list.add(follower1);
 		list.add(follower1);
 		list.add(follower1);
 		list.add(follower1);
+		list.add(follower2);
 		list.add(follower1);
 		list.add(follower1);
 		list.add(follower1);
 		list.add(follower1);
 		list.add(follower1);
 		list.add(follower2);
+		list.add(follower2);
+		list.add(follower2);
+		list.add(follower2);
+		list.add(follower2);
 		return list;
 	}
-
-
+	
+	
 	@Override
 	public final String getName()
 	{
 		return name;
 	}
-
-
+	
+	
 	@Override
 	public final String getScreenname()
 	{
 		return screenname;
 	}
-
-
-
+	
+	
+	
 	/** The Twitter accounts' ID. */
 	public long id;
-
+	
 	/** The Twitter accounts' name. */
 	public String name;
-
+	
 	/** The Twitter accounts' screenname. */
 	public String screenname;
-
+	
 	/** The Twitter accounts' profile image. */
 	public String image;
-
+	
 	/** The Twtitter's account number of followers Database. */
 	public IDatabaseNumFollowers numFollowersDB;
-
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 }

@@ -49,7 +49,6 @@ public class FollowersDisplayedLanguageChart extends AbstractPieChartComponent
 	 */
 	private void initialiseLayout()
 	{
-		set("!FollowersDisplayedLanguageChart!");
 		updateChart();
 	}
 	

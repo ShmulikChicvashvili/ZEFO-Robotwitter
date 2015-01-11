@@ -137,6 +137,15 @@ public abstract class AbstractPieChartComponent
 		{
 			dataSeries.newSeries().add(entry.getKey(), entry.getValue());
 		}
+		if (dataSeries.isEmpty())
+		{
+			options.getLegend().setShow(false);
+			Object[] empty = { null, null };
+			dataSeries.newSeries().add(empty);
+		} else
+		{
+			options.getLegend().setShow(true);
+		}
 		pieChart.setDataSeries(dataSeries);
 	}
 	

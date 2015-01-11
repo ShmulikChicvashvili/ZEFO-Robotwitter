@@ -35,8 +35,8 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 		initialiseLayout();
 		getUserSession().observeActiveTwitterAccount(this);
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.util.RobotwitterCustomComponent#
 	 * activateTwitterAccount(long) */
@@ -45,8 +45,8 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 	{
 		updateChart();
 	}
-
-
+	
+	
 	/**
 	 * Initialise layout.
 	 */
@@ -54,8 +54,8 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 	{
 		updateChart();
 	}
-
-
+	
+	
 	/**
 	 * Update chart.
 	 */
@@ -63,14 +63,14 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 	{
 		ITwitterAccountController controller =
 			getUserSession().getAccountController().getActiveTwitterAccount();
-
+		
 		List<Integer> separators = new ArrayList<>();
 		List<Integer> amounts = new ArrayList<>();
-		controller.getFollowersAmountByTheirFollowingAmount(
+		controller.getFollowersAmountByTheirFollowersAmount(
 			5,
 			amounts,
 			separators);
-
+		
 		setBySeperators(separators, amounts);
 		show();
 	}

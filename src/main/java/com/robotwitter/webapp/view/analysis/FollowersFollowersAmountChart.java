@@ -31,7 +31,8 @@ public class FollowersFollowersAmountChart extends AbstractBarCharComponent
 	 */
 	public FollowersFollowersAmountChart(IMessagesContainer messages)
 	{
-		super(messages);
+		super(messages, messages
+			.get("AnalysisView.FollowersAmountChart.error.no-data"));
 		initialiseLayout();
 		getUserSession().observeActiveTwitterAccount(this);
 	}

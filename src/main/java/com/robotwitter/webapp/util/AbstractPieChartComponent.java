@@ -20,6 +20,7 @@ import org.dussan.vaadin.dcharts.options.SeriesDefaults;
 import org.dussan.vaadin.dcharts.renderers.legend.EnhancedLegendRenderer;
 import org.dussan.vaadin.dcharts.renderers.series.PieRenderer;
 
+import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 
 import com.robotwitter.webapp.messages.IMessagesContainer;
@@ -38,8 +39,8 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
  * @author Hagai
  */
 public abstract class AbstractPieChartComponent
-	extends
-		RobotwitterCustomComponent
+extends
+RobotwitterCustomComponent
 {
 	
 	/**
@@ -48,7 +49,9 @@ public abstract class AbstractPieChartComponent
 	 * @param messages
 	 *            the messages
 	 */
-	public AbstractPieChartComponent(IMessagesContainer messages)
+	public AbstractPieChartComponent(
+		IMessagesContainer messages,
+		String noDataMessage)
 	{
 		super(messages);
 		
@@ -60,12 +63,17 @@ public abstract class AbstractPieChartComponent
 		
 		options =
 			new Options()
-				.setSeriesDefaults(seriesDefaults)
-				.setHighlighter(highlighter)
-				.setLegend(legend);
+		.setSeriesDefaults(seriesDefaults)
+		.setHighlighter(highlighter)
+		.setLegend(legend);
+		
+		dataSeries = new DataSeries();
 		
 		pieChart = new DCharts();
-		setCompositionRoot(pieChart);
+		
+		noDataLabel = new Label(noDataMessage);
+		
+		// setCompositionRoot(pieChart);
 		
 		// FIXME this should be done on the client-side
 		UI.getCurrent().getPage().addBrowserWindowResizeListener(event -> {
@@ -83,10 +91,10 @@ public abstract class AbstractPieChartComponent
 	{
 		Highlighter highlighter =
 			new Highlighter()
-				.setShow(true)
-				.setShowTooltip(true)
-				.setTooltipAlwaysVisible(true)
-				.setKeepTooltipInsideChart(true);
+		.setShow(true)
+		.setShowTooltip(true)
+		.setTooltipAlwaysVisible(true)
+		.setKeepTooltipInsideChart(true);
 		return highlighter;
 	}
 	
@@ -100,11 +108,11 @@ public abstract class AbstractPieChartComponent
 	{
 		Legend legend =
 			new Legend()
-				.setShow(true)
-				.setRenderer(LegendRenderers.ENHANCED)
-				.setRendererOptions(
-					new EnhancedLegendRenderer().setSeriesToggle(
-						SeriesToggles.SLOW).setSeriesToggleReplot(true));
+		.setShow(true)
+		.setRenderer(LegendRenderers.ENHANCED)
+		.setRendererOptions(
+			new EnhancedLegendRenderer().setSeriesToggle(
+				SeriesToggles.SLOW).setSeriesToggleReplot(true));
 		return legend;
 	}
 	
@@ -118,8 +126,8 @@ public abstract class AbstractPieChartComponent
 	{
 		SeriesDefaults seriesDefaults =
 			new SeriesDefaults()
-				.setRenderer(SeriesRenderers.PIE)
-				.setRendererOptions(new PieRenderer().setShowDataLabels(true));
+		.setRenderer(SeriesRenderers.PIE)
+		.setRendererOptions(new PieRenderer().setShowDataLabels(true));
 		return seriesDefaults;
 	}
 	
@@ -132,21 +140,12 @@ public abstract class AbstractPieChartComponent
 	 */
 	protected final void set(Map<String, Integer> data)
 	{
-		DataSeries dataSeries = new DataSeries();
+		dataSeries = new DataSeries();
 		for (Entry<String, Integer> entry : data.entrySet())
 		{
 			dataSeries.newSeries().add(entry.getKey(), entry.getValue());
 		}
-		if (dataSeries.isEmpty())
-		{
-			options.getLegend().setShow(false);
-			Object[] empty = { null, null };
-			dataSeries.newSeries().add(empty);
-		} else
-		{
-			options.getLegend().setShow(true);
-		}
-		pieChart.setDataSeries(dataSeries);
+		// pieChart.setDataSeries(dataSeries);
 	}
 	
 	
@@ -167,15 +166,29 @@ public abstract class AbstractPieChartComponent
 	 */
 	protected final void show()
 	{
-		pieChart.setOptions(options);
-		pieChart.show();
+		if (dataSeries.isEmpty())
+		{
+			setCompositionRoot(noDataLabel);
+		} else
+		{
+			pieChart.setDataSeries(dataSeries);
+			pieChart.setOptions(options);
+			pieChart.show();
+			setCompositionRoot(pieChart);
+		}
 	}
 	
 	
+	
+	/** The data series. */
+	private DataSeries dataSeries;
 	
 	/** The pie chart options. */
 	private Options options;
 	
 	/** The pie chart. */
 	private DCharts pieChart;
+	
+	/** The no data label. */
+	private Label noDataLabel;
 }

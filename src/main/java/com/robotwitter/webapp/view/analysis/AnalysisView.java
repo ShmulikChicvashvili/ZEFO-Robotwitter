@@ -24,7 +24,7 @@ import com.robotwitter.webapp.view.AbstractView;
  */
 public class AnalysisView extends AbstractView
 {
-
+	
 	/**
 	 * Instantiates a new login view.
 	 *
@@ -36,22 +36,22 @@ public class AnalysisView extends AbstractView
 	{
 		super(messages, messages.get("AnalysisView.page.title"));
 	}
-	
-	
+
+
 	@Override
 	public final boolean isSignedInProhibited()
 	{
 		return false;
 	}
-
-
+	
+	
 	@Override
 	public final boolean isSignedInRequired()
 	{
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Wrap the given component in a panel.
 	 *
@@ -72,33 +72,33 @@ public class AnalysisView extends AbstractView
 		panel.addStyleName(PANEL_STYLENAME);
 		return panel;
 	}
-	
-	
+
+
 	@Override
 	protected final void initialise()
 	{
 		Label header = new Label(messages.get("AnalysisView.label.header"));
 		FollowersAmountOverview overview =
 			new FollowersAmountOverview(messages);
-		
+
 		FollowersAmountOverTimeChart followersChart =
 			new FollowersAmountOverTimeChart(messages);
 		MostInfluentialFollowers influentialFollowers =
 			new MostInfluentialFollowers(messages);
-
+		
 		FollowersDisplayedLanguageChart followersDisplayedLanguageChart =
 			new FollowersDisplayedLanguageChart(messages);
 		FollowersFollowersAmountChart followersFollowersAmountChart =
 			new FollowersFollowersAmountChart(messages);
 		FollowersFollowingAmountChart followersFollowingAmountChart =
 			new FollowersFollowingAmountChart(messages);
-		
+
 		followersChart.setSizeFull();
 		influentialFollowers.setSizeFull();
 		followersDisplayedLanguageChart.setSizeFull();
 		followersFollowersAmountChart.setSizeFull();
 		followersFollowingAmountChart.setSizeFull();
-		
+
 		Component followersChartPanel =
 			wrapInPanel(
 				followersChart,
@@ -111,7 +111,7 @@ public class AnalysisView extends AbstractView
 			wrapInPanel(
 				followersDisplayedLanguageChart,
 				messages
-				.get("AnalysisView.caption.followers-displayed-language"));
+					.get("AnalysisView.caption.followers-displayed-language"));
 		Component followersFollowersAmountChartPanel =
 			wrapInPanel(
 				followersFollowersAmountChart,
@@ -120,20 +120,20 @@ public class AnalysisView extends AbstractView
 			wrapInPanel(
 				followersFollowingAmountChart,
 				messages.get("AnalysisView.caption.followers-following-amount"));
-
+		
 		// TODO this should be in CSS
-		influentialFollowersPanel.setWidth("690px");
-
+		influentialFollowersPanel.setWidth("700px");
+		
 		HorizontalLayout firstRow = new HorizontalLayout(header, overview);
 		firstRow.setWidth("100%");
 		firstRow.setSpacing(true);
-		
+
 		HorizontalLayout secondRow =
 			new HorizontalLayout(influentialFollowersPanel, followersChartPanel);
 		secondRow.setSizeFull();
 		secondRow.setSpacing(true);
 		secondRow.setExpandRatio(followersChartPanel, 1);
-		
+
 		HorizontalLayout thirdRow =
 			new HorizontalLayout(
 				followersDisplayedLanguageChartPanel,
@@ -141,38 +141,38 @@ public class AnalysisView extends AbstractView
 				followersFollowingAmountChartPanel);
 		thirdRow.setSizeFull();
 		thirdRow.setSpacing(true);
-
+		
 		VerticalLayout layout =
 			new VerticalLayout(firstRow, secondRow, thirdRow);
 		layout.setSizeFull();
 		layout.setSpacing(true);
 		layout.setExpandRatio(secondRow, 1);
 		layout.setExpandRatio(thirdRow, 1);
-		
+
 		header.addStyleName(HEADER_STYLENAME);
 		addStyleName(STYLENAME);
-
+		
 		setCompositionRoot(layout);
 	}
-
-
-
+	
+	
+	
 	/** The view's name. */
 	public static final String NAME = "analysis";
-
+	
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "AnalysisView";
-	
+
 	/** The CSS class name to apply to each panel component. */
 	private static final String PANEL_STYLENAME = "AnalysisView-panel";
-	
+
 	/** The CSS class name to apply to each panel title label. */
 	private static final String PANEL_TITLE_STYLENAME =
 		"AnalysisView-panel-title";
-	
+
 	/** The CSS class name to apply to the header component. */
 	private static final String HEADER_STYLENAME = "AnalysisView-header";
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

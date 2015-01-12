@@ -1,10 +1,8 @@
+
 package com.robotwitter.test;
 
-import static org.junit.Assert.assertEquals;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.*;
+import static org.junit.Assert.assertEquals;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -14,16 +12,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import com.robotwitter.webapp.control.account.TwitterAccountController;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+
 import com.robotwitter.database.interfaces.IDatabaseFollowers;
 import com.robotwitter.database.interfaces.IDatabaseHeavyHitters;
 import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
 import com.robotwitter.database.primitives.DBFollower;
 import com.robotwitter.database.primitives.DBFollowersNumber;
+import com.robotwitter.webapp.control.account.TwitterAccountController;
 
-public class FollowersNumberTest {
+
+
+
+public class FollowersNumberTest
+{
 	@Before
-	public void before() {
+	public void before()
+	{
 		list1 = new ArrayList<DBFollowersNumber>();
 		list2 = new ArrayList<DBFollowersNumber>();
 		list3 = new ArrayList<DBFollowersNumber>();
@@ -58,33 +65,61 @@ public class FollowersNumberTest {
 
 		Mockito.when(dbHeavyHitters.get((long) 4)).thenReturn(hHlist4);
 
-		Mockito.when(dbFollowers.getAllFollowers((long) 1)).thenReturn(flist1);
+		Mockito.when(dbFollowers.getFollowers(1)).thenReturn(flist1);
 
-		Mockito.when(dbFollowers.getAllFollowers((long) 2)).thenReturn(flist2);
+		Mockito.when(dbFollowers.getFollowers(2)).thenReturn(flist2);
 
-		Mockito.when(dbFollowers.getAllFollowers((long) 3)).thenReturn(flist3);
+		Mockito.when(dbFollowers.getFollowers(3)).thenReturn(flist3);
 
-		Mockito.when(dbFollowers.getAllFollowers((long) 4)).thenReturn(flist4);// empty
-																				// list
+		Mockito.when(dbFollowers.getFollowers(4)).thenReturn(flist4);// empty
+																		// list
 
-		Mockito.when(dbFollowers.get((long) 1)).thenReturn(follower1);
+		Mockito.when(dbFollowers.get(1)).thenReturn(follower1);
 
-		Mockito.when(dbFollowers.get((long) 2)).thenReturn(follower2);
+		Mockito.when(dbFollowers.get(2)).thenReturn(follower2);
 
-		Mockito.when(dbFollowers.get((long) 3)).thenReturn(follower3);
+		Mockito.when(dbFollowers.get(3)).thenReturn(follower3);
 
-		Mockito.when(dbFollowers.get((long) 4)).thenReturn(follower4);
+		Mockito.when(dbFollowers.get(4)).thenReturn(follower4);
 
-		tac1 = new TwitterAccountController(1, "1", "1", "1", dbnumfollowers,
-				dbHeavyHitters, dbFollowers);
-		tac2 = new TwitterAccountController(2, "1", "1", "1", dbnumfollowers,
-				dbHeavyHitters, dbFollowers);
-		tac3 = new TwitterAccountController(3, "1", "1", "1", dbnumfollowers,
-				dbHeavyHitters, dbFollowers);
-		tac4 = new TwitterAccountController(4, "1", "1", "1", dbnumfollowers,
-				dbHeavyHitters, dbFollowers);
+		tac1 =
+			new TwitterAccountController(
+				1,
+				"1",
+				"1",
+				"1",
+				dbnumfollowers,
+				dbHeavyHitters,
+				dbFollowers);
+		tac2 =
+			new TwitterAccountController(
+				2,
+				"1",
+				"1",
+				"1",
+				dbnumfollowers,
+				dbHeavyHitters,
+				dbFollowers);
+		tac3 =
+			new TwitterAccountController(
+				3,
+				"1",
+				"1",
+				"1",
+				dbnumfollowers,
+				dbHeavyHitters,
+				dbFollowers);
+		tac4 =
+			new TwitterAccountController(
+				4,
+				"1",
+				"1",
+				"1",
+				dbnumfollowers,
+				dbHeavyHitters,
+				dbFollowers);
 		// initializing the calendar
-		Calendar calendar = Calendar.getInstance();
+		final Calendar calendar = Calendar.getInstance();
 
 		// Initializing the possible dates
 		from = new Date(2014, 12, 20);
@@ -104,7 +139,7 @@ public class FollowersNumberTest {
 		t6 = new Timestamp(d6.getTime());
 
 		// Initiallizing list 1 of test case 1:
-		Long num = (long) 1;
+		final Long num = (long) 1;
 		f11 = new DBFollowersNumber(num, t1, 100, 0, 0);
 		f12 = new DBFollowersNumber(num, t2, 1001, 0, 0);
 		f13 = new DBFollowersNumber(num, t3, 10011, 0, 0);
@@ -125,22 +160,62 @@ public class FollowersNumberTest {
 		// list 3 is an empty list for test cases
 
 		// Initializing the followers DB
-		follower1 = new DBFollower(1, "Hagai Akibayov", "DonAkibayov",
-				"Some Description", 20, 40, "Israel", 5, "France", true,
+		follower1 =
+			new DBFollower(
+				1,
+				"Hagai Akibayov",
+				"DonAkibayov",
+				"Some Description",
+				20,
+				40,
+				"Israel",
+				5,
+				"France",
+				true,
 				Timestamp.valueOf(LocalDateTime.now()),
 				"http://pbs.twimg.com/profile_images/546786848849158145/wS82lZr8_normal.jpeg");
-		follower2 = new DBFollower(2, "Eyal Tolchisnky", "DonTasd",
-				"Somasdasdjasde Description", 10, 20, "Haifa", 53, "English",
-				false, Timestamp.valueOf(LocalDateTime.now()),
+		follower2 =
+			new DBFollower(
+				2,
+				"Eyal Tolchisnky",
+				"DonTasd",
+				"Somasdasdjasde Description",
+				10,
+				20,
+				"Haifa",
+				53,
+				"English",
+				false,
+				Timestamp.valueOf(LocalDateTime.now()),
 				"http://mkalty.org/wp-content/uploads/2014/06/3602836742_6f8c876e28.jpg");
 
-		follower3 = new DBFollower(3, "Doron Hogery", "DonTasd",
-				"Somasdasdjasde Description", 5, 10, "Haifa", 53, "Hebrew",
-				false, Timestamp.valueOf(LocalDateTime.now()),
+		follower3 =
+			new DBFollower(
+				3,
+				"Doron Hogery",
+				"DonTasd",
+				"Somasdasdjasde Description",
+				5,
+				10,
+				"Haifa",
+				53,
+				"Hebrew",
+				false,
+				Timestamp.valueOf(LocalDateTime.now()),
 				"http://mkalty.org/wp-content/uploads/2014/06/3602836742_6f8c876e28.jpg");
-		follower4 = new DBFollower(4, "Itaykiflitz", "DonTasd",
-				"Somasdasdjasde Description", 15, 30, "Haifa", 53, "Hebrew",
-				false, Timestamp.valueOf(LocalDateTime.now()),
+		follower4 =
+			new DBFollower(
+				4,
+				"Itaykiflitz",
+				"DonTasd",
+				"Somasdasdjasde Description",
+				15,
+				30,
+				"Haifa",
+				53,
+				"Hebrew",
+				false,
+				Timestamp.valueOf(LocalDateTime.now()),
 				"http://mkalty.org/wp-content/uploads/2014/06/3602836742_6f8c876e28.jpg");
 
 		// Initializing the heavyHitterslists
@@ -168,14 +243,16 @@ public class FollowersNumberTest {
 		flist3.add(follower2);
 	}
 
+
 	// This section is for testing the function "getAmoutOfFollowers"
 	/**
 	 * This case checks that the main idea of the function works.
 	 */
 	@SuppressWarnings("nls")
 	@Test
-	public void testCaseAllDatesInsideInAmount() {
-		Map<Date, Integer> test1 = tac1.getAmountOfFollowers(from, t6);
+	public void testCaseAllDatesInsideInAmount()
+	{
+		final Map<Date, Integer> test1 = tac1.getAmountOfFollowers(from, t6);
 		assertEquals(test1.size(), 5);
 		assertEquals(test1.get(d1).intValue(), 100);
 		assertEquals(test1.get(d2).intValue(), 1001);
@@ -184,94 +261,52 @@ public class FollowersNumberTest {
 		assertEquals(test1.get(d5).intValue(), 1001111);
 	}
 
-	/*
-	 * This case is checking that in case of receiving in the parameters from
-	 * and to the null argument, we will give all the followers in our list.
-	 */
+
+	// Testing the case when there is no followers in our twitter account
 	@Test
-	public void testCaseNullInputGivesAllInAmount() {
-		Map<Date, Integer> test2 = tac1.getAmountOfFollowers(null, null);
-		assertEquals(test2.size(), 5);
-		assertEquals(test2.get(d1).intValue(), 100);
-		assertEquals(test2.get(d2).intValue(), 1001);
-		assertEquals(test2.get(d3).intValue(), 10011);
-		assertEquals(test2.get(d4).intValue(), 100111);
-		assertEquals(test2.get(d5).intValue(), 1001111);
+	public void testCaseNoFollowersInFollowers()
+	{
+		final List<Integer> amounts = new ArrayList<Integer>();
+		final List<Integer> separators = new ArrayList<Integer>();
+		tac4.getFollowersAmountByTheirFollowersAmount(10, amounts, separators);
+		assertEquals(0, amounts.size());
+		assertEquals(0, separators.size());
 	}
 
-	/*
-	 * Checking to see that in case of an empty database list everything works
-	 * fine without any exceptions.
-	 */
+
+	// Testing the case when there is no followers in our twitter account
 	@Test
-	public void testCaseNullListInAmount() {
-		Map<Date, Integer> test1 = tac3.getAmountOfFollowers(null, null);
-		assertEquals(test1.size(), 0);
+	public void testCaseNoFollowersInFollowing()
+	{
+		final List<Integer> amounts = new ArrayList<Integer>();
+		final List<Integer> separators = new ArrayList<Integer>();
+		tac4.getFollowersAmountByTheirFollowingAmount(20, amounts, separators);
+		assertEquals(0, amounts.size());
+		assertEquals(0, separators.size());
 	}
 
-	/*
-	 * Testing that in case of receiving only part of the list, it will return
-	 * the right output
-	 */
+
+	// testing the case no followers on our twitter account
 	@Test
-	public void testCaseOnlyPartOfListInAmount() {
-		Map<Date, Integer> test1 = tac1.getAmountOfFollowers(d2, d4);
-		assertEquals(test1.size(), 3);
-		assertEquals(test1.get(d2).intValue(), 1001);
-		assertEquals(test1.get(d3).intValue(), 10011);
-		assertEquals(test1.get(d4).intValue(), 100111);
+	public void testCaseNoFollowersInLanguage()
+	{
+		final Map<String, Integer> test4 =
+			tac4.getFollowersAmountByDisplayedLanguage();
+		assertEquals(0, test4.size());
 	}
 
-	/*
-	 * In this case we are checking that in case of receiving only one null in
-	 * our input we will return that this null will be the first or the latest
-	 * date (accordingly) in our list.
-	 */
-	@Test
-	public void testCaseReceiveOneNullInAmount() {
-		Map<Date, Integer> test1 = tac1.getAmountOfFollowers(d2, null);
-		Map<Date, Integer> test2 = tac1.getAmountOfFollowers(null, d3);
-		assertEquals(test1.size(), 4);
-		assertEquals(test1.get(d2).intValue(), 1001);
-		assertEquals(test1.get(d3).intValue(), 10011);
-		assertEquals(test1.get(d4).intValue(), 100111);
-		assertEquals(test1.get(d5).intValue(), 1001111);
-		assertEquals(test2.size(), 3);
-		assertEquals(test2.get(d1).intValue(), 100);
-		assertEquals(test2.get(d2).intValue(), 1001);
-		assertEquals(test2.get(d3).intValue(), 10011);
-	}
-
-	/*
-	 * testing to see if we give as an input the same date as an existing date
-	 * we will receive that information in our output - as we should.
-	 */
-	@Test
-	public void testCaseTheSameDateInAmount() {
-		Map<Date, Integer> test2 = tac1.getAmountOfFollowers(d1, d5);
-		assertEquals(test2.size(), 5);
-		assertEquals(test2.get(d1).intValue(), 100);
-		assertEquals(test2.get(d2).intValue(), 1001);
-		assertEquals(test2.get(d3).intValue(), 10011);
-		assertEquals(test2.get(d4).intValue(), 100111);
-		assertEquals(test2.get(d5).intValue(), 1001111);
-	}
-
-	// Section over
-
-	// This section is for testing the function
-	// "getFollowersAmountByDisplayedLanguage"
 
 	// testing all the normal behaviors like normal and empty databases with
 	// different languages
 	@Test
-	public void testCaseNormalBehaviourInLanguage() {
-		Map<String, Integer> test1 = tac1
-				.getFollowersAmountByDisplayedLanguage();
-		Map<String, Integer> test2 = tac2
-				.getFollowersAmountByDisplayedLanguage();
-		Map<String, Integer> test3 = tac3
-				.getFollowersAmountByDisplayedLanguage();
+	public void testCaseNormalBehaviourInLanguage()
+	{
+		final Map<String, Integer> test1 =
+			tac1.getFollowersAmountByDisplayedLanguage();
+		final Map<String, Integer> test2 =
+			tac2.getFollowersAmountByDisplayedLanguage();
+		final Map<String, Integer> test3 =
+			tac3.getFollowersAmountByDisplayedLanguage();
 
 		assertEquals(3, test1.size());
 		assertEquals((Integer) 2, test1.get("Hebrew"));
@@ -287,23 +322,12 @@ public class FollowersNumberTest {
 
 	}
 
-	// testing the case no followers on our twitter account
-	@Test
-	public void testCaseNoFollowersInLanguage() {
-		Map<String, Integer> test4 = tac4
-				.getFollowersAmountByDisplayedLanguage();
-		assertEquals(0, test4.size());
-	}
-
-	// Section Over
-
-	// Section - Testing the function
-	// "getFollowersAmountByTheirFollowersAmount()"
 
 	@Test
-	public void testCaseNormalBehavioursInFollowers() {
-		List<Integer> amounts = new ArrayList<Integer>();
-		List<Integer> separators = new ArrayList<Integer>();
+	public void testCaseNormalBehavioursInFollowers()
+	{
+		final List<Integer> amounts = new ArrayList<Integer>();
+		final List<Integer> separators = new ArrayList<Integer>();
 		tac1.getFollowersAmountByTheirFollowersAmount(2, amounts, separators);
 		assertEquals((Integer) 2, amounts.get(0));
 		assertEquals((Integer) 2, amounts.get(1));
@@ -323,46 +347,19 @@ public class FollowersNumberTest {
 
 	}
 
-	// Testing the case when there is too much subdivisions and that the list
-	// still right
-	@Test
-	public void testCaseTooManySubDivInFollowers() {
-		List<Integer> amounts = new ArrayList<Integer>();
-		List<Integer> separators = new ArrayList<Integer>();
-		tac1.getFollowersAmountByTheirFollowersAmount(50, amounts, separators);
-		assertEquals(15, separators.size());
-	}
 
-	// Testing the case when there is only one follower
-	@Test
-	public void testCaseOnlyOneFollowerInFollowers() {
-		List<Integer> amounts = new ArrayList<Integer>();
-		List<Integer> separators = new ArrayList<Integer>();
-		tac3.getFollowersAmountByTheirFollowersAmount(2, amounts, separators);
-		assertEquals(1, separators.size());
-		assertEquals((Integer) 10, separators.get(0));
-		assertEquals(1, amounts.size());
-		assertEquals((Integer) 1, amounts.get(0));
-	}
+	// Section over
 
-	// Testing the case when there is no followers in our twitter account
-	@Test
-	public void testCaseNoFollowersInFollowers() {
-		List<Integer> amounts = new ArrayList<Integer>();
-		List<Integer> separators = new ArrayList<Integer>();
-		tac4.getFollowersAmountByTheirFollowersAmount(10, amounts, separators);
-		assertEquals(0, amounts.size());
-		assertEquals(0, separators.size());
-	}
-
-	// Section Over
+	// This section is for testing the function
+	// "getFollowersAmountByDisplayedLanguage"
 
 	// Section - Testing the function
 	// "getFollowersAmountByTheirFollowingAmount()"
 	@Test
-	public void testCaseNormalBehavioursInFollowing() {
-		List<Integer> amounts = new ArrayList<Integer>();
-		List<Integer> separators = new ArrayList<Integer>();
+	public void testCaseNormalBehavioursInFollowing()
+	{
+		final List<Integer> amounts = new ArrayList<Integer>();
+		final List<Integer> separators = new ArrayList<Integer>();
 		tac1.getFollowersAmountByTheirFollowingAmount(2, amounts, separators);
 		assertEquals((Integer) 2, amounts.get(0));
 		assertEquals((Integer) 2, amounts.get(1));
@@ -382,21 +379,57 @@ public class FollowersNumberTest {
 
 	}
 
-	// Testing the case when there is too much subdivisions and that the list
-	// still right
+
+	/* This case is checking that in case of receiving in the parameters from
+	 * and to the null argument, we will give all the followers in our list. */
 	@Test
-	public void testCaseTooManySubDivInFollowing() {
-		List<Integer> amounts = new ArrayList<Integer>();
-		List<Integer> separators = new ArrayList<Integer>();
-		tac1.getFollowersAmountByTheirFollowingAmount(50, amounts, separators);
-		assertEquals(30, separators.size());
+	public void testCaseNullInputGivesAllInAmount()
+	{
+		final Map<Date, Integer> test2 = tac1.getAmountOfFollowers(null, null);
+		assertEquals(test2.size(), 5);
+		assertEquals(test2.get(d1).intValue(), 100);
+		assertEquals(test2.get(d2).intValue(), 1001);
+		assertEquals(test2.get(d3).intValue(), 10011);
+		assertEquals(test2.get(d4).intValue(), 100111);
+		assertEquals(test2.get(d5).intValue(), 1001111);
 	}
+
+
+	// Section Over
+
+	// Section - Testing the function
+	// "getFollowersAmountByTheirFollowersAmount()"
+
+	/* Checking to see that in case of an empty database list everything works
+	 * fine without any exceptions. */
+	@Test
+	public void testCaseNullListInAmount()
+	{
+		final Map<Date, Integer> test1 = tac3.getAmountOfFollowers(null, null);
+		assertEquals(test1.size(), 0);
+	}
+
 
 	// Testing the case when there is only one follower
 	@Test
-	public void testCaseOnlyOneFollowerInFollowing() {
-		List<Integer> amounts = new ArrayList<Integer>();
-		List<Integer> separators = new ArrayList<Integer>();
+	public void testCaseOnlyOneFollowerInFollowers()
+	{
+		final List<Integer> amounts = new ArrayList<Integer>();
+		final List<Integer> separators = new ArrayList<Integer>();
+		tac3.getFollowersAmountByTheirFollowersAmount(2, amounts, separators);
+		assertEquals(1, separators.size());
+		assertEquals((Integer) 10, separators.get(0));
+		assertEquals(1, amounts.size());
+		assertEquals((Integer) 1, amounts.get(0));
+	}
+
+
+	// Testing the case when there is only one follower
+	@Test
+	public void testCaseOnlyOneFollowerInFollowing()
+	{
+		final List<Integer> amounts = new ArrayList<Integer>();
+		final List<Integer> separators = new ArrayList<Integer>();
 		tac3.getFollowersAmountByTheirFollowingAmount(2, amounts, separators);
 		assertEquals(1, separators.size());
 		assertEquals((Integer) 20, separators.get(0));
@@ -404,15 +437,81 @@ public class FollowersNumberTest {
 		assertEquals((Integer) 1, amounts.get(0));
 	}
 
-	// Testing the case when there is no followers in our twitter account
+
+	/* Testing that in case of receiving only part of the list, it will return
+	 * the right output */
 	@Test
-	public void testCaseNoFollowersInFollowing() {
-		List<Integer> amounts = new ArrayList<Integer>();
-		List<Integer> separators = new ArrayList<Integer>();
-		tac4.getFollowersAmountByTheirFollowingAmount(20, amounts, separators);
-		assertEquals(0, amounts.size());
-		assertEquals(0, separators.size());
+	public void testCaseOnlyPartOfListInAmount()
+	{
+		final Map<Date, Integer> test1 = tac1.getAmountOfFollowers(d2, d4);
+		assertEquals(test1.size(), 3);
+		assertEquals(test1.get(d2).intValue(), 1001);
+		assertEquals(test1.get(d3).intValue(), 10011);
+		assertEquals(test1.get(d4).intValue(), 100111);
 	}
+
+
+	// Section Over
+
+	/* In this case we are checking that in case of receiving only one null in
+	 * our input we will return that this null will be the first or the latest
+	 * date (accordingly) in our list. */
+	@Test
+	public void testCaseReceiveOneNullInAmount()
+	{
+		final Map<Date, Integer> test1 = tac1.getAmountOfFollowers(d2, null);
+		final Map<Date, Integer> test2 = tac1.getAmountOfFollowers(null, d3);
+		assertEquals(test1.size(), 4);
+		assertEquals(test1.get(d2).intValue(), 1001);
+		assertEquals(test1.get(d3).intValue(), 10011);
+		assertEquals(test1.get(d4).intValue(), 100111);
+		assertEquals(test1.get(d5).intValue(), 1001111);
+		assertEquals(test2.size(), 3);
+		assertEquals(test2.get(d1).intValue(), 100);
+		assertEquals(test2.get(d2).intValue(), 1001);
+		assertEquals(test2.get(d3).intValue(), 10011);
+	}
+
+
+	/* testing to see if we give as an input the same date as an existing date
+	 * we will receive that information in our output - as we should. */
+	@Test
+	public void testCaseTheSameDateInAmount()
+	{
+		final Map<Date, Integer> test2 = tac1.getAmountOfFollowers(d1, d5);
+		assertEquals(test2.size(), 5);
+		assertEquals(test2.get(d1).intValue(), 100);
+		assertEquals(test2.get(d2).intValue(), 1001);
+		assertEquals(test2.get(d3).intValue(), 10011);
+		assertEquals(test2.get(d4).intValue(), 100111);
+		assertEquals(test2.get(d5).intValue(), 1001111);
+	}
+
+
+	// Testing the case when there is too much subdivisions and that the list
+	// still right
+	@Test
+	public void testCaseTooManySubDivInFollowers()
+	{
+		final List<Integer> amounts = new ArrayList<Integer>();
+		final List<Integer> separators = new ArrayList<Integer>();
+		tac1.getFollowersAmountByTheirFollowersAmount(50, amounts, separators);
+		assertEquals(15, separators.size());
+	}
+
+
+	// Testing the case when there is too much subdivisions and that the list
+	// still right
+	@Test
+	public void testCaseTooManySubDivInFollowing()
+	{
+		final List<Integer> amounts = new ArrayList<Integer>();
+		final List<Integer> separators = new ArrayList<Integer>();
+		tac1.getFollowersAmountByTheirFollowingAmount(50, amounts, separators);
+		assertEquals(30, separators.size());
+	}
+
+
 
 	// End of section
 
@@ -424,35 +523,55 @@ public class FollowersNumberTest {
 	// }
 
 	List<DBFollowersNumber> list1;
+
 	List<DBFollowersNumber> list2;
+
 	List<DBFollowersNumber> list3;
 
-	List<DBFollower> flist1;
-	List<DBFollower> flist2;
-	List<DBFollower> flist3;
-	List<DBFollower> flist4;
+	ArrayList<DBFollower> flist1;
+
+	ArrayList<DBFollower> flist2;
+
+	ArrayList<DBFollower> flist3;
+
+	ArrayList<DBFollower> flist4;
 
 	ArrayList<Long> hHlist1;
+
 	ArrayList<Long> hHlist2;
+
 	ArrayList<Long> hHlist3;
+
 	ArrayList<Long> hHlist4;
 
 	Date from;
+
 	Date d1;
+
 	Date d2;
+
 	Date d3;
+
 	Date d4;
+
 	Date d5;
+
 	Date d6;
 
 	Timestamp t0;
+
 	Timestamp t1;
+
 	Timestamp t2;
+
 	Timestamp t3;
+
 	Timestamp t4;
 
 	Timestamp t5;
+
 	Timestamp t6;
+
 	DBFollowersNumber f11;
 
 	DBFollowersNumber f12;
@@ -460,8 +579,11 @@ public class FollowersNumberTest {
 	DBFollowersNumber f13;
 
 	DBFollower follower1;
+
 	DBFollower follower2;
+
 	DBFollower follower3;
+
 	DBFollower follower4;
 
 	DBFollowersNumber f14;
@@ -477,6 +599,8 @@ public class FollowersNumberTest {
 	TwitterAccountController tac4;
 
 	IDatabaseNumFollowers dbnumfollowers;
+
 	IDatabaseHeavyHitters dbHeavyHitters;
+
 	IDatabaseFollowers dbFollowers;
 }

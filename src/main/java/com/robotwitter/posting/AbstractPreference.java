@@ -21,6 +21,16 @@ public abstract class AbstractPreference
 {
 	
 	/**
+	 * @param charAt
+	 * @return
+	 */
+	private static boolean isWhitespace(char ch)
+	{
+		return ch == ' ' || ch == '\t' || ch == '\r' || ch == '\n';
+	}
+	
+	
+	/**
 	 * @param s
 	 *            The collection contains the strings
 	 * @param delimiter
@@ -42,8 +52,8 @@ public abstract class AbstractPreference
 		}
 		return builder.toString();
 	}
-
-
+	
+	
 	/**
 	 * @param tweets
 	 *            The tweets list
@@ -57,19 +67,19 @@ public abstract class AbstractPreference
 		String postfix)
 	{
 		if (tweets == null || tweets.contains(null) || postfix == null) { return null; }
-
+		
 		final ArrayList<String> $ = new ArrayList<>();
-
+		
 		for (final String tweet : tweets)
 		{
 			final String postfixedTweet = tweet + " " + postfix;
 			$.add(postfixedTweet);
 		}
-
+		
 		return $;
 	}
-
-
+	
+	
 	/**
 	 * @param list
 	 *            The tweet list
@@ -83,19 +93,19 @@ public abstract class AbstractPreference
 		String prefix)
 	{
 		if (list == null || list.contains(null) || prefix == null) { return null; }
-
+		
 		final ArrayList<String> $ = new ArrayList<>();
-
+		
 		for (final String tweet : list)
 		{
 			final String prefixedTweet = prefix + " " + tweet;
 			$.add(prefixedTweet);
 		}
-
+		
 		return $;
 	}
-
-
+	
+	
 	/**
 	 * @param tweet
 	 *            The tweet we want to break into several tweets
@@ -109,44 +119,70 @@ public abstract class AbstractPreference
 		int tweetMaxLength)
 	{
 		if (tweet == null) { return null; }
-
-		final ArrayList<String> $ = new ArrayList<>();
-
-		ArrayList<String> tmp = new ArrayList<>();
-		final String[] tweetSplitedByWhiteSpaces = tweet.split(" ");
-		for (final String s : tweetSplitedByWhiteSpaces)
+		
+		final ArrayList<String> $ = new ArrayList<String>();
+		if (tweetMaxLength >= tweet.length())
 		{
-			if (s.length() > tweetMaxLength)
-			{
-				if (!tmp.isEmpty())
-				{
-					$.add(join(tmp, " "));
-				}
-				$.add(s.substring(0, tweetMaxLength));
-				tmp = new ArrayList<>();
-				continue;
-			}
-			tmp.add(s);
-			if (join(tmp, " ").length() <= tweetMaxLength)
-			{ /* We already added s */} else
-			{
-				tmp.remove(s);
-				$.add(join(tmp, " "));
-				tmp = new ArrayList<>();
-				tmp.add(s);
-			}
+			$.add(tweet);
+			return $;
 		}
-
-		if (!tmp.isEmpty())
+		
+		int endIndex = tweetMaxLength;
+		while (endIndex >= 0 && !isWhitespace(tweet.charAt(endIndex)))
 		{
-			$.add(join(tmp, " "));
+			endIndex--;
 		}
-
+		$.add(tweet.substring(0, endIndex));
+		$.addAll(breakToTweets(
+			tweet.substring(endIndex + 1, tweet.length()),
+			tweetMaxLength));
 		return $;
 	}
-
-
-
+	
+	
+	
+	// This is the old version, DO NOT DELETE!
+	// protected static ArrayList<String> breakToTweets(
+	// String tweet,
+	// int tweetMaxLength)
+	// {
+	// if (tweet == null) { return null; }
+	//
+	// final ArrayList<String> $ = new ArrayList<>();
+	//
+	// ArrayList<String> tmp = new ArrayList<>();
+	// final String[] tweetSplitedByWhiteSpaces = tweet.split("\\s+");
+	// for (final String s : tweetSplitedByWhiteSpaces)
+	// {
+	// if (s.length() > tweetMaxLength)
+	// {
+	// if (!tmp.isEmpty())
+	// {
+	// $.add(join(tmp, " "));
+	// }
+	// $.add(s.substring(0, tweetMaxLength));
+	// tmp = new ArrayList<>();
+	// continue;
+	// }
+	// tmp.add(s);
+	// if (join(tmp, " ").length() <= tweetMaxLength)
+	// { /* We already added s */} else
+	// {
+	// tmp.remove(s);
+	// $.add(join(tmp, " "));
+	// tmp = new ArrayList<>();
+	// tmp.add(s);
+	// }
+	// }
+	//
+	// if (!tmp.isEmpty())
+	// {
+	// $.add(join(tmp, " "));
+	// }
+	//
+	// return $;
+	// }
+	
 	/**
 	 * Twitter's maximum tweet length
 	 */

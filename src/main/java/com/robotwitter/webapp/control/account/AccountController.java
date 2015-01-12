@@ -37,7 +37,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public class AccountController implements IAccountController
 {
-	
+
 	/**
 	 * Instantiates a new account controller stub.
 	 *
@@ -69,8 +69,8 @@ public class AccountController implements IAccountController
 		activeTwitterAccount = null;
 		twitterAccounts = new HashMap<>();
 	}
-	
-	
+
+
 	@SuppressWarnings("boxing")
 	@Override
 	public final Status activateTwitterAccount(long id)
@@ -81,13 +81,13 @@ public class AccountController implements IAccountController
 		activeTwitterAccount = account;
 		return Status.SUCCESS;
 	}
-	
-	
+
+
 	@Override
 	public final Status connect(@SuppressWarnings("hiding") String email)
 	{
 		if (!usersDB.isExists(email)) { return Status.USER_DOESNT_EXIST; }
-		
+
 		this.email = email;
 		if (!updateTwitterAccounts())
 		{
@@ -96,8 +96,8 @@ public class AccountController implements IAccountController
 		}
 		return Status.SUCCESS;
 	}
-	
-	
+
+
 	@Override
 	public final void disconnect()
 	{
@@ -105,23 +105,23 @@ public class AccountController implements IAccountController
 		activeTwitterAccount = null;
 		twitterAccounts = new HashMap<>();
 	}
-	
-	
+
+
 	@Override
 	public final ITwitterAccountController getActiveTwitterAccount()
 	{
 		if (email == null) { return null; }
 		return activeTwitterAccount;
 	}
-	
-	
+
+
 	@Override
 	public final String getEmail()
 	{
 		return email;
 	}
-	
-	
+
+
 	@Override
 	public final String getName()
 	{
@@ -129,8 +129,8 @@ public class AccountController implements IAccountController
 		// FIXME: once we support names in sign up, change this!
 		return "Robotwitter account:";
 	}
-	
-	
+
+
 	@Override
 	public final Collection<ITwitterAccountController> getTwitterAccounts()
 	{
@@ -141,8 +141,8 @@ public class AccountController implements IAccountController
 														// this!
 		return twitterAccounts.values();
 	}
-	
-	
+
+
 	/**
 	 * Update twitter accounts.
 	 *
@@ -153,15 +153,15 @@ public class AccountController implements IAccountController
 	{
 		final ArrayList<DBTwitterAccount> attachedAccounts =
 			twitterAccountsDB.get(email);
-		
+
 		if (attachedAccounts == null) { return true; }
-		
+
 		final long[] ids = new long[attachedAccounts.size()];
 		for (int i = 0; i < attachedAccounts.size(); i++)
 		{
 			ids[i] = attachedAccounts.get(i).getUserId();
 		}
-		
+
 		ResponseList<User> userList = null;
 		try
 		{
@@ -193,47 +193,48 @@ public class AccountController implements IAccountController
 				account.getToken(),
 				account.getPrivateToken()));
 			userAccount.setTwitter(connector);
+			userAccount.setAttached(true);
 			currAccount.setTwitterAccount(userAccount);
 			twitterAccounts.put(currAccount.id, currAccount);
 		}
-		
+
 		return true;
 	}
-	
-	
-	
+
+
+
 	/** The app connector. */
 	private final Twitter appConnector;
-	
+
 	/** <code>null</code> if a user isn't connected, else his email. */
 	private String email;
-	
+
 	/** The users database. */
 	@SuppressFBWarnings("SE_BAD_FIELD")
 	private final IDatabaseUsers usersDB;
-	
+
 	/** The twitter accounts database. */
 	@SuppressFBWarnings("SE_BAD_FIELD")
 	private final IDatabaseTwitterAccounts twitterAccountsDB;
-	
+
 	/** The twitter accounts num of followers database. */
 	@SuppressFBWarnings("SE_BAD_FIELD")
 	private final IDatabaseNumFollowers numFollowersDB;
-	
+
 	/** The Twitter accounts connected to the user, mapped by their IDs. */
 	private Map<Long, ITwitterAccountController> twitterAccounts;
-	
+
 	/** The currently active Twitter account. */
 	private ITwitterAccountController activeTwitterAccount;
-	
+
 	/** The database of heavy hitters */
 	@SuppressFBWarnings("SE_BAD_FIELD")
 	private final IDatabaseHeavyHitters heavyhitterDB;
-	
+
 	/** The database of followers */
 	@SuppressFBWarnings("SE_BAD_FIELD")
 	private final IDatabaseFollowers followersDB;
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.twitter;
@@ -53,17 +53,18 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 		this.followersDB = followersDB;
 		this.followersNumDB = followersNumDB;
 		twitterConnector = factory.getInstance();
-		
+
 		// Uninitialised
 		userAccount = null;
 		yesterdaysFirstPage = null;
 		yesterdayFollowerNumber = -1;
 		workTimer = null;
-		
+
 	}
-	
-	
-	/* (non-Javadoc) @see com.robotwitter.twitter.UserBackfiller#setUser(java.lang.Long) */
+
+
+	/* (non-Javadoc) @see
+	 * com.robotwitter.twitter.UserBackfiller#setUser(java.lang.Long) */
 	@Override
 	public void setUser(Long userID)
 	{
@@ -72,7 +73,7 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 			"Tried to track a user that doesn't exist!"); }
 		twitterConnector.setOAuthAccessToken(new AccessToken(userAccount
 			.getToken(), userAccount.getPrivateToken()));
-		
+
 		yesterdaysFirstPage = getFirstFollowersPage();
 		try
 		{
@@ -80,7 +81,7 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 				twitterConnector
 					.showUser(userAccount.getUserId())
 					.getFollowersCount();
-		} catch (TwitterException e)
+		} catch (final TwitterException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -91,8 +92,8 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 			workTimer = null;
 		}
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.twitter.UserBackfiller#start() */
 	@Override
 	public void start()
@@ -100,25 +101,25 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 		workTimer = new Timer(true);
 		workTimer.scheduleAtFixedRate(new TimerTask()
 		{
-			
+
 			@Override
 			public void run()
 			{
 				doDailyTask();
-				
+
 			}
 		}, new Date(), MILLIS_IN_SECOND * FULL_DAY);
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see com.robotwitter.twitter.UserBackfiller#stop() */
 	@Override
 	public void stop()
 	{
 		workTimer.cancel();
 	}
-	
-	
+
+
 	/**
 	 * @param followerNumberEntry
 	 */
@@ -127,8 +128,8 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 	{
 		followersNumDB.insert(followerNumberEntry);
 	}
-	
-	
+
+
 	/**
 	 * @param todaysFollowerNumber
 	 * @param newFollowersNumber
@@ -147,8 +148,8 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 			newFollowersNumber,
 			newUnfollowerNumber);
 	}
-	
-	
+
+
 	/**
 	 * @param yesterdaysFirstPage
 	 * @param todaysFirstPage
@@ -158,10 +159,10 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 		IDs yesterdaysFirstPage,
 		IDs todaysFirstPage)
 	{
-		long[] yesterdaysIDs = yesterdaysFirstPage.getIDs();
-		
-		long[] todaysIDs = todaysFirstPage.getIDs();
-		
+		final long[] yesterdaysIDs = yesterdaysFirstPage.getIDs();
+
+		final long[] todaysIDs = todaysFirstPage.getIDs();
+
 		for (int i = 0; i < Math.min(yesterdaysIDs.length, GIVE_UP_LIMIT); i++)
 		{
 			for (int j = 0; j < todaysIDs.length; j++)
@@ -171,19 +172,19 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 		}
 		return HIGHEST_LIMIT;
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 */
 	private void clearYesterdaysFollowersDatabase()
 	{
 		followersDB.deleteUserFollowersLinks(userAccount.getUserId());
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 */
 	private void doDailyTask()
 	{
@@ -193,25 +194,26 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 			sleepFor(REPAIR_TIME);
 			firstPage = getFirstFollowersPage();
 		}
-		
+
 		// Use todays number of followers, yesterdays number of followers,
 		// and the first page from today and yesterday to calculate the
 		// number of followers gained and lost.
-		int todaysFollowerNumber = saveTodaysFollowersToDatabase(firstPage);
-		int newFollowersNumber =
+		final int todaysFollowerNumber =
+			saveTodaysFollowersToDatabase(firstPage);
+		final int newFollowersNumber =
 			calcNewFollowersNumber(yesterdaysFirstPage, firstPage);
-		int newUnfollowerNumber =
+		final int newUnfollowerNumber =
 			newFollowersNumber
 				- (todaysFollowerNumber - yesterdayFollowerNumber);
 		updateFollowerNumberDatabase(
 			todaysFollowerNumber,
 			newFollowersNumber,
 			newUnfollowerNumber);
-		
+
 		updateYesterdaysVariables(firstPage, todaysFollowerNumber);
 	}
-	
-	
+
+
 	/**
 	 * @return
 	 */
@@ -221,15 +223,15 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 		try
 		{
 			$ = twitterConnector.getFollowersIDs(-1);
-		} catch (TwitterException e)
+		} catch (final TwitterException e)
 		{
 			e.printStackTrace();
 			return null;
 		}
 		return $;
 	}
-	
-	
+
+
 	/**
 	 * @param followersPage
 	 * @return
@@ -240,15 +242,15 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 		{
 			followersPage =
 				twitterConnector.getFollowersIDs(followersPage.getNextCursor());
-		} catch (TwitterException e)
+		} catch (final TwitterException e)
 		{
 			e.printStackTrace();
 			sleepFor(REPAIR_TIME);
 		}
 		return followersPage;
 	}
-	
-	
+
+
 	/**
 	 * @param firstPage
 	 * @return the total number of followers backfilled
@@ -258,7 +260,7 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 		int $ = firstPage.getIDs().length;
 		IDs nextPage = firstPage;
 		clearYesterdaysFollowersDatabase();
-		
+
 		do
 		{
 			updatePageToDatabase(nextPage);
@@ -273,8 +275,8 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 			&& nextPage.getRateLimitStatus().getRemaining() > 0);
 		return $;
 	}
-	
-	
+
+
 	/**
 	 * @param timeInSeconds
 	 */
@@ -283,14 +285,14 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 		try
 		{
 			Thread.sleep(1000 * timeInSeconds);
-		} catch (InterruptedException e)
+		} catch (final InterruptedException e)
 		{
 			// Its ok, we are just waking up!
 		}
-		
+
 	}
-	
-	
+
+
 	/**
 	 * @param todaysFollowerNumber
 	 * @param newFollowersNumber
@@ -301,27 +303,27 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 		int newFollowersNumber,
 		int newUnfollowerNumber)
 	{
-		DBFollowersNumber followerNumberEntry =
+		final DBFollowersNumber followerNumberEntry =
 			buildFollowerNumberEntry(
 				todaysFollowerNumber,
 				newFollowersNumber,
 				newUnfollowerNumber);
 		addToFollowerNumberDatabase(followerNumberEntry);
 	}
-	
-	
+
+
 	/**
 	 * @param followersPage
 	 */
 	private void updatePageToDatabase(IDs followersPage)
 	{
-		for (Long followerID : followersPage.getIDs())
+		for (final Long followerID : followersPage.getIDs())
 		{
 			followersDB.insert(userAccount.getUserId(), followerID);
 		}
 	}
-	
-	
+
+
 	/**
 	 * @param firstPage
 	 * @param todaysFollowerNumber
@@ -332,34 +334,34 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 	{
 		yesterdaysFirstPage = firstPage;
 		yesterdayFollowerNumber = todaysFollowerNumber;
-		
+
 	}
-	
-	
-	
+
+
+
 	private static final int HIGHEST_LIMIT = 5000;
-	
+
 	private static final int GIVE_UP_LIMIT = 100;
-	
+
 	private static final long MILLIS_IN_SECOND = 1000;
-	
+
 	private static final long FULL_DAY = 60 * 60 * 24;
-	
-	private static final long REPAIR_TIME = 60;
-	
+
+	private static final long REPAIR_TIME = 60 * 15;
+
 	private IDs yesterdaysFirstPage;
-	
+
 	private int yesterdayFollowerNumber;
-	
+
 	private DBTwitterAccount userAccount;
-	
+
 	private Timer workTimer;
-	
-	private Twitter twitterConnector;
-	
-	private IDatabaseNumFollowers followersNumDB;
-	
-	private IDatabaseFollowers followersDB;
-	
-	private IDatabaseTwitterAccounts accountsDB;
+
+	private final Twitter twitterConnector;
+
+	private final IDatabaseNumFollowers followersNumDB;
+
+	private final IDatabaseFollowers followersDB;
+
+	private final IDatabaseTwitterAccounts accountsDB;
 }

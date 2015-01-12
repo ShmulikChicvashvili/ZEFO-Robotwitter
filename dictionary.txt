@@ -43,3 +43,7 @@ toolbar
 overflown
 tweeting
 tweets
+textarea
+hashtags
+hashtag
+dussan

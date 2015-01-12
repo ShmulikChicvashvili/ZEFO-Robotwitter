@@ -47,14 +47,23 @@
 		}
 	}
 	
-	/* Twitter profile image */
-	.TwitterCard-image
+	/* Twitter profile image wrapper */
+	.TwitterCard-image-wrapper
 	{
-		margin-top: $height * (1 - $size_ratio) / 2;
-		height: $size_ratio * 100%;
-		
+		position: relative;
+		top: $height * (1 - $size_ratio) / 2;
+		width: $size_ratio * $height;
+		height: $size_ratio * $height;
+		overflow: hidden;
+			
 		/* features */
 		@include robotwitter-border-radius($height); /* Circle */
+			
+		/* Twitter profile image */
+		.TwitterCard-image
+		{
+			width: 100%;
+		}
 	}
 	
 } }

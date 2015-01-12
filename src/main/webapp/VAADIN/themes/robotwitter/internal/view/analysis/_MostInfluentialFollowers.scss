@@ -6,7 +6,7 @@
 	
 	$list-width: 250px;
 	$left-width: 150px;
-	$right-width: 260px;
+	$right-width: 270px;
 	
 	width: $list-width + $left-width + $right-width;
 		
@@ -17,7 +17,7 @@
 	{		
 		width: $list-width !important;
 		
-		overflow-y: scroll;
+		overflow-y: auto;
 		overflow-x: visible;
 		
 		background: white;
@@ -132,18 +132,35 @@
 		.v-slot-MostInfluentialFollowers-information-right
 		{
 			$padding-left: $left-width / 7.5;
-			width: $right-width - $padding-left !important;
+			$padding-right: $left-width / 7.5;
+			width: $right-width - $padding-left - $padding-right !important;
 			
 			padding-left: $padding-left;
+			padding-right: $padding-left;
 			
 			/* More spacing between properties */
 			.v-spacing { width: 1.5em; height: 1.5em; }
 			
 			/* Properties captions */
 			.v-caption { color: rgba(black, 0.8); font-weight: bold; }
+			
+			/* Bio property */
+			.MostInfluentialFollowers-information-description
+			{
+				white-space: pre-wrap;       /* css-3 */
+				white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+				white-space: -pre-wrap;      /* Opera 4-6 */
+				white-space: -o-pre-wrap;    /* Opera 7 */
+				word-wrap: break-word;       /* Internet Explorer 5.5+ */
+				
+				max-height: 50px;
+				overflow-y: auto;
+				background: rgba(black, 0.05);
+				padding: 5px;
+			}
 		}
 		
-		/* An stat property */
+		/* A stat property */
 		.v-slot-MostInfluentialFollowers-information-stat
 		{
 			line-height: 1em;

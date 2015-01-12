@@ -18,7 +18,7 @@ import com.robotwitter.posting.Preference;
  */
 public class TweetingController implements ITweetingController
 {
-	
+
 	/**
 	 * @param preference
 	 */
@@ -26,26 +26,26 @@ public class TweetingController implements ITweetingController
 	{
 		preference = new NumberedPreference();
 	}
-	
-	
+
+
 	@Override
 	public final List<String> breakTweet(String tweet)
 	{
 		return preference.generateTweet(tweet);
 	}
-
-
+	
+	
 	@Override
 	public final List<String> previewTweet(String tweet)
 	{
-		
+
 		return breakTweet(tweet);
 	}
-
-
-
+	
+	
+	
 	Preference preference;
-
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

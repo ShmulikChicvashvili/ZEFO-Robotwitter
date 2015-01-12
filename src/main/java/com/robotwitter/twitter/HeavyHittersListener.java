@@ -83,8 +83,8 @@ public class HeavyHittersListener implements UserStreamListener
 	@Override
 	public void onDirectMessage(DirectMessage directMessage)
 	{
-		User recipient = directMessage.getRecipient();
-		User sender = directMessage.getSender();
+		final User recipient = directMessage.getRecipient();
+		final User sender = directMessage.getSender();
 		if (recipient.getId() != userID && sender.getId() == userID)
 		{
 			heavyHittersHandler.onDirectMessage(recipient.getId());
@@ -278,7 +278,8 @@ public class HeavyHittersListener implements UserStreamListener
 	private boolean sameDaySinceUpdate(Timestamp timestamp)
 	{
 		return lastUpdated != null
-			&& timestamp.getDay() == lastUpdated.getDay();
+			&& timestamp.getDay() == lastUpdated.getDay()
+			&& false; // FIXME: holy mother of fixmes!
 	}
 	
 	
@@ -292,9 +293,9 @@ public class HeavyHittersListener implements UserStreamListener
 	
 	
 	
-	private Timestamp lastUpdated;
+	private final Timestamp lastUpdated;
 	
-	private IDatabaseHeavyHitters db;
+	private final IDatabaseHeavyHitters db;
 	
 	/**
 	 * The user we track

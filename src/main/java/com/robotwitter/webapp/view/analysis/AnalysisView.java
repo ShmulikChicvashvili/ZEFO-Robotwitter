@@ -2,31 +2,14 @@
 package com.robotwitter.webapp.view.analysis;
 
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-
-import org.dussan.vaadin.dcharts.DCharts;
-import org.dussan.vaadin.dcharts.base.elements.XYaxis;
-import org.dussan.vaadin.dcharts.data.DataSeries;
-import org.dussan.vaadin.dcharts.metadata.TooltipAxes;
-import org.dussan.vaadin.dcharts.metadata.XYaxes;
-import org.dussan.vaadin.dcharts.metadata.locations.TooltipLocations;
-import org.dussan.vaadin.dcharts.metadata.renderers.AxisRenderers;
-import org.dussan.vaadin.dcharts.metadata.renderers.LabelRenderers;
-import org.dussan.vaadin.dcharts.options.Axes;
-import org.dussan.vaadin.dcharts.options.Highlighter;
-import org.dussan.vaadin.dcharts.options.Options;
-import org.dussan.vaadin.dcharts.renderers.tick.AxisTickRenderer;
-import org.dussan.vaadin.dcharts.renderers.tick.CanvasAxisTickRenderer;
-
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import com.vaadin.ui.UI;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.VerticalLayout;
 
-import com.robotwitter.webapp.control.account.ITwitterAccountController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.AbstractView;
 
@@ -41,7 +24,7 @@ import com.robotwitter.webapp.view.AbstractView;
  */
 public class AnalysisView extends AbstractView
 {
-
+	
 	/**
 	 * Instantiates a new login view.
 	 *
@@ -60,8 +43,8 @@ public class AnalysisView extends AbstractView
 	{
 		return false;
 	}
-
-
+	
+	
 	@Override
 	public final boolean isSignedInRequired()
 	{
@@ -69,67 +52,127 @@ public class AnalysisView extends AbstractView
 	}
 
 
-	@Override
-	protected final void initialise()
+	/**
+	 * Wrap the given component in a panel.
+	 *
+	 * @param component
+	 *            the component to wrap
+	 * @param title
+	 *            the panel's title
+	 *
+	 * @return a newly created panel wrapper, wrapping the given component
+	 */
+	private Component wrapInPanel(Component component, String title)
 	{
-		ITwitterAccountController controller =
-			getUserSession().getAccountController().getActiveTwitterAccount();
-
-		Map<Date, Integer> followers =
-			controller.getAmountOfFollowers(null, null);
-
-		DataSeries dataSeries = new DataSeries().newSeries();
-
-		DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-
-		for (Map.Entry<Date, Integer> entry : followers.entrySet())
-		{
-			dataSeries.add(df.format(entry.getKey()), entry.getValue());
-		}
-
-		Axes axes =
-			new Axes().addAxis(
-				new XYaxis().setRenderer(AxisRenderers.DATE).setTickOptions(
-					new CanvasAxisTickRenderer().setAngle(-30).setFormatString(
-						"%#d %b, %Y"))).addAxis(
-							new XYaxis(XYaxes.Y)
-							.setLabel(
-								messages.get("AnalysisView.chart.label.followers"))
-								.setLabelRenderer(LabelRenderers.CANVAS)
-								.setTickOptions(
-									new AxisTickRenderer().setFormatString("%d")));
-
-		Highlighter highlighter =
-			new Highlighter()
-		.setShow(true)
-		.setSizeAdjust(10)
-		.setTooltipLocation(TooltipLocations.NORTH)
-		.setTooltipAxes(TooltipAxes.YX)
-		.setUseAxesFormatters(true)
-		.setFormatString("%s followers on %s");
-
-		Options options = new Options().addOption(axes).addOption(highlighter);
-
-		DCharts chart =
-			new DCharts().setDataSeries(dataSeries).setOptions(options).show();
-
-		setCompositionRoot(chart);
-
-		UI.getCurrent().getPage().addBrowserWindowResizeListener(event -> {
-			chart.setSizeFull();
-		});
-		
-		addStyleName(STYLENAME);
+		Label titleLabel = new Label(title);
+		VerticalLayout panel = new VerticalLayout(titleLabel, component);
+		panel.setSizeFull();
+		panel.setExpandRatio(component, 1);
+		titleLabel.addStyleName(PANEL_TITLE_STYLENAME);
+		panel.addStyleName(PANEL_STYLENAME);
+		return panel;
 	}
 
 
+	@Override
+	protected final void initialise()
+	{
+		Label header = new Label(messages.get("AnalysisView.label.header"));
+		FollowersAmountOverview overview =
+			new FollowersAmountOverview(messages);
 
+		FollowersAmountOverTimeChart followersChart =
+			new FollowersAmountOverTimeChart(messages);
+		MostInfluentialFollowers influentialFollowers =
+			new MostInfluentialFollowers(messages);
+		
+		FollowersDisplayedLanguageChart followersDisplayedLanguageChart =
+			new FollowersDisplayedLanguageChart(messages);
+		FollowersFollowersAmountChart followersFollowersAmountChart =
+			new FollowersFollowersAmountChart(messages);
+		FollowersFollowingAmountChart followersFollowingAmountChart =
+			new FollowersFollowingAmountChart(messages);
+
+		followersChart.setSizeFull();
+		influentialFollowers.setSizeFull();
+		followersDisplayedLanguageChart.setSizeFull();
+		followersFollowersAmountChart.setSizeFull();
+		followersFollowingAmountChart.setSizeFull();
+
+		Component followersChartPanel =
+			wrapInPanel(
+				followersChart,
+				messages.get("AnalysisView.caption.followers-amount-over-time"));
+		Component influentialFollowersPanel =
+			wrapInPanel(
+				influentialFollowers,
+				messages.get("AnalysisView.caption.most-influential-followers"));
+		Component followersDisplayedLanguageChartPanel =
+			wrapInPanel(
+				followersDisplayedLanguageChart,
+				messages
+					.get("AnalysisView.caption.followers-displayed-language"));
+		Component followersFollowersAmountChartPanel =
+			wrapInPanel(
+				followersFollowersAmountChart,
+				messages.get("AnalysisView.caption.followers-followers-amount"));
+		Component followersFollowingAmountChartPanel =
+			wrapInPanel(
+				followersFollowingAmountChart,
+				messages.get("AnalysisView.caption.followers-following-amount"));
+		
+		// TODO this should be in CSS
+		influentialFollowersPanel.setWidth("700px");
+		
+		HorizontalLayout firstRow = new HorizontalLayout(header, overview);
+		firstRow.setWidth("100%");
+		firstRow.setSpacing(true);
+
+		HorizontalLayout secondRow =
+			new HorizontalLayout(influentialFollowersPanel, followersChartPanel);
+		secondRow.setSizeFull();
+		secondRow.setSpacing(true);
+		secondRow.setExpandRatio(followersChartPanel, 1);
+
+		HorizontalLayout thirdRow =
+			new HorizontalLayout(
+				followersDisplayedLanguageChartPanel,
+				followersFollowersAmountChartPanel,
+				followersFollowingAmountChartPanel);
+		thirdRow.setSizeFull();
+		thirdRow.setSpacing(true);
+		
+		VerticalLayout layout =
+			new VerticalLayout(firstRow, secondRow, thirdRow);
+		layout.setSizeFull();
+		layout.setSpacing(true);
+		layout.setExpandRatio(secondRow, 1);
+		layout.setExpandRatio(thirdRow, 1);
+
+		header.addStyleName(HEADER_STYLENAME);
+		addStyleName(STYLENAME);
+		
+		setCompositionRoot(layout);
+	}
+	
+	
+	
 	/** The view's name. */
 	public static final String NAME = "analysis";
-
+	
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "AnalysisView";
-	
+
+	/** The CSS class name to apply to each panel component. */
+	private static final String PANEL_STYLENAME = "AnalysisView-panel";
+
+	/** The CSS class name to apply to each panel title label. */
+	private static final String PANEL_TITLE_STYLENAME =
+		"AnalysisView-panel-title";
+
+	/** The CSS class name to apply to the header component. */
+	private static final String HEADER_STYLENAME = "AnalysisView-header";
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

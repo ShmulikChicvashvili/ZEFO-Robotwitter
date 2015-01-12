@@ -28,12 +28,12 @@ public final class TwitterCard
 	 *            is the account empty
 	 * @return an HTML string representing the newly created card
 	 */
-	static String createAsHtml(
+	public static String createAsHtml(
 		String name,
 		String screenname,
 		String image,
 		boolean isEmpty)
-	
+
 	{		// Twitter account name element
 		String nameOpen = "<div class=\"" + TWITTER_NAME_STYLENAME + "\">";
 		String nameClose = "</div>";
@@ -62,9 +62,13 @@ public final class TwitterCard
 
 		// Twitter profile image
 		String imageOpen =
-			"<img class=\"" + TWITTER_PROFILE_IMAGE_STYLENAME + "\" ";
+			"<div class=\""
+				+ TWITTER_IMAGE_WRAPPER_STYLENAME
+				+ "\"><img class=\""
+				+ TWITTER_PROFILE_IMAGE_STYLENAME
+				+ "\" ";
 		imageOpen += "alt=\"" + name + "\" src=\"";
-		String imageClose = "\">";
+		String imageClose = "\" /></div>";
 		String imageContent = image;
 		String imageElem = imageOpen + imageContent + imageClose;
 
@@ -102,6 +106,10 @@ public final class TwitterCard
 	/** The CSS class name to apply to a Twitter profile image. */
 	private static final String TWITTER_PROFILE_IMAGE_STYLENAME =
 		"TwitterCard-image";
+
+	/** The CSS class name to apply to a Twitter profile image wrapper. */
+	private static final String TWITTER_IMAGE_WRAPPER_STYLENAME =
+		"TwitterCard-image-wrapper";
 
 	/** The CSS class name to apply to a Twitter screenname in a profile card. */
 	private static final String TWITTER_SCREENNAME_STYLENAME =

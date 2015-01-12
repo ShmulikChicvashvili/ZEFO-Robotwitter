@@ -8,6 +8,9 @@ package com.robotwitter.statistics;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 
 
 
@@ -21,7 +24,9 @@ public class HeavyHitters implements IHeavyHitters
 	 * @param numOfCounters
 	 * @param numOfHeavyHitters
 	 */
-	public HeavyHitters(int numOfCounters, int numOfHeavyHitters)
+	@Inject
+	public HeavyHitters(
+		@Named("Heavy Hitters Counter Number")Integer numOfCounters,@Named("Heavy Hitters Number") Integer numOfHeavyHitters)
 	{
 		this.numOfCounters = numOfCounters;
 		this.numOfHeavyHitters = numOfHeavyHitters;

@@ -13,10 +13,12 @@ import java.sql.Timestamp;
 /**
  * @author Eyal and Shmulik
  *
+ * @author Itay
+ * Edited by Itay in 9.1.15 to add the number of followers joined and left.
  */
 public class DBFollowersNumber
 {
-	public DBFollowersNumber(Long twitterId, Timestamp date, int numFollowers)
+	public DBFollowersNumber(Long twitterId, Timestamp date, int numFollowers, int numJoined, int numLeft)
 	{
 		this.twitterId = twitterId;
 		if (date != null)
@@ -27,11 +29,10 @@ public class DBFollowersNumber
 			this.date = null;
 		}
 		this.numFollowers = numFollowers;
+		this.numJoined = numJoined;
+		this.numLeft = numLeft;
 	}
-	
-	
-	/* (non-Javadoc) @see
-	 * com.robotwitter.database.primitives.DatabaseType#equals(java.lang.Object) */
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -39,10 +40,11 @@ public class DBFollowersNumber
 		final DBFollowersNumber other = (DBFollowersNumber) obj;
 		return twitterId.equals(other.twitterId)
 			&& date.equals(other.date)
-			&& numFollowers == other.numFollowers;
+			&& numFollowers == other.numFollowers
+			&& numJoined == other.numJoined
+			&& numLeft == other.numLeft;
 	}
-	
-	
+
 	/**
 	 * @return the date
 	 */
@@ -50,8 +52,7 @@ public class DBFollowersNumber
 	{
 		return date;
 	}
-	
-	
+
 	/**
 	 * @return the numFollowers
 	 */
@@ -59,14 +60,44 @@ public class DBFollowersNumber
 	{
 		return numFollowers;
 	}
-	
-	
+
+	/**
+	 * @return the numJoined
+	 */
+	public int getNumJoined()
+	{
+		return numJoined;
+	}
+
+	/**
+	 * @return the numLeft
+	 */
+	public int getNumLeft()
+	{
+		return numLeft;
+	}
+
 	/**
 	 * @return the twitterId
 	 */
 	public Long getTwitterId()
 	{
 		return twitterId;
+	}
+
+	/* (non-Javadoc) @see java.lang.Object#hashCode() */
+	@Override
+	public int hashCode()
+	{
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + numFollowers;
+		result = prime * result + numJoined;
+		result = prime * result + numLeft;
+		result =
+			prime * result + ((twitterId == null) ? 0 : twitterId.hashCode());
+		return result;
 	}
 	
 	
@@ -91,6 +122,24 @@ public class DBFollowersNumber
 	
 	
 	/**
+	 * @param numJoined the numJoined to set
+	 */
+	public void setNumJoined(int numJoined)
+	{
+		this.numJoined = numJoined;
+	}
+	
+	
+	/**
+	 * @param numLeft the numLeft to set
+	 */
+	public void setNumLeft(int numLeft)
+	{
+		this.numLeft = numLeft;
+	}
+	
+	
+	/**
 	 * @param twitterId
 	 *            the twitterId to set
 	 */
@@ -100,18 +149,11 @@ public class DBFollowersNumber
 	}
 	
 	
-	/* (non-Javadoc) @see java.lang.Object#toString() */
-	@Override
-	public String toString()
-	{
-		return "DBFollowersNumber [date=" //$NON-NLS-1$
-			+ date
-			+ ", numFollowers=" //$NON-NLS-1$
-			+ numFollowers
-			+ "]"; //$NON-NLS-1$
-	}
 	
 	
+	private int numJoined;
+	
+	private int numLeft;
 	
 	private Timestamp date;
 	

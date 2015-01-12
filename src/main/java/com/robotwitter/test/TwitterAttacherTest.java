@@ -31,7 +31,7 @@ import com.robotwitter.twitter.TwitterAttacher;
  * @author Itay
  *
  */
-public class TwitterAttacherTest // TODO: think how to test this...
+public class TwitterAttacherTest
 {
 
 	@Before
@@ -75,15 +75,12 @@ public class TwitterAttacherTest // TODO: think how to test this...
 
 		} catch (final IllegalPinException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (final IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (final TwitterException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

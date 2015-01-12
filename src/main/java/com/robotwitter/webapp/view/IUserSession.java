@@ -5,6 +5,7 @@ package com.robotwitter.webapp.view;
 import java.io.Serializable;
 
 import com.robotwitter.webapp.control.account.IAccountController;
+import com.robotwitter.webapp.util.RobotwitterCustomComponent;
 
 
 
@@ -21,7 +22,7 @@ import com.robotwitter.webapp.control.account.IAccountController;
  */
 public interface IUserSession extends Serializable
 {
-	
+
 	/**
 	 * Activates a connected Twitter account.
 	 *
@@ -33,15 +34,28 @@ public interface IUserSession extends Serializable
 	
 	/** @return the current user's account controller. */
 	IAccountController getAccountController();
-
-
+	
+	
 	/**
 	 * @return <code>true</code> if the user is signed in, <code>false</code>
 	 *         otherwise.
 	 */
 	boolean isSigned();
-	
-	
+
+
+	/**
+	 * Observe a change in the active Twitter Account.
+	 *
+	 * The {@link RobotwitterCustomComponent#activateTwitterAccount} method will
+	 * be called on each observing component after the active Twitter Account
+	 * changes.
+	 *
+	 * @param component
+	 *            the component that will be the observer
+	 */
+	void observeActiveTwitterAccount(RobotwitterCustomComponent component);
+
+
 	/**
 	 * Keeps a user signing for this session.
 	 * <p>
@@ -55,8 +69,8 @@ public interface IUserSession extends Serializable
 	 *            next session, <code>false</code> otherwise
 	 */
 	void sign(String email, boolean remember);
-
-
+	
+	
 	/** Signs out a currently signed in user. */
 	void unsign();
 }

@@ -36,11 +36,13 @@ $v-app-loading-text: "Robotwitter is loading...";
 /*----------------------------------------------------------------------------*/
 
 @import "internal/util";
-@import "internal/ui";
+@import "internal/menu";
+@import "internal/RobotwitterUI";
 @import "internal/view/login";
 @import "internal/view/registration";
 @import "internal/view/connect_twitter";
 @import "internal/view/analysis";
+@import "internal/view/tools";
 
 /*----------------------------------------------------------------------------*/
 
@@ -50,11 +52,13 @@ $v-app-loading-text: "Robotwitter is loading...";
 	@include valo;
 	
 	@include robotwitter-util;
-	@include robotwitter-ui;
+	@include robotwitter-menu;
+	@include RobotwitterUI;
 	
 	/* Views */
 	@include robotwitter-view-login;
 	@include robotwitter-view-registration;
 	@include robotwitter-view-connect_twitter;
 	@include robotwitter-view-analysis;
+	@include robotwitter-view-tools;
 }

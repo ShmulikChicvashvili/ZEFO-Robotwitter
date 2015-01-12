@@ -5,9 +5,6 @@ package com.robotwitter.management;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
-import com.robotwitter.database.MySqlDatabaseUser;
-import com.robotwitter.database.interfaces.IDatabaseUsers;
-
 
 
 
@@ -25,7 +22,6 @@ public class EmailPasswordRetrieverModule extends AbstractModule
 		bind(String.class)
 			.annotatedWith(Names.named("System Email")).toInstance("robotwitter.app@gmail.com"); //$NON-NLS-1$ //$NON-NLS-2$
 		bind(IRetrievalMailBuilder.class).to(RetrievalMailBuilder.class);
-		bind(IDatabaseUsers.class).to(MySqlDatabaseUser.class);
 	}
 	
 }

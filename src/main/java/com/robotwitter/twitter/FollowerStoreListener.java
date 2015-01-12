@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.twitter;
@@ -8,11 +8,6 @@ package com.robotwitter.twitter;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
-
-import com.robotwitter.database.interfaces.IDatabaseFollowers;
-import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
-import com.robotwitter.database.primitives.DBFollower;
-import com.robotwitter.database.primitives.DBFollowersNumber;
 
 import twitter4j.DirectMessage;
 import twitter4j.StallWarning;
@@ -23,6 +18,11 @@ import twitter4j.UserList;
 import twitter4j.UserMentionEntity;
 import twitter4j.UserStreamListener;
 
+import com.google.inject.Inject;
+
+import com.robotwitter.database.interfaces.IDatabaseFollowers;
+import com.robotwitter.database.primitives.DBFollower;
+
 
 
 
@@ -32,28 +32,24 @@ import twitter4j.UserStreamListener;
  */
 public class FollowerStoreListener implements UserStreamListener
 {
-	public FollowerStoreListener(
-		IDatabaseFollowers followersDB,
-		IDatabaseNumFollowers numFollowersDB,
-		Long userID)
+	@Inject
+	public FollowerStoreListener(IDatabaseFollowers followersDB)
 	{
 		this.followersDB = followersDB;
-		this.numFollowersDB = numFollowersDB;
-		this.userID = userID;
+
 		lastUpdated = null;
-		
+
 		updateFollowersBarrier = new HashMap<Long, DBFollower>();
-		followersNumBarrier = new DBFollowersNumber(userID, lastUpdated, -1);
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see twitter4j.UserStreamListener#onBlock(twitter4j.User,
 	 * twitter4j.User) */
 	@Override
 	public void onBlock(User source, User blockedUser)
 	{
 		// Nothing to do here
-		
+
 	}
 	
 	
@@ -63,28 +59,28 @@ public class FollowerStoreListener implements UserStreamListener
 	public void onDeletionNotice(long directMessageId, long userId)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.StatusListener#onDeletionNotice(twitter4j.StatusDeletionNotice) */
 	@Override
 	public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onDirectMessage(twitter4j.DirectMessage) */
 	@Override
 	public void onDirectMessage(DirectMessage directMessage)
 	{
-		User recipient = directMessage.getRecipient();
-		User sender = directMessage.getSender();
-		
+		final User recipient = directMessage.getRecipient();
+		final User sender = directMessage.getSender();
+
 		// This means that I sent a message to him, hence he follows me.
 		if (recipient.getId() != userID && sender.getId() == userID)
 		{
@@ -92,8 +88,8 @@ public class FollowerStoreListener implements UserStreamListener
 			updateNumFollowers(sender);
 		}
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.StreamListener#onException(java.lang.Exception) */
 	@Override
@@ -101,8 +97,8 @@ public class FollowerStoreListener implements UserStreamListener
 	{
 		// Nothing to do here
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onFavorite(twitter4j.User, twitter4j.User,
 	 * twitter4j.Status) */
@@ -110,14 +106,14 @@ public class FollowerStoreListener implements UserStreamListener
 	public void onFavorite(User source, User target, Status favoritedStatus)
 	{
 		if (target.getId() == userID && source.getId() != userID)
-		{	
+		{
 			updateFollowers(source);
 			updateNumFollowers(target);
 		}
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see twitter4j.UserStreamListener#onFollow(twitter4j.User,
 	 * twitter4j.User) */
 	@Override
@@ -128,38 +124,38 @@ public class FollowerStoreListener implements UserStreamListener
 			updateFollowers(source);
 			updateNumFollowers(followedUser);
 		}
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see twitter4j.UserStreamListener#onFriendList(long[]) */
 	@Override
 	public void onFriendList(long[] friendIds)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see twitter4j.StatusListener#onScrubGeo(long, long) */
 	@Override
 	public void onScrubGeo(long userId, long upToStatusId)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.StatusListener#onStallWarning(twitter4j.StallWarning) */
 	@Override
 	public void onStallWarning(StallWarning warning)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see twitter4j.StatusListener#onStatus(twitter4j.Status) */
 	@Override
 	public void onStatus(Status status)
@@ -176,7 +172,7 @@ public class FollowerStoreListener implements UserStreamListener
 					break;
 				}
 			}
-
+			
 			if (status.isRetweet()
 				&& status.getRetweetedStatus().getUser().getId() == userID)
 			{
@@ -184,33 +180,34 @@ public class FollowerStoreListener implements UserStreamListener
 				updateNumFollowers(status.getRetweetedStatus().getUser());
 			}
 		}
-		
-		if(source.getId() == userID) {
+
+		if (source.getId() == userID)
+		{
 			updateNumFollowers(source);
 		}
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see twitter4j.StatusListener#onTrackLimitationNotice(int) */
 	@Override
 	public void onTrackLimitationNotice(int numberOfLimitedStatuses)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see twitter4j.UserStreamListener#onUnblock(twitter4j.User,
 	 * twitter4j.User) */
 	@Override
 	public void onUnblock(User source, User unblockedUser)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onUnfavorite(twitter4j.User, twitter4j.User,
 	 * twitter4j.Status) */
@@ -220,20 +217,20 @@ public class FollowerStoreListener implements UserStreamListener
 		onUnfavorite(User source, User target, Status unfavoritedStatus)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onUnfollow(twitter4j.User, twitter4j.User) */
 	@Override
 	public void onUnfollow(User source, User unfollowedUser)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onUserListCreation(twitter4j.User,
 	 * twitter4j.UserList) */
@@ -241,10 +238,10 @@ public class FollowerStoreListener implements UserStreamListener
 	public void onUserListCreation(User listOwner, UserList list)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onUserListDeletion(twitter4j.User,
 	 * twitter4j.UserList) */
@@ -252,10 +249,10 @@ public class FollowerStoreListener implements UserStreamListener
 	public void onUserListDeletion(User listOwner, UserList list)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onUserListMemberAddition(twitter4j.User,
 	 * twitter4j.User, twitter4j.UserList) */
@@ -266,10 +263,10 @@ public class FollowerStoreListener implements UserStreamListener
 		UserList list)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onUserListMemberDeletion(twitter4j.User,
 	 * twitter4j.User, twitter4j.UserList) */
@@ -280,10 +277,10 @@ public class FollowerStoreListener implements UserStreamListener
 		UserList list)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onUserListSubscription(twitter4j.User,
 	 * twitter4j.User, twitter4j.UserList) */
@@ -294,10 +291,10 @@ public class FollowerStoreListener implements UserStreamListener
 		UserList list)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onUserListUnsubscription(twitter4j.User,
 	 * twitter4j.User, twitter4j.UserList) */
@@ -308,10 +305,10 @@ public class FollowerStoreListener implements UserStreamListener
 		UserList list)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onUserListUpdate(twitter4j.User,
 	 * twitter4j.UserList) */
@@ -319,63 +316,81 @@ public class FollowerStoreListener implements UserStreamListener
 	public void onUserListUpdate(User listOwner, UserList list)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onUserProfileUpdate(twitter4j.User) */
 	@Override
 	public void onUserProfileUpdate(User updatedUser)
 	{
 		// Nothing to do here
-		
+
 	}
-	
-	
+
+
+	public void setUser(Long userID)
+	{
+		System.out.println("Set the user of StoreListener to " + userID);
+		this.userID = userID;
+	}
+
+
+	@SuppressWarnings("nls")
 	private DBFollower buildFollowerFromUser(User user)
 	{
+		// return new DBFollower(
+		// user.getId(),
+		// user.getName(),
+		// user.getScreenName(),
+		// user.getDescription() == null ? "" : user.getDescription(),
+		// user.getFollowersCount(),
+		// user.getFriendsCount(),
+		// user.getLocation() == null ? "" : user.getLocation(),
+		// user.getFavouritesCount(),
+		// user.getLang(),
+		// user.isVerified(),
+		// new Timestamp(user.getCreatedAt().getTime()),
+		// user.getBiggerProfileImageURL());
+		String desc = null;
+		if (user.getDescription() == null)
+		{
+			desc = "";
+		} else
+		{
+			desc = user.getDescription();
+		}
+		String location = null;
+		if (user.getLocation() == null)
+		{
+			location = "";
+		} else
+		{
+			location = user.getLocation();
+		}
 		return new DBFollower(
 			user.getId(),
 			user.getName(),
 			user.getScreenName(),
-			user.getDescription(),
+			desc,
 			user.getFollowersCount(),
 			user.getFriendsCount(),
-			user.getLocation(),
+			location,
 			user.getFavouritesCount(),
 			user.getLang(),
 			user.isVerified(),
 			new Timestamp(user.getCreatedAt().getTime()),
-			user.getProfileImageURL());
+			user.getBiggerProfileImageURL());
 	}
-	
-	
-	private DBFollowersNumber buildFollowersNumber(User myUser)
-	{
-		return new DBFollowersNumber(
-			userID,
-			new Timestamp(new Date().getTime()),
-			myUser.getFollowersCount());
-	}
-	
-	
-	/**
-	 * 
-	 */
-	private void flushFollowersNumber()
-	{
-		numFollowersDB.insert(followersNumBarrier);
-	}
-	
-	
+
+
 	/**
 	 * @param follower
 	 */
 	private void flushFollowerToDatabase(Long follower)
 	{
-		// FIXME: we are inserting people who may not be following the user!,
-		// talk with drutin and see what we can do.
+		System.err.println("inserting user" + follower);
 		if (followersDB.isExists(follower))
 		{
 			followersDB.update(updateFollowersBarrier.get(follower));
@@ -383,26 +398,26 @@ public class FollowerStoreListener implements UserStreamListener
 		{
 			followersDB.insert(updateFollowersBarrier.get(follower));
 		}
-		
+
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 */
 	private void flushUpdates()
 	{
-		for (Long follower : updateFollowersBarrier.keySet())
+		for (final Long follower : updateFollowersBarrier.keySet())
 		{
 			flushFollowerToDatabase(follower);
 		}
-		
-		flushFollowersNumber();
 		lastUpdated = new Timestamp(new Date().getTime());
+
+		updateFollowersBarrier = new HashMap<Long, DBFollower>();
 		
 	}
-	
-	
+
+
 	/**
 	 * @param timestamp
 	 * @return
@@ -411,33 +426,34 @@ public class FollowerStoreListener implements UserStreamListener
 	private boolean sameDaySinceUpdate(Timestamp timestamp)
 	{
 		return lastUpdated != null
-			&& timestamp.getDay() == lastUpdated.getDay();
+			&& timestamp.getDay() == lastUpdated.getDay()
+			&& false; // FIXME: holy mother of fixmes!
 	}
-	
-	
+
+
 	/**
 	 * @param followingUser
 	 */
 	private void updateFollowers(User followingUser)
 	{
-		DBFollower follower = buildFollowerFromUser(followingUser);
+		System.out.println("Trying to update for " + followingUser.getId());
+		final DBFollower follower = buildFollowerFromUser(followingUser);
 		updateFollowersBarrier.put(followingUser.getId(), follower);
-		
-		Timestamp now = new Timestamp(new Date().getTime());
+
+		final Timestamp now = new Timestamp(new Date().getTime());
 		if (!sameDaySinceUpdate(now))
 		{
 			flushUpdates();
 		}
 	}
-	
-	
+
+
 	/**
 	 * @param myUser
 	 */
 	private void updateNumFollowers(User myUser)
 	{
-		Timestamp now = new Timestamp(new Date().getTime());
-		followersNumBarrier = buildFollowersNumber(myUser);
+		final Timestamp now = new Timestamp(new Date().getTime());
 		if (!sameDaySinceUpdate(now))
 		{
 			flushUpdates();
@@ -446,16 +462,12 @@ public class FollowerStoreListener implements UserStreamListener
 	
 	
 	
-	private DBFollowersNumber followersNumBarrier;
-	
 	private HashMap<Long, DBFollower> updateFollowersBarrier;
-	
+
 	private Timestamp lastUpdated;
-	
-	private IDatabaseFollowers followersDB;
-	
-	private IDatabaseNumFollowers numFollowersDB;
-	
+
+	private final IDatabaseFollowers followersDB;
+
 	private Long userID;
-	
+
 }

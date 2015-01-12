@@ -72,7 +72,7 @@ public class DatabaseFollowersTest
 		assertEquals(null, db.get(null));
 		final DBFollowersNumber dbTest =
 			new DBFollowersNumber((long) 123456789, Timestamp.from(c
-				.toInstant()), 0);
+				.toInstant()), 0,0,0);
 		assertEquals(SqlError.SUCCESS, db.insert(dbTest));
 		assertEquals(SqlError.ALREADY_EXIST, db.insert(dbTest));
 
@@ -109,25 +109,25 @@ public class DatabaseFollowersTest
 		c.setTime(new Date());
 		c.set(Calendar.MILLISECOND, 0);
 
-		DBFollowersNumber badParamaters = new DBFollowersNumber(null, null, -1);
+		DBFollowersNumber badParamaters = new DBFollowersNumber(null, null, -1,0,0);
 
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(null));
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(badParamaters));
 
-		badParamaters = new DBFollowersNumber((long) 123456, null, -1);
+		badParamaters = new DBFollowersNumber((long) 123456, null, -1,0,0);
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(badParamaters));
 
 		badParamaters =
-			new DBFollowersNumber(null, Timestamp.from(c.toInstant()), -1);
+			new DBFollowersNumber(null, Timestamp.from(c.toInstant()), -1,0,0);
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(badParamaters));
 
-		badParamaters = new DBFollowersNumber(null, null, 1);
+		badParamaters = new DBFollowersNumber(null, null, 1,0,0);
 		assertEquals(SqlError.INVALID_PARAMS, db.insert(badParamaters));
 
 		final Long userID = (long) 248335762;
 		final Timestamp date = Timestamp.from(c.toInstant());
 		final DBFollowersNumber goodParamaters =
-			new DBFollowersNumber(userID, date, 0);
+			new DBFollowersNumber(userID, date, 0,0,0);
 
 		assertEquals(SqlError.SUCCESS, db.insert(goodParamaters));
 

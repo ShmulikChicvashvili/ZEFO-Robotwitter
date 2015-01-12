@@ -1,0 +1,182 @@
+@import "../../common";
+@import "../../../config";
+/*----------------------------------------------------------------------------*/
+
+@mixin MostInfluentialFollowers { .MostInfluentialFollowers {
+	
+	$list-width: 250px;
+	$left-width: 150px;
+	$right-width: 270px;
+	
+	width: $list-width + $left-width + $right-width;
+		
+	position: relative;
+
+	/* The list of followers component. */
+	.v-slot-MostInfluentialFollowers-followers-list
+	{		
+		width: $list-width !important;
+		
+		overflow-y: auto;
+		overflow-x: visible;
+		
+		background: white;
+		border: 1px solid rgba(black, 0.15);
+		
+		/* A wrapper of a twitter follower card. */
+		.MostInfluentialFollowers-card-wrapper
+		{
+			text-align: right;
+		
+			padding: 0 15px;
+			
+			border-bottom: 1px solid rgba(black, 0.15);
+			
+			/* The card itself. */
+			.v-label { width: auto !important; }
+				
+			/* Hover */
+			cursor: pointer;
+			&:hover
+			{
+				padding-right: 1.5em;
+				background: hsl(hue($robotwitter-main-color), 2%, 95%);
+			}
+			
+			/* Transitions */
+			@include robotwitter-transition(background 0.3s ease);
+			@include robotwitter-transition(padding 0.3s ease);
+		}
+		
+		/* Active twitter follower card. */
+		.MostInfluentialFollowers-active-card-wrapper
+		{
+			background: $robotwitter-main-color;
+			
+			padding-right: 2em;
+			
+			/** Twitter card name. */
+			.TwitterCard-name { color: white; }
+			
+			/** Twitter card screenname. */
+			.TwitterCard-screenname { color: rgba(white, 0.75); }
+			
+			/* Cancel hover */
+			cursor: default;
+			&:hover { padding-right: 2em; background: $robotwitter-main-color; }
+		}
+		
+		/* Fix wrapped list glitch */
+		.v-expand { height: auto; }
+	}
+	
+	/* The active follower's information. */
+	.v-slot-MostInfluentialFollowers-information
+	{
+		width: $left-width + $right-width !important;
+		
+		/* Left side */
+		.v-slot-MostInfluentialFollowers-information-left
+		{
+			width: $left-width !important;
+			
+			/* Profile picture */
+			.v-slot-MostInfluentialFollowers-information-picture
+			{
+				$border-width: $left-width / 30;
+				width: $left-width - 2 * $border-width;
+				height: $left-width - 2 * $border-width;
+				border: $border-width solid $robotwitter-neutral-color;
+				@include robotwitter-border-radius($left-width / 10);
+				
+				margin-bottom: $left-width / 40;
+				
+				overflow: hidden;
+				img { width: 100%; }
+			}
+		}
+		
+		/* Account name */
+		.MostInfluentialFollowers-information-name
+		{
+			font-size: 1em;
+			font-weight: bold;
+		}
+		
+		/* Account screenname */
+		.MostInfluentialFollowers-information-screenname
+		{
+			color: rgba($robotwitter-2nd-neutral-color, 0.75);
+		}
+		
+		/* Account celebrity */
+		.MostInfluentialFollowers-information-celebrity
+		{
+			position: absolute;
+			top: $left-width / 40;
+			left: -$left-width / 7.5;
+					
+			font-size: 1.5em;
+			font-weight: lighter;
+			
+			color: white;
+			background: $robotwitter-main-color;
+			
+			width: auto !important;
+			padding: 0 $left-width / 20;
+			@include robotwitter-border-radius($left-width / 40);
+			@include robotwitter-transform(rotate(-30deg));
+		}
+		
+		/* Right side */
+		.v-slot-MostInfluentialFollowers-information-right
+		{
+			$padding-left: $left-width / 7.5;
+			$padding-right: $left-width / 7.5;
+			width: $right-width - $padding-left - $padding-right !important;
+			
+			padding-left: $padding-left;
+			padding-right: $padding-left;
+			
+			/* More spacing between properties */
+			.v-spacing { width: 1.5em; height: 1.5em; }
+			
+			/* Properties captions */
+			.v-caption { color: rgba(black, 0.8); font-weight: bold; }
+			
+			/* Bio property */
+			.MostInfluentialFollowers-information-description
+			{
+				white-space: pre-wrap;       /* css-3 */
+				white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+				white-space: -pre-wrap;      /* Opera 4-6 */
+				white-space: -o-pre-wrap;    /* Opera 7 */
+				word-wrap: break-word;       /* Internet Explorer 5.5+ */
+				
+				max-height: 50px;
+				overflow-y: auto;
+				background: rgba(black, 0.05);
+				padding: 5px;
+			}
+		}
+		
+		/* A stat property */
+		.v-slot-MostInfluentialFollowers-information-stat
+		{
+			line-height: 1em;
+		
+			.MostInfluentialFollowers-information-stat
+			{
+				text-align: center;
+				width: 100%;
+				color: $robotwitter-main-color;
+				font-size: 1.5em;
+				font-weight: bold;
+			}
+		}
+		
+		/* Doron Chachamovitz was here! */		
+	}
+	
+} }
+

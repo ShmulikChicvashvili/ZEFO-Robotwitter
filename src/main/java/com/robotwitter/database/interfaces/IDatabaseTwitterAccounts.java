@@ -32,10 +32,12 @@ public interface IDatabaseTwitterAccounts
 	
 	
 	/**
-	 * @param userID The user's id
+	 * @param userID
+	 *            The user's id
 	 * @return The user
 	 */
 	public DBTwitterAccount get(long userID);
+	
 	
 	/**
 	 * @param eMail
@@ -43,6 +45,12 @@ public interface IDatabaseTwitterAccounts
 	 * @return The twitter accounts associated with this specific email
 	 */
 	public ArrayList<DBTwitterAccount> get(String eMail);
+	
+	
+	/**
+	 * @return All the accounts in the database
+	 */
+	public ArrayList<DBTwitterAccount> getAllAccounts();
 	
 	
 	/**
@@ -58,16 +66,16 @@ public interface IDatabaseTwitterAccounts
 	 *            INSERT_ALREADY_EXISTS, INSERT_INVALID_PARAMETERS
 	 */
 	public SqlError insert(DBTwitterAccount twitterAccount);
-
-
+	
+	
 	/**
 	 * @param userId
 	 *            The user id which you check whether exists or not
 	 * @return If exists true else false
 	 */
 	public boolean isExists(Long userId);
-
-
+	
+	
 	/**
 	 * @param twitterAccount
 	 *            The twitter account to update

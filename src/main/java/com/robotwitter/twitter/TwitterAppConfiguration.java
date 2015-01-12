@@ -38,7 +38,6 @@ public class TwitterAppConfiguration
 				new TwitterFactory(cb.build()).getInstance().getOAuth2Token();
 		} catch (TwitterException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		cb = new ConfigurationBuilder();

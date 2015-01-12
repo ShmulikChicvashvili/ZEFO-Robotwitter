@@ -84,7 +84,7 @@ public class TwitterAttacher implements ITwitterAttacher
 			// TODO: display error page to user.
 			e.printStackTrace();
 		}
-		return null; // TODO: what to return here in case of error?
+		return null;
 	}
 	
 	

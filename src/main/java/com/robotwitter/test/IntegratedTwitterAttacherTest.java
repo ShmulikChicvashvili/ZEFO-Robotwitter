@@ -23,7 +23,7 @@ import twitter4j.auth.AccessToken;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
-import com.robotwitter.database.MySqlDBUserModule;
+import com.robotwitter.database.MySqlConnectionEstablisherModule;
 import com.robotwitter.database.MySqlDatabaseTwitterAccounts;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.twitter.IllegalPinException;
@@ -48,7 +48,7 @@ public class IntegratedTwitterAttacherTest
 			new TwitterFactory(conf.getUserConfiguration());
 		account = new TwitterAccount(tf);
 
-		final Injector injector = Guice.createInjector(new MySqlDBUserModule());
+		final Injector injector = Guice.createInjector(new MySqlConnectionEstablisherModule());
 		db = injector.getInstance(MySqlDatabaseTwitterAccounts.class);
 
 		attacher = new TwitterAttacher(db);
@@ -92,17 +92,14 @@ public class IntegratedTwitterAttacherTest
 				shmulikTwitter.updateStatus("yolo swag!");
 			} catch (TwitterException e)
 			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 		} catch (IllegalPinException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

@@ -1,0 +1,202 @@
+@import "../../common";
+@import "../../../config";
+/*----------------------------------------------------------------------------*/
+
+@mixin TweetComposer { .TweetComposer {
+
+	$left-width: 500px;
+	$right-width: 500px;
+
+	/* Left side */
+	.TweetComposer-left
+	{
+		position: relative;
+		width: $left-width !important;
+		
+		/* Fix tweet input text area and toolbar width issue */
+		.v-slot-TweetComposer-input-textarea > div,
+		.TweetComposer-input-textarea,
+		.TweetComposer-toolbar-and-button
+		{
+			width: 100%;
+			.v-slot-TweetComposer-tweet-button { float: right; }
+		}
+		
+		/* Characters count */
+		.TweetComposer-characters
+		{
+			position: absolute;
+			top: 0;
+			right: 0;
+			.count { font-weight: bold; }
+			
+			/* When character count is overflow */
+			&.TweetComposer-characters-overflown
+			{
+				.count { color: $v-error-indicator-color; }
+			}
+		}
+	
+		/* Error message */
+		.TweetComposer-error
+		{
+			color: $v-error-indicator-color;
+			font-weight: bold;
+			font-size: 0.85em;
+		}
+	
+		/* Fix textarea focus glow effect colour on textareas with errors. */
+		.v-textarea-error.v-textarea
+		{
+			@include robotwitter-box-shadow(0 0 0 2px rgba($v-error-indicator-color, 0.25));
+		}
+		
+		/* Toolbar */
+		.TweetComposer-toolbar
+		{
+			line-height: 1em;
+		}
+		
+		/* Tweet button */
+		.TweetComposer-tweet-button
+		{
+			background: $robotwitter-main-color;
+			border-color: rgba(black, 0.1);
+			
+			
+			@include robotwitter-transition(background 0.3s ease);
+			&:hover {
+				background: hsl(hue($robotwitter-main-color),
+								saturation($robotwitter-main-color),
+								45%);
+			}
+		}
+		
+		/* Compose another button */
+		.TweetComposer-compose-another { margin-top: 29px; }
+	}
+	
+	/* Right side */
+	.TweetComposer-right
+	{	
+		width: $right-width !important;
+		$padding: 9px;
+		$picture-size: 48px;
+		
+		/* Fix preview width issue */
+		.v-slot-TweetComposer-preview > div,
+		.TweetComposer-preview,
+		.TweetComposer-preview-tweet { width: 100%; }
+		
+		/* Preview's caption */
+		.v-caption-TweetComposer-preview { text-align: center; }
+		
+		/* Preview of the composed Tweet */
+		.TweetComposer-preview
+		{				
+			/* A single Tweet */
+			.TweetComposer-preview-tweet
+			{
+				font-family: Arial, sans-serif;
+				line-height: 1em;
+				background: #f5f8fa;
+				border: 1px solid #E1E8ED;
+				border-top: none;
+				padding: $padding;
+			
+				/* The picture */
+				.TweetComposer-preview-picture
+				{
+					width: $picture-size;
+					height: $picture-size;
+					border-radius: 5px;
+				}
+				
+				/* The name */
+				.TweetComposer-preview-name
+				{
+					color: black;
+					font-weight: bold;
+					margin-right: 5px;
+					
+					@include robotwitter-transition(none);
+					&:hover { color: $robotwitter-main-color; }
+				}
+				
+				/* The screenname */
+				.TweetComposer-preview-screenname
+				{
+					color: #8899A6;
+				}	
+				
+				/* The text */
+				.TweetComposer-preview-text
+				{
+					width: $right-width - 2 * $padding - $picture-size - 11;
+					margin: 0;
+					margin-top: 3px;
+					font-family: Arial, sans-serif;
+					line-height: 18px;
+					
+					white-space: pre-wrap;       /* css-3 */
+					white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+					white-space: -pre-wrap;      /* Opera 4-6 */
+					white-space: -o-pre-wrap;    /* Opera 7 */
+					word-wrap: break-word;       /* Internet Explorer 5.5+ */
+					
+					/* Hashtags */
+					.hashtag {
+						color: #66B5D2;
+						text-decoration: none;
+						span { color: #0084B4; }
+						&:hover span { text-decoration: underline; }
+					}
+				}				
+			}
+			
+			/* Style the first Tweet differently */
+			.v-slot-TweetComposer-preview-tweet:first-child
+			{			
+				/* A single Tweet */
+				.TweetComposer-preview-tweet
+				{
+					background: white;
+					border-top: 1px solid #E1E8ED;
+					
+					/* Break the screenname from the name's line */
+					.v-slot-TweetComposer-preview-name { display: block; }
+					
+					/* The name */
+					.TweetComposer-preview-name
+					{
+						margin-right: 0;
+						font-size: 18px;
+						line-height: 1.25;
+					}
+					
+					/* The screenname */
+					.TweetComposer-preview-screenname
+					{
+						color: #8899A6;
+					}	
+					
+					/* The text */
+					.TweetComposer-preview-text
+					{
+						width: $right-width - 2 * $padding;
+						position: relative;
+						left: -$picture-size - 11;
+						top: $padding * 1.8;
+						margin-bottom: $padding * 1.8;
+						
+						font-size: 28px;
+						line-height: 34px;
+						font-weight: 300;
+					}				
+				}
+			}
+		}
+	}
+	
+} }
+

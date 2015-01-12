@@ -11,6 +11,7 @@ import com.robotwitter.webapp.view.connect_twitter.ConnectTwitterView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
 import com.robotwitter.webapp.view.login.LoginView;
 import com.robotwitter.webapp.view.registration.RegistrationView;
+import com.robotwitter.webapp.view.tools.ToolsView;
 
 
 
@@ -61,6 +62,7 @@ public class ViewMap extends HashMap<String, Class<? extends View>>
 		put(ConnectTwitterView.NAME, ConnectTwitterView.class);
 		put(DashboardView.NAME, DashboardView.class);
 		put(AnalysisView.NAME, AnalysisView.class);
+		put(ToolsView.NAME, ToolsView.class);
 	}
 	
 	

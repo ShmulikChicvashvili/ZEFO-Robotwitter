@@ -20,6 +20,15 @@
           box-shadow: $box-shadow;
 }
 
+
+/* Cross-platform text-shadow. */
+@mixin robotwitter-text-shadow($text-shadow)
+{
+  -webkit-text-shadow: $text-shadow;
+     -moz-text-shadow: $text-shadow;
+          text-shadow: $text-shadow;
+}
+
 /* Cross-platform transition. */
 @mixin robotwitter-transition($transition)
 {
@@ -28,6 +37,16 @@
       -ms-transition: $transition;
        -o-transition: $transition;
           transition: $transition;
+}
+
+/* Cross-platform transform. */
+@mixin robotwitter-transform($transform)
+{
+  -webkit-transform: $transform;
+     -moz-transform: $transform;
+      -ms-transform: $transform;
+       -o-transform: $transform;
+          transform: $transform;
 }
 
 /* Cross-platform keyframes. */

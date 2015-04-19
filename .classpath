@@ -23,5 +23,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="C:/Users/Itay/Desktop/TechnionDocs/Semester7/YearlyProject/ProjectRepo/5775-234311-2-t09/libraries/gtranslateapi-1.0.jar"/>
+	<classpathentry kind="lib" path="lingpipe-4.1.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

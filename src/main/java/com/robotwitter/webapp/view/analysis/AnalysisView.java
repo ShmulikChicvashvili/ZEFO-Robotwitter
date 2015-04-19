@@ -24,7 +24,7 @@ import com.robotwitter.webapp.view.AbstractView;
  */
 public class AnalysisView extends AbstractView
 {
-	
+
 	/**
 	 * Instantiates a new login view.
 	 *
@@ -43,8 +43,8 @@ public class AnalysisView extends AbstractView
 	{
 		return false;
 	}
-	
-	
+
+
 	@Override
 	public final boolean isSignedInRequired()
 	{
@@ -62,9 +62,13 @@ public class AnalysisView extends AbstractView
 	 *
 	 * @return a newly created panel wrapper, wrapping the given component
 	 */
-	private Component wrapInPanel(Component component, String title)
+	private Component wrapInPanel(
+		Component component,
+		String title,
+		String tooltip)
 	{
 		Label titleLabel = new Label(title);
+		titleLabel.setDescription(tooltip);
 		VerticalLayout panel = new VerticalLayout(titleLabel, component);
 		panel.setSizeFull();
 		panel.setExpandRatio(component, 1);
@@ -85,7 +89,7 @@ public class AnalysisView extends AbstractView
 			new FollowersAmountOverTimeChart(messages);
 		MostInfluentialFollowers influentialFollowers =
 			new MostInfluentialFollowers(messages);
-		
+
 		FollowersDisplayedLanguageChart followersDisplayedLanguageChart =
 			new FollowersDisplayedLanguageChart(messages);
 		FollowersFollowersAmountChart followersFollowersAmountChart =
@@ -102,28 +106,34 @@ public class AnalysisView extends AbstractView
 		Component followersChartPanel =
 			wrapInPanel(
 				followersChart,
-				messages.get("AnalysisView.caption.followers-amount-over-time"));
+				messages.get("AnalysisView.caption.followers-amount-over-time"),
+				messages.get("AnalysisView.tooltip.followers-amount-over-time"));
 		Component influentialFollowersPanel =
 			wrapInPanel(
 				influentialFollowers,
-				messages.get("AnalysisView.caption.most-influential-followers"));
+				messages.get("AnalysisView.caption.most-influential-followers"),
+				messages.get("AnalysisView.tooltip.most-influential-followers"));
 		Component followersDisplayedLanguageChartPanel =
 			wrapInPanel(
 				followersDisplayedLanguageChart,
 				messages
-					.get("AnalysisView.caption.followers-displayed-language"));
+				.get("AnalysisView.caption.followers-displayed-language"),
+				messages
+				.get("AnalysisView.tooltip.followers-displayed-language"));
 		Component followersFollowersAmountChartPanel =
 			wrapInPanel(
 				followersFollowersAmountChart,
-				messages.get("AnalysisView.caption.followers-followers-amount"));
+				messages.get("AnalysisView.caption.followers-followers-amount"),
+				messages.get("AnalysisView.tooltip.followers-followers-amount"));
 		Component followersFollowingAmountChartPanel =
 			wrapInPanel(
 				followersFollowingAmountChart,
-				messages.get("AnalysisView.caption.followers-following-amount"));
-		
+				messages.get("AnalysisView.caption.followers-following-amount"),
+				messages.get("AnalysisView.tooltip.followers-following-amount"));
+
 		// TODO this should be in CSS
 		influentialFollowersPanel.setWidth("700px");
-		
+
 		HorizontalLayout firstRow = new HorizontalLayout(header, overview);
 		firstRow.setWidth("100%");
 		firstRow.setSpacing(true);
@@ -141,7 +151,7 @@ public class AnalysisView extends AbstractView
 				followersFollowingAmountChartPanel);
 		thirdRow.setSizeFull();
 		thirdRow.setSpacing(true);
-		
+
 		VerticalLayout layout =
 			new VerticalLayout(firstRow, secondRow, thirdRow);
 		layout.setSizeFull();
@@ -151,15 +161,15 @@ public class AnalysisView extends AbstractView
 
 		header.addStyleName(HEADER_STYLENAME);
 		addStyleName(STYLENAME);
-		
+
 		setCompositionRoot(layout);
 	}
-	
-	
-	
+
+
+
 	/** The view's name. */
 	public static final String NAME = "analysis";
-	
+
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "AnalysisView";
 

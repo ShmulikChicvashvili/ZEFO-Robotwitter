@@ -5,7 +5,11 @@
 package com.robotwitter.classification;
 
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import com.robotwitter.database.interfaces.IDatabaseResponses;
+import com.robotwitter.database.primitives.DBResponse;
 
 import twitter4j.DirectMessage;
 import twitter4j.StallWarning;
@@ -25,41 +29,50 @@ import twitter4j.UserStreamListener;
 public class TweetClassifierListener implements UserStreamListener
 {
 	
-	public TweetClassifierListener(IDatabaseResponses db, ITweetClassifier classifier)
+	public TweetClassifierListener(
+		IDatabaseResponses db,
+		ITweetClassifier classifier)
 	{
 		this.classifier = classifier;
 		this.db = db;
 		userID = null;
-		lastUpdated = null;
 	}
+	
+	
 	/* (non-Javadoc) @see twitter4j.UserStreamListener#onBlock(twitter4j.User,
 	 * twitter4j.User) */
 	@Override
 	public void onBlock(User source, User blockedUser)
 	{}
+	
+	
 	/* (non-Javadoc) @see twitter4j.UserStreamListener#onDeletionNotice(long,
 	 * long) */
 	@Override
 	public void onDeletionNotice(long directMessageId, long userId)
 	{}
+	
+	
 	/* (non-Javadoc) @see
 	 * twitter4j.StatusListener#onDeletionNotice(twitter4j.StatusDeletionNotice) */
 	@Override
 	public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice)
 	{}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onDirectMessage(twitter4j.DirectMessage) */
 	@Override
 	public void onDirectMessage(DirectMessage directMessage)
 	{}
 	
+	
 	/* (non-Javadoc) @see
 	 * twitter4j.StreamListener#onException(java.lang.Exception) */
 	@Override
 	public void onException(Exception ex)
 	{}
+	
 	
 	/* (non-Javadoc) @see
 	 * twitter4j.UserStreamListener#onFavorite(twitter4j.User, twitter4j.User,
@@ -98,11 +111,16 @@ public class TweetClassifierListener implements UserStreamListener
 	/* (non-Javadoc) @see twitter4j.StatusListener#onStatus(twitter4j.Status) */
 	@Override
 	public void onStatus(Status status)
-	{	
-		//FIXME
+	{
+		if (isLegitimateResponse(status))
+		{
+			db.insert(buildDBResponseFromStatus(status));
+			//FIXME Perhaps we should also alert something if this is a bad one
+		}
+		
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see twitter4j.StatusListener#onTrackLimitationNotice(int) */
 	@Override
 	public void onTrackLimitationNotice(int numberOfLimitedStatuses)
@@ -214,15 +232,36 @@ public class TweetClassifierListener implements UserStreamListener
 	}
 	
 	
-	private ITweetClassifier classifier;
+	/**
+	 * @param status
+	 * @return
+	 */
+	private DBResponse buildDBResponseFromStatus(Status status)
+	{
+		return new DBResponse(
+			userID,
+			status.getUser().getId(),
+			new Timestamp(new Date().getTime()),
+			status.getText(),
+			classifier.classify(status.getText()));
+	}
 	
+	
+	/**
+	 * @param status
+	 * @return
+	 */
+	private boolean isLegitimateResponse(Status status)
+	{
+		return status.isRetweet() && !userID.equals(status.getUser().getId());
+	}
+	
+	
+	
+	private ITweetClassifier classifier;
 	
 	private IDatabaseResponses db;
 	
-	
-	private Object userID;
-	
-	
-	private Object lastUpdated;
+	private Long userID;
 	
 }

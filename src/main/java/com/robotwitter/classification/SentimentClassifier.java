@@ -11,6 +11,8 @@ import java.io.IOException;
 import com.aliasi.classify.ConditionalClassification;
 import com.aliasi.classify.LMClassifier;
 import com.aliasi.util.AbstractExternalizable;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 
 
@@ -21,7 +23,8 @@ import com.aliasi.util.AbstractExternalizable;
  */
 public class SentimentClassifier implements ITweetClassifier
 {
-	public SentimentClassifier(String classifierFilepath)
+	@Inject
+	public SentimentClassifier(@Named("Classifier Filepath") String classifierFilepath)
 	{
 		try
 		{

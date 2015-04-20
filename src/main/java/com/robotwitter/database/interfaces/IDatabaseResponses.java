@@ -84,24 +84,6 @@ public interface IDatabaseResponses
 	
 	
 	/**
-	 * @param followerId
-	 *            The id of the user to check
-	 * @return whether a follower with this id exists
-	 */
-	public boolean isExists(long followerId);
-	
-	
-	/**
-	 * @param followedId
-	 *            The id of the followed in the connection
-	 * @param followerId
-	 *            The id of the follower in the connection
-	 * @return whether a follower with this id exists
-	 */
-	public boolean isExists(long followedId, long followerId);
-	
-	
-	/**
 	 * @param response
 	 *            The response to update
 	 * @return Returns the status code. It could be either SUCCESS,

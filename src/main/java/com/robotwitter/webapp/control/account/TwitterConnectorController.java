@@ -11,6 +11,7 @@ import com.google.inject.name.Named;
 
 import com.vaadin.server.VaadinServlet;
 
+import com.robotwitter.classification.TweetClassifierListener;
 import com.robotwitter.management.ITwitterTracker;
 import com.robotwitter.twitter.FollowerIdsBackfiller;
 import com.robotwitter.twitter.FollowerStoreListener;
@@ -135,11 +136,16 @@ public class TwitterConnectorController implements ITwitterConnectorController
 		FollowerStoreListener dbListener =
 			injector.getInstance(FollowerStoreListener.class);
 		dbListener.setUser(id);
+		TweetClassifierListener classifier = injector.getInstance(TweetClassifierListener.class);
+		classifier.setUser(id);
 		
 		FollowerIdsBackfiller backfiller = injector.getInstance(FollowerIdsBackfiller.class);
+		backfiller.setUser(id);
+		
 		
 		userTracker.addListener(dbListener);
 		userTracker.addListener(hhListener);
+		userTracker.addListener(classifier);
 		userTracker.addBackfiller(backfiller);
 		
 		tracker.addUserTracker(userTracker);

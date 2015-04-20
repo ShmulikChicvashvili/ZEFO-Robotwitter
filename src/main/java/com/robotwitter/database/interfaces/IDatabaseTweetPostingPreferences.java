@@ -39,4 +39,12 @@ public interface IDatabaseTweetPostingPreferences
 	 * @return The error in case there was
 	 */
 	public SqlError update(DBTweetPostingPreferences tweetPostingPreferences);
+	
+	
+	/**
+	 * @param email
+	 *            The user which we want to know if exists
+	 * @return True incase of existence, false otherwise
+	 */
+	public boolean isExists(String email);
 }

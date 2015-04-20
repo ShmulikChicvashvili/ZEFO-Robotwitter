@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebListener;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
+import com.robotwitter.classification.TweetClassifierListener;
 import com.robotwitter.database.MySqlConnectionEstablisherModule;
 import com.robotwitter.database.MySqlDBModule;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
@@ -159,12 +160,16 @@ public class Configuration implements ServletContextListener
 		FollowerStoreListener dbListener =
 			injector.getInstance(FollowerStoreListener.class);
 		dbListener.setUser(account.getUserId());
+		TweetClassifierListener classifier = injector.getInstance(TweetClassifierListener.class);
+		classifier.setUser(account.getUserId());
 		
 		FollowerIdsBackfiller backfiller = injector.getInstance(FollowerIdsBackfiller.class);
 		backfiller.setUser(account.getUserId());
 		
+		
 		tracker.addListener(dbListener);
 		tracker.addListener(hhListener);
+		tracker.addListener(classifier);
 		tracker.addBackfiller(backfiller);
 		accountsTracker.addUserTracker(tracker);
 		accountsTracker.startTracker(account.getUserId());

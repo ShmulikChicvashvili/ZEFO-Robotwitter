@@ -69,9 +69,11 @@ public class TweetPreview extends RobotwitterCustomComponent
 	}
 
 
-
 	/**
+	 * Instantiates a new tweet preview.
+	 *
 	 * @param messages
+	 *            the messages
 	 */
 	public TweetPreview(IMessagesContainer messages)
 	{
@@ -93,6 +95,13 @@ public class TweetPreview extends RobotwitterCustomComponent
 	}
 
 
+	/**
+	 * Update the preview with the given tweets.
+	 *
+	 * @param tweets
+	 *            the tweets to be shown. Does not validate any restrictions
+	 *            that might be.
+	 */
 	public void updatePreview(List<String> tweets)
 	{
 		preview.removeAllComponents();
@@ -109,7 +118,7 @@ public class TweetPreview extends RobotwitterCustomComponent
 
 
 	/**
-	 *
+	 * Alter the preview to correspond with the newly chosen account.
 	 */
 	private void activateTwitterAccount()
 	{
@@ -129,6 +138,8 @@ public class TweetPreview extends RobotwitterCustomComponent
 		preview.setCaption(messages.get("TweetComposer.caption.preview"));
 		preview.setIcon(FontAwesome.PAPER_PLANE_O);
 		preview.addStyleName(PREVIEW_STYLENAME);
+
+		setCompositionRoot(preview);
 
 		activateTwitterAccount();
 	}
@@ -185,12 +196,9 @@ public class TweetPreview extends RobotwitterCustomComponent
 	}
 
 
-	/**
-	 *
-	 */
+
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -381333812459248416L;
-
-
 
 	/** The CSS class name to apply to the preview component. */
 	private static final String PREVIEW_STYLENAME = "TweetComposer-preview";

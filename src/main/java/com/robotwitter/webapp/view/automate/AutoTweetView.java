@@ -8,6 +8,7 @@ package com.robotwitter.webapp.view.automate;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 
@@ -67,6 +68,9 @@ public class AutoTweetView extends AbstractView
 			new Button("Respond", event -> getUI().addWindow(
 				new TweetResponseWindow(messages, tweetingController)));
 		final VerticalLayout layout = new VerticalLayout(btn);
+
+		layout.setSizeFull();
+		layout.setComponentAlignment(btn, Alignment.BOTTOM_LEFT);
 
 		setCompositionRoot(layout);
 	}

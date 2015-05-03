@@ -21,6 +21,17 @@ public interface IDatabaseResponses
 {
 	
 	/**
+	 * changes the answer status of the response with the given id to true.
+	 * 
+	 * @param responseId
+	 *             The response to answer.
+	 * @return Return the status code. It could be either SUCCESS,
+	 *         DOES_NOT_EXIST, INVALID_PARAMS
+	 */
+	public SqlError answer(long responseId);
+	
+	
+	/**
 	 * Delete the information of a response from the database
 	 * 
 	 * @param responseId
@@ -40,7 +51,6 @@ public interface IDatabaseResponses
 	 */
 	public DBResponse get(long responseId);
 	
-	
 	/**
 	 * returns all bad responses attached to this user (meaning, posted on his
 	 * timeline)
@@ -53,17 +63,6 @@ public interface IDatabaseResponses
 	
 	
 	/**
-	 * returns all good responses attached to this user (meaning, posted on his
-	 * timeline)
-	 * 
-	 * @param userId
-	 *            The id of the user you want to get it's responses
-	 * @return The DBResponse type of the responses posted to this user
-	 */
-	public ArrayList<DBResponse> getGoodResponsesOfUser(long userId);
-	
-	
-	/**
 	 * returns all responses attached to this user (meaning, posted on his
 	 * timeline)
 	 * 
@@ -72,6 +71,17 @@ public interface IDatabaseResponses
 	 * @return The DBResponse type of the responses posted to this user
 	 */
 	public ArrayList<DBResponse> getResponsesOfUser(long userId);
+	
+	
+	/**
+	 * returns all bad responses that aren't answered attached to this user (meaning, posted on his
+	 * timeline, for which he didn't responded to yet)
+	 * 
+	 * @param userId
+	 *            The id of the user you want to get it's responses
+	 * @return The DBResponse type of the responses posted to this user
+	 */
+	public ArrayList<DBResponse> getUnansweredResponsesOfUser(long userId);
 	
 	
 	/**

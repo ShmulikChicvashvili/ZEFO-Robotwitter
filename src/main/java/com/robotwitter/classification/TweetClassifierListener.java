@@ -238,12 +238,14 @@ public class TweetClassifierListener implements UserStreamListener
 	 */
 	private DBResponse buildDBResponseFromStatus(Status status)
 	{
+		String classification = classifier.classify(status.getText());
 		return new DBResponse(
 			userID,
 			status.getUser().getId(),
 			new Timestamp(new Date().getTime()),
 			status.getText(),
-			classifier.classify(status.getText()));
+			classification,
+			classification.equals("pos"));
 	}
 	
 	

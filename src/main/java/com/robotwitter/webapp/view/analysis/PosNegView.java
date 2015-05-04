@@ -24,6 +24,7 @@ import com.vaadin.event.dd.acceptcriteria.AcceptAll;
 import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
 import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.shared.ui.dd.VerticalDropLocation;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.AbstractSelect.AbstractSelectTargetDetails;
 import com.vaadin.ui.Button;
@@ -195,7 +196,7 @@ public class PosNegView extends AbstractView
 		final Table spam = new Table(messages.get("posNegView.title.spam"));
 		final Table neg = new Table(messages.get("posNegView.title.neg"));
 		final Label header = new Label(messages.get("posNegView.LabelHeader"));
-
+		
 		pos.addContainerProperty(
 			messages.get("posNegView.Positive"),
 			Component.class,
@@ -218,9 +219,11 @@ public class PosNegView extends AbstractView
 			createTweetPreview(
 				"Check if works",
 				"Doron",
-				"http://i.ytimg.com/vi/DOr-5qDlgcY/maxresdefault.jpg",
+				"http://flightdiary.net/img/facebook-profile.png",
 				"Hogery");
-		pos.addItem(twitter1);
+		pos.addItem(new Object[] { twitter1 }, 1);
+		// pos.addItem(new Object[] { new Button("Fuck") }, 2);
+		// pos.addItem(new Object[] { new Button("Shit") }, 3);
 		final Component TablePanelPos =
 			wrapInPanel(pos, messages.get("posNegView.empty"));
 		final Component TablePanelSpam =
@@ -234,6 +237,8 @@ public class PosNegView extends AbstractView
 			{
 				final AbstractSelectTargetDetails dropData =
 					(AbstractSelectTargetDetails) dropEvent.getTargetDetails();
+				final Object targetItemId = dropData.getItemIdOver();
+				
 				final DataBoundTransferable t =
 					(DataBoundTransferable) dropEvent.getTransferable();
 				final Container sourceContainer = t.getSourceContainer();
@@ -242,10 +247,9 @@ public class PosNegView extends AbstractView
 				sourceContainer.removeItem(sourceId);
 				if (sourceItem != null)
 				{
-					pos.addItem(sourceItem);
 					sourceContainer.removeItem(sourceId);
+					pos.addItem(sourceItem);
 				}
-
 			}
 			
 			
@@ -263,6 +267,8 @@ public class PosNegView extends AbstractView
 			{
 				final AbstractSelectTargetDetails dropData =
 					(AbstractSelectTargetDetails) dropEvent.getTargetDetails();
+				final Object targetItemId = dropData.getItemIdOver();
+				
 				final DataBoundTransferable t =
 					(DataBoundTransferable) dropEvent.getTransferable();
 				final Container sourceContainer = t.getSourceContainer();
@@ -271,10 +277,16 @@ public class PosNegView extends AbstractView
 				sourceContainer.removeItem(sourceId);
 				if (sourceItem != null)
 				{
-					spam.addItem(sourceItem);
 					sourceContainer.removeItem(sourceId);
+					if (dropData.getDropLocation() == VerticalDropLocation.BOTTOM)
+					{
+						spam.addItem(new Object[] { sourceItem }, 1);
+					} else
+					{
+						final Object prevItemId = pos.prevItemId(targetItemId);
+						spam.addItemAfter(prevItemId, sourceItem);
+					}
 				}
-
 			}
 			
 			
@@ -292,6 +304,8 @@ public class PosNegView extends AbstractView
 			{
 				final AbstractSelectTargetDetails dropData =
 					(AbstractSelectTargetDetails) dropEvent.getTargetDetails();
+				final Object targetItemId = dropData.getItemIdOver();
+				
 				final DataBoundTransferable t =
 					(DataBoundTransferable) dropEvent.getTransferable();
 				final Container sourceContainer = t.getSourceContainer();
@@ -300,13 +314,19 @@ public class PosNegView extends AbstractView
 				sourceContainer.removeItem(sourceId);
 				if (sourceItem != null)
 				{
-					neg.addItem(sourceItem);
 					sourceContainer.removeItem(sourceId);
+					if (dropData.getDropLocation() == VerticalDropLocation.BOTTOM)
+					{
+						neg.addItem(new Object[] { sourceItem }, 1);
+					} else
+					{
+						final Object prevItemId = pos.prevItemId(targetItemId);
+						neg.addItemAfter(prevItemId, sourceItem);
+					}
 				}
-
 			}
-
-
+			
+			
 			@Override
 			public AcceptCriterion getAcceptCriterion()
 			{
@@ -315,12 +335,12 @@ public class PosNegView extends AbstractView
 		});
 		// TODO this should be in CSS
 		// TablePanel.setWidth("700px");
-
+		
 		final HorizontalLayout layout =
 			new HorizontalLayout(TablePanelPos, TablePanelSpam, TablePanelNeg);
 		layout.setSizeFull();
 		layout.setSpacing(true);
-
+		
 		header.addStyleName(HEADER_STYLENAME);
 		addStyleName(STYLENAME);
 		setCompositionRoot(layout);

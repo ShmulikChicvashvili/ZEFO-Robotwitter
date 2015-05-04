@@ -47,10 +47,10 @@ public class TweetingController implements ITweetingController
 		// TODO Auto-generated method stub
 		List<String> responses = new ArrayList<>();
 		responses
-		.add("Hi, This is robotwitter and I'm urging you to follow us on twitter!!!!");
+		.add("Hi, we are sorry you feel this way. We are doing the best to be helpful.");
 		responses
-		.add("Hey, have you checked our cool twitter page? it's a lot of fun and code!");
-		responses.add("Nah, you don't really wanna tweet this...");
+		.add("Hey, thank you for your response we will do our best to improve!");
+		responses.add("FUCK OFF YA' CHUBBY COON, YA' WRINKLY BITCH!!");
 
 		return responses;
 	}

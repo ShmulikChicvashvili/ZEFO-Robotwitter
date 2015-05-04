@@ -5,18 +5,13 @@
 package com.robotwitter.webapp.view.automate;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Window;
 
 import com.robotwitter.webapp.control.tools.ITweetingController;
+import com.robotwitter.webapp.control.tools.tweeting.Tweet;
 import com.robotwitter.webapp.messages.IMessagesContainer;
-import com.robotwitter.webapp.util.tweeting.TweetPreview;
 
 
 
@@ -38,16 +33,14 @@ public class TweetResponseWindow extends Window
 	 */
 	public TweetResponseWindow(
 		IMessagesContainer messages,
-		ITweetingController tweetingController)
+		ITweetingController tweetingController,
+		Tweet originalTweet)
 	{
 		this.messages = messages;
-		preview = new TweetPreview(messages);
-		offeredTweets = new Label();
-		((Label) offeredTweets).setValue("Tweet Tweet Tweet");
+		this.tweetingController = tweetingController;
+		this.originalTweet = originalTweet;
 
 		initializeLayout();
-
-		// setContent(new TweetComposer(messages, tweetingController));
 	}
 
 
@@ -63,31 +56,28 @@ public class TweetResponseWindow extends Window
 
 		setCaption(messages.get("TweetResponseWindow.caption"));
 
-		final HorizontalLayout layout =
-			new HorizontalLayout(offeredTweets, preview);
-		setContent(layout);
+		Component content =
+			new TweetResponseComponent(
+				messages,
+				tweetingController,
+				originalTweet);
 
-		final List<String> tweets = new ArrayList<>();
-		tweets.add("1/3 response");
-		tweets.add("2/3 response");
-		tweets.add("3/3 response");
-		preview.updatePreview(tweets);
+		setContent(content);
+
+		center();
 	}
 
 
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -4523468889069315800L;
+
 	/** The messages displayed by this view. */
 	protected IMessagesContainer messages;
 
-	/**
-	 * The right panel of the layout. Holds the preview of the chosen
-	 * possibility.
-	 */
-	private final TweetPreview preview;
+	ITweetingController tweetingController;
 
-	/**
-	 * The left panel of the layout. Holds the different possibilities for
-	 * tweets.
-	 */
-	private final Component offeredTweets;
+	private Tweet originalTweet;
 }

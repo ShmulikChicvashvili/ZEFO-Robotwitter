@@ -13,6 +13,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 
 import com.robotwitter.webapp.control.tools.ITweetingController;
+import com.robotwitter.webapp.control.tools.tweeting.Tweet;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.AbstractView;
 
@@ -64,9 +65,11 @@ public class AutoTweetView extends AbstractView
 	@Override
 	protected void initialise()
 	{
+		Tweet tweet =
+			new Tweet(0, "THIS IS A TWEET", "john dough", "screen time", "");
 		final Button btn =
 			new Button("Respond", event -> getUI().addWindow(
-				new TweetResponseWindow(messages, tweetingController)));
+				new TweetResponseWindow(messages, tweetingController, tweet)));
 		final VerticalLayout layout = new VerticalLayout(btn);
 
 		layout.setSizeFull();

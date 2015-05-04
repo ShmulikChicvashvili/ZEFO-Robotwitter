@@ -51,4 +51,11 @@
 		<nature>net.sf.eclipsecs.core.CheckstyleNature</nature>
 		<nature>edu.umd.cs.findbugs.plugin.eclipse.findbugsNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>lingpipe-4.1.0.jar</name>
+			<type>1</type>
+			<locationURI>PARENT-4-PROJECT_LOC/Semester8/YearlyProject2/lingpipe-4.1.0.jar</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>

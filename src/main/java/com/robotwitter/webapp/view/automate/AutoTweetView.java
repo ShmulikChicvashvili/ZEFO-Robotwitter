@@ -26,7 +26,7 @@ import com.robotwitter.webapp.view.AbstractView;
  */
 public class AutoTweetView extends AbstractView
 {
-
+	
 	/**
 	 * Instantiates a new auto tweet view.
 	 *
@@ -41,8 +41,8 @@ public class AutoTweetView extends AbstractView
 		super(messages, messages.get("AutoTweetView.page.title"));
 		this.tweetingController = tweetingController;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.view.AbstractView#isSignedInProhibited() */
 	@Override
@@ -50,8 +50,8 @@ public class AutoTweetView extends AbstractView
 	{
 		return false;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.view.AbstractView#isSignedInRequired() */
 	@Override
@@ -59,35 +59,40 @@ public class AutoTweetView extends AbstractView
 	{
 		return true;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see com.robotwitter.webapp.view.AbstractView#initialise() */
 	@Override
 	protected void initialise()
 	{
 		Tweet tweet =
-			new Tweet(0, "THIS IS A TWEET", "john dough", "screen time", "");
+			new Tweet(
+				new Long("595341741718315008"),
+				"OMG made a tweet!",
+				"Itay Khazon",
+				"itaykh",
+				"https://pbs.twimg.com/profile_images/547044214270214144/Sq6-BXv5.jpeg");
 		final Button btn =
 			new Button("Respond", event -> getUI().addWindow(
 				new TweetResponseWindow(messages, tweetingController, tweet)));
 		final VerticalLayout layout = new VerticalLayout(btn);
-
+		
 		layout.setSizeFull();
 		layout.setComponentAlignment(btn, Alignment.BOTTOM_LEFT);
-
+		
 		setCompositionRoot(layout);
 	}
-
-
-
+	
+	
+	
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 2343210387167584004L;
-
+	
 	/** The Constant NAME. */
 	public static final String NAME = "auto-tweet";
-
+	
 	/** The tweeting controller. */
 	private final ITweetingController tweetingController;
 }

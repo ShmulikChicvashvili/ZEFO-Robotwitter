@@ -37,14 +37,14 @@ import com.robotwitter.webapp.util.tweeting.TweetPreview;
  */
 public class TweetResponseComponent extends RobotwitterCustomComponent
 {
-	
+
 	public interface OnResponseSuccess
 	{
 		public void onResponse();
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Instantiates a new tweet response component.
 	 *
@@ -65,26 +65,26 @@ public class TweetResponseComponent extends RobotwitterCustomComponent
 		this.tweetingController = tweetingController;
 		this.originalTweet = originalTweet;
 		this.onResponseSuccess = onResponseSuccess;
-		
+
 		maxRadioCaptionLen = 20;
-		
+
 		maxTweetLen =
 			getUserSession()
 			.getAccountController()
 			.getActiveTwitterAccount()
 			.getCurrentMaximumTweetLength();
-		
+
 		responses = tweetingController.getOptionalResponses(originalTweet);
-		
+
 		preview = new TweetPreview(messages);
-		
+
 		initializeOfferedResponses();
 		initializeLayout();
-		
+
 		responseRadio.setValue(0);
 	}
-	
-	
+
+
 	/**
 	 * Change response chosen with the radio buttons.
 	 *
@@ -100,7 +100,7 @@ public class TweetResponseComponent extends RobotwitterCustomComponent
 		if (chosen >= 0)
 		{
 			tweetComposeBox.setEnabled(false);
-			
+
 			List<String> tweets = tweetingController.previewTweet(tweet);
 			preview.updatePreview(tweets);
 		} else
@@ -109,8 +109,8 @@ public class TweetResponseComponent extends RobotwitterCustomComponent
 			tweetComposeTextChanged(tweet);
 		}
 	}
-	
-	
+
+
 	public final void submitClick(ClickEvent event)
 	{
 		String tweet = getSelectedTweet();
@@ -123,7 +123,7 @@ public class TweetResponseComponent extends RobotwitterCustomComponent
 			controller.postTweetsAsSingleResponseTweet(
 				originalTweet.getId(),
 				tweets);
-		
+
 		switch (status)
 		{
 			case SUCCESS:
@@ -137,33 +137,40 @@ public class TweetResponseComponent extends RobotwitterCustomComponent
 					+ ValoTheme.NOTIFICATION_TRAY);
 				notification.setIcon(FontAwesome.TWITTER);
 				notification.show(UI.getCurrent().getPage());
-				
+
 				onResponseSuccess.onResponse();
 				return;
-				
+
 			default:
 				setErrorMessage(messages.get("TweetResponse.error.unknown"));
 		}
 	}
-	
-	
+
+
 	/** Clears the displayed error message on the composer. */
 	private void clearErrorMessage()
 	{
 		errorMessage.setVisible(false);
 	}
-	
-	
+
+
 	private String getSelectedTweet()
 	{
 		@SuppressWarnings("boxing")
 		int chosen = (int) responseRadio.getValue();
-		if (chosen >= 0) { return responses.get(chosen); }
-		
-		return tweetComposeBox.getText();
+		String $ = "";
+		if (chosen >= 0)
+		{
+			$ = responses.get(chosen);
+		} else
+		{
+			$ = tweetComposeBox.getText();
+
+		}
+		return "@" + originalTweet.getScreenName() + " " + $;
 	}
-	
-	
+
+
 	/**
 	 * Initialize layout.
 	 */
@@ -176,20 +183,20 @@ public class TweetResponseComponent extends RobotwitterCustomComponent
 		submit.setIcon(FontAwesome.PAPER_PLANE);
 		submit.addStyleName(TWEET_BUTTON_STYLENAME);
 		submit.addStyleName(ValoTheme.BUTTON_PRIMARY);
-		
+
 		errorMessage = new Label();
 		errorMessage.setVisible(false);
 		errorMessage.setStyleName(ERROR_STYLENAME);
-		
+
 		VerticalLayout left =
 			new VerticalLayout(offeredResponses, submit, errorMessage);
-		
+
 		final HorizontalLayout layout = new HorizontalLayout(left, preview);
-		
+
 		setCompositionRoot(layout);
 	}
-	
-	
+
+
 	@SuppressWarnings("boxing")
 	private void initializeOfferedResponses()
 	{
@@ -197,7 +204,7 @@ public class TweetResponseComponent extends RobotwitterCustomComponent
 			new OptionGroup(
 				messages.get("TweetResponse.caption.offered-responses"));
 		responseRadio.setMultiSelect(false);
-		
+
 		for (int i = 0; i < responses.size(); i++)
 		{
 			responseRadio.addItem(i);
@@ -208,24 +215,24 @@ public class TweetResponseComponent extends RobotwitterCustomComponent
 			}
 			responseRadio.setItemCaption(i, caption);
 		}
-		
+
 		int otherId = -1;
 		responseRadio.addItem(otherId);
 		responseRadio.setItemCaption(
 			otherId,
 			messages.get("TweetResponse.radio.other"));
-		
+
 		responseRadio.addValueChangeListener(event -> changeResponse(event));
-		
+
 		tweetComposeBox =
 			new TweetComposeBox(
 				messages,
 				event -> tweetComposeTextChanged(event.getText()));
-		
+
 		offeredResponses = new VerticalLayout(responseRadio, tweetComposeBox);
 	}
-	
-	
+
+
 	/**
 	 * Displays an error message on the composer.
 	 *
@@ -236,13 +243,13 @@ public class TweetResponseComponent extends RobotwitterCustomComponent
 	{
 		// Clear any previous error message.
 		clearErrorMessage();
-		
+
 		// Set the error message
 		errorMessage.setVisible(true);
 		errorMessage.setValue(error);
 	}
-	
-	
+
+
 	/**
 	 * Update tweet.
 	 *
@@ -251,10 +258,11 @@ public class TweetResponseComponent extends RobotwitterCustomComponent
 	 */
 	private void tweetComposeTextChanged(String text)
 	{
+		text = getSelectedTweet();
 		List<String> tweets = tweetingController.previewTweet(text);
-		
+
 		preview.updatePreview(tweets);
-		
+
 		int c = 0;
 		for (String s : tweets)
 		{
@@ -262,8 +270,8 @@ public class TweetResponseComponent extends RobotwitterCustomComponent
 		}
 		tweetComposeBox.updateTweetLength(c);
 	}
-	
-	
+
+
 	/**
 	 * Validates the Tweet.
 	 *
@@ -283,59 +291,59 @@ public class TweetResponseComponent extends RobotwitterCustomComponent
 			setErrorMessage(messages.get("TweetResponse.error.tweet-empty"));
 			return false;
 		}
-		
+
 		// Validate
 		if (c > maxTweetLen)
 		{
 			setErrorMessage(messages.get("TweetResponse.error.tweet-too-long"));
 			return false;
 		}
-		
+
 		return true;
 	}
-	
-	
-	
+
+
+
 	/** The CSS class name to apply to the error message. */
 	private static final String ERROR_STYLENAME = "TweetComposer-error";
-	
+
 	/** The CSS class name to apply to the Tweet button. */
 	private static final String TWEET_BUTTON_STYLENAME =
 		"TweetComposer-tweet-button";
-	
+
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 7559345052989581150L;
-	
+
 	ITweetingController tweetingController;
-	
+
 	/**
 	 * The right panel of the layout. Holds the preview of the chosen
 	 * possibility.
 	 */
 	private final TweetPreview preview;
-	
+
 	/**
 	 * The left panel of the layout. Holds the different possibilities for
 	 * tweets.
 	 */
 	private Component offeredResponses;
-	
+
 	private TweetComposeBox tweetComposeBox;
-	
+
 	private int maxRadioCaptionLen;
-	
+
 	private OptionGroup responseRadio;
-	
+
 	private List<String> responses;
-	
+
 	private Tweet originalTweet;
-	
+
 	private int maxTweetLen;
-	
+
 	/** The error message of a failed tweeting attempt. */
 	private Label errorMessage;
-	
+
 	private OnResponseSuccess onResponseSuccess;
 }

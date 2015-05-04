@@ -18,19 +18,19 @@ import java.util.Map;
  */
 public interface ITwitterAccountController extends Serializable
 {
-	
+
 	/** Status codes returned by this instance. */
 	enum Status
 	{
 		/** Operation succeeded. */
 		SUCCESS,
-		
+
 		/** An unknown failure occurred . */
 		FAILURE
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Gets the amount of followers in the given date range.
 	 *
@@ -43,8 +43,8 @@ public interface ITwitterAccountController extends Serializable
 	 *         <code>from</code> and <code>to</code>.
 	 */
 	Map<Date, Integer> getAmountOfFollowers(Date from, Date to);
-	
-	
+
+
 	/**
 	 * Gets the current maximum tweet length considering multiple tweets that
 	 * are broken from a single long tweet.
@@ -52,8 +52,8 @@ public interface ITwitterAccountController extends Serializable
 	 * @return the current maximum tweet length
 	 */
 	int getCurrentMaximumTweetLength();
-	
-	
+
+
 	/**
 	 * Gets the followers amount by displayed language.
 	 *
@@ -61,8 +61,8 @@ public interface ITwitterAccountController extends Serializable
 	 *         twitter account has with this displayed language.
 	 */
 	Map<String, Integer> getFollowersAmountByDisplayedLanguage();
-	
-	
+
+
 	/**
 	 * Gets a list of amounts of followers with a number of followers in the
 	 * corresponding ranges. the number of ranges is determined by
@@ -100,8 +100,8 @@ public interface ITwitterAccountController extends Serializable
 		int subdivisions,
 		List<Integer> amounts,
 		List<Integer> separators);
-	
-	
+
+
 	/**
 	 * Gets a list of amounts of followers with a number of accounts they're
 	 * following in the corresponding ranges. the number of ranges is determined
@@ -140,40 +140,55 @@ public interface ITwitterAccountController extends Serializable
 		int subdivisions,
 		List<Integer> amounts,
 		List<Integer> separators);
-	
-	
+
+
 	/** @return The Twitter account's ID. */
 	long getID();
-	
-	
+
+
 	/** @return The Twitter account's image. */
 	String getImage();
-	
-	
+
+
 	/** @return The last known amount of followers. */
 	int getLastKnownAmountOfFollowers();
-	
-	
+
+
 	/** @return The last known amount of gained followers. */
 	int getLastKnownAmountOfGainedFollowers();
-	
-	
+
+
 	/** @return The last known amount of lost followers. */
 	int getLastKnownAmountOfLostFollowers();
-	
-	
+
+
 	/** @return A list of the most influential followers. */
 	List<TwitterFollower> getMostInfluentialFollowers();
-	
-	
+
+
 	/** @return The Twitter account's name. */
 	String getName();
-	
-	
+
+
 	/** @return The Twitter account's screenname. */
 	String getScreenname();
-	
-	
+
+
+	/**
+	 * Post the tweets as a response to the original one, one after the other as
+	 * a single tweet
+	 *
+	 * @param originalId
+	 *            the id for the original tweet, which the next ones should be a
+	 *            response to
+	 * @param tweets
+	 *            the tweets that form the response
+	 * @return the status
+	 */
+	Status
+	postTweetsAsSingleResponseTweet(long originalId, List<String> tweets);
+
+
 	/**
 	 * Post the given tweets as a single tweet.
 	 * <p>
@@ -189,5 +204,5 @@ public interface ITwitterAccountController extends Serializable
 	 * @return the status
 	 */
 	Status postTweetsAsSingleTweet(List<String> tweets);
-	
+
 }

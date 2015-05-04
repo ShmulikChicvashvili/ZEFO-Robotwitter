@@ -73,11 +73,11 @@ public class PosNegView extends AbstractView
 			}
 			string = converted;
 		}
-		
+
 		return converted;
 	}
-	
-	
+
+
 	/**
 	 * Creates a tweet preview component.
 	 *
@@ -103,42 +103,42 @@ public class PosNegView extends AbstractView
 		pictureImage.setAlternateText(name);
 		final Button nameButton = new Button(name);
 		final Label screennameLabel = new Label('@' + screenname);
-		
+
 		String tweetHtml = StringEscapeUtils.escapeHtml4(tweetText);
-		
+
 		tweetHtml = hashtagsToTwitterHtmlLinks(tweetHtml);
-		
+
 		final Label text = new Label(tweetHtml, ContentMode.HTML);
-		
+
 		final BrowserWindowOpener opener =
 			new BrowserWindowOpener("https://twitter.com/" + screenname);
 		opener.extend(nameButton);
-		
+
 		final HorizontalLayout nameAndScreenname =
 			new HorizontalLayout(nameButton, screennameLabel);
 		final VerticalLayout right =
 			new VerticalLayout(nameAndScreenname, text);
 		final HorizontalLayout layout =
 			new HorizontalLayout(pictureImage, right);
-		
+
 		nameAndScreenname.setSizeFull();
 		right.setSizeFull();
 		layout.setSizeFull();
 		layout.setExpandRatio(right, 1);
-		
+
 		layout.setSpacing(true);
-		
+
 		pictureImage.addStyleName(PREVIEW_PICTURE_STYLENAME);
 		nameButton.addStyleName(PREVIEW_NAME_STYLENAME);
 		nameButton.addStyleName(ValoTheme.BUTTON_LINK);
 		screennameLabel.addStyleName(PREVIEW_SCREENNAME_STYLENAME);
 		text.addStyleName(PREVIEW_TEXT_STYLENAME);
 		layout.setStyleName(PREVIEW_TWEET_STYLENAME);
-		
+
 		return layout;
 	}
-	
-	
+
+
 	/**
 	 * Instantiates a new login view.
 	 *
@@ -150,59 +150,22 @@ public class PosNegView extends AbstractView
 	{
 		super(messages, messages.get("posNegView.page.title"));
 	}
-	
-	
+
+
 	@Override
 	public final boolean isSignedInProhibited()
 	{
 		return false;
 	}
-	
-	
+
+
 	@Override
 	public final boolean isSignedInRequired()
 	{
 		return false;
 	}
-	
-	
-	// /**
-	// * Updates the preview component.
-	// *
-	// * @param tweets
-	// * the tweets to preview
-	// */
-	// private void updatePreview(List<String> tweets, int column)
-	// {
-	// preview.removeAllComponents();
-	// if (column == FIRSTCOLUMN)
-	// {
-	//
-	// } else
-	// {
-	// if (column == SECONDCOLUMN)
-	// {
-	//
-	// } else
-	// {
-	//
-	// }
-	// }
-	// for (final String tweetText : tweets)
-	// {
-	// preview.addComponent(createTweetPreview(
-	// tweetText,
-	// tweetText,
-	// tweetText,
-	// tweetText));
-	// }
-	//
-	// if (tweets.isEmpty())
-	// {
-	// preview.addComponent(createTweetPreview(""));
-	// }
-	// }
-	
+
+
 	/**
 	 * Wrap the given component in a panel.
 	 *
@@ -223,8 +186,8 @@ public class PosNegView extends AbstractView
 		panel.addStyleName(PANEL_STYLENAME);
 		return panel;
 	}
-	
-	
+
+
 	@Override
 	protected final void initialise()
 	{
@@ -232,7 +195,7 @@ public class PosNegView extends AbstractView
 		final Table spam = new Table(messages.get("posNegView.title.spam"));
 		final Table neg = new Table(messages.get("posNegView.title.neg"));
 		final Label header = new Label(messages.get("posNegView.LabelHeader"));
-		
+
 		pos.addContainerProperty(
 			messages.get("posNegView.Positive"),
 			Component.class,
@@ -251,6 +214,13 @@ public class PosNegView extends AbstractView
 		spam.setDragMode(TableDragMode.ROW);
 		neg.setSizeFull();
 		neg.setDragMode(TableDragMode.ROW);
+		final Component twitter1 =
+			createTweetPreview(
+				"Check if works",
+				"Doron",
+				"http://i.ytimg.com/vi/DOr-5qDlgcY/maxresdefault.jpg",
+				"Hogery");
+		pos.addItem(twitter1);
 		final Component TablePanelPos =
 			wrapInPanel(pos, messages.get("posNegView.empty"));
 		final Component TablePanelSpam =
@@ -275,7 +245,7 @@ public class PosNegView extends AbstractView
 					pos.addItem(sourceItem);
 					sourceContainer.removeItem(sourceId);
 				}
-				
+
 			}
 			
 			
@@ -285,7 +255,7 @@ public class PosNegView extends AbstractView
 				return AcceptAll.get();
 			}
 		});
-
+		
 		spam.setDropHandler(new DropHandler()
 		{
 			@Override
@@ -304,7 +274,7 @@ public class PosNegView extends AbstractView
 					spam.addItem(sourceItem);
 					sourceContainer.removeItem(sourceId);
 				}
-				
+
 			}
 			
 			
@@ -314,7 +284,7 @@ public class PosNegView extends AbstractView
 				return AcceptAll.get();
 			}
 		});
-
+		
 		neg.setDropHandler(new DropHandler()
 		{
 			@Override
@@ -333,10 +303,10 @@ public class PosNegView extends AbstractView
 					neg.addItem(sourceItem);
 					sourceContainer.removeItem(sourceId);
 				}
-				
+
 			}
-			
-			
+
+
 			@Override
 			public AcceptCriterion getAcceptCriterion()
 			{
@@ -345,63 +315,63 @@ public class PosNegView extends AbstractView
 		});
 		// TODO this should be in CSS
 		// TablePanel.setWidth("700px");
-		
+
 		final HorizontalLayout layout =
 			new HorizontalLayout(TablePanelPos, TablePanelSpam, TablePanelNeg);
 		layout.setSizeFull();
 		layout.setSpacing(true);
-		
+
 		header.addStyleName(HEADER_STYLENAME);
 		addStyleName(STYLENAME);
 		setCompositionRoot(layout);
 	}
-	
-	
-	
+
+
+
 	private static final int FIRSTCOLUMN = 0;
-	
+
 	private static final int SECONDCOLUMN = 1;
-	
+
 	private static final int THIRDCOLUMN = 2;
-	
+
 	/** The view's name. */
 	public static final String NAME = "pos-neg";
-	
+
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "PosNegView";
-	
+
 	/** The CSS class name to apply to each panel component. */
 	private static final String PANEL_STYLENAME = "PosNegView-panel";
-	
+
 	/** The CSS class name to apply to a tweet in the preview. */
 	private static final String PREVIEW_TWEET_STYLENAME =
 		"PosNeg-preview-tweet";
-	
+
 	/** The CSS class name to apply to a tweet's picture in the preview. */
 	private static final String PREVIEW_PICTURE_STYLENAME =
 		"PosNeg-preview-picture";
-	
+
 	/** The CSS class name to apply to a tweet's name in the preview. */
 	private static final String PREVIEW_NAME_STYLENAME = "PosNeg-preview-name";
-	
+
 	/** The CSS class name to apply to a tweet's screenname in the preview. */
 	private static final String PREVIEW_SCREENNAME_STYLENAME =
 		"PosNeg-preview-screenname";
-	
+
 	/** The CSS class name to apply to a tweet's text in the preview. */
 	private static final String PREVIEW_TEXT_STYLENAME = "PosNeg-preview-text";
-	
+
 	/** The CSS class name to apply to the compose another button. */
 	private static final String COMPOSE_ANOTHER_STYLENAME =
 		"PosNeg-compose-another";
-	
+
 	/** The CSS class name to apply to each panel title label. */
 	private static final String PANEL_TITLE_STYLENAME =
 		"posNegView-panel-title";
-	
+
 	/** The CSS class name to apply to the header component. */
 	private static final String HEADER_STYLENAME = "posNegView-header";
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

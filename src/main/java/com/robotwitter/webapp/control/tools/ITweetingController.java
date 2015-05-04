@@ -5,6 +5,8 @@ package com.robotwitter.webapp.control.tools;
 import java.io.Serializable;
 import java.util.List;
 
+import com.robotwitter.webapp.control.tools.tweeting.Tweet;
+
 
 
 
@@ -26,6 +28,16 @@ public interface ITweetingController extends Serializable
 	 * @return A list of Tweets that are broken down from the given Tweet
 	 */
 	List<String> breakTweet(String tweet);
+
+
+	/**
+	 * Geta list of options to respond to the given tweet (as the current user).
+	 *
+	 * @param tweet
+	 *            the tweet to respond to
+	 * @return the optional responses as the current user.
+	 */
+	List<String> getOptionalResponses(Tweet tweet);
 
 
 	/**

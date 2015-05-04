@@ -60,7 +60,8 @@ public class TweetResponseWindow extends Window
 			new TweetResponseComponent(
 				messages,
 				tweetingController,
-				originalTweet);
+				originalTweet,
+				() -> close());
 
 		setContent(content);
 

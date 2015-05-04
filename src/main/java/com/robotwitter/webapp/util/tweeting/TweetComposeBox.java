@@ -76,6 +76,15 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 	}
 
 
+	/**
+	 * @return
+	 */
+	public String getText()
+	{
+		return tweet.getValue();
+	}
+
+
 	public void updateTweetLength(int length)
 	{
 		count.count = length;
@@ -147,8 +156,8 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 		createTweetTextArea();
 		Component toolbar = createToolbar();
 
-		charactersLeft.addStyleName(CHARACTERS_STYLENAME);
 		charactersLeft = new Label();
+		charactersLeft.addStyleName(CHARACTERS_STYLENAME);
 		charactersLeft.setDescription(messages
 			.get("TweetComposer.tooltip.characters"));
 
@@ -166,6 +175,10 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 	}
 
 
+	/**
+	 * @param text
+	 */
+
 	/** Updates state based on the active Twitter account. */
 	private void updateBasedOnActiveTwitterAccount()
 	{
@@ -176,9 +189,6 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 	}
 
 
-	/**
-	 * @param text
-	 */
 
 	/**
 	 * Update tweet.
@@ -192,8 +202,6 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 		String[] lines = text.split("\r\n|\r|\n");
 		tweet.setRows(lines.length + 2);
 	}
-
-
 
 	/**
 	 *
@@ -229,6 +237,8 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 
 	/** The current character count of the Tweet. */
 	CharacterCount count;
+
+
 
 	/** The maximum allowed character count of the Tweet. */
 	CharacterCount max;

@@ -27,11 +27,11 @@ import com.vaadin.ui.TextArea;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
-
 import com.robotwitter.webapp.control.account.ITwitterAccountController;
 import com.robotwitter.webapp.control.tools.ITweetingController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.RobotwitterCustomComponent;
+import com.robotwitter.webapp.view.login.PasswordRetrievalWindow;
 
 
 
@@ -247,10 +247,17 @@ Button.ClickListener
 		return toolbar;
 	}
 	
+	/** Initialises the password retrieval window. */
+	private void initialiseComposerSettings()
+	{
+		composerSettings =
+			new ComposerSettings(messages, tweetingController);
+	}
 	
 	/** Initialises the layout. */
 	private void initialiseLayout()
 	{
+		
 		initialiseTweet();
 		initialisePreview();
 		updateBasedOnActiveTwitterAccount();
@@ -502,7 +509,9 @@ Button.ClickListener
 	}
 
 
-
+	/** The Composer Settings window. */
+	private ComposerSettings composerSettings;
+	
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "TweetComposer";
 	

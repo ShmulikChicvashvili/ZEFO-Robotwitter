@@ -61,10 +61,10 @@ public class TwitterAccountController implements ITwitterAccountController
 		this.numFollowersDB = numFollowersDB;
 		this.heavyhitterDB = heavyhitterDB;
 		this.followersDB = followersDB;
-
+		
 	}
-
-
+	
+	
 	@Override
 	public final Map<Date, Integer> getAmountOfFollowers(Date from, Date to)
 	{
@@ -108,8 +108,8 @@ public class TwitterAccountController implements ITwitterAccountController
 		}
 		return followersBetween;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.account.ITwitterAccountController
 	 * #getCurrentMaximumTweetLength() */
@@ -118,8 +118,8 @@ public class TwitterAccountController implements ITwitterAccountController
 	{
 		return 15 * 140;
 	}
-
-
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.account.ITwitterAccountController
 	 * #getFollowersAmountByDisplayedLanguage() */
@@ -139,8 +139,8 @@ public class TwitterAccountController implements ITwitterAccountController
 		}
 		return m;
 	}
-
-
+	
+	
 	@Override
 	public void getFollowersAmountByTheirFollowersAmount(
 		int subdivisions,
@@ -152,8 +152,8 @@ public class TwitterAccountController implements ITwitterAccountController
 		separatorsByPath(subdivisions, separators, FINDFOLLOWERS);
 		followersAmountByPath(separators, amounts, FINDFOLLOWERS);
 	}
-
-
+	
+	
 	@Override
 	public void getFollowersAmountByTheirFollowingAmount(
 		int subdivisions,
@@ -164,24 +164,24 @@ public class TwitterAccountController implements ITwitterAccountController
 		separators.clear();
 		separatorsByPath(subdivisions, separators, FINDFOLLOWING);
 		followersAmountByPath(separators, amounts, FINDFOLLOWING);
-
+		
 	}
-
-
+	
+	
 	@Override
 	public final long getID()
 	{
 		return id;
 	}
-
-
+	
+	
 	@Override
 	public final String getImage()
 	{
 		return image;
 	}
-
-
+	
+	
 	@Override
 	public final int getLastKnownAmountOfFollowers()
 	{
@@ -189,8 +189,8 @@ public class TwitterAccountController implements ITwitterAccountController
 		if (dbfollowers == null || dbfollowers.isEmpty()) { return NOFOLLOWERSINFO; }
 		return lastUpdateInDatabase().getNumFollowers();
 	}
-
-
+	
+	
 	@Override
 	public final int getLastKnownAmountOfGainedFollowers()
 	{
@@ -198,18 +198,18 @@ public class TwitterAccountController implements ITwitterAccountController
 		if (dbfollowers == null || dbfollowers.isEmpty()) { return NOFOLLOWERSINFO; }
 		return lastUpdateInDatabase().getNumJoined();
 	}
-
-
+	
+	
 	@Override
 	public final int getLastKnownAmountOfLostFollowers()
 	{
 		final List<DBFollowersNumber> dbfollowers = numFollowersDB.get(id);
-
+		
 		if (dbfollowers == null || dbfollowers.isEmpty()) { return NOFOLLOWERSINFO; }
 		return lastUpdateInDatabase().getNumLeft();
 	}
-
-
+	
+	
 	@Override
 	public final List<TwitterFollower> getMostInfluentialFollowers()
 	{
@@ -242,22 +242,33 @@ public class TwitterAccountController implements ITwitterAccountController
 		}
 		return list;
 	}
-
-
+	
+	
 	@Override
 	public final String getName()
 	{
 		return name;
 	}
-
-
+	
+	
 	@Override
 	public final String getScreenname()
 	{
 		return screenname;
 	}
-
-
+	
+	
+	/* (non-Javadoc) @see com.robotwitter.webapp.control.account.ITwitterAccountController#postTweetsAsSingleResponseTweet(long, java.util.List) */
+	@Override
+	public Status postTweetsAsSingleResponseTweet(
+		long originalId,
+		List<String> tweets)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.account.ITwitterAccountController
 	 * #postTweetsAsSingleTweet(java.util.List) */
@@ -268,13 +279,13 @@ public class TwitterAccountController implements ITwitterAccountController
 		{
 			case SUCCESS:
 				return Status.SUCCESS;
-				
+
 			default:
 				return Status.FAILURE;
 		}
 	}
-
-
+	
+	
 	/* This function will create a list that will say how many followers are
 	 * there for each separator */
 	public void setTwitterAccount(TwitterAccount twitterAccount)
@@ -282,8 +293,8 @@ public class TwitterAccountController implements ITwitterAccountController
 		this.twitterAccount = twitterAccount;
 		tweetPostService = new TweetPostService(twitterAccount);
 	}
-
-
+	
+	
 	private void followersAmountByPath(
 		List<Integer> separators,
 		List<Integer> followersAmount,
@@ -351,8 +362,8 @@ public class TwitterAccountController implements ITwitterAccountController
 		}
 		separators.remove(separators.size() - 1);
 	}
-
-
+	
+	
 	/* This function will create the separators and will insert them into
 	 * separators array */
 	private final DBFollowersNumber lastUpdateInDatabase()
@@ -361,7 +372,7 @@ public class TwitterAccountController implements ITwitterAccountController
 		if (dbfollowers.isEmpty()) { return null; }
 		DBFollowersNumber latest = null;
 		boolean firstTime = true;
-
+		
 		for (final DBFollowersNumber follower : dbfollowers)
 		{
 			if (firstTime)
@@ -378,8 +389,9 @@ public class TwitterAccountController implements ITwitterAccountController
 		}
 		return latest;
 	}
-
-
+	
+	
+	
 	private void separatorsByPath(
 		int subdivision,
 		List<Integer> separators,
@@ -416,7 +428,7 @@ public class TwitterAccountController implements ITwitterAccountController
 		}
 		if (maxCount.equals(minCount)) { return; }
 		final double divide = (double) (maxCount - minCount) / subdivision;
-
+		
 		for (int i = 1; i < subdivision; i++)
 		{
 			final int addNew = (int) (minCount + i * divide);
@@ -430,41 +442,39 @@ public class TwitterAccountController implements ITwitterAccountController
 		}
 		assert separators.size() < subdivision;
 	}
-
-
-
-	private TwitterAccount twitterAccount;
-
+	
 	private static final int NOFOLLOWERSINFO = -1;
-
+	
 	private static final int FINDFOLLOWERS = 0;
-
+	
 	private static final int FINDFOLLOWING = 1;
-
-	/** The Twitter accounts' ID. */
-	public long id;
-
-	/** The Twitter accounts' name. */
-	public String name;
-
-	/** The Twitter accounts' screen name. */
-	public String screenname;
-
-	/** The Twitter accounts' profile image. */
-	public String image;
-
-	/** The Twtitter's account number of followers Database. */
-	public IDatabaseNumFollowers numFollowersDB;
-
+	
 	/** Serialization version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
+	private TwitterAccount twitterAccount;
+	
+	/** The Twitter accounts' ID. */
+	public long id;
+	
+	/** The Twitter accounts' name. */
+	public String name;
+	
+	/** The Twitter accounts' screen name. */
+	public String screenname;
+	
+	/** The Twitter accounts' profile image. */
+	public String image;
+	
+	/** The Twtitter's account number of followers Database. */
+	public IDatabaseNumFollowers numFollowersDB;
+	
 	/** The heavy hitters database */
 	private final IDatabaseHeavyHitters heavyhitterDB;
-
+	
 	/** The followers DB */
 	private final IDatabaseFollowers followersDB;
-
+	
 	private TweetPostService tweetPostService;
-
+	
 }

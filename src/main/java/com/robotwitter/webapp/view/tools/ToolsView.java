@@ -86,15 +86,20 @@ public class ToolsView extends AbstractView
 		TweetComposer composer =
 			new TweetComposer(messages, tweetingController);
 		
+		ComposerSettings settings = new ComposerSettings(messages, tweetingController);
+		
 		Component composerPanel =
 			wrapInPanel(
 				composer,
 				messages.get("ToolsView.caption.tweet-composer"));
-		VerticalLayout composerPanelWrapper = new VerticalLayout(composerPanel);
+		Component settingsPanel = wrapInPanel(settings, messages.get("ToolsView.caption.composer-settings"));
+		
+		VerticalLayout composerPanelWrapper = new VerticalLayout(composerPanel, settingsPanel);
 		composerPanelWrapper.setSizeFull();
 		composerPanelWrapper.setComponentAlignment(
 			composerPanel,
 			Alignment.MIDDLE_CENTER);
+		composerPanelWrapper.setComponentAlignment(settingsPanel, Alignment.BOTTOM_CENTER);
 
 		VerticalLayout layout =
 			new VerticalLayout(header, composerPanelWrapper);

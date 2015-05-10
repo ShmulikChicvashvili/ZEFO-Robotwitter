@@ -52,10 +52,20 @@ public class CannedTweetsController implements ICannedTweetsController
 	@Override
 	public List<Tweet> getCannedTweets(long twitterAccountID)
 	{
+		ArrayList<Tweet> $ = new ArrayList<>();
 		ArrayList<DBResponse> cannedTweets =
-			responseDatabase.getBadResponsesOfUser(twitterAccountID);
-		// TODO Auto-generated method stub
-		return null;
+			responseDatabase.getUnansweredResponsesOfUser(twitterAccountID);
+		for (DBResponse res : cannedTweets)
+		{
+			$
+				.add(new Tweet(
+					res.getId(),
+					res.getText(),
+					"POCName",
+					"POCScreenName",
+					"http://pbs.twimg.com/profile_images/547044214270214144/Sq6-BXv5_bigger.jpeg"));
+		}
+		return $;
 	}
 	
 	

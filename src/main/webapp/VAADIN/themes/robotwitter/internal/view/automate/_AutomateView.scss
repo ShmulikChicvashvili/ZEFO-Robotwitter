@@ -1,0 +1,43 @@
+@import "../../common";
+@import "../../../config";
+/*----------------------------------------------------------------------------*/
+
+@mixin AutomateView { .AutomateView {
+	
+	padding: 10px;
+	
+	/* Header */
+	.AutomateView-header
+	{
+		font-size: 3.3em; padding-left: 15px; line-height: 1em;
+	}
+	
+	/* Tweets */
+	.AutomateView-tweets
+	{
+		/* Single tweet */
+		.AutomateView-tweet
+		{
+			position: relative;
+			
+			/* Buttons */
+			.AutomateView-buttons
+			{
+				position: absolute;
+				top: 0;
+				right: 0;
+				opacity: 0;
+				
+				@include robotwitter-transition(opacity 0.5s ease);
+			}
+				
+			/* Hover */
+			&:hover .AutomateView-buttons
+			{
+				opacity: 1;
+			}
+		}
+	}
+
+} }
+

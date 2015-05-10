@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.posting;
@@ -13,7 +13,6 @@ import twitter4j.TwitterException;
 
 import com.google.inject.Inject;
 
-import com.robotwitter.posting.TweetPostService.ReturnStatus;
 import com.robotwitter.twitter.TwitterAccount;
 
 
@@ -37,9 +36,9 @@ public class ResponsePostService
 		INVALID_PARAMS,
 		FAILURE
 	}
-	
-	
-	
+
+
+
 	/**
 	 * @param twitterAccount
 	 *            The twitter account
@@ -49,8 +48,8 @@ public class ResponsePostService
 	{
 		this.twitterAccount = twitterAccount;
 	}
-	
-	
+
+
 	@SuppressWarnings({ "nls", "boxing" })
 	public ReturnStatus post(long tweetId, List<String> tweetsToPost)
 	{
@@ -61,24 +60,24 @@ public class ResponsePostService
 		{
 			if (twitterAccount == null || !twitterAccount.isAttached()) { return ReturnStatus.UNATTACHED_ACCOUNT; }
 			if (getTweetingRemainingLimit() < tweetsToPost.size()) { return ReturnStatus.OUT_OF_RATES; }
-			
-			for (final String tweetPost : tweetsToPost)
+
+			for (String tweetPost : tweetsToPost)
 			{
 				if (latestStatus == null)
 				{
 					latestUpdate = new StatusUpdate(tweetPost);
+					latestUpdate.setInReplyToStatusId(tweetId);
 					latestStatus =
-						twitterAccount.getTwitter().updateStatus(
-							latestUpdate.inReplyToStatusId(tweetId));
+						twitterAccount.getTwitter().updateStatus(latestUpdate);
 				} else
 				{
 					latestUpdate = new StatusUpdate(tweetPost);
 					latestStatus =
 						twitterAccount
-							.getTwitter()
-							.updateStatus(
-								latestUpdate.inReplyToStatusId(latestStatus
-									.getId()));
+						.getTwitter()
+						.updateStatus(
+							latestUpdate.inReplyToStatusId(latestStatus
+								.getId()));
 				}
 			}
 		} catch (final TwitterException e)
@@ -88,8 +87,8 @@ public class ResponsePostService
 		}
 		return ReturnStatus.SUCCESS;
 	}
-	
-	
+
+
 	/**
 	 * @return
 	 * @throws TwitterException
@@ -98,8 +97,8 @@ public class ResponsePostService
 	{
 		return 15; // FIXME: get the real limits!
 	}
-	
-	
-	
+
+
+
 	TwitterAccount twitterAccount;
 }

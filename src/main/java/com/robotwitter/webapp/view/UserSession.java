@@ -103,6 +103,9 @@ public class UserSession implements IUserSession
 		
 		component.addDetachListener(event -> observingTwitterAccountChange
 			.remove(event.getSource()));
+		
+		component.addAttachListener(event -> observingTwitterAccountChange
+			.add(component));
 	}
 	
 	

@@ -1,6 +1,3 @@
-/**
- *
- */
 
 package com.robotwitter.webapp.util.tweeting;
 
@@ -11,7 +8,6 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
@@ -22,15 +18,15 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import com.robotwitter.webapp.control.account.ITwitterAccountController;
-import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.RobotwitterCustomComponent;
 
 
 
 
 /**
- * @author Eyal
+ * A preview of a single Tweet (or a Tweet with replies).
  *
+ * @author Eyal
  */
 public class TweetPreview extends RobotwitterCustomComponent
 {
@@ -49,7 +45,7 @@ public class TweetPreview extends RobotwitterCustomComponent
 	 */
 	private static String hashtagsToTwitterHtmlLinks(String string)
 	{
-		String converted = string;
+		String converted;
 		while (true)
 		{
 			converted =
@@ -68,6 +64,27 @@ public class TweetPreview extends RobotwitterCustomComponent
 		return converted;
 	}
 
+	private static String strudelToTwitterHtmlLinks(String string)
+	{
+		String converted;
+		while (true)
+		{
+			converted =
+				string.replaceAll(
+					"(^|\\s)@(\\w*[a-zA-Z_]+\\w*)($|\\s)",
+					"$1<a class=\"hashtag\" href=\"http://twitter.com/$2\""
+						+ " target=\"_blank\" >"
+						+ "@<span>$2</span></a>$3");
+			if (converted.equals(string))
+			{
+				break;
+			}
+			string = converted;
+		}
+
+		return converted;
+	}
+
 
 	/**
 	 * Instantiates a new tweet preview.
@@ -75,9 +92,9 @@ public class TweetPreview extends RobotwitterCustomComponent
 	 * @param messages
 	 *            the messages
 	 */
-	public TweetPreview(IMessagesContainer messages)
+	public TweetPreview()
 	{
-		super(messages);
+		super(null);
 
 		initialiseLayout();
 
@@ -89,7 +106,7 @@ public class TweetPreview extends RobotwitterCustomComponent
 	 * com.robotwitter.webapp.util.RobotwitterCustomComponent#
 	 * activateTwitterAccount(long) */
 	@Override
-	public void activateTwitterAccount(long id)
+	public final void activateTwitterAccount(long id)
 	{
 		activateTwitterAccount();
 	}
@@ -102,7 +119,7 @@ public class TweetPreview extends RobotwitterCustomComponent
 	 *            the tweets to be shown. Does not validate any restrictions
 	 *            that might be.
 	 */
-	public void updatePreview(List<String> tweets)
+	public final void updatePreview(List<String> tweets)
 	{
 		preview.removeAllComponents();
 		for (final String tweetText : tweets)
@@ -135,9 +152,7 @@ public class TweetPreview extends RobotwitterCustomComponent
 	private void initialiseLayout()
 	{
 		preview = new VerticalLayout();
-		preview.setCaption(messages.get("TweetComposer.caption.preview"));
-		preview.setIcon(FontAwesome.PAPER_PLANE_O);
-		preview.addStyleName(PREVIEW_STYLENAME);
+		preview.addStyleName(STYLENAME);
 
 		setCompositionRoot(preview);
 
@@ -164,6 +179,7 @@ public class TweetPreview extends RobotwitterCustomComponent
 		String tweetHtml = StringEscapeUtils.escapeHtml4(tweetText);
 
 		tweetHtml = hashtagsToTwitterHtmlLinks(tweetHtml);
+		tweetHtml = strudelToTwitterHtmlLinks(tweetHtml);
 
 		final Label text = new Label(tweetHtml, ContentMode.HTML);
 
@@ -185,12 +201,12 @@ public class TweetPreview extends RobotwitterCustomComponent
 
 		layout.setSpacing(true);
 
-		pictureImage.addStyleName(PREVIEW_PICTURE_STYLENAME);
-		nameButton.addStyleName(PREVIEW_NAME_STYLENAME);
+		pictureImage.addStyleName(PICTURE_STYLENAME);
+		nameButton.addStyleName(NAME_STYLENAME);
 		nameButton.addStyleName(ValoTheme.BUTTON_LINK);
-		screennameLabel.addStyleName(PREVIEW_SCREENNAME_STYLENAME);
-		text.addStyleName(PREVIEW_TEXT_STYLENAME);
-		layout.setStyleName(PREVIEW_TWEET_STYLENAME);
+		screennameLabel.addStyleName(SCREENNAME_STYLENAME);
+		text.addStyleName(TEXT_STYLENAME);
+		layout.setStyleName(TWEET_STYLENAME);
 
 		return layout;
 	}
@@ -198,30 +214,26 @@ public class TweetPreview extends RobotwitterCustomComponent
 
 
 	/** The Constant serialVersionUID. */
-	private static final long serialVersionUID = -381333812459248416L;
+	private static final long serialVersionUID = 1L;
 
 	/** The CSS class name to apply to the preview component. */
-	private static final String PREVIEW_STYLENAME = "TweetComposer-preview";
+	private static final String STYLENAME = "TweetPreview";
 
 	/** The CSS class name to apply to a tweet in the preview. */
-	private static final String PREVIEW_TWEET_STYLENAME =
-		"TweetComposer-preview-tweet";
+	private static final String TWEET_STYLENAME = "TweetPreview-tweet";
 
 	/** The CSS class name to apply to a tweet's picture in the preview. */
-	private static final String PREVIEW_PICTURE_STYLENAME =
-		"TweetComposer-preview-picture";
+	private static final String PICTURE_STYLENAME = "TweetPreview-picture";
 
 	/** The CSS class name to apply to a tweet's name in the preview. */
-	private static final String PREVIEW_NAME_STYLENAME =
-		"TweetComposer-preview-name";
+	private static final String NAME_STYLENAME = "TweetPreview-name";
 
 	/** The CSS class name to apply to a tweet's screenname in the preview. */
-	private static final String PREVIEW_SCREENNAME_STYLENAME =
-		"TweetComposer-preview-screenname";
+	private static final String SCREENNAME_STYLENAME =
+		"TweetPreview-screenname";
 
 	/** The CSS class name to apply to a tweet's text in the preview. */
-	private static final String PREVIEW_TEXT_STYLENAME =
-		"TweetComposer-preview-text";
+	private static final String TEXT_STYLENAME = "TweetPreview-text";
 
 	/** The Tweet preview component. */
 	private VerticalLayout preview;

@@ -1,0 +1,109 @@
+@import "../common";
+@import "../../config";
+/*----------------------------------------------------------------------------*/
+
+
+@mixin TweetPreview { .TweetPreview {
+	
+	/* A single Tweet */
+	.TweetPreview-tweet
+	{
+		font-family: Arial, sans-serif;
+		line-height: 1em;
+		background: #f5f8fa;
+		border: 1px solid #E1E8ED;
+		border-top: none;
+		padding: 9px;
+	
+		/* The picture */
+		.TweetPreview-picture
+		{
+			width: $picture-size;
+			height: $picture-size;
+			border-radius: 5px;
+		}
+		
+		/* The name */
+		.TweetPreview-name
+		{
+			color: black;
+			font-weight: bold;
+			margin-right: 5px;
+			
+			@include robotwitter-transition(none);
+			&:hover { color: $robotwitter-main-color; }
+		}
+		
+		/* The screenname */
+		.TweetPreview-screenname
+		{
+			color: #8899A6;
+		}	
+		
+		/* The text */
+		.TweetPreview-text
+		{
+			width: $right-width - 2 * $padding - $picture-size - 11;
+			margin: 0;
+			margin-top: 3px;
+			font-family: Arial, sans-serif;
+			line-height: 18px;
+			
+			white-space: pre-wrap;       /* css-3 */
+			white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+			white-space: -pre-wrap;      /* Opera 4-6 */
+			white-space: -o-pre-wrap;    /* Opera 7 */
+			word-wrap: break-word;       /* Internet Explorer 5.5+ */
+			
+			/* Hashtags */
+			.hashtag {
+				color: #66B5D2;
+				text-decoration: none;
+				span { color: #0084B4; }
+				&:hover span { text-decoration: underline; }
+			}
+		}				
+	}
+	
+	/* Style the first Tweet differently */
+	.v-slot-TweetPreview-tweet:first-child
+	{			
+		/* A single Tweet */
+		.TweetPreview-tweet
+		{
+			background: white;
+			border-top: 1px solid #E1E8ED;
+			
+			/* Break the screenname from the name's line */
+			.v-slot-TweetPreview-name { display: block; }
+			
+			/* The name */
+			.TweetPreview-name
+			{
+				margin-right: 0;
+				font-size: 18px;
+				line-height: 1.25;
+			}
+			
+			/* The screenname */
+			.TweetPreview-screenname
+			{
+				color: #8899A6;
+			}	
+			
+			/* The text */
+			.TweetPreview-text
+			{
+				width: $right-width - 2 * $padding;
+				position: relative;
+				left: -$picture-size - 11;
+				top: $padding * 1.8;
+				margin-bottom: $padding * 1.8;
+				
+				font-size: 28px;
+				line-height: 34px;
+				font-weight: 300;
+			}				
+		}
+	}
+} }

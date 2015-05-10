@@ -54,13 +54,16 @@ public class TweetResponseWindow extends Window
 		center();
 		setResizable(false);
 
-		setCaption(messages.get("TweetResponseWindow.caption"));
+		setCaption(messages.get("TweetResponseWindow.caption")
+			+ "@"
+			+ originalTweet.getScreenName());
 
 		Component content =
-			new TweetResponseComponent(
+			new TweetResponse(
 				messages,
 				tweetingController,
-				originalTweet);
+				originalTweet,
+				() -> close());
 
 		setContent(content);
 

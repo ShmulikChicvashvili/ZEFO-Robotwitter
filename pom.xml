@@ -28,6 +28,15 @@
 				<enabled>true</enabled>
 			</snapshots>
 		</repository>
+		<repository>
+			<id>spotlight-releases-repository</id>
+			<url>https://github.com/dbpedia-spotlight/maven-repo/raw/master/releases</url>
+		</repository>
+
+		<repository>
+			<id>spotlight-snapshots-repository</id>
+			<url>https://github.com/dbpedia-spotlight/maven-repo/raw/master/snapshots</url>
+		</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
@@ -44,10 +53,16 @@
 	<dependencies>
 
 		<dependency>
+			<groupId>com.aliasi</groupId>
+			<artifactId>lingpipe</artifactId>
+			<version>4.1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>nz.ac.waikato.cms.weka</groupId>
 			<artifactId>weka-dev</artifactId>
 			<version>3.7.12</version>
 		</dependency>
+
 
 		<dependency>
 			<groupId>org.twitter4j</groupId>

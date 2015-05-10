@@ -43,6 +43,7 @@ $v-app-loading-text: "Robotwitter is loading...";
 @import "internal/view/connect_twitter";
 @import "internal/view/analysis";
 @import "internal/view/tools";
+@import "internal/view/automate";
 
 /*----------------------------------------------------------------------------*/
 
@@ -61,4 +62,5 @@ $v-app-loading-text: "Robotwitter is loading...";
 	@include robotwitter-view-connect_twitter;
 	@include robotwitter-view-analysis;
 	@include robotwitter-view-tools;
+	@include robotwitter-view-automate;
 }

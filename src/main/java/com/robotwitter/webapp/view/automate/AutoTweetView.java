@@ -66,7 +66,12 @@ public class AutoTweetView extends AbstractView
 	protected void initialise()
 	{
 		Tweet tweet =
-			new Tweet(0, "THIS IS A TWEET", "john dough", "screen time", "");
+			new Tweet(
+				new Long("586606957978456064"),
+				"OMG made a tweet!",
+				"Itay Khazon",
+				"itaykh",
+				"https://pbs.twimg.com/profile_images/547044214270214144/Sq6-BXv5.jpeg");
 		final Button btn =
 			new Button("Respond", event -> getUI().addWindow(
 				new TweetResponseWindow(messages, tweetingController, tweet)));

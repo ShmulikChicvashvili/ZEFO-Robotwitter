@@ -30,7 +30,7 @@ import com.robotwitter.webapp.util.RobotwitterCustomComponent;
  */
 public class TweetPreview extends RobotwitterCustomComponent
 {
-	
+
 	/**
 	 * Converts all the hashtags in the given string to HTML anchor links.
 	 * <p>
@@ -60,11 +60,32 @@ public class TweetPreview extends RobotwitterCustomComponent
 			}
 			string = converted;
 		}
-		
+
 		return converted;
 	}
-	
-	
+
+	private static String strudelToTwitterHtmlLinks(String string)
+	{
+		String converted;
+		while (true)
+		{
+			converted =
+				string.replaceAll(
+					"(^|\\s)@(\\w*[a-zA-Z_]+\\w*)($|\\s)",
+					"$1<a class=\"hashtag\" href=\"http://twitter.com/$2\""
+						+ " target=\"_blank\" >"
+						+ "@<span>$2</span></a>$3");
+			if (converted.equals(string))
+			{
+				break;
+			}
+			string = converted;
+		}
+
+		return converted;
+	}
+
+
 	/**
 	 * Instantiates a new tweet preview.
 	 *
@@ -74,13 +95,13 @@ public class TweetPreview extends RobotwitterCustomComponent
 	public TweetPreview()
 	{
 		super(null);
-		
+
 		initialiseLayout();
-		
+
 		getUserSession().observeActiveTwitterAccount(this);
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.util.RobotwitterCustomComponent#
 	 * activateTwitterAccount(long) */
@@ -89,8 +110,8 @@ public class TweetPreview extends RobotwitterCustomComponent
 	{
 		activateTwitterAccount();
 	}
-	
-	
+
+
 	/**
 	 * Update the preview with the given tweets.
 	 *
@@ -105,14 +126,14 @@ public class TweetPreview extends RobotwitterCustomComponent
 		{
 			preview.addComponent(createTweetPreview(tweetText));
 		}
-		
+
 		if (tweets.isEmpty())
 		{
 			preview.addComponent(createTweetPreview(""));
 		}
 	}
-	
-	
+
+
 	/**
 	 * Alter the preview to correspond with the newly chosen account.
 	 */
@@ -120,25 +141,25 @@ public class TweetPreview extends RobotwitterCustomComponent
 	{
 		final ITwitterAccountController controller =
 			getUserSession().getAccountController().getActiveTwitterAccount();
-		
+
 		picture = controller.getImage();
 		name = controller.getName();
 		screenname = controller.getScreenname();
 	}
-	
-	
+
+
 	/** Initialises the Tweet preview component. */
 	private void initialiseLayout()
 	{
 		preview = new VerticalLayout();
 		preview.addStyleName(STYLENAME);
-		
+
 		setCompositionRoot(preview);
-		
+
 		activateTwitterAccount();
 	}
-	
-	
+
+
 	/**
 	 * Creates a tweet preview component.
 	 *
@@ -154,74 +175,75 @@ public class TweetPreview extends RobotwitterCustomComponent
 		pictureImage.setAlternateText(name);
 		final Button nameButton = new Button(name);
 		final Label screennameLabel = new Label('@' + screenname);
-		
+
 		String tweetHtml = StringEscapeUtils.escapeHtml4(tweetText);
-		
+
 		tweetHtml = hashtagsToTwitterHtmlLinks(tweetHtml);
-		
+		tweetHtml = strudelToTwitterHtmlLinks(tweetHtml);
+
 		final Label text = new Label(tweetHtml, ContentMode.HTML);
-		
+
 		final BrowserWindowOpener opener =
 			new BrowserWindowOpener("https://twitter.com/" + screenname);
 		opener.extend(nameButton);
-		
+
 		final HorizontalLayout nameAndScreenname =
 			new HorizontalLayout(nameButton, screennameLabel);
 		final VerticalLayout right =
 			new VerticalLayout(nameAndScreenname, text);
 		final HorizontalLayout layout =
 			new HorizontalLayout(pictureImage, right);
-		
+
 		nameAndScreenname.setSizeFull();
 		right.setSizeFull();
 		layout.setSizeFull();
 		layout.setExpandRatio(right, 1);
-		
+
 		layout.setSpacing(true);
-		
+
 		pictureImage.addStyleName(PICTURE_STYLENAME);
 		nameButton.addStyleName(NAME_STYLENAME);
 		nameButton.addStyleName(ValoTheme.BUTTON_LINK);
 		screennameLabel.addStyleName(SCREENNAME_STYLENAME);
 		text.addStyleName(TEXT_STYLENAME);
 		layout.setStyleName(TWEET_STYLENAME);
-		
+
 		return layout;
 	}
-	
-	
-	
+
+
+
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The CSS class name to apply to the preview component. */
 	private static final String STYLENAME = "TweetPreview";
-	
+
 	/** The CSS class name to apply to a tweet in the preview. */
 	private static final String TWEET_STYLENAME = "TweetPreview-tweet";
-	
+
 	/** The CSS class name to apply to a tweet's picture in the preview. */
 	private static final String PICTURE_STYLENAME = "TweetPreview-picture";
-	
+
 	/** The CSS class name to apply to a tweet's name in the preview. */
 	private static final String NAME_STYLENAME = "TweetPreview-name";
-	
+
 	/** The CSS class name to apply to a tweet's screenname in the preview. */
 	private static final String SCREENNAME_STYLENAME =
 		"TweetPreview-screenname";
-	
+
 	/** The CSS class name to apply to a tweet's text in the preview. */
 	private static final String TEXT_STYLENAME = "TweetPreview-text";
-	
+
 	/** The Tweet preview component. */
 	private VerticalLayout preview;
-	
+
 	/** The active Twitter follower's picture image. */
 	String picture;
-	
+
 	/** The active Twitter follower's name label. */
 	String name;
-	
+
 	/** The active Twitter follower's screenname label. */
 	String screenname;
 }

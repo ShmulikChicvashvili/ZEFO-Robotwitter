@@ -14,6 +14,8 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import com.robotwitter.webapp.control.tools.ITweetingController;
+import com.robotwitter.webapp.control.tools.tweeting.Tweet;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.tweeting.TweetPreview;
 import com.robotwitter.webapp.view.AbstractView;
@@ -21,7 +23,11 @@ import com.robotwitter.webapp.view.AbstractView;
 
 
 
-/** Automate view. */
+/**
+ * Automate view.
+ *
+ * @author Hagai Akibayov
+ */
 public class AutomateView extends AbstractView
 {
 	
@@ -30,11 +36,14 @@ public class AutomateView extends AbstractView
 	 *
 	 * @param messages
 	 *            the container of messages to display
+	 * @param tweetingController the tweeting controller
 	 */
 	@Inject
-	public AutomateView(@Named(NAME) IMessagesContainer messages)
+	public AutomateView(@Named(NAME) IMessagesContainer messages, ITweetingController tweetingController)
 	{
 		super(messages, messages.get("AutomateView.page.title"));
+
+		this.tweetingController = tweetingController;
 	}
 	
 	
@@ -65,8 +74,18 @@ public class AutomateView extends AbstractView
 		TweetPreview preview = new TweetPreview();
 		preview.updatePreview(Arrays.asList(text));
 		
+		Tweet tweet__ =
+			new Tweet(
+				new Long("586606957978456064"),
+				"OMG made a tweet!",
+				"Itay Khazon",
+				"itaykh",
+				"https://pbs.twimg.com/profile_images/547044214270214144/Sq6-BXv5.jpeg");
+		
 		Button respond =
-			new Button(messages.get("AutomateView.button.respond"));
+			new Button(messages.get("AutomateView.button.respond"),
+				event -> getUI().addWindow(
+					new TweetResponseWindow(messages, tweetingController, tweet__)));
 		Button delete = new Button(messages.get("AutomateView.button.delete"));
 		HorizontalLayout buttons = new HorizontalLayout(respond, delete);
 		
@@ -148,4 +167,7 @@ public class AutomateView extends AbstractView
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
+	
+	/** Tweeting controller. */
+	private ITweetingController tweetingController;
 }

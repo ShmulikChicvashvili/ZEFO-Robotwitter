@@ -54,4 +54,12 @@ public interface ITweetingController extends Serializable
 	 * @return A list of Tweets that are broken down from the given Tweet
 	 */
 	List<String> previewTweet(String tweet);
+	
+	void setPrefix(String prefix);
+	
+	void setSuffix(String suffix);
+	
+	void getPrefix(String prefix);
+	
+	void getSuffix(String suffix);
 }

@@ -247,7 +247,7 @@ Button.ClickListener
 		return toolbar;
 	}
 	
-	/** Initialises the password retrieval window. */
+	/** Initialises the settings component. */
 	private void initialiseComposerSettings()
 	{
 		composerSettings =
@@ -508,9 +508,6 @@ Button.ClickListener
 		return layout;
 	}
 
-
-	/** The Composer Settings window. */
-	private ComposerSettings composerSettings;
 	
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "TweetComposer";
@@ -586,6 +583,9 @@ Button.ClickListener
 	/** The error message of a failed tweeting attempt. */
 	private Label errorMessage;
 
+	/** The Composer Settings component. */
+	private ComposerSettings composerSettings;
+	
 	/** The Tweet preview component. */
 	private VerticalLayout preview;
 	

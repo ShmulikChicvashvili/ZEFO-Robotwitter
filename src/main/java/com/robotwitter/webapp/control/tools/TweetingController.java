@@ -30,16 +30,17 @@ public class TweetingController implements ITweetingController {
 	 * @param preference
 	 */
 	@Inject
-	public TweetingController(IDatabaseTweetPostingPreferences db, IAccountController accountController) {
+	public TweetingController(IDatabaseTweetPostingPreferences db,
+			IAccountController accountController) {
 		preferencesDB = db;
 		this.accountContoller = accountController;
-		
+
 		String email = accountController.getEmail();
-		
+
 		DBTweetPostingPreferences preferences = preferencesDB.get(email);
 		if (preferences == null) {
 			preference = new BasicPreference();
-			preferences = new DBTweetPostingPreferences(email,null, null, null);
+			preferences = new DBTweetPostingPreferences(email, null, null, null);
 			preferences.setPostingPreference(TweetPostingPreferenceType.BASIC);
 			preferencesDB.insert(preferences);
 		} else {
@@ -56,8 +57,8 @@ public class TweetingController implements ITweetingController {
 			}
 		}
 	}
-	
-	public TweetPostingPreferenceType getPreference(){
+
+	public TweetPostingPreferenceType getPreference() {
 		String email = this.accountContoller.getEmail();
 		return preferencesDB.get(email).getPostingPreference();
 	}
@@ -91,13 +92,33 @@ public class TweetingController implements ITweetingController {
 
 		return breakTweet(tweet);
 	}
+	
+	@Override
+	public void setPrefix(String prefix){
+		/* TODO: insert prefix to DB */
+	}
 
+	@Override
+	public void setSuffix(String suffix){
+		/* TODO: insert suffix to DB */
+	}
+	
+	@Override
+	public void getPrefix(String prefix){
+		/* TODO: get prefix from DB */
+	}
+
+	@Override
+	public void getSuffix(String suffix){
+		/* TODO: get suffix from DB */
+	}
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 
 	IDatabaseTweetPostingPreferences preferencesDB;
 
 	Preference preference;
-	
+
 	private IAccountController accountContoller;
 }

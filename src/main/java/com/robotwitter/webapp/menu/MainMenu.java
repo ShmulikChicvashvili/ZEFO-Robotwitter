@@ -16,6 +16,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import com.robotwitter.webapp.control.account.ITwitterConnectorController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.analysis.AnalysisView;
+import com.robotwitter.webapp.view.automate.AutomateView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
 import com.robotwitter.webapp.view.tools.ToolsView;
 
@@ -117,7 +118,7 @@ public class MainMenu extends AbstractMenu
 		links.addItem(
 			messages.get("MainMenu.link.automate"),
 			FontAwesome.COGS,
-			null).setEnabled(false);
+			item -> navigate(AutomateView.NAME));
 		
 		// Set properties and styles
 		links.setAutoOpen(true);

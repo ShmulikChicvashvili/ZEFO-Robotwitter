@@ -1,4 +1,5 @@
 @import "util/AbstractFormComponent";
+@import "util/TweetPreview";
 @import "util/WindowWithDescription";
 /*----------------------------------------------------------------------------*/
 
@@ -6,5 +7,6 @@
 @mixin robotwitter-util
 {
 	@include AbstractFormComponent;
+	@include TweetPreview;
 	@include WindowWithDescription;
 }

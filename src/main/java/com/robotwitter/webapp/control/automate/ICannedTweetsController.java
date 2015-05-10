@@ -4,6 +4,7 @@ package com.robotwitter.webapp.control.automate;
 
 import java.util.List;
 
+import com.robotwitter.twitter.TwitterAccount;
 import com.robotwitter.webapp.control.general.Tweet;
 
 
@@ -22,22 +23,22 @@ public interface ICannedTweetsController
 	{
 		/** Operation succeeded. */
 		SUCCESS,
-		
+
 		/** The received Twitter account is not attached to the connected user. */
 		TWITTER_ACCOUNT_DOESNT_EXIST,
-		
+
 		/**
 		 * The received Tweet doesn't exist in the Twitter account's canned
 		 * tweets list.
 		 */
 		TWEET_DOESNT_EXIST,
-		
+
 		/** An unknown failure occurred . */
 		FAILURE
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Get a list of canned tweets for a given Twitter account.
 	 *
@@ -48,8 +49,8 @@ public interface ICannedTweetsController
 	 *         given Twitter account doesn't exist.
 	 */
 	List<Tweet> getCannedTweets(long twitterAccountID);
-	
-	
+
+
 	/**
 	 * Get a list of possible responses for a given Twitter account and tweet.
 	 *
@@ -64,8 +65,8 @@ public interface ICannedTweetsController
 	 *         the account's canned tweets list.
 	 */
 	List<String> getResponses(long twitterAccountID, long tweetID);
-	
-	
+
+
 	/**
 	 * Remove the given tweet from a Twitter account's canned tweets list.
 	 *
@@ -78,8 +79,8 @@ public interface ICannedTweetsController
 	 * @return the operation's status
 	 */
 	Status removeTweet(long twitterAccountID, long tweetID);
-	
-	
+
+
 	/**
 	 * Respond to the given tweet from a Twitter account's canned tweets list.
 	 *
@@ -95,4 +96,13 @@ public interface ICannedTweetsController
 	 * @return the operation's status
 	 */
 	Status respondToTweet(long twitterAccountID, long tweetID, String text);
+
+
+	/**
+	 * Set the current active Twitter account.
+	 *
+	 * @param twitterAccount
+	 *            the Twitter account
+	 */
+	void setTwitterAccount(TwitterAccount twitterAccount);
 }

@@ -43,6 +43,11 @@
 	</pluginRepositories>
 	<dependencies>
 
+		<dependency>
+			<groupId>nz.ac.waikato.cms.weka</groupId>
+			<artifactId>weka-dev</artifactId>
+			<version>3.7.12</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.twitter4j</groupId>

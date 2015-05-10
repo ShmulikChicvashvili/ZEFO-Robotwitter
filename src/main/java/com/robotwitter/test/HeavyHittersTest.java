@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.test;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -38,7 +38,11 @@ public class HeavyHittersTest
 	
 	private class StreamGenerator
 	{
-		public StreamGenerator(long seed, int userNumber, long bigUser, long secondBiggestUser)
+		public StreamGenerator(
+			long seed,
+			int userNumber,
+			long bigUser,
+			long secondBiggestUser)
 		{
 			rand = new Random(seed);
 			
@@ -49,13 +53,13 @@ public class HeavyHittersTest
 			eventTable = new ArrayList<EventType>();
 			for (int i = 0; i < userNumber * 1000; i++)
 			{
-				Long user = (long) rand.nextInt(userNumber);
+				final Long user = (long) rand.nextInt(userNumber);
 				userTable.add(i, user + 1);
 			}
 			
-			for (EventType event : EventType.values())
+			for (final EventType event : EventType.values())
 			{
-				int eventProb = rand.nextInt(100);
+				final int eventProb = rand.nextInt(100);
 				for (int i = 0; i < eventProb; i++)
 				{
 					eventTable.add(event);
@@ -68,39 +72,39 @@ public class HeavyHittersTest
 			}
 		}
 
+
 		public EventType generateEventType()
 		{
-			int eventIndex = rand.nextInt(500);
+			final int eventIndex = rand.nextInt(500);
 			return eventTable.get(eventIndex);
 		}
 
+
 		public Long generateUserEvent()
 		{
-			if(rand.nextBoolean() == true) {
-				return bigUser;
-			}
+			if (rand.nextBoolean() == true) { return bigUser; }
 			
-			if(rand.nextBoolean() == true) {
-				return secondBiggest;
-			}
-			int userIndex = rand.nextInt(userNumber * 1000);
+			if (rand.nextBoolean() == true) { return secondBiggest; }
+			final int userIndex = rand.nextInt(userNumber * 1000);
 			return userTable.get(userIndex);
 		}
+
+
+
+		private final long secondBiggest;
+
+		private final long bigUser;
 		
+		private final ArrayList<EventType> eventTable;
 		
-		private long secondBiggest;
+		private final Random rand;
 		
+		private final int userNumber;
 		
-		private long bigUser;
-		
-		private ArrayList<EventType> eventTable;
-		
-		private Random rand;
-		
-		private int userNumber;
-		
-		private ArrayList<Long> userTable;
+		private final ArrayList<Long> userTable;
 	}
+
+
 
 	/**
 	 * @throws java.lang.Exception
@@ -109,8 +113,14 @@ public class HeavyHittersTest
 	public void setUp() throws Exception
 	{
 		hh = new HeavyHitters(COUNTERS_NUMBER, HH_NUMBER);
-		stream = new StreamGenerator(SEED, USER_NUMBER, BIGGEST_USER,SECOND_BIGGEST_USER);
+		stream =
+			new StreamGenerator(
+				SEED,
+				USER_NUMBER,
+				BIGGEST_USER,
+				SECOND_BIGGEST_USER);
 	}
+
 
 	/**
 	 * @throws java.lang.Exception
@@ -121,9 +131,8 @@ public class HeavyHittersTest
 		hh = null;
 		stream = null;
 	}
-	
-	
-	
+
+
 	@Test
 	public void testEmptyStream()
 	{
@@ -143,23 +152,30 @@ public class HeavyHittersTest
 		}
 		
 		// Add another one to the hh, meaning we will decrease now
-		Long newUser = (long) (COUNTERS_NUMBER + 1);
+		final Long newUser = (long) (COUNTERS_NUMBER + 1);
 		hh.onFollow(newUser);
 		// After this action, HH_NUMBER should replace user 1, we add some
 		// action to our new user, so we can see it.
-		for(int i =0; i < COUNTERS_NUMBER; i ++) {
+		for (int i = 0; i < COUNTERS_NUMBER; i++)
+		{
 			hh.onRetweetedStatus(newUser);
 		}
 		
 		assertEquals(HH_NUMBER, hh.getCurrentHeavyHitters().size());
-		ArrayList<Long> heavyHitters = hh.getCurrentHeavyHitters();
+		final ArrayList<Long> heavyHitters = hh.getCurrentHeavyHitters();
 		
 		for (int i = 0; i < HH_NUMBER; i++)
 		{
-			if(i == 0) {
-				assertEquals(heavyHitters.get(i).longValue(), newUser.longValue());
-			} else {			
-				assertEquals(heavyHitters.get(i).longValue(), COUNTERS_NUMBER + 1 - i);
+			if (i == 0)
+			{
+				assertEquals(
+					heavyHitters.get(i).longValue(),
+					newUser.longValue());
+			} else
+			{
+				assertEquals(heavyHitters.get(i).longValue(), COUNTERS_NUMBER
+					+ 1
+					- i);
 			}
 		}
 	}
@@ -168,8 +184,8 @@ public class HeavyHittersTest
 	@Test
 	public void testOneBigOneSmall()
 	{
-		Long bigUser = (long) 10;
-		Long smallUser = (long) 20;
+		final Long bigUser = (long) 10;
+		final Long smallUser = (long) 20;
 		
 		for (int i = 0; i < 10; i++)
 		{
@@ -187,7 +203,7 @@ public class HeavyHittersTest
 	@Test
 	public void testOneEvent()
 	{
-		Long user = (long) 17;
+		final Long user = (long) 17;
 		hh.onFollow(user);
 		
 		assertEquals(1, hh.getCurrentHeavyHitters().size());
@@ -209,7 +225,7 @@ public class HeavyHittersTest
 			}
 		}
 		assertEquals(HH_NUMBER, hh.getCurrentHeavyHitters().size());
-		ArrayList<Long> heavyHitters = hh.getCurrentHeavyHitters();
+		final ArrayList<Long> heavyHitters = hh.getCurrentHeavyHitters();
 		
 		for (int i = 0; i < HH_NUMBER; i++)
 		{
@@ -219,9 +235,12 @@ public class HeavyHittersTest
 	
 	
 	@Test
-	public void testOnStream() {
-		for(int i = 0; i<10000; i++) {
-			switch(stream.generateEventType()) {
+	public void testOnStream()
+	{
+		for (int i = 0; i < 10000; i++)
+		{
+			switch (stream.generateEventType())
+			{
 				case MENTION:
 					hh.onMentioned(stream.generateUserEvent());
 					break;
@@ -239,14 +258,15 @@ public class HeavyHittersTest
 					break;
 			}
 		}
-		ArrayList<Long> heavyHitters = hh.getCurrentHeavyHitters();
+		final ArrayList<Long> heavyHitters = hh.getCurrentHeavyHitters();
 		assertEquals(HH_NUMBER, heavyHitters.size());
 		assertEquals(BIGGEST_USER, heavyHitters.get(0).longValue());
 		assertEquals(SECOND_BIGGEST_USER, heavyHitters.get(1).longValue());
 		
 	}
-	
-	
+
+
+
 	private static final long SECOND_BIGGEST_USER = 50;
 	
 	private static final long BIGGEST_USER = 100;

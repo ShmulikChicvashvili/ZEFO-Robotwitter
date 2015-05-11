@@ -67,7 +67,7 @@ public class CannedTweetsController implements ICannedTweetsController
 			responseDatabase.getUnansweredResponsesOfUser(activeID);
 		for (DBResponse res : cannedTweets)
 		{
-			DBFollower respondingPerson = followersDB.get(res.getUserID());
+			DBFollower respondingPerson = followersDB.get(res.getResponderID());
 			$
 			.add(new Tweet(
 				res.getId(),

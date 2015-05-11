@@ -32,14 +32,16 @@ import com.robotwitter.webapp.view.AbstractView;
  */
 public class AutomateView extends AbstractView
 {
-	
+
 	/**
 	 * Instantiates a new automate view.
 	 *
 	 * @param messages
 	 *            the container of messages to display
 	 * @param tweetingController
-	 *            the tweeting controller-
+	 *            the tweeting controller
+	 * @param cannedController
+	 *            the canned controller
 	 */
 	@Inject
 	public AutomateView(
@@ -48,38 +50,42 @@ public class AutomateView extends AbstractView
 		ICannedTweetsController cannedController)
 	{
 		super(messages, messages.get("AutomateView.page.title"));
-		
+
 		this.tweetingController = tweetingController;
 		this.cannedController = cannedController;
 		
+		tweets = new VerticalLayout();
+		tweets.setSpacing(true);
+		tweets.addStyleName(TWEETS_STYLENAME);
+
 		getUserSession().observeActiveTwitterAccount(this);
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.util.RobotwitterCustomComponent#
 	 * activateTwitterAccount(long) */
 	@Override
 	public final void activateTwitterAccount(long id)
 	{
-		cannedController.setTwitterAccount(id);
+		updateBaseOnTwitterAccount(id);
 	}
-
-
+	
+	
 	@Override
 	public final boolean isSignedInProhibited()
 	{
 		return false;
 	}
-	
-	
+
+
 	@Override
 	public final boolean isSignedInRequired()
 	{
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Create a tweet preview with respond and delete buttons.
 	 *
@@ -93,7 +99,7 @@ public class AutomateView extends AbstractView
 		TweetPreview preview = new TweetPreview();
 		preview.updatePreview(Arrays.asList(tweet.getText()));
 		// TODO set tweet's author (picture, name, screenname)
-		
+
 		Button respond =
 			new Button(
 				messages.get("AutomateView.button.respond"),
@@ -103,46 +109,41 @@ public class AutomateView extends AbstractView
 						tweetingController,
 						cannedController,
 						tweet)));
-
+		
 		Button delete =
 			new Button(
 				messages.get("AutomateView.button.delete"),
 				event -> cannedController.removeTweet(tweet.getID()));
-		
+
 		HorizontalLayout buttons = new HorizontalLayout(respond, delete);
-		
+
 		VerticalLayout tweetComponent = new VerticalLayout(preview, buttons);
-		
+
 		respond.addStyleName(ValoTheme.BUTTON_SMALL);
 		delete.addStyleName(ValoTheme.BUTTON_SMALL);
-		
+
 		respond.addStyleName(RESPOND_STYLENAME);
 		delete.addStyleName(DELETE_STYLENAME);
 		buttons.addStyleName(BUTTONS_STYLENAME);
 		tweetComponent.addStyleName(TWEET_STYLENAME);
-		
+
 		return tweetComponent;
 	}
-	
-	
-	/** @return new Tweets for canned-response. */
-	private Component createTweets()
+
+
+	/** update Tweets for canned-response. */
+	private void updateTweets()
 	{
 		List<Tweet> cannedTweets = cannedController.getCannedTweets();
-
-		VerticalLayout tweetsComponent = new VerticalLayout();
+		
+		tweets.removeAllComponents();
 		for (Tweet tweet : cannedTweets)
 		{
-			tweetsComponent.addComponent(createTweet(tweet));
+			tweets.addComponent(createTweet(tweet));
 		}
-		
-		tweetsComponent.setSpacing(true);
-		tweetsComponent.addStyleName(TWEETS_STYLENAME);
-		
-		return tweetsComponent;
 	}
-
-
+	
+	
 	@Override
 	protected final void initialise()
 	{
@@ -152,18 +153,18 @@ public class AutomateView extends AbstractView
 			.getAccountController()
 			.getActiveTwitterAccount()
 			.getID());
-		
+
 		VerticalLayout layout = new VerticalLayout(header, desc, tweets);
 		layout.setWidth("100%");
-		
+
 		header.addStyleName(HEADER_STYLENAME);
 		desc.addStyleName(DESC_STYLENAME);
 		setStyleName(STYLENAME);
-		
+
 		setCompositionRoot(layout);
 	}
-	
-	
+
+
 	/**
 	 * Update base on Twitter account.
 	 *
@@ -173,47 +174,47 @@ public class AutomateView extends AbstractView
 	final void updateBaseOnTwitterAccount(long id)
 	{
 		cannedController.setTwitterAccount(id);
-		tweets = createTweets();
+		updateTweets();
 	}
-
-
-
+	
+	
+	
 	/** The list of canned tweets. */
-	private Component tweets;
-
+	private VerticalLayout tweets;
+	
 	/** The view's name. */
 	public static final String NAME = "automate";
-	
+
 	/** The CSS class name to apply to this view. */
 	private static final String STYLENAME = "AutomateView";
-	
+
 	/** The CSS class name to apply to the header component. */
 	private static final String HEADER_STYLENAME = "AutomateView-header";
-	
+
 	/** The CSS class name to apply to the description component. */
 	private static final String DESC_STYLENAME = "AutomateView-desc";
-	
+
 	/** The CSS class name to apply to the tweets component. */
 	private static final String TWEETS_STYLENAME = "AutomateView-tweets";
-	
+
 	/** The CSS class name to apply to a tweet component. */
 	private static final String TWEET_STYLENAME = "AutomateView-tweet";
-	
+
 	/** The CSS class name to apply to a buttons wrapper. */
 	private static final String BUTTONS_STYLENAME = "AutomateView-buttons";
-	
+
 	/** The CSS class name to apply to a respond button. */
 	private static final String RESPOND_STYLENAME = "AutomateView-respond";
-	
+
 	/** The CSS class name to apply to a delete button. */
 	private static final String DELETE_STYLENAME = "AutomateView-delete";
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** Canned controller. */
 	private ICannedTweetsController cannedController;
-	
+
 	/** Tweeting controller. */
 	private ITweetingController tweetingController;
 }

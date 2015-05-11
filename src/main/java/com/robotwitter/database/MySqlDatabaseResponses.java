@@ -33,6 +33,8 @@ IDatabaseResponses
 	private enum Columns
 	{
 		USER_ID,
+		
+		RESPONDER_ID,
 
 		RESPONSE_ID,
 
@@ -64,6 +66,7 @@ IDatabaseResponses
 				String.format("CREATE TABLE IF NOT EXISTS %s (" //$NON-NLS-1$
 					+ "`%s` BIGINT NOT NULL," //$NON-NLS-1$
 					+ "`%s` BIGINT NOT NULL," //$NON-NLS-1$
+					+ "`%s` BIGINT NOT NULL," //$NON-NLS-1$
 					+ "`%s` TIMESTAMP NOT NULL," //$NON-NLS-1$
 					+ "`%s` VARCHAR(255) NOT NULL," //$NON-NLS-1$
 					+ "`%s` VARCHAR(10) NOT NULL," //$NON-NLS-1$
@@ -71,6 +74,7 @@ IDatabaseResponses
 					+ "PRIMARY KEY (`%s`));", //$NON-NLS-1$
 					table,
 					Columns.USER_ID.toString().toLowerCase(),
+					Columns.RESPONDER_ID.toString().toLowerCase(),
 					Columns.RESPONSE_ID.toString().toLowerCase(),
 					Columns.DATE.toString().toLowerCase(),
 					Columns.TEXT.toString().toLowerCase(),
@@ -283,6 +287,7 @@ IDatabaseResponses
 			|| response.getAnswered() == null
 			|| response.getClassify() == null
 			|| response.getId() < 0
+			|| response.getResponderID() < 0
 			|| response.getText() == null
 			|| response.getUserID() < 0
 			|| response.getTimestamp() == null) { return SqlError.INVALID_PARAMS; }
@@ -297,6 +302,8 @@ IDatabaseResponses
 				+ ","
 				+ Columns.RESPONSE_ID.toString().toLowerCase()
 				+ ","
+				+ Columns.RESPONDER_ID.toString().toLowerCase()
+				+ ","
 				+ Columns.DATE.toString().toLowerCase()
 				+ ","
 				+ Columns.TEXT.toString().toLowerCase()
@@ -304,14 +311,15 @@ IDatabaseResponses
 				+ Columns.CLASSIFICATION.toString().toLowerCase()
 				+ ","
 				+ Columns.ANSWERED.toString().toLowerCase()
-				+ ") VALUES ( ?, ?, ?, ?, ?, ? );"))
+				+ ") VALUES ( ?, ?, ?, ?, ?, ?, ? );"))
 				{
 			preparedStatement.setLong(1, response.getUserID());
-			preparedStatement.setLong(2, response.getId());
-			preparedStatement.setTimestamp(3, response.getTimestamp());
-			preparedStatement.setString(4, response.getText());
-			preparedStatement.setString(5, response.getClassify());
-			preparedStatement.setString(6, response.getAnswered().toString());
+			preparedStatement.setLong(2, response.getResponderID());
+			preparedStatement.setLong(3, response.getId());
+			preparedStatement.setTimestamp(4, response.getTimestamp());
+			preparedStatement.setString(5, response.getText());
+			preparedStatement.setString(6, response.getClassify());
+			preparedStatement.setString(7, response.getAnswered().toString());
 			preparedStatement.executeUpdate();
 
 				} catch (final SQLException e)
@@ -323,53 +331,6 @@ IDatabaseResponses
 		return SqlError.SUCCESS;
 	}
 
-
-	/* (non-Javadoc) @see
-	 * com.robotwitter.database.interfaces.IDatabaseResponses#
-	 * update(com.robotwitter.database.primitives.DBResponse) */
-	@Override
-	public SqlError update(DBResponse response)
-	{
-		if (response == null
-			|| response.getAnswered() == null
-			|| response.getClassify() == null
-			|| response.getId() < 0
-			|| response.getText() == null
-			|| response.getUserID() < 0
-			|| response.getTimestamp() == null) { return SqlError.INVALID_PARAMS; }
-		try (
-			Connection con = connectionEstablisher.getConnection();
-			@SuppressWarnings("nls")
-			PreparedStatement preparedStatement =
-			con
-			.prepareStatement(String
-				.format(
-					"UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ?",
-					table,
-					Columns.USER_ID.toString().toLowerCase(),
-					Columns.RESPONSE_ID.toString().toLowerCase(),
-					Columns.DATE.toString().toLowerCase(),
-					Columns.TEXT.toString().toLowerCase(),
-					Columns.CLASSIFICATION.toString().toLowerCase(),
-					Columns.ANSWERED.toString().toLowerCase())))
-					{
-			preparedStatement.setLong(1, response.getUserID());
-			preparedStatement.setLong(2, response.getId());
-			preparedStatement.setTimestamp(3, response.getTimestamp());
-			preparedStatement.setString(4, response.getText());
-			preparedStatement.setString(5, response.getClassify());
-			preparedStatement.setString(6, response.getAnswered().toString());
-			preparedStatement.executeUpdate();
-
-					} catch (final SQLException e)
-		{
-						e.printStackTrace();
-						return SqlError.FAILURE;
-		}
-		return SqlError.SUCCESS;
-	}
-
-
 	/**
 	 * @return
 	 * @throws SQLException
@@ -378,16 +339,18 @@ IDatabaseResponses
 	{
 		return new DBResponse(resultSet.getLong(Columns.USER_ID
 			.toString()
+			.toLowerCase()), resultSet.getLong(Columns.RESPONDER_ID
+			.toString()
 			.toLowerCase()), resultSet.getLong(Columns.RESPONSE_ID
-				.toString()
-				.toLowerCase()), resultSet.getTimestamp(Columns.DATE
-					.toString()
-					.toLowerCase()), resultSet.getString(Columns.TEXT
-						.toString()
-						.toLowerCase()), resultSet.getString(Columns.CLASSIFICATION
-							.toString()
-							.toLowerCase()), resultSet.getString(
-								Columns.ANSWERED.toString().toLowerCase()).equals("true"));
+			.toString()
+			.toLowerCase()), resultSet.getTimestamp(Columns.DATE
+			.toString()
+			.toLowerCase()), resultSet.getString(Columns.TEXT
+			.toString()
+			.toLowerCase()), resultSet.getString(Columns.CLASSIFICATION
+			.toString()
+			.toLowerCase()), resultSet.getString(
+			Columns.ANSWERED.toString().toLowerCase()).equals("true"));
 	}
 
 

@@ -72,6 +72,8 @@ public interface ICannedTweetsController
 	/**
 	 * Respond to the given tweet from a Twitter account's canned tweets list.
 	 *
+	 * @param email
+	 *            the email of the user responding
 	 * @param tweetID
 	 *            the ID of the tweet to get responses for
 	 * @param text

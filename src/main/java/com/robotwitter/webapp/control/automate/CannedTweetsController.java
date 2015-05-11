@@ -1,6 +1,3 @@
-/**
- *
- */
 
 package com.robotwitter.webapp.control.automate;
 
@@ -33,20 +30,30 @@ import com.robotwitter.webapp.control.general.Tweet;
 
 
 /**
- * @author Shmulik
+ * The Class CannedTweetsController.
  *
+ * @author Shmulik
  */
 public class CannedTweetsController implements ICannedTweetsController
 {
+
 	/**
+	 * Instantiates a new canned tweets controller.
+	 *
 	 * @param responseDatabase
+	 *            the response database
 	 * @param postingPreferenceDatabase
+	 *            the posting preference database
+	 * @param accountsDB
+	 *            the accounts db
+	 * @param followersDB
+	 *            the followers db
 	 */
 	@Inject
 	public CannedTweetsController(
 		IDatabaseResponses responseDatabase,
 		IDatabaseTweetPostingPreferences postingPreferenceDatabase,
-		IDatabaseTwitterAccounts accountsDB, 
+		IDatabaseTwitterAccounts accountsDB,
 		IDatabaseFollowers followersDB)
 	{
 		this.responseDatabase = responseDatabase;
@@ -56,11 +63,12 @@ public class CannedTweetsController implements ICannedTweetsController
 		this.followersDB = followersDB;
 	}
 
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.automate.ICannedTweetsController
 	 * #getCannedTweets(long) */
 	@Override
-	public List<Tweet> getCannedTweets()
+	public final List<Tweet> getCannedTweets()
 	{
 		ArrayList<Tweet> $ = new ArrayList<>();
 		ArrayList<DBResponse> cannedTweets =
@@ -68,13 +76,9 @@ public class CannedTweetsController implements ICannedTweetsController
 		for (DBResponse res : cannedTweets)
 		{
 			DBFollower respondingPerson = followersDB.get(res.getResponderID());
-			$
-			.add(new Tweet(
-				res.getId(),
-				res.getText(),
-				respondingPerson.getName(),
-				respondingPerson.getScreenName(),
-				respondingPerson.getPicture()));
+			$.add(new Tweet(res.getId(), res.getText(), respondingPerson
+				.getName(), respondingPerson.getScreenName(), respondingPerson
+				.getPicture()));
 		}
 		return $;
 	}
@@ -84,7 +88,7 @@ public class CannedTweetsController implements ICannedTweetsController
 	 * com.robotwitter.webapp.control.automate.ICannedTweetsController
 	 * #getResponses(long, long) */
 	@Override
-	public List<String> getResponses(long tweetID)
+	public final List<String> getResponses(long tweetID)
 	{
 		ArrayList<String> $ = new ArrayList<>();
 		$
@@ -100,7 +104,7 @@ public class CannedTweetsController implements ICannedTweetsController
 	 * com.robotwitter.webapp.control.automate.ICannedTweetsController
 	 * #removeTweet(long, long) */
 	@Override
-	public Status removeTweet(long tweetID)
+	public final Status removeTweet(long tweetID)
 	{
 		Status $ = Status.SUCCESS;
 		SqlError res = responseDatabase.deleteResponse(tweetID);
@@ -126,8 +130,17 @@ public class CannedTweetsController implements ICannedTweetsController
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.automate.ICannedTweetsController
 	 * #respondToTweet(long, long, java.lang.String) */
+	/**
+	 * Respond to tweet.
+	 *
+	 * @param tweetID
+	 *            the tweet id
+	 * @param text
+	 *            the text
+	 * @return the status
+	 */
 	@Override
-	public Status respondToTweet(long tweetID, String text)
+	public final Status respondToTweet(String email, long tweetID, String text)
 	{
 		Status $ = Status.SUCCESS;
 
@@ -149,11 +162,13 @@ public class CannedTweetsController implements ICannedTweetsController
 
 
 	/**
-	 * @param twitterAccount
-	 *            the twitter account
+	 * Sets the twitter account.
+	 *
+	 * @param id
+	 *            the new twitter account
 	 */
 	@Override
-	public void setTwitterAccount(long id)
+	public final void setTwitterAccount(long id)
 	{
 		activeID = id;
 		DBTwitterAccount account = accountsDB.get(id);
@@ -172,21 +187,28 @@ public class CannedTweetsController implements ICannedTweetsController
 	}
 
 
+
+	/** The followers db. */
 	private IDatabaseFollowers followersDB;
 
-
-
+	/** The active id. */
 	private long activeID;
 
+	/** The pref db. */
 	private IDatabaseTweetPostingPreferences prefDB;
 
+	/** The accounts db. */
 	private IDatabaseTwitterAccounts accountsDB;
 
+	/** The twitter account. */
 	TwitterAccount twitterAccount;
 
+	/** The response post service. */
 	ResponsePostService responsePostService;
 
+	/** The response database. */
 	IDatabaseResponses responseDatabase;
 
+	/** The pref. */
 	Preference pref;
 }

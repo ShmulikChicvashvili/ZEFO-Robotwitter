@@ -64,7 +64,7 @@ public class MockCannedTweetsController implements ICannedTweetsController
 			tweet1.setText("Second account #HOLYMOLLY");
 		}
 		
-		return Arrays.asList(tweet1, tweet2, tweet3);
+		return Arrays.asList(tweet1, tweet2, tweet3, tweet1, tweet2, tweet3);
 	}
 
 
@@ -116,7 +116,7 @@ public class MockCannedTweetsController implements ICannedTweetsController
 	 * com.robotwitter.webapp.control.automate.ICannedTweetsController
 	 * #respondToTweet(long, long, java.lang.String) */
 	@Override
-	public final Status respondToTweet(long tweetID, String text)
+	public final Status respondToTweet(String email, long tweetID, String text)
 	{
 		switch ((int) tweetID)
 		{

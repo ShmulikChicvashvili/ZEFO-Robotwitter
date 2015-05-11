@@ -5,6 +5,10 @@
 
 @mixin TweetPreview { .TweetPreview {
 	
+	$picture-size: 48px;
+	$width: 500px;
+	$padding: 9px;
+	
 	/* A single Tweet */
 	.TweetPreview-tweet
 	{
@@ -13,7 +17,7 @@
 		background: #f5f8fa;
 		border: 1px solid #E1E8ED;
 		border-top: none;
-		padding: 9px;
+		padding: $padding;
 	
 		/* The picture */
 		.TweetPreview-picture
@@ -43,7 +47,7 @@
 		/* The text */
 		.TweetPreview-text
 		{
-			width: $right-width - 2 * $padding - $picture-size - 11;
+			width: $width - 2 * $padding - $picture-size - 11;
 			margin: 0;
 			margin-top: 3px;
 			font-family: Arial, sans-serif;
@@ -94,7 +98,7 @@
 			/* The text */
 			.TweetPreview-text
 			{
-				width: $right-width - 2 * $padding;
+				width: $width - 2 * $padding;
 				position: relative;
 				left: -$picture-size - 11;
 				top: $padding * 1.8;

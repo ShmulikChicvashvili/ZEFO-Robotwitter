@@ -2,6 +2,7 @@
 package com.robotwitter.webapp.util.tweeting;
 
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -18,6 +19,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import com.robotwitter.webapp.control.account.ITwitterAccountController;
+import com.robotwitter.webapp.control.general.Tweet;
 import com.robotwitter.webapp.util.RobotwitterCustomComponent;
 
 
@@ -65,13 +67,6 @@ public class TweetPreview extends RobotwitterCustomComponent
 	}
 	
 	
-	/**
-	 * Strudel to twitter html links.
-	 *
-	 * @param string
-	 *            the string
-	 * @return the string
-	 */
 	private static String strudelToTwitterHtmlLinks(String string)
 	{
 		String converted;
@@ -95,6 +90,58 @@ public class TweetPreview extends RobotwitterCustomComponent
 	
 	
 	/**
+	 * Creates a tweet preview component.
+	 *
+	 * @param tweet
+	 *            the tweet
+	 * @return the tweet preview component
+	 */
+	final static Component createTweetPreview(Tweet tweet)
+	{
+		final Image pictureImage = new Image();
+		pictureImage.setSource(new ExternalResource(tweet.getPicture()));
+		pictureImage.setAlternateText(tweet.getName());
+		final Button nameButton = new Button(tweet.getName());
+		final Label screennameLabel = new Label('@' + tweet.getScreenName());
+		
+		String tweetHtml = StringEscapeUtils.escapeHtml4(tweet.getText());
+		
+		tweetHtml = hashtagsToTwitterHtmlLinks(tweetHtml);
+		tweetHtml = strudelToTwitterHtmlLinks(tweetHtml);
+		
+		final Label text = new Label(tweetHtml, ContentMode.HTML);
+		
+		final BrowserWindowOpener opener =
+			new BrowserWindowOpener("https://twitter.com/"
+				+ tweet.getScreenName());
+		opener.extend(nameButton);
+		
+		final HorizontalLayout nameAndScreenname =
+			new HorizontalLayout(nameButton, screennameLabel);
+		final VerticalLayout right =
+			new VerticalLayout(nameAndScreenname, text);
+		final HorizontalLayout layout =
+			new HorizontalLayout(pictureImage, right);
+		
+		nameAndScreenname.setSizeFull();
+		right.setSizeFull();
+		layout.setSizeFull();
+		layout.setExpandRatio(right, 1);
+		
+		layout.setSpacing(true);
+		
+		pictureImage.addStyleName(PICTURE_STYLENAME);
+		nameButton.addStyleName(NAME_STYLENAME);
+		nameButton.addStyleName(ValoTheme.BUTTON_LINK);
+		screennameLabel.addStyleName(SCREENNAME_STYLENAME);
+		text.addStyleName(TEXT_STYLENAME);
+		layout.setStyleName(TWEET_STYLENAME);
+		
+		return layout;
+	}
+	
+	
+	/**
 	 * Instantiates a new tweet preview.
 	 *
 	 * @param messages
@@ -103,6 +150,7 @@ public class TweetPreview extends RobotwitterCustomComponent
 	public TweetPreview()
 	{
 		super(null);
+		customFirstTweet = null;
 		
 		initialiseLayout();
 		
@@ -120,6 +168,13 @@ public class TweetPreview extends RobotwitterCustomComponent
 	}
 	
 	
+	public void setCustomFirstTweet(Tweet tweet)
+	{
+		customFirstTweet = tweet;
+		updatePreview(new LinkedList<>());
+	}
+	
+	
 	/**
 	 * Update the preview with the given tweets.
 	 *
@@ -130,15 +185,20 @@ public class TweetPreview extends RobotwitterCustomComponent
 	public final void updatePreview(List<String> tweets)
 	{
 		preview.removeAllComponents();
+		
+		if (customFirstTweet != null)
+		{
+			preview.addComponent(createTweetPreview(customFirstTweet));
+		} else if (tweets.isEmpty())
+		{
+			preview.addComponent(createTweetPreview(""));
+		}
+		
 		for (final String tweetText : tweets)
 		{
 			preview.addComponent(createTweetPreview(tweetText));
 		}
 		
-		if (tweets.isEmpty())
-		{
-			preview.addComponent(createTweetPreview(""));
-		}
 	}
 	
 	
@@ -178,45 +238,8 @@ public class TweetPreview extends RobotwitterCustomComponent
 	 */
 	final Component createTweetPreview(String tweetText)
 	{
-		final Image pictureImage = new Image();
-		pictureImage.setSource(new ExternalResource(picture));
-		pictureImage.setAlternateText(name);
-		final Button nameButton = new Button(name);
-		final Label screennameLabel = new Label('@' + screenname);
-		
-		String tweetHtml = StringEscapeUtils.escapeHtml4(tweetText);
-		
-		tweetHtml = hashtagsToTwitterHtmlLinks(tweetHtml);
-		tweetHtml = strudelToTwitterHtmlLinks(tweetHtml);
-		
-		final Label text = new Label(tweetHtml, ContentMode.HTML);
-		
-		final BrowserWindowOpener opener =
-			new BrowserWindowOpener("https://twitter.com/" + screenname);
-		opener.extend(nameButton);
-		
-		final HorizontalLayout nameAndScreenname =
-			new HorizontalLayout(nameButton, screennameLabel);
-		final VerticalLayout right =
-			new VerticalLayout(nameAndScreenname, text);
-		final HorizontalLayout layout =
-			new HorizontalLayout(pictureImage, right);
-		
-		nameAndScreenname.setSizeFull();
-		right.setSizeFull();
-		layout.setSizeFull();
-		layout.setExpandRatio(right, 1);
-		
-		layout.setSpacing(true);
-		
-		pictureImage.addStyleName(PICTURE_STYLENAME);
-		nameButton.addStyleName(NAME_STYLENAME);
-		nameButton.addStyleName(ValoTheme.BUTTON_LINK);
-		screennameLabel.addStyleName(SCREENNAME_STYLENAME);
-		text.addStyleName(TEXT_STYLENAME);
-		layout.setStyleName(TWEET_STYLENAME);
-		
-		return layout;
+		Tweet tweet = new Tweet(0, tweetText, name, screenname, picture);
+		return createTweetPreview(tweet);
 	}
 	
 	
@@ -254,4 +277,6 @@ public class TweetPreview extends RobotwitterCustomComponent
 	
 	/** The active Twitter follower's screenname label. */
 	String screenname;
+	
+	private Tweet customFirstTweet;
 }

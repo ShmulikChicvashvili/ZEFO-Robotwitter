@@ -4,10 +4,10 @@
 
 @mixin FollowersAmountOverview { .FollowersAmountOverview {
 
-	$height: 50px;
+	$height: 200px;
 	height: $height;
 	
-	text-align: right;
+	text-align: center;
 	line-height: 1em;
 	
 	/* A followers amount component. */

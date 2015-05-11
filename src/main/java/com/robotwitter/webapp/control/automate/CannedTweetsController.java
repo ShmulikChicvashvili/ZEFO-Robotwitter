@@ -19,9 +19,15 @@ import com.robotwitter.database.interfaces.IDatabaseTweetPostingPreferences;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBResponse;
+import com.robotwitter.database.primitives.DBTweetPostingPreferences;
 import com.robotwitter.database.primitives.DBTwitterAccount;
+import com.robotwitter.posting.BasicPreference;
+import com.robotwitter.posting.NumberedPreference;
+import com.robotwitter.posting.PostfixPreference;
 import com.robotwitter.posting.Preference;
+import com.robotwitter.posting.PrefixPreference;
 import com.robotwitter.posting.ResponsePostService;
+import com.robotwitter.posting.TweetPostingPreferenceType;
 import com.robotwitter.twitter.TwitterAccount;
 import com.robotwitter.twitter.TwitterAppConfiguration;
 import com.robotwitter.webapp.control.general.Tweet;
@@ -41,14 +47,12 @@ public class CannedTweetsController implements ICannedTweetsController
 	 */
 	@Inject
 	public CannedTweetsController(
-		Preference pref,
 		IDatabaseResponses responseDatabase,
 		IDatabaseTweetPostingPreferences postingPreferenceDatabase,
 		IDatabaseTwitterAccounts accountsDB)
 	{
 		this.responseDatabase = responseDatabase;
 		prefDB = postingPreferenceDatabase;
-		this.pref = pref;
 		this.accountsDB = accountsDB;
 	}
 
@@ -123,10 +127,38 @@ public class CannedTweetsController implements ICannedTweetsController
 	 * com.robotwitter.webapp.control.automate.ICannedTweetsController
 	 * #respondToTweet(long, long, java.lang.String) */
 	@Override
-	public Status respondToTweet(long tweetID, String text)
+	public Status respondToTweet(String email, long tweetID, String text)
 	{
 		Status $ = Status.SUCCESS;
-
+		Preference pref = new BasicPreference();
+		DBTweetPostingPreferences tweetPref = prefDB.get(email);
+		if (tweetPref == null)
+		{
+			prefDB.insert(new DBTweetPostingPreferences(
+				email,
+				TweetPostingPreferenceType.BASIC,
+				null,
+				null));
+		} else
+		{
+			switch (tweetPref.getPostingPreference())
+			{
+				case BASIC:
+					pref = new BasicPreference();
+					break;
+				case NUMBERED:
+					pref = new NumberedPreference();
+					break;
+				case PREFIX:
+					pref = new PrefixPreference(tweetPref.getPrefix());
+					break;
+				case POSTFIX:
+					pref = new PostfixPreference(tweetPref.getPostfix());
+					break;
+				default:
+					break;
+			}
+		}
 		ArrayList<String> tweets = pref.generateTweet(text);
 		switch (responsePostService.post(tweetID, tweets))
 		{
@@ -181,5 +213,4 @@ public class CannedTweetsController implements ICannedTweetsController
 
 	IDatabaseResponses responseDatabase;
 
-	Preference pref;
 }

@@ -20,6 +20,8 @@
 		border: 1px solid rgba(black, 0.2);
 		@include robotwitter-border-radius(5px);
 		@include robotwitter-box-shadow(0 0 5px 0 rgba(black, 0.05));
+		
+		margin-bottom: 30px;
 	}
 	
 	/* Center tabs */

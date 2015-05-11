@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.webapp.control.automate;
@@ -8,18 +8,22 @@ package com.robotwitter.webapp.control.automate;
 import java.util.ArrayList;
 import java.util.List;
 
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
+
 import com.google.inject.Inject;
-import com.mysql.jdbc.SQLError;
 
 import com.robotwitter.database.interfaces.IDatabaseResponses;
 import com.robotwitter.database.interfaces.IDatabaseTweetPostingPreferences;
+import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBResponse;
-import com.robotwitter.database.primitives.DBTweetPostingPreferences;
+import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.posting.Preference;
 import com.robotwitter.posting.ResponsePostService;
-import com.robotwitter.posting.TweetPostService;
 import com.robotwitter.twitter.TwitterAccount;
+import com.robotwitter.twitter.TwitterAppConfiguration;
 import com.robotwitter.webapp.control.general.Tweet;
 
 
@@ -39,57 +43,60 @@ public class CannedTweetsController implements ICannedTweetsController
 	public CannedTweetsController(
 		Preference pref,
 		IDatabaseResponses responseDatabase,
-		IDatabaseTweetPostingPreferences postingPreferenceDatabase)
+		IDatabaseTweetPostingPreferences postingPreferenceDatabase,
+		IDatabaseTwitterAccounts accountsDB)
 	{
 		this.responseDatabase = responseDatabase;
+		prefDB = postingPreferenceDatabase;
 		this.pref = pref;
+		this.accountsDB = accountsDB;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.automate.ICannedTweetsController
 	 * #getCannedTweets(long) */
 	@Override
-	public List<Tweet> getCannedTweets(long twitterAccountID)
+	public List<Tweet> getCannedTweets()
 	{
 		ArrayList<Tweet> $ = new ArrayList<>();
 		ArrayList<DBResponse> cannedTweets =
-			responseDatabase.getUnansweredResponsesOfUser(twitterAccountID);
+			responseDatabase.getUnansweredResponsesOfUser(activeID);
 		for (DBResponse res : cannedTweets)
 		{
 			$
-				.add(new Tweet(
-					res.getId(),
-					res.getText(),
-					"POCName",
-					"POCScreenName",
-					"http://pbs.twimg.com/profile_images/547044214270214144/Sq6-BXv5_bigger.jpeg"));
+			.add(new Tweet(
+				res.getId(),
+				res.getText(),
+				"POCName",
+				"POCScreenName",
+				"http://pbs.twimg.com/profile_images/547044214270214144/Sq6-BXv5_bigger.jpeg"));
 		}
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.automate.ICannedTweetsController
 	 * #getResponses(long, long) */
 	@Override
-	public List<String> getResponses(long twitterAccountID, long tweetID)
+	public List<String> getResponses(long tweetID)
 	{
 		ArrayList<String> $ = new ArrayList<>();
 		$
-			.add("We are sorry you feel this way, please contact us and we will try to help!");
+		.add("We are sorry you feel this way, please contact us and we will try to help!");
 		$
-			.add("We do our best to improve, stick with us and we won't disappoint you.");
+		.add("We do our best to improve, stick with us and we won't disappoint you.");
 		$.add("Man up ya wrinkley bitch");
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.automate.ICannedTweetsController
 	 * #removeTweet(long, long) */
 	@Override
-	public Status removeTweet(long twitterAccountID, long tweetID)
+	public Status removeTweet(long tweetID)
 	{
 		Status $ = Status.SUCCESS;
 		SqlError res = responseDatabase.deleteResponse(tweetID);
@@ -110,52 +117,69 @@ public class CannedTweetsController implements ICannedTweetsController
 		}
 		return $;
 	}
-	
-	
+
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.automate.ICannedTweetsController
 	 * #respondToTweet(long, long, java.lang.String) */
 	@Override
-	public Status respondToTweet(
-		long twitterAccountID,
-		long tweetID,
-		String text)
+	public Status respondToTweet(long tweetID, String text)
 	{
 		Status $ = Status.SUCCESS;
-		
+
 		ArrayList<String> tweets = pref.generateTweet(text);
 		switch (responsePostService.post(tweetID, tweets))
 		{
 			case SUCCESS:
 				$ = Status.SUCCESS;
+				responseDatabase.answer(tweetID);
 				break;
-			
+
 			default:
 				$ = Status.FAILURE;
 				break;
 		}
-		
+
 		return $;
 	}
-	
-	
+
+
 	/**
 	 * @param twitterAccount
 	 *            the twitter account
 	 */
-	public void setTwitterAccount(TwitterAccount twitterAccount)
+	@Override
+	public void setTwitterAccount(long id)
 	{
-		this.twitterAccount = twitterAccount;
-		responsePostService = new ResponsePostService(twitterAccount);
+		activeID = id;
+		DBTwitterAccount account = accountsDB.get(id);
+		final TwitterFactory tf =
+			new TwitterFactory(
+				new TwitterAppConfiguration().getUserConfiguration());
+		final TwitterAccount userAccount = new TwitterAccount(tf);
+		final Twitter connector = tf.getInstance();
+		connector.setOAuthAccessToken(new AccessToken(
+			account.getToken(),
+			account.getPrivateToken()));
+		userAccount.setTwitter(connector);
+		userAccount.setAttached(true);
+		responsePostService = new ResponsePostService(userAccount);
+		// FIXME CHANGE PREF TO NEW ACCOUNTS PREF
 	}
-	
-	
-	
+
+
+
+	private long activeID;
+
+	private IDatabaseTweetPostingPreferences prefDB;
+
+	private IDatabaseTwitterAccounts accountsDB;
+
 	TwitterAccount twitterAccount;
-	
+
 	ResponsePostService responsePostService;
-	
+
 	IDatabaseResponses responseDatabase;
-	
+
 	Preference pref;
 }

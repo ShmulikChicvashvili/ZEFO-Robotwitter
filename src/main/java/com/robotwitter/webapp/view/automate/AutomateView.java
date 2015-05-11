@@ -3,10 +3,7 @@ package com.robotwitter.webapp.view.automate;
 
 
 import java.util.Arrays;
-
-import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.AccessToken;
+import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -18,13 +15,9 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
-import com.robotwitter.database.primitives.DBTwitterAccount;
-import com.robotwitter.twitter.TwitterAccount;
-import com.robotwitter.twitter.TwitterAppConfiguration;
-import com.robotwitter.webapp.control.account.TwitterAccountController;
 import com.robotwitter.webapp.control.automate.ICannedTweetsController;
+import com.robotwitter.webapp.control.general.Tweet;
 import com.robotwitter.webapp.control.tools.ITweetingController;
-import com.robotwitter.webapp.control.tools.tweeting.Tweet;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.tweeting.TweetPreview;
 import com.robotwitter.webapp.view.AbstractView;
@@ -46,9 +39,7 @@ public class AutomateView extends AbstractView
 	 * @param messages
 	 *            the container of messages to display
 	 * @param tweetingController
-	 *            the tweeting controller
-	 * @param cannedController
-	 *            the canned controller
+	 *            the tweeting controller-
 	 */
 	@Inject
 	public AutomateView(
@@ -71,10 +62,10 @@ public class AutomateView extends AbstractView
 	@Override
 	public final void activateTwitterAccount(long id)
 	{
-		activateTwitterAccount();
+		cannedController.setTwitterAccount(id);
 	}
-	
-	
+
+
 	@Override
 	public final boolean isSignedInProhibited()
 	{
@@ -89,57 +80,19 @@ public class AutomateView extends AbstractView
 	}
 	
 	
-	/** Activate a Twitter account. */
-	private void activateTwitterAccount()
-	{
-		final TwitterAccountController currAccount =
-			new TwitterAccountController(
-				user.getId(),
-				user.getName(),
-				user.getScreenName(),
-				user.getProfileImageURL(),
-				numFollowersDB,
-				heavyhitterDB,
-				followersDB);
-		final TwitterFactory tf =
-			new TwitterFactory(
-				new TwitterAppConfiguration().getUserConfiguration());
-		final TwitterAccount userAccount = new TwitterAccount(tf);
-		final Twitter connector = tf.getInstance();
-		final DBTwitterAccount account =
-			twitterAccountsDB.get(user.getId());
-		connector.setOAuthAccessToken(new AccessToken(
-			account.getToken(),
-			account.getPrivateToken()));
-		userAccount.setTwitter(connector);
-		userAccount.setAttached(true);
-		currAccount.setTwitterAccount(userAccount);
-		twitterAccounts.put(currAccount.id, currAccount);
-
-		cannedController.setTwitterAccount(null);
-	}
-	
-	
 	/**
 	 * Create a tweet preview with respond and delete buttons.
 	 *
-	 * @param text
-	 *            the tweet's text
+	 * @param tweet
+	 *            the tweet
 	 *
 	 * @return the newly created tweet
 	 */
-	private Component createTweet(String text)
+	private Component createTweet(Tweet tweet)
 	{
 		TweetPreview preview = new TweetPreview();
-		preview.updatePreview(Arrays.asList(text));
-		
-		Tweet tweet__ =
-			new Tweet(
-				new Long("586606957978456064"),
-				"OMG made a tweet!",
-				"Itay Khazon",
-				"itaykh",
-				"https://pbs.twimg.com/profile_images/547044214270214144/Sq6-BXv5.jpeg");
+		preview.updatePreview(Arrays.asList(tweet.getText()));
+		// TODO set tweet's author (picture, name, screenname)
 		
 		Button respond =
 			new Button(
@@ -148,11 +101,17 @@ public class AutomateView extends AbstractView
 					new TweetResponseWindow(
 						messages,
 						tweetingController,
-						tweet__)));
-		Button delete = new Button(messages.get("AutomateView.button.delete"));
+						cannedController,
+						tweet)));
+
+		Button delete =
+			new Button(
+				messages.get("AutomateView.button.delete"),
+				event -> cannedController.removeTweet(tweet.getID()));
+		
 		HorizontalLayout buttons = new HorizontalLayout(respond, delete);
 		
-		VerticalLayout tweet = new VerticalLayout(preview, buttons);
+		VerticalLayout tweetComponent = new VerticalLayout(preview, buttons);
 		
 		respond.addStyleName(ValoTheme.BUTTON_SMALL);
 		delete.addStyleName(ValoTheme.BUTTON_SMALL);
@@ -160,34 +119,39 @@ public class AutomateView extends AbstractView
 		respond.addStyleName(RESPOND_STYLENAME);
 		delete.addStyleName(DELETE_STYLENAME);
 		buttons.addStyleName(BUTTONS_STYLENAME);
-		tweet.addStyleName(TWEET_STYLENAME);
+		tweetComponent.addStyleName(TWEET_STYLENAME);
 		
-		return tweet;
+		return tweetComponent;
 	}
 	
 	
 	/** @return new Tweets for canned-response. */
 	private Component createTweets()
 	{
-		Component t1 = createTweet("Tweet 1 #YOLO");
-		Component t2 = createTweet("Tweet 2 #Swag");
-		Component t3 = createTweet("Tweet 3 #Fuck");
+		List<Tweet> cannedTweets = cannedController.getCannedTweets();
+
+		VerticalLayout tweetsComponent = new VerticalLayout();
+		for (Tweet tweet : cannedTweets)
+		{
+			tweetsComponent.addComponent(createTweet(tweet));
+		}
 		
-		VerticalLayout tweets = new VerticalLayout(t1, t2, t3);
-		tweets.setSpacing(true);
+		tweetsComponent.setSpacing(true);
+		tweetsComponent.addStyleName(TWEETS_STYLENAME);
 		
-		tweets.addStyleName(TWEETS_STYLENAME);
-		
-		return tweets;
+		return tweetsComponent;
 	}
-	
-	
+
+
 	@Override
 	protected final void initialise()
 	{
 		Label header = new Label(messages.get("AutomateView.label.header"));
 		Label desc = new Label(messages.get("AutomateView.label.description"));
-		Component tweets = createTweets();
+		updateBaseOnTwitterAccount(getUserSession()
+			.getAccountController()
+			.getActiveTwitterAccount()
+			.getID());
 		
 		VerticalLayout layout = new VerticalLayout(header, desc, tweets);
 		layout.setWidth("100%");
@@ -200,7 +164,23 @@ public class AutomateView extends AbstractView
 	}
 	
 	
-	
+	/**
+	 * Update base on Twitter account.
+	 *
+	 * @param id
+	 *            the ID of the Twitter account
+	 */
+	final void updateBaseOnTwitterAccount(long id)
+	{
+		cannedController.setTwitterAccount(id);
+		tweets = createTweets();
+	}
+
+
+
+	/** The list of canned tweets. */
+	private Component tweets;
+
 	/** The view's name. */
 	public static final String NAME = "automate";
 	

@@ -92,6 +92,15 @@ public class MockCannedTweetsController implements ICannedTweetsController
 	}
 
 
+	/* (non-Javadoc) @see com.robotwitter.webapp.control.automate.ICannedTweetsController#previewTweet(java.lang.String) */
+	@Override
+	public List<String> previewTweet(String tweet)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.automate.ICannedTweetsController
 	 * #removeTweet(long, long) */
@@ -130,6 +139,7 @@ public class MockCannedTweetsController implements ICannedTweetsController
 				return Status.TWEET_DOESNT_EXIST;
 		}
 	}
+
 
 
 	/**

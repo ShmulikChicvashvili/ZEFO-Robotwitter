@@ -23,7 +23,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import com.robotwitter.webapp.control.automate.ICannedTweetsController;
 import com.robotwitter.webapp.control.automate.ICannedTweetsController.Status;
 import com.robotwitter.webapp.control.general.Tweet;
-import com.robotwitter.webapp.control.tools.ITweetingController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.RobotwitterCustomComponent;
 import com.robotwitter.webapp.util.tweeting.TweetComposeBox;
@@ -70,13 +69,11 @@ public class TweetResponse extends RobotwitterCustomComponent
 	 */
 	public TweetResponse(
 		IMessagesContainer messages,
-		ITweetingController tweetingController,
 		ICannedTweetsController cannedController,
 		Tweet originalTweet,
 		OnResponseSuccess onResponseSuccess)
 	{
 		super(messages);
-		this.tweetingController = tweetingController;
 		this.cannedController = cannedController;
 		this.originalTweet = originalTweet;
 		this.onResponseSuccess = onResponseSuccess;
@@ -89,7 +86,7 @@ public class TweetResponse extends RobotwitterCustomComponent
 			.getActiveTwitterAccount()
 			.getCurrentMaximumTweetLength();
 		
-		responses = tweetingController.getOptionalResponses(originalTweet);
+		responses = cannedController.getResponses(originalTweet.getID());
 		
 		preview = new TweetPreview();
 		preview.setCustomFirstTweet(originalTweet);
@@ -122,7 +119,7 @@ public class TweetResponse extends RobotwitterCustomComponent
 		{
 			tweetComposeBox.setEnabled(false);
 			
-			List<String> tweets = tweetingController.previewTweet(tweet);
+			List<String> tweets = cannedController.previewTweet(tweet);
 			preview.updatePreview(tweets);
 		} else
 		{
@@ -321,7 +318,7 @@ public class TweetResponse extends RobotwitterCustomComponent
 	 */
 	private void updateTweetComposeText(String text)
 	{
-		List<String> tweets = tweetingController.previewTweet(text);
+		List<String> tweets = cannedController.previewTweet(text);
 		
 		preview.updatePreview(tweets);
 		
@@ -393,9 +390,6 @@ public class TweetResponse extends RobotwitterCustomComponent
 	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
-	
-	/** The tweeting controller. */
-	ITweetingController tweetingController;
 	
 	/**
 	 * The right panel of the layout. Holds the preview of the chosen

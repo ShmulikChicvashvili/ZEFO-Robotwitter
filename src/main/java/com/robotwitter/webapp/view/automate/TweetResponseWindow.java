@@ -66,7 +66,6 @@ public class TweetResponseWindow extends Window
 		Component content =
 			new TweetResponse(
 				messages,
-				tweetingController,
 				cannedController,
 				originalTweet,
 				() -> close());

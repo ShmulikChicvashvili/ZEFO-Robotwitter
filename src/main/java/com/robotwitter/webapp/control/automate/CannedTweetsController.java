@@ -95,8 +95,16 @@ public class CannedTweetsController implements ICannedTweetsController
 		.add("We are sorry you feel this way, please contact us and we will try to help!");
 		$
 		.add("We do our best to improve, stick with us and we won't disappoint you.");
-		$.add("Man up ya wrinkley bitch");
+		$.add("Please refrain from such foul language if you want your comment to be taken seriously.");
 		return $;
+	}
+
+
+	/* (non-Javadoc) @see com.robotwitter.webapp.control.automate.ICannedTweetsController#previewTweet(java.lang.String) */
+	@Override
+	public List<String> previewTweet(String tweet)
+	{
+		return pref.generateTweet(tweet);
 	}
 
 
@@ -161,6 +169,7 @@ public class CannedTweetsController implements ICannedTweetsController
 	}
 
 
+
 	/**
 	 * Sets the twitter account.
 	 *
@@ -185,8 +194,6 @@ public class CannedTweetsController implements ICannedTweetsController
 		responsePostService = new ResponsePostService(userAccount);
 		// FIXME CHANGE PREF TO NEW ACCOUNTS PREF
 	}
-
-
 
 	/** The followers db. */
 	private IDatabaseFollowers followersDB;

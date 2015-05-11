@@ -60,6 +60,13 @@ public interface ICannedTweetsController
 	
 	
 	/**
+	 * @param tweet
+	 * @return
+	 */
+	List<String> previewTweet(String tweet);
+	
+	
+	/**
 	 * Remove the given tweet from a Twitter account's canned tweets list.
 	 *
 	 * @param tweetID
@@ -82,8 +89,8 @@ public interface ICannedTweetsController
 	 * @return the operation's status
 	 */
 	Status respondToTweet(String email, long tweetID, String text);
-	
-	
+
+
 	/**
 	 * Set the current active Twitter account.
 	 *

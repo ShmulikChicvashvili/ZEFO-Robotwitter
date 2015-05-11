@@ -4,6 +4,8 @@
 
 @mixin AutomateView { .AutomateView {
 	
+	$width: 500px;
+	
 	padding: 10px;
 	
 	/* Header */
@@ -12,9 +14,18 @@
 		font-size: 3.3em; padding-left: 15px; line-height: 1em;
 	}
 	
+	/* Description */
+	.AutomateView-desc
+	{
+		text-align: center;
+		font-size: 1.5em; line-height: 2em;
+	}
+	
 	/* Tweets */
 	.AutomateView-tweets
 	{
+		width: $width !important;
+	
 		/* Single tweet */
 		.AutomateView-tweet
 		{
@@ -28,7 +39,7 @@
 				right: 0;
 				opacity: 0;
 				
-				@include robotwitter-transition(opacity 0.5s ease);
+				@include robotwitter-transition(opacity 0.8s ease);
 			}
 				
 			/* Hover */
@@ -38,6 +49,9 @@
 			}
 		}
 	}
+	
+	/* Center the tweets */
+	.v-slot-AutomateView-tweets { text-align: center; }
 
 } }
 

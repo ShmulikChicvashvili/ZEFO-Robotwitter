@@ -1,8 +1,10 @@
 @import "automate/AutomateView";
+@import "automate/TweetResponse";
 /*----------------------------------------------------------------------------*/
 
 
 @mixin robotwitter-view-automate
 {
 	@include AutomateView;
+	@include TweetResponse;
 }

@@ -2,9 +2,6 @@
 @import "../../../config";
 /*----------------------------------------------------------------------------*/
 
-/* Fix min-height */
-.v-slot-AnalysisView { position: relative; min-height: 750px; }
-
 @mixin AnalysisView { .AnalysisView {
 
 	position: absolute;
@@ -15,27 +12,6 @@
 	.AnalysisView-header
 	{
 		font-size: 3.3em; padding-left: 15px; line-height: 1em;
-	}
-
-	/* Panel */
-	.AnalysisView-panel
-	{
-		$padding: 15px;
-		padding: $padding;
-		background: white;
-		border: 1px solid rgba(black, 0.2);
-		@include robotwitter-border-radius(5px);
-		@include robotwitter-box-shadow(0 0 5px 0 rgba(black, 0.05));
-		
-		/* Title */
-		.AnalysisView-panel-title
-		{
-			position: relative;
-			font-size: 1.5em;
-			top: -$padding / 2;
-			color: #2E6C96;
-			text-align: center;
-		}
 	}
 
 } }

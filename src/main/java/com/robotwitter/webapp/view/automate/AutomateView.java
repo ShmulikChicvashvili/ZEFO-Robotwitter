@@ -2,12 +2,12 @@
 package com.robotwitter.webapp.view.automate;
 
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
@@ -39,7 +39,9 @@ public class AutomateView extends AbstractView
 	 * @param messages
 	 *            the container of messages to display
 	 * @param tweetingController
-	 *            the tweeting controller-
+	 *            the tweeting controller
+	 * @param cannedController
+	 *            the canned controller
 	 */
 	@Inject
 	public AutomateView(
@@ -51,6 +53,10 @@ public class AutomateView extends AbstractView
 		
 		this.tweetingController = tweetingController;
 		this.cannedController = cannedController;
+
+		tweets = new VerticalLayout();
+		tweets.setSpacing(true);
+		tweets.addStyleName(TWEETS_STYLENAME);
 		
 		getUserSession().observeActiveTwitterAccount(this);
 	}
@@ -62,7 +68,7 @@ public class AutomateView extends AbstractView
 	@Override
 	public final void activateTwitterAccount(long id)
 	{
-		cannedController.setTwitterAccount(id);
+		updateBaseOnTwitterAccount(id);
 	}
 
 
@@ -91,8 +97,7 @@ public class AutomateView extends AbstractView
 	private Component createTweet(Tweet tweet)
 	{
 		TweetPreview preview = new TweetPreview();
-		preview.updatePreview(Arrays.asList(tweet.getText()));
-		// TODO set tweet's author (picture, name, screenname)
+		preview.setCustomFirstTweet(tweet);
 		
 		Button respond =
 			new Button(
@@ -103,12 +108,15 @@ public class AutomateView extends AbstractView
 						tweetingController,
 						cannedController,
 						tweet)));
+		respond.setIcon(FontAwesome.PAPER_PLANE);
 
 		Button delete =
 			new Button(
 				messages.get("AutomateView.button.delete"),
 				event -> cannedController.removeTweet(tweet.getID()));
-		
+		delete.setIcon(FontAwesome.TRASH_O);
+		delete.addStyleName(ValoTheme.BUTTON_DANGER);
+
 		HorizontalLayout buttons = new HorizontalLayout(respond, delete);
 		
 		VerticalLayout tweetComponent = new VerticalLayout(preview, buttons);
@@ -125,21 +133,16 @@ public class AutomateView extends AbstractView
 	}
 	
 	
-	/** @return new Tweets for canned-response. */
-	private Component createTweets()
+	/** update Tweets for canned-response. */
+	private void updateTweets()
 	{
 		List<Tweet> cannedTweets = cannedController.getCannedTweets();
 
-		VerticalLayout tweetsComponent = new VerticalLayout();
+		tweets.removeAllComponents();
 		for (Tweet tweet : cannedTweets)
 		{
-			tweetsComponent.addComponent(createTweet(tweet));
+			tweets.addComponent(createTweet(tweet));
 		}
-		
-		tweetsComponent.setSpacing(true);
-		tweetsComponent.addStyleName(TWEETS_STYLENAME);
-		
-		return tweetsComponent;
 	}
 
 
@@ -173,13 +176,13 @@ public class AutomateView extends AbstractView
 	final void updateBaseOnTwitterAccount(long id)
 	{
 		cannedController.setTwitterAccount(id);
-		tweets = createTweets();
+		updateTweets();
 	}
 
 
 
 	/** The list of canned tweets. */
-	private Component tweets;
+	private VerticalLayout tweets;
 
 	/** The view's name. */
 	public static final String NAME = "automate";

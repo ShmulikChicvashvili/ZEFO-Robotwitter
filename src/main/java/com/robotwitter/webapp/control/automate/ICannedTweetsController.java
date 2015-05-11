@@ -16,28 +16,28 @@ import com.robotwitter.webapp.control.general.Tweet;
  */
 public interface ICannedTweetsController
 {
-
+	
 	/** Status codes returned by this instance. */
 	enum Status
 	{
 		/** Operation succeeded. */
 		SUCCESS,
-
+		
 		/** The received Twitter account is not attached to the connected user. */
 		TWITTER_ACCOUNT_DOESNT_EXIST,
-
+		
 		/**
 		 * The received Tweet doesn't exist in the Twitter account's canned
 		 * tweets list.
 		 */
 		TWEET_DOESNT_EXIST,
-
+		
 		/** An unknown failure occurred . */
 		FAILURE
 	}
-
-
-
+	
+	
+	
 	/**
 	 * Get a list of canned tweets for a given Twitter account.
 	 *
@@ -45,8 +45,8 @@ public interface ICannedTweetsController
 	 *         given Twitter account doesn't exist.
 	 */
 	List<Tweet> getCannedTweets();
-
-
+	
+	
 	/**
 	 * Get a list of possible responses for a given Twitter account and tweet.
 	 *
@@ -57,8 +57,8 @@ public interface ICannedTweetsController
 	 *         the account's canned tweets list.
 	 */
 	List<String> getResponses(long tweetID);
-
-
+	
+	
 	/**
 	 * Remove the given tweet from a Twitter account's canned tweets list.
 	 *
@@ -67,11 +67,13 @@ public interface ICannedTweetsController
 	 * @return the operation's status
 	 */
 	Status removeTweet(long tweetID);
-
-
+	
+	
 	/**
 	 * Respond to the given tweet from a Twitter account's canned tweets list.
 	 *
+	 * @param email
+	 *            the email of the user responding
 	 * @param tweetID
 	 *            the ID of the tweet to get responses for
 	 * @param text
@@ -79,9 +81,9 @@ public interface ICannedTweetsController
 	 *            replies if its length exceeds the maximum allowed.
 	 * @return the operation's status
 	 */
-	Status respondToTweet(long tweetID, String text);
-
-
+	Status respondToTweet(String email, long tweetID, String text);
+	
+	
 	/**
 	 * Set the current active Twitter account.
 	 *

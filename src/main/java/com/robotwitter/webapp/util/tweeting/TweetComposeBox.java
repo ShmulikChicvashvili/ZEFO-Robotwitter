@@ -130,19 +130,18 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 
 
 	/**
-	 *
+	 * Creates the tweet text area.
 	 */
 	private void createTweetTextArea()
 	{
 		tweet = new TextArea();
+		tweet.setSizeFull();
 		tweet.setRows(3);
 		tweet.addTextChangeListener(event -> {
 			updateTweet(event.getText());
 			textChangeListener.textChange(event);
 		});
 		tweet.setValidationVisible(false);
-		tweet.setIcon(FontAwesome.PENCIL);
-		tweet.setCaption(messages.get("TweetComposer.caption.input-tweet"));
 
 		tweet.addStyleName(TWEET_INPUT_STYLENAME);
 	}
@@ -154,15 +153,13 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 	private void initialiseLayout()
 	{
 		createTweetTextArea();
-		Component toolbar = createToolbar();
+		// Component toolbar = createToolbar();
 
 		charactersLeft = new Label();
 		charactersLeft.addStyleName(CHARACTERS_STYLENAME);
-		charactersLeft.setDescription(messages
-			.get("TweetComposer.tooltip.characters"));
 
 		HorizontalLayout toolbarAndCharactersLeft =
-			new HorizontalLayout(toolbar, charactersLeft);
+			new HorizontalLayout(charactersLeft);
 		toolbarAndCharactersLeft.setSizeFull();
 		toolbarAndCharactersLeft.addStyleName(TOOLBAR_AND_CHARS_LEFT_STYLENAME);
 
@@ -175,10 +172,6 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 	}
 
 
-	/**
-	 * @param text
-	 */
-
 	/** Updates state based on the active Twitter account. */
 	private void updateBasedOnActiveTwitterAccount()
 	{
@@ -187,7 +180,6 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 
 		max.count = controller.getCurrentMaximumTweetLength();
 	}
-
 
 
 	/**
@@ -203,10 +195,10 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 		tweet.setRows(lines.length + 2);
 	}
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -2166319252234636636L;
+
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
 
 	/** The CSS class name to apply to the toolbar and button wrapper. */
 	private static final String TOOLBAR_AND_CHARS_LEFT_STYLENAME =
@@ -227,6 +219,7 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 	/** The CSS class name to apply to the toolbar of the Tweet text area. */
 	private static final String TOOLBAR_STYLENAME = "TweetComposer-toolbar";
 
+	/** The text change listener. */
 	TextChangeListener textChangeListener;
 
 	/** A label containing the amount of characters left. */
@@ -237,8 +230,6 @@ public class TweetComposeBox extends RobotwitterCustomComponent
 
 	/** The current character count of the Tweet. */
 	CharacterCount count;
-
-
 
 	/** The maximum allowed character count of the Tweet. */
 	CharacterCount max;

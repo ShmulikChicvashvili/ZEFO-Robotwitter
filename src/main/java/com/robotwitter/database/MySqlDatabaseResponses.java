@@ -300,9 +300,9 @@ IDatabaseResponses
 				+ " ("
 				+ Columns.USER_ID.toString().toLowerCase()
 				+ ","
-				+ Columns.RESPONSE_ID.toString().toLowerCase()
-				+ ","
 				+ Columns.RESPONDER_ID.toString().toLowerCase()
+				+ ","
+				+ Columns.RESPONSE_ID.toString().toLowerCase()
 				+ ","
 				+ Columns.DATE.toString().toLowerCase()
 				+ ","

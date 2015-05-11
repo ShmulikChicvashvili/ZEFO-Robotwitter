@@ -160,8 +160,10 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 		IDs todaysFirstPage)
 	{
 		final long[] yesterdaysIDs = yesterdaysFirstPage.getIDs();
-
 		final long[] todaysIDs = todaysFirstPage.getIDs();
+		
+		if (todaysIDs.length < HIGHEST_LIMIT) { return todaysIDs.length
+			- yesterdaysIDs.length; }
 
 		for (int i = 0; i < Math.min(yesterdaysIDs.length, GIVE_UP_LIMIT); i++)
 		{
@@ -207,8 +209,8 @@ public class FollowerIdsBackfiller implements IUserBackfiller
 				- (todaysFollowerNumber - yesterdayFollowerNumber);
 		updateFollowerNumberDatabase(
 			todaysFollowerNumber,
-			newFollowersNumber,
-			newUnfollowerNumber);
+			Math.min(newFollowersNumber, 0),
+			Math.min(newUnfollowerNumber, 0));
 
 		updateYesterdaysVariables(firstPage, todaysFollowerNumber);
 	}

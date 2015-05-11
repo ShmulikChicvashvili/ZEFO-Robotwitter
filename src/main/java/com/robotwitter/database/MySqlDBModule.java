@@ -24,19 +24,29 @@ import com.robotwitter.database.interfaces.IDatabaseUsers;
  */
 public class MySqlDBModule extends AbstractModule
 {
-
+	
 	/* (non-Javadoc) @see com.google.inject.AbstractModule#configure() */
 	@Override
 	protected final void configure()
 	{
-		bind(IDatabaseUsers.class).to(MySqlDatabaseUser.class);
+		bind(IDatabaseUsers.class)
+			.to(MySqlDatabaseUser.class)
+			.asEagerSingleton();
 		bind(IDatabaseTwitterAccounts.class).to(
-			MySqlDatabaseTwitterAccounts.class);
-		bind(IDatabaseNumFollowers.class).to(MySqlDatabaseNumFollowers.class);
-		bind(IDatabaseFollowers.class).to(MySqlDatabaseFollowers.class);
-		bind(IDatabaseHeavyHitters.class).to(MySqlDatabaseHeavyHitters.class);
+			MySqlDatabaseTwitterAccounts.class).asEagerSingleton();
+		bind(IDatabaseNumFollowers.class)
+			.to(MySqlDatabaseNumFollowers.class)
+			.asEagerSingleton();
+		bind(IDatabaseFollowers.class)
+			.to(MySqlDatabaseFollowers.class)
+			.asEagerSingleton();
+		bind(IDatabaseHeavyHitters.class)
+			.to(MySqlDatabaseHeavyHitters.class)
+			.asEagerSingleton();
 		bind(IDatabaseTweetPostingPreferences.class).to(
-			MySqlDatabaseTweetPostingPreferences.class);
-		bind(IDatabaseResponses.class).to(MySqlDatabaseResponses.class);
+			MySqlDatabaseTweetPostingPreferences.class).asEagerSingleton();
+		bind(IDatabaseResponses.class)
+			.to(MySqlDatabaseResponses.class)
+			.asEagerSingleton();
 	}
 }

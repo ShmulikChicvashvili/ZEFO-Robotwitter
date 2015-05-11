@@ -7,7 +7,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
 import com.robotwitter.classification.ITweetClassifier;
-import com.robotwitter.classification.SentimentClassifier;
+import com.robotwitter.classification.SimpleTweetClassifier;
 
 /**
  * @author Itay, Shmulik
@@ -30,7 +30,7 @@ public class UserListenerModule extends AbstractModule
 			.annotatedWith(Names.named("Classifier Filepath"))
 			.toInstance(
 				"C:\\Users\\Itay\\Desktop\\TechnionDocs\\Semester8\\YearlyProject2\\classifier.txt");
-		bind(ITweetClassifier.class).to(SentimentClassifier.class);
+		bind(ITweetClassifier.class).to(SimpleTweetClassifier.class);
 	}	
 	
 }

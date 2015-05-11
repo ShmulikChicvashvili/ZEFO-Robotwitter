@@ -91,13 +91,4 @@ public interface IDatabaseResponses
 	 *         ALREADY_EXIST, INVALID_PARAMS
 	 */
 	public SqlError insert(DBResponse response);
-	
-	
-	/**
-	 * @param response
-	 *            The response to update
-	 * @return Returns the status code. It could be either SUCCESS,
-	 *         DOES_NOT_EXIST, INVALID_PARAMS
-	 */
-	public SqlError update(DBResponse response);
 }

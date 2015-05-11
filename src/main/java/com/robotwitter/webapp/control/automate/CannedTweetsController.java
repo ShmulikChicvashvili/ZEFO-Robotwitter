@@ -14,10 +14,12 @@ import twitter4j.auth.AccessToken;
 
 import com.google.inject.Inject;
 
+import com.robotwitter.database.interfaces.IDatabaseFollowers;
 import com.robotwitter.database.interfaces.IDatabaseResponses;
 import com.robotwitter.database.interfaces.IDatabaseTweetPostingPreferences;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.returnValues.SqlError;
+import com.robotwitter.database.primitives.DBFollower;
 import com.robotwitter.database.primitives.DBResponse;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.posting.NumberedPreference;
@@ -44,14 +46,15 @@ public class CannedTweetsController implements ICannedTweetsController
 	public CannedTweetsController(
 		IDatabaseResponses responseDatabase,
 		IDatabaseTweetPostingPreferences postingPreferenceDatabase,
-		IDatabaseTwitterAccounts accountsDB)
+		IDatabaseTwitterAccounts accountsDB, 
+		IDatabaseFollowers followersDB)
 	{
 		this.responseDatabase = responseDatabase;
 		prefDB = postingPreferenceDatabase;
 		pref = new NumberedPreference();
 		this.accountsDB = accountsDB;
+		this.followersDB = followersDB;
 	}
-
 
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.automate.ICannedTweetsController
@@ -64,13 +67,14 @@ public class CannedTweetsController implements ICannedTweetsController
 			responseDatabase.getUnansweredResponsesOfUser(activeID);
 		for (DBResponse res : cannedTweets)
 		{
+			DBFollower respondingPerson = followersDB.get(res.getUserID());
 			$
 			.add(new Tweet(
 				res.getId(),
 				res.getText(),
-				"POCName",
-				"POCScreenName",
-				"http://pbs.twimg.com/profile_images/547044214270214144/Sq6-BXv5_bigger.jpeg"));
+				respondingPerson.getName(),
+				respondingPerson.getScreenName(),
+				respondingPerson.getPicture()));
 		}
 		return $;
 	}
@@ -166,6 +170,9 @@ public class CannedTweetsController implements ICannedTweetsController
 		responsePostService = new ResponsePostService(userAccount);
 		// FIXME CHANGE PREF TO NEW ACCOUNTS PREF
 	}
+
+
+	private IDatabaseFollowers followersDB;
 
 
 

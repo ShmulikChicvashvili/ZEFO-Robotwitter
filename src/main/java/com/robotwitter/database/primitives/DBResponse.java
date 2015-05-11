@@ -26,6 +26,7 @@ public class DBResponse
 	 */
 	public DBResponse(
 		long userID,
+		long responderID,
 		long id,
 		Timestamp timestamp,
 		String text,
@@ -33,14 +34,14 @@ public class DBResponse
 		Boolean answered)
 	{
 		this.userID = userID;
+		this.responderID = responderID;
 		this.id = id;
 		this.timestamp = timestamp;
 		this.text = text;
 		this.classify = classify;
 		this.answered = answered;
 	}
-	
-	
+
 	/* (non-Javadoc) @see java.lang.Object#equals(java.lang.Object) */
 	@Override
 	public boolean equals(Object obj)
@@ -69,8 +70,7 @@ public class DBResponse
 		if (userID != other.userID) return false;
 		return true;
 	}
-	
-	
+
 	/**
 	 * @return the answered
 	 */
@@ -78,8 +78,7 @@ public class DBResponse
 	{
 		return answered;
 	}
-	
-	
+
 	/**
 	 * @return the classify
 	 */
@@ -87,14 +86,22 @@ public class DBResponse
 	{
 		return classify;
 	}
-	
-	
+
 	/**
 	 * @return the id
 	 */
 	public long getId()
 	{
 		return id;
+	}
+	
+	
+	/**
+	 * @return the responderID
+	 */
+	public long getResponderID()
+	{
+		return responderID;
 	}
 	
 	
@@ -175,6 +182,15 @@ public class DBResponse
 	
 	
 	/**
+	 * @param responderID the responderID to set
+	 */
+	public void setResponderID(long responderID)
+	{
+		this.responderID = responderID;
+	}
+	
+	
+	/**
 	 * @param text
 	 *            the text to set
 	 */
@@ -195,6 +211,15 @@ public class DBResponse
 	
 	
 	/**
+	 * @param userID the userID to set
+	 */
+	public void setUserID(long userID)
+	{
+		this.userID = userID;
+	}
+	
+	
+	/**
 	 * @param userID
 	 *            the userID to set
 	 */
@@ -202,6 +227,9 @@ public class DBResponse
 	{
 		this.userID = userID;
 	}
+	
+	
+	private long responderID;
 	
 	
 	

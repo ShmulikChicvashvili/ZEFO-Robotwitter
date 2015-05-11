@@ -4,27 +4,81 @@
 
 @mixin FollowersAmountOverview { .FollowersAmountOverview {
 
-	$height: 200px;
-	height: $height;
+	$height: 150px;
+	$padding: 35px;
+	
+	height: $height + $padding;
+	padding-bottom: $padding;
 	
 	text-align: center;
 	
-	/* Twitter's account picture */
+	/* Twitter account's picture */
 	.FollowersAmountOverview-picture
 	{
 		width: $height;
 		height: $height;
+		
+		/* features */
+		@include robotwitter-border-radius($height); /* Circle */
 	}
 	
-	/* A followers amount component. */
-	.v-slot-FollowersAmountOverview-amount-component
-	{		
-		/* The gained number. */
-		.FollowersAmountOverview-gained { color: #50B317; }
+	/* Twitter account's name and screenname */
+	.FollowersAmountOverview-name-and-screenname
+	{
+		text-align: right;
+	
+		/* Twitter account's name */
+		.FollowersAmountOverview-name { font-size: 2em; }
 		
-		/* The lost number. */
-		.FollowersAmountOverview-lost { color: rgb(229, 18, 18); }
+		/* Twitter account's screenname */
+		.FollowersAmountOverview-screenname
+		{
+			font-size: 1.5em;
+			line-height: 1em;
+			padding-right: 15px;
+		}
 	}
+	
+	
+	/* Stats component */	
+	.FollowersAmountOverview-stats
+	{
+		position: relative;
+		left: -10px;
+		
+		padding-top: 12px;
+		
+		/* A followers amount component. */
+		.v-slot-FollowersAmountOverview-amount-component
+		{	
+			position: relative;
+			
+			margin-bottom: 30px;
+		
+			/* Captions and numbers */
+			.v-captiontext, .v-label { font-weight: bold; }
+			
+			/* Numbers */
+			.v-label
+			{
+				position: absolute;
+				top: -26px;
+				left: 20px;
+				
+				font-size: 1.5em;
+			}
+		
+			/* The gained number. */
+			.FollowersAmountOverview-gained { color: #50B317; }
+			
+			/* The lost number. */
+			.FollowersAmountOverview-lost { color: rgb(229, 18, 18); }
+		}
+		
+		/* Push gained (middle-number) around circle picture */
+		.v-slot-FollowersAmountOverview-gained { margin-left: 20px; }
+	}
+	
 
 } }
 

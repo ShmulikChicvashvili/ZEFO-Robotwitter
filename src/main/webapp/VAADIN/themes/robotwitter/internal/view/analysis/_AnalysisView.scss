@@ -4,8 +4,6 @@
 
 @mixin AnalysisView { .AnalysisView {
 
-	position: absolute;
-	
 	padding: 10px;
 	
 	/* Header */
@@ -13,6 +11,19 @@
 	{
 		font-size: 3.3em; padding-left: 15px; line-height: 1em;
 	}
+	
+	
+	/* Tabs */
+	.AnalysisView-tabs
+	{
+		background: white;
+		border: 1px solid rgba(black, 0.2);
+		@include robotwitter-border-radius(5px);
+		@include robotwitter-box-shadow(0 0 5px 0 rgba(black, 0.05));
+	}
+	
+	/* Center tabs */
+	.v-slot-AnalysisView-tabs { text-align: center; }
 
 } }
 

@@ -107,13 +107,15 @@ public class AutomateView extends AbstractView
 						messages,
 						tweetingController,
 						cannedController,
-						tweet)));
+						tweet,
+						() -> updateTweets())));
 		respond.setIcon(FontAwesome.PAPER_PLANE);
 
 		Button delete =
-			new Button(
-				messages.get("AutomateView.button.delete"),
-				event -> cannedController.removeTweet(tweet.getID()));
+			new Button(messages.get("AutomateView.button.delete"), event -> {
+				cannedController.removeTweet(tweet.getID());
+				updateTweets();
+			});
 		delete.setIcon(FontAwesome.TRASH_O);
 		delete.addStyleName(ValoTheme.BUTTON_DANGER);
 
@@ -143,6 +145,14 @@ public class AutomateView extends AbstractView
 		{
 			tweets.addComponent(createTweet(tweet));
 		}
+		
+		if (cannedTweets.isEmpty())
+		{
+			desc.setValue(messages.get("AutomateView.label.no-canned-tweets"));
+		} else
+		{
+			desc.setValue(messages.get("AutomateView.label.description"));
+		}
 	}
 
 
@@ -150,7 +160,7 @@ public class AutomateView extends AbstractView
 	protected final void initialise()
 	{
 		Label header = new Label(messages.get("AutomateView.label.header"));
-		Label desc = new Label(messages.get("AutomateView.label.description"));
+		desc = new Label();
 		updateBaseOnTwitterAccount(getUserSession()
 			.getAccountController()
 			.getActiveTwitterAccount()
@@ -219,4 +229,7 @@ public class AutomateView extends AbstractView
 	
 	/** Tweeting controller. */
 	private ITweetingController tweetingController;
+
+	/** The page's description. */
+	private Label desc;
 }

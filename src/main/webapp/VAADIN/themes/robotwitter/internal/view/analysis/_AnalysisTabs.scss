@@ -1,0 +1,69 @@
+@import "../../common";
+@import "../../../config";
+/*----------------------------------------------------------------------------*/
+
+@mixin AnalysisTabs { .AnalysisTabs {
+
+	$menu-width: 220px;
+	$content-width: 670px;
+	$padding: 15px;
+	
+	width: $menu-width + $content-width + $padding * 2 !important;
+	padding: $padding;
+	
+	
+	/* Tab menu */
+	.AnalysisTabs-menu
+	{
+		$margin: 30px;
+		$padding: 20px;
+		
+		width: $menu-width - $margin - $padding !important;
+		margin-right: $margin;
+		padding-right: $padding;
+		
+		text-align: right;
+		border-right: 1px dashed rgba(black, 0.2);
+		
+		/* Tab */
+		.v-button
+		{			
+			&:hover
+			{
+				padding-left: 2em;
+			}
+			
+			/* Transitions */
+			@include robotwitter-transition(background 0.3s ease);
+			@include robotwitter-transition(padding 0.3s ease);
+		}
+		
+		/* Active tab */
+		.AnalysisTabs-active-tab
+		{
+			font-weight: bold;
+			padding-left: 2em;
+			background: hsl(hue($robotwitter-main-color), 20%, 90%);
+		}
+	}
+	
+	/* Fix content position */
+	.v-slot-AnalysisTabs-menu { width: initial !important; }
+	
+	
+	/* Content */
+	.AnalysisTabs-content
+	{
+		width: $content-width !important;
+		
+		/* Content's description */
+		.AnalysisTabs-desc
+		{
+			white-space: normal;
+			margin-bottom: 10px;
+		}
+	}
+	
+
+} }
+

@@ -14,6 +14,7 @@ import twitter4j.Status;
 import twitter4j.StatusDeletionNotice;
 import twitter4j.User;
 import twitter4j.UserList;
+import twitter4j.UserMentionEntity;
 import twitter4j.UserStreamListener;
 
 import com.google.inject.Inject;
@@ -117,6 +118,7 @@ public class TweetClassifierListener implements UserStreamListener
 	{
 		if (isLegitimateResponse(status))
 		{
+			System.out.println("trying to insert a response to the DB");
 			db.insert(buildDBResponseFromStatus(status));
 			// FIXME Perhaps we should also alert something if this is a bad one
 		}
@@ -258,7 +260,13 @@ public class TweetClassifierListener implements UserStreamListener
 	 */
 	private boolean isLegitimateResponse(Status status)
 	{
-		return status.isRetweet() && !userID.equals(status.getUser().getId());
+		boolean isTagged = false;
+		for (UserMentionEntity taggedUser: status.getUserMentionEntities()) {
+			if(taggedUser.getId() == userID) {
+				isTagged = true;
+			}
+		}
+		return isTagged && !userID.equals(status.getUser().getId());
 	}
 
 

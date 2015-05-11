@@ -20,6 +20,7 @@ import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBResponse;
 import com.robotwitter.database.primitives.DBTwitterAccount;
+import com.robotwitter.posting.NumberedPreference;
 import com.robotwitter.posting.Preference;
 import com.robotwitter.posting.ResponsePostService;
 import com.robotwitter.twitter.TwitterAccount;
@@ -41,14 +42,13 @@ public class CannedTweetsController implements ICannedTweetsController
 	 */
 	@Inject
 	public CannedTweetsController(
-		Preference pref,
 		IDatabaseResponses responseDatabase,
 		IDatabaseTweetPostingPreferences postingPreferenceDatabase,
 		IDatabaseTwitterAccounts accountsDB)
 	{
 		this.responseDatabase = responseDatabase;
 		prefDB = postingPreferenceDatabase;
-		this.pref = pref;
+		pref = new NumberedPreference();
 		this.accountsDB = accountsDB;
 	}
 

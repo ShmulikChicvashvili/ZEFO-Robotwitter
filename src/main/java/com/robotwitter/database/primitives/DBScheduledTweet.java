@@ -11,19 +11,10 @@ public class DBScheduledTweet extends DatabaseType {
 			String tweetName, String tweetText, Calendar startingDate,
 			AutomateTweetPostingPeriod postingPeriod) {
 		super(email);
-		this.twitterAccount = twitterAccount;
 		this.tweetName = tweetName;
 		this.tweetText = tweetText;
 		this.startingDate = startingDate;
 		this.postingPeriod = postingPeriod;
-	}
-
-	public TwitterAccount getTwitterAccount() {
-		return twitterAccount;
-	}
-
-	public void setTwitterAccount(TwitterAccount twitterAccount) {
-		this.twitterAccount = twitterAccount;
 	}
 
 	public String getTweetName() {
@@ -58,7 +49,6 @@ public class DBScheduledTweet extends DatabaseType {
 		this.postingPeriod = postingPeriod;
 	}
 
-	TwitterAccount twitterAccount;
 	String tweetName;
 	String tweetText;
 	Calendar startingDate;

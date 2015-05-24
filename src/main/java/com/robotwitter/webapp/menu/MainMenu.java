@@ -18,6 +18,7 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.analysis.AnalysisView;
 import com.robotwitter.webapp.view.automate.AutomateView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
+import com.robotwitter.webapp.view.scheduling.ScheduledViewMock;
 import com.robotwitter.webapp.view.tools.ToolsView;
 
 
@@ -70,7 +71,7 @@ public class MainMenu extends AbstractMenu
 	 */
 	private Component createAccountInformation()
 	{
-		PopupView account = new PopupView(accountInfoPopup);
+		final PopupView account = new PopupView(accountInfoPopup);
 		accountInfoPopup.setOwner(account);
 
 		// Set properties and styles
@@ -88,7 +89,7 @@ public class MainMenu extends AbstractMenu
 	 */
 	private Component createLinks()
 	{
-		MenuBar links = new MenuBar();
+		final MenuBar links = new MenuBar();
 
 		// Add home button
 		links.addItem(
@@ -107,24 +108,24 @@ public class MainMenu extends AbstractMenu
 			messages.get("MainMenu.link.tools"),
 			FontAwesome.WRENCH,
 			item -> navigate(ToolsView.NAME));
-		
+
 		// Add schedule button
 		links.addItem(
 			messages.get("MainMenu.link.schedule"),
 			FontAwesome.CALENDAR,
-			null).setEnabled(false);
-		
+			item -> navigate(ScheduledViewMock.NAME));// .setEnabled(false);
+
 		// Add automate button
 		links.addItem(
 			messages.get("MainMenu.link.automate"),
 			FontAwesome.COGS,
 			item -> navigate(AutomateView.NAME));
-		
+
 		// Set properties and styles
 		links.setAutoOpen(true);
 		links.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
 		links.addStyleName(LINKS_STYLENAME);
-		
+
 		return links;
 	}
 
@@ -132,9 +133,10 @@ public class MainMenu extends AbstractMenu
 	/** @return a newly created main menu component. */
 	private Component createMenu()
 	{
-		Component links = createLinks();
+		final Component links = createLinks();
 		accountInformation = createAccountInformation();
-		HorizontalLayout menu = new HorizontalLayout(links, accountInformation);
+		final HorizontalLayout menu =
+			new HorizontalLayout(links, accountInformation);
 		menu.setComponentAlignment(links, Alignment.TOP_LEFT);
 		menu.setComponentAlignment(accountInformation, Alignment.TOP_RIGHT);
 		menu.setSizeFull();

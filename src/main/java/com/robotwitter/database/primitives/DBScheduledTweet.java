@@ -1,5 +1,6 @@
 package com.robotwitter.database.primitives;
 
+import java.sql.Timestamp;
 import java.util.Calendar;
 
 import com.robotwitter.posting.AutomateTweetPostingPeriod;
@@ -7,10 +8,11 @@ import com.robotwitter.twitter.TwitterAccount;
 
 public class DBScheduledTweet extends DatabaseType {
 
-	public DBScheduledTweet(String email, TwitterAccount twitterAccount,
-			String tweetName, String tweetText, Calendar startingDate,
+	public DBScheduledTweet(String email, long userId, String tweetName,
+			String tweetText, Timestamp startingDate,
 			AutomateTweetPostingPeriod postingPeriod) {
 		super(email);
+		this.userId = userId;
 		this.tweetName = tweetName;
 		this.tweetText = tweetText;
 		this.startingDate = startingDate;
@@ -33,11 +35,11 @@ public class DBScheduledTweet extends DatabaseType {
 		this.tweetText = tweetText;
 	}
 
-	public Calendar getStartingDate() {
+	public Timestamp getStartingDate() {
 		return startingDate;
 	}
 
-	public void setStartingDate(Calendar startingDate) {
+	public void setStartingDate(Timestamp startingDate) {
 		this.startingDate = startingDate;
 	}
 
@@ -49,8 +51,17 @@ public class DBScheduledTweet extends DatabaseType {
 		this.postingPeriod = postingPeriod;
 	}
 
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+
+	long userId;
 	String tweetName;
 	String tweetText;
-	Calendar startingDate;
+	Timestamp startingDate;
 	AutomateTweetPostingPeriod postingPeriod;
 }

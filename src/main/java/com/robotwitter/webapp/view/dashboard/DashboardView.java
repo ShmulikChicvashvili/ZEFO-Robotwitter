@@ -5,20 +5,18 @@ package com.robotwitter.webapp.view.dashboard;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.themes.ValoTheme;
 
 import com.robotwitter.webapp.control.dashboard.IDashboardController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.AbstractView;
+import com.robotwitter.webapp.view.analysis.FollowersAmountOverview;
 
 
 
@@ -73,12 +71,12 @@ public class DashboardView extends AbstractView
 	 *
 	 * @param messages
 	 *            the container of messages to display
+	 * @param controller
+	 *            the controller for the dashboard
 	 */
 	@Inject
-	public DashboardView(@Named("analysis") IMessagesContainer messages,  // FIXME:
-																			// change
-																			// to
-																			// dashboard
+	public DashboardView(
+		@Named(NAME) IMessagesContainer messages,
 		IDashboardController controller)
 	{
 		super(messages, messages.get("DashboardView.page.title"));
@@ -90,7 +88,7 @@ public class DashboardView extends AbstractView
 	@Override
 	public final void activateTwitterAccount(long id)
 	{
-		activeAccountComponent = createInformationComponent();
+		updateActiveTwitterAccountComponent();
 	}
 	
 	
@@ -99,8 +97,8 @@ public class DashboardView extends AbstractView
 	{
 		return false;
 	}
-	
-	
+
+
 	@Override
 	public final boolean isSignedInRequired()
 	{
@@ -109,101 +107,90 @@ public class DashboardView extends AbstractView
 	
 	
 	/**
-	 * @return
+	 * Creates the accounts component.
+	 *
+	 * @return the horizontal layout
 	 */
 	private HorizontalLayout createAccountsComponent()
 	{
 		accountsComponent = new HorizontalLayout();
+		accountsComponent.setSpacing(true);
+		
 		for (ConnectedAccountInfo twitterAccount : controller
 			.getConnectedAccountsInfo())
 		{
 			accountsComponent
-				.addComponent(createSingleAccountComponent(twitterAccount));
+			.addComponent(createSingleAccountComponent(twitterAccount));
 		}
+
+		accountsComponent.addStyleName(ACCOUNTS_STYLENAME);
 		
 		return accountsComponent;
 	}
 	
 	
-	/** @return A newly created follower information component. */
+	/**
+	 * Creates the information component.
+	 *
+	 * @return A newly created follower information component.
+	 */
 	private Component createInformationComponent()
 	{
-		picture = new Image();
-		name = new Label();
-		screenname = new Label();
+		FollowersAmountOverview followersAmountOverview =
+			new FollowersAmountOverview(messages);
+		
 		description = new Label();
 		location = new Label();
 		language = new Label();
-		celebrity = new Label();
-		
+
 		followingStat = new Label();
-		followersStat = new Label();
 		favouritesStat = new Label();
-		
-		link =
-			new Button(
-				messages
-					.get("MostInfluentialFollowers.link.to-follower-twitter"));
-		link.addStyleName(ValoTheme.BUTTON_LINK);
-		opener = null;
-		
+
 		// Captions
-		description.setCaption(messages
-			.get("MostInfluentialFollowers.caption.bio"));
-		location.setCaption(messages
-			.get("MostInfluentialFollowers.caption.location"));
-		language.setCaption(messages
-			.get("MostInfluentialFollowers.caption.language"));
+		description.setCaption(messages.get("DashboardView.caption.bio"));
+		location.setCaption(messages.get("DashboardView.caption.location"));
+		language.setCaption(messages.get("DashboardView.caption.language"));
 		followingStat.setCaption(messages
-			.get("MostInfluentialFollowers.caption.following"));
-		followersStat.setCaption(messages
-			.get("MostInfluentialFollowers.caption.followers"));
+			.get("DashboardView.caption.following"));
 		favouritesStat.setCaption(messages
-			.get("MostInfluentialFollowers.caption.favourites"));
-		
-		// Tooltips
-		celebrity.setDescription(messages
-			.get("MostInfluentialFollowers.tooltip.celebrity"));
+			.get("DashboardView.caption.favourites"));
 		
 		// Icons
 		location.setIcon(FontAwesome.GLOBE);
-		link.setIcon(FontAwesome.TWITTER);
-		
+
+		VerticalLayout numberStats =
+			new VerticalLayout(followingStat, favouritesStat);
+		numberStats.setSpacing(true);
+
+		VerticalLayout textStats = new VerticalLayout(location, language);
+		textStats.setSpacing(true);
+
 		HorizontalLayout stats =
-			new HorizontalLayout(followingStat, followersStat, favouritesStat);
+			new HorizontalLayout(numberStats, description, textStats);
 		stats.setSpacing(true);
 		
-		VerticalLayout left =
-			new VerticalLayout(picture, name, screenname, celebrity, link);
-		VerticalLayout right =
-			new VerticalLayout(stats, description, location, language);
-		right.setSpacing(true);
-		
-		HorizontalLayout layout = new HorizontalLayout(left, right);
-		layout.setSizeFull();
-		
-		picture.addStyleName(INFORMATION_PICTURE_STYLENAME);
-		name.addStyleName(INFORMATION_NAME_STYLENAME);
-		screenname.addStyleName(INFORMATION_SCREENNAME_STYLENAME);
+		VerticalLayout layout =
+			new VerticalLayout(followersAmountOverview, stats);
+
 		description.addStyleName(INFORMATION_DESCRIPTION_STYLENAME);
 		location.addStyleName(INFORMATION_LOCATION_STYLENAME);
 		language.addStyleName(INFORMATION_LANGUAGE_STYLENAME);
-		celebrity.addStyleName(INFORMATION_CELEBRITY_STYLENAME);
 		followingStat.addStyleName(INFORMATION_STAT_STYLENAME);
-		followersStat.addStyleName(INFORMATION_STAT_STYLENAME);
 		favouritesStat.addStyleName(INFORMATION_STAT_STYLENAME);
 		stats.addStyleName(INFORMATION_STATS_STYLENAME);
-		left.addStyleName(INFORMATION_LEFT_STYLENAME);
-		right.addStyleName(INFORMATION_RIGHT_STYLENAME);
-		layout.addStyleName(INFORMATION_STYLENAME);
+
+		updateActiveTwitterAccountComponent();
 		
 		return layout;
 	}
 	
 	
 	/**
+	 * Creates the single account component.
+	 *
 	 * @param twitterAccount
-	 * @return
+	 *            the twitter account
+	 * @return the component
 	 */
 	private Component createSingleAccountComponent(
 		ConnectedAccountInfo twitterAccount)
@@ -225,9 +212,11 @@ public class DashboardView extends AbstractView
 		Label accountFollowing = new Label();
 		Label accountGained = new Label();
 		Label accountLost = new Label();
-		accountFollowing.setCaption("Followers:");
-		accountGained.setCaption("Followers Gained:");
-		accountLost.setCaption("Followers Lost:");
+
+		accountFollowing.setIcon(FontAwesome.USERS);
+		accountGained.setIcon(FontAwesome.ARROW_UP);
+		accountLost.setIcon(FontAwesome.ARROW_DOWN);
+
 		accountFollowing.setValue(getShortenedValue(twitterAccount
 			.getNumFollowers()));
 		accountGained.setValue(getShortenedValue(twitterAccount
@@ -237,72 +226,78 @@ public class DashboardView extends AbstractView
 		
 		HorizontalLayout followersInfo =
 			new HorizontalLayout(accountFollowing, accountGained, accountLost);
+		followersInfo.setSpacing(true);
 		
-		Label newMessages = new Label();
-		newMessages.setCaption("Your Unanswered Messeges:");
-		newMessages.setValue(getShortenedValue(twitterAccount
+		Label newNotifications = new Label();
+		newNotifications.setIcon(FontAwesome.COMMENT);
+		Label newNotificationsCaption =
+			new Label(
+				messages.get("DashboardView.caption.notifications-available"));
+		newNotifications.setValue(getShortenedValue(twitterAccount
 			.getUnansweredMesseges()));
+
+		HorizontalLayout notifications =
+			new HorizontalLayout(newNotifications, newNotificationsCaption);
 		
-		return new VerticalLayout(
-			accountPicture,
-			names,
-			followersInfo,
-			newMessages);
+		VerticalLayout layout =
+			new VerticalLayout(
+				accountPicture,
+				names,
+				followersInfo,
+				notifications);
+
+		if (twitterAccount.getUnansweredMesseges() == 0)
+		{
+			layout.removeComponent(notifications);
+		}
+
+		layout.addStyleName(ACCOUNT_STYLENAME);
+		accountPicture.addStyleName(ACCOUNT_PICTURE_STYLENAME);
+		names.addStyleName(ACCOUNT_NAME_AND_SCREENNNAME_STYLENAME);
+		accountName.addStyleName(ACCOUNT_NAME_STYLENAME);
+		accountScreenname.addStyleName(ACCOUNT_SCREENNAME_STYLENAME);
+		followersInfo.addStyleName(ACCOUNT_STATS_STYLENAME);
+		accountFollowing.addStyleName(ACCOUNT_STAT_STYLENAME);
+		accountFollowing.addStyleName(ACCOUNT_TOTAL_STYLENAME);
+		accountGained.addStyleName(ACCOUNT_STAT_STYLENAME);
+		accountGained.addStyleName(ACCOUNT_GAINED_STYLENAME);
+		accountLost.addStyleName(ACCOUNT_STAT_STYLENAME);
+		accountLost.addStyleName(ACCOUNT_LOST_STYLENAME);
+		notifications.addStyleName(ACCOUNT_NOTIFICATIONS_STYLENAME);
+
+		return layout;
 	}
 	
 	
-	private void showAccount()
+	/**
+	 * Update active twitter account component.
+	 */
+	private void updateActiveTwitterAccountComponent()
 	{
 		ConnectedAccountInfo accountInformation =
 			controller.getCurrentAccountInfo();
-		
-		picture
-			.setSource(new ExternalResource(accountInformation.getPicture()));
-		picture.setAlternateText(accountInformation.getName());
-		name.setValue(accountInformation.getName());
-		screenname.setValue('@' + accountInformation.getScreenName());
+
 		description.setValue(accountInformation.getDescription());
 		location.setValue(accountInformation.getLocation());
 		language.setValue(accountInformation.getLanguage());
 		
-		celebrity.setValue("");
-		if (accountInformation.getIsCelebrity())
-		{
-			celebrity.setValue(messages
-				.get("MostInfluentialFollowers.label.celebrity"));
-		}
-		
 		followingStat.setValue(getShortenedValue(accountInformation
 			.getNumFollowing()));
-		followersStat.setValue(getShortenedValue(accountInformation
-			.getNumFollowers()));
 		favouritesStat.setValue(getShortenedValue(accountInformation
 			.getNumFavorites()));
-		
-		if (opener != null)
-		{
-			link.removeExtension(opener);
-		}
-		opener =
-			new BrowserWindowOpener("https://twitter.com/"
-				+ accountInformation.getScreenName());
-		opener.extend(link);
 	}
 	
 	
 	@Override
 	protected final void initialise()
 	{
-		Label infoHeader = new Label("Currently Connected As:"); // FIXME:
-																	// turn
-																	// to
-																	// messeges
+		Label infoHeader =
+			new Label(
+				messages.get("DashboardView.title.current-twitter-account"));
 		activeAccountComponent = createInformationComponent();
-		showAccount();
-		Label accountsHeader = new Label("Your Twitter Accounts:"); // FIXME:
-																	// turn
-																	// to
-																	// messeges
+		Label accountsHeader =
+			new Label(
+				messages.get("DashboardView.title.other-twitter-accounts"));
 		accountsComponent = createAccountsComponent();
 		VerticalLayout layout =
 			new VerticalLayout(
@@ -311,34 +306,30 @@ public class DashboardView extends AbstractView
 				accountsHeader,
 				accountsComponent);
 		
-		infoHeader.addStyleName(INFO_HEADER_STYLENAME);
-		accountsHeader.addStyleName(INFO_HEADER_STYLENAME);
+		infoHeader.addStyleName(HEADER_STYLENAME);
+		accountsHeader.addStyleName(HEADER_STYLENAME);
+
+		addStyleName(STYLENAME);
 		
 		setCompositionRoot(layout);
 	}
 	
 	
 	
+	/** The accounts component. */
 	private HorizontalLayout accountsComponent;
 	
+	/** The active account component. */
 	private Component activeAccountComponent;
 	
+	/** The controller. */
 	private IDashboardController controller;
 	
 	/** The view's name. */
-	public static final String NAME = "dashboard"; // FIXME: change to dashboard
+	public static final String NAME = "dashboard";
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
-	/** The active Twitter follower's picture image. */
-	Image picture;
-	
-	/** The active Twitter follower's name label. */
-	Label name;
-	
-	/** The active Twitter follower's screenname label. */
-	Label screenname;
 	
 	/** The active Twitter follower's description label. */
 	Label description;
@@ -349,80 +340,82 @@ public class DashboardView extends AbstractView
 	/** The active Twitter follower's language label. */
 	Label language;
 	
-	/** The active Twitter follower's celebrity label. */
-	Label celebrity;
-	
 	/** The active Twitter follower's following stat label. */
 	Label followingStat;
-	
-	/** The active Twitter follower's followers stat label. */
-	Label followersStat;
 	
 	/** The active Twitter follower's favourites stat label. */
 	Label favouritesStat;
 	
-	/** The active Twitter follower's link to Twitter account. */
-	Button link;
-	
-	/** Link browser window opener. */
-	BrowserWindowOpener opener;
-	
 	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "MostInfluentialFollowers";
+	private static final String STYLENAME = "DashboardView";
 	
-	/** The CSS class name to apply to the followers list component. */
-	private static final String FOLLOWERS_LIST_STYLENAME =
-		"MostInfluentialFollowers-followers-list";
-	
-	/** The CSS class name to apply to the active follower information. */
-	private static final String INFORMATION_STYLENAME =
-		"MostInfluentialFollowers-information";
-	
-	/** The CSS class name to apply to the information left side. */
-	private static final String INFORMATION_LEFT_STYLENAME =
-		"MostInfluentialFollowers-information-left";
-	
-	/** The CSS class name to apply to the information right side. */
-	private static final String INFORMATION_RIGHT_STYLENAME =
-		"MostInfluentialFollowers-information-right";
-	
-	/** The CSS class name to apply to a picture in the information. */
-	private static final String INFORMATION_PICTURE_STYLENAME =
-		"MostInfluentialFollowers-information-picture";
-	
-	/** The CSS class name to apply to a name in the information. */
-	private static final String INFORMATION_NAME_STYLENAME =
-		"MostInfluentialFollowers-information-name";
-	
-	/** The CSS class name to apply to a screenname in the information. */
-	private static final String INFORMATION_SCREENNAME_STYLENAME =
-		"MostInfluentialFollowers-information-screenname";
+	/** The CSS class name to apply to the header component. */
+	private static final String HEADER_STYLENAME = "DashboardView-header";
 	
 	/** The CSS class name to apply to a stat in the information. */
 	private static final String INFORMATION_STAT_STYLENAME =
-		"MostInfluentialFollowers-information-stat";
-	
+		"DashboardView-information-stat";
+
 	/** The CSS class name to apply to the stats wrapper in the information. */
 	private static final String INFORMATION_STATS_STYLENAME =
-		"MostInfluentialFollowers-information-stats";
-	
+		"DashboardView-information-stats";
+
 	/** The CSS class name to apply to a description in the information. */
 	private static final String INFORMATION_DESCRIPTION_STYLENAME =
-		"MostInfluentialFollowers-information-description";
-	
+		"DashboardView-information-description";
+
 	/** The CSS class name to apply to a location in the information. */
 	private static final String INFORMATION_LOCATION_STYLENAME =
-		"MostInfluentialFollowers-information-location";
-	
+		"DashboardView-information-location";
+
 	/** The CSS class name to apply to a language in the information. */
 	private static final String INFORMATION_LANGUAGE_STYLENAME =
-		"MostInfluentialFollowers-information-language";
+		"DashboardView-information-language";
 	
-	/** The CSS class name to apply to a celebrity in the information. */
-	private static final String INFORMATION_CELEBRITY_STYLENAME =
-		"MostInfluentialFollowers-information-celebrity";
+	/** The CSS class name to apply to the accounts wrapper. */
+	private static final String ACCOUNTS_STYLENAME = "DashboardView-accounts";
 	
-	/** The CSS class name to apply to the header component. */
-	private static final String INFO_HEADER_STYLENAME = "AnalysisView-header";
+	/** The CSS class name to apply to the accounts wrapper. */
+	private static final String ACCOUNT_STYLENAME = "DashboardView-account";
+	
+	/** The CSS class name to apply to an account's profile picture. */
+	private static final String ACCOUNT_PICTURE_STYLENAME =
+		"DashboardView-account-picture";
+
+	/** The CSS class name to apply to an account's name. */
+	private static final String ACCOUNT_NAME_AND_SCREENNNAME_STYLENAME =
+		"DashboardView-account-name-and-screenname";
+
+	/** The CSS class name to apply to an account's name. */
+	private static final String ACCOUNT_NAME_STYLENAME =
+		"DashboardView-account-name";
+
+	/** The CSS class name to apply to an account's screenname. */
+	private static final String ACCOUNT_SCREENNAME_STYLENAME =
+		"DashboardView-account-screenname";
+
+	/** The CSS class name to apply to an account's stats wrapper. */
+	private static final String ACCOUNT_STATS_STYLENAME =
+		"DashboardView-account-stats";
+
+	/** The CSS class name to apply to an account's stat. */
+	private static final String ACCOUNT_STAT_STYLENAME =
+		"DashboardView-account-stat";
+
+	/** The CSS class name to apply to an account's total followers. */
+	private static final String ACCOUNT_TOTAL_STYLENAME =
+		"DashboardView-account-total";
+
+	/** The CSS class name to apply to an account's gained followers. */
+	private static final String ACCOUNT_GAINED_STYLENAME =
+		"DashboardView-account-gained";
+
+	/** The CSS class name to apply to an account's lost followers. */
+	private static final String ACCOUNT_LOST_STYLENAME =
+		"DashboardView-account-lost";
+
+	/** The CSS class name to apply to an account's notifications. */
+	private static final String ACCOUNT_NOTIFICATIONS_STYLENAME =
+		"DashboardView-account-notifications";
 	
 }

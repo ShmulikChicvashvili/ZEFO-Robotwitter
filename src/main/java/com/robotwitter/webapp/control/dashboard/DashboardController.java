@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 
 package com.robotwitter.webapp.control.dashboard;
@@ -27,11 +27,18 @@ public class DashboardController implements IDashboardController
 	@Override
 	public List<ConnectedAccountInfo> getConnectedAccountsInfo()
 	{
-		ArrayList<ConnectedAccountInfo> $ = new ArrayList<ConnectedAccountInfo>();
+		ArrayList<ConnectedAccountInfo> $ =
+			new ArrayList<ConnectedAccountInfo>();
 		$.add(getCurrentAccountInfo());
 		$.add(getCurrentAccountInfo());
 		$.add(getCurrentAccountInfo());
-		return $;	
+		$.add(getCurrentAccountInfo());
+		$.add(getCurrentAccountInfo());
+		$.add(getCurrentAccountInfo());
+		$.add(getCurrentAccountInfo());
+		$.add(getCurrentAccountInfo());
+		$.add(getCurrentAccountInfo());
+		return $;
 	}
 	
 	
@@ -54,7 +61,7 @@ public class DashboardController implements IDashboardController
 			false,
 			new Timestamp(0),
 			"https://pbs.twimg.com/profile_images/546786848849158145/wS82lZr8.jpeg",
-			0,
+			5,
 			0,
 			0);
 	}

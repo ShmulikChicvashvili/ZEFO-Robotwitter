@@ -18,13 +18,18 @@ public interface IDashboardController
 {
 
 	/**
+	 * @return the information of the  twitter account.
+	 */
+	ConnectedAccountInfo getAccountInfo(long id);	
+
+	/**
 	 * @return
 	 */
 	List<ConnectedAccountInfo> getConnectedAccountsInfo();
 
 	/**
-	 * @return the information of the currently active twitter account.
+	 * @param email the email of the user
 	 */
-	ConnectedAccountInfo getCurrentAccountInfo();	
+	void setUser(String email);
 	
 }

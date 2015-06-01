@@ -38,7 +38,7 @@ public class DashboardView extends AbstractView
 	static String getShortenedValue(int n)
 	{
 		String $ = getShortenedValueAux(n);
-		$ = $.replace(".0", "");
+		$ = $.replace(".0", ""); //$NON-NLS-1$ //$NON-NLS-2$
 		return $;
 	}
 	
@@ -60,9 +60,9 @@ public class DashboardView extends AbstractView
 		
 		if (n < k) { return String.valueOf(n); }
 		f /= k;
-		if (f < k) { return String.format("%.1f", Float.valueOf(f)) + 'K'; }
+		if (f < k) { return String.format("%.1f", Float.valueOf(f)) + 'K'; } //$NON-NLS-1$
 		f /= k;
-		return String.format("%.1f", Float.valueOf(f)) + 'M';
+		return String.format("%.1f", Float.valueOf(f)) + 'M'; //$NON-NLS-1$
 	}
 	
 	
@@ -79,9 +79,11 @@ public class DashboardView extends AbstractView
 		@Named(NAME) IMessagesContainer messages,
 		IDashboardController controller)
 	{
-		super(messages, messages.get("DashboardView.page.title"));
+		super(messages, messages.get("DashboardView.page.title")); //$NON-NLS-1$
 		this.controller = controller;
+		this.controller.setUser(getUserSession().getAccountController().getEmail());
 		getUserSession().observeActiveTwitterAccount(this);
+		
 	}
 	
 	
@@ -147,13 +149,13 @@ public class DashboardView extends AbstractView
 		favouritesStat = new Label();
 
 		// Captions
-		description.setCaption(messages.get("DashboardView.caption.bio"));
-		location.setCaption(messages.get("DashboardView.caption.location"));
-		language.setCaption(messages.get("DashboardView.caption.language"));
+		description.setCaption(messages.get("DashboardView.caption.bio")); //$NON-NLS-1$
+		location.setCaption(messages.get("DashboardView.caption.location")); //$NON-NLS-1$
+		language.setCaption(messages.get("DashboardView.caption.language")); //$NON-NLS-1$
 		followingStat.setCaption(messages
-			.get("DashboardView.caption.following"));
+			.get("DashboardView.caption.following")); //$NON-NLS-1$
 		favouritesStat.setCaption(messages
-			.get("DashboardView.caption.favourites"));
+			.get("DashboardView.caption.favourites")); //$NON-NLS-1$
 		
 		// Icons
 		location.setIcon(FontAwesome.GLOBE);
@@ -232,7 +234,7 @@ public class DashboardView extends AbstractView
 		newNotifications.setIcon(FontAwesome.COMMENT);
 		Label newNotificationsCaption =
 			new Label(
-				messages.get("DashboardView.caption.notifications-available"));
+				messages.get("DashboardView.caption.notifications-available")); //$NON-NLS-1$
 		newNotifications.setValue(getShortenedValue(twitterAccount
 			.getUnansweredMesseges()));
 
@@ -274,8 +276,9 @@ public class DashboardView extends AbstractView
 	 */
 	private void updateActiveTwitterAccountComponent()
 	{
+		
 		ConnectedAccountInfo accountInformation =
-			controller.getCurrentAccountInfo();
+			controller.getAccountInfo(getUserSession().getAccountController().getActiveTwitterAccount().getID());
 
 		description.setValue(accountInformation.getDescription());
 		location.setValue(accountInformation.getLocation());
@@ -293,11 +296,11 @@ public class DashboardView extends AbstractView
 	{
 		Label infoHeader =
 			new Label(
-				messages.get("DashboardView.title.current-twitter-account"));
+				messages.get("DashboardView.title.current-twitter-account")); //$NON-NLS-1$
 		activeAccountComponent = createInformationComponent();
 		Label accountsHeader =
 			new Label(
-				messages.get("DashboardView.title.other-twitter-accounts"));
+				messages.get("DashboardView.title.other-twitter-accounts")); //$NON-NLS-1$
 		accountsComponent = createAccountsComponent();
 		VerticalLayout layout =
 			new VerticalLayout(
@@ -326,7 +329,7 @@ public class DashboardView extends AbstractView
 	private IDashboardController controller;
 	
 	/** The view's name. */
-	public static final String NAME = "dashboard";
+	public static final String NAME = "dashboard"; //$NON-NLS-1$
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
@@ -347,75 +350,75 @@ public class DashboardView extends AbstractView
 	Label favouritesStat;
 	
 	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "DashboardView";
+	private static final String STYLENAME = "DashboardView"; //$NON-NLS-1$
 	
 	/** The CSS class name to apply to the header component. */
-	private static final String HEADER_STYLENAME = "DashboardView-header";
+	private static final String HEADER_STYLENAME = "DashboardView-header"; //$NON-NLS-1$
 	
 	/** The CSS class name to apply to a stat in the information. */
 	private static final String INFORMATION_STAT_STYLENAME =
-		"DashboardView-information-stat";
+		"DashboardView-information-stat"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to the stats wrapper in the information. */
 	private static final String INFORMATION_STATS_STYLENAME =
-		"DashboardView-information-stats";
+		"DashboardView-information-stats"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to a description in the information. */
 	private static final String INFORMATION_DESCRIPTION_STYLENAME =
-		"DashboardView-information-description";
+		"DashboardView-information-description"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to a location in the information. */
 	private static final String INFORMATION_LOCATION_STYLENAME =
-		"DashboardView-information-location";
+		"DashboardView-information-location"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to a language in the information. */
 	private static final String INFORMATION_LANGUAGE_STYLENAME =
-		"DashboardView-information-language";
+		"DashboardView-information-language"; //$NON-NLS-1$
 	
 	/** The CSS class name to apply to the accounts wrapper. */
-	private static final String ACCOUNTS_STYLENAME = "DashboardView-accounts";
+	private static final String ACCOUNTS_STYLENAME = "DashboardView-accounts"; //$NON-NLS-1$
 	
 	/** The CSS class name to apply to the accounts wrapper. */
-	private static final String ACCOUNT_STYLENAME = "DashboardView-account";
+	private static final String ACCOUNT_STYLENAME = "DashboardView-account"; //$NON-NLS-1$
 	
 	/** The CSS class name to apply to an account's profile picture. */
 	private static final String ACCOUNT_PICTURE_STYLENAME =
-		"DashboardView-account-picture";
+		"DashboardView-account-picture"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to an account's name. */
 	private static final String ACCOUNT_NAME_AND_SCREENNNAME_STYLENAME =
-		"DashboardView-account-name-and-screenname";
+		"DashboardView-account-name-and-screenname"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to an account's name. */
 	private static final String ACCOUNT_NAME_STYLENAME =
-		"DashboardView-account-name";
+		"DashboardView-account-name"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to an account's screenname. */
 	private static final String ACCOUNT_SCREENNAME_STYLENAME =
-		"DashboardView-account-screenname";
+		"DashboardView-account-screenname"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to an account's stats wrapper. */
 	private static final String ACCOUNT_STATS_STYLENAME =
-		"DashboardView-account-stats";
+		"DashboardView-account-stats"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to an account's stat. */
 	private static final String ACCOUNT_STAT_STYLENAME =
-		"DashboardView-account-stat";
+		"DashboardView-account-stat"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to an account's total followers. */
 	private static final String ACCOUNT_TOTAL_STYLENAME =
-		"DashboardView-account-total";
+		"DashboardView-account-total"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to an account's gained followers. */
 	private static final String ACCOUNT_GAINED_STYLENAME =
-		"DashboardView-account-gained";
+		"DashboardView-account-gained"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to an account's lost followers. */
 	private static final String ACCOUNT_LOST_STYLENAME =
-		"DashboardView-account-lost";
+		"DashboardView-account-lost"; //$NON-NLS-1$
 
 	/** The CSS class name to apply to an account's notifications. */
 	private static final String ACCOUNT_NOTIFICATIONS_STYLENAME =
-		"DashboardView-account-notifications";
+		"DashboardView-account-notifications"; //$NON-NLS-1$
 	
 }

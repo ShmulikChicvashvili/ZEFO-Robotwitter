@@ -5,14 +5,18 @@
 package com.robotwitter.webapp.view.scheduling;
 
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.vaadin.server.FontAwesome;
+import com.vaadin.server.Page;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -61,12 +65,6 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 		this.schedulingController = schedulingController;
 		this.onResponseSuccess = onResponseSuccess;
 
-		maxTweetLen =
-			getUserSession()
-				.getAccountController()
-				.getActiveTwitterAccount()
-				.getCurrentMaximumTweetLength();
-
 		initializeLayout();
 	}
 
@@ -113,6 +111,7 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 	private void initializePreviewLayout()
 	{
 		preview = new TweetPreview();
+		preview.updatePreview(new ArrayList<>());
 	}
 
 
@@ -174,6 +173,15 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 	 */
 	private void submitClick(ClickEvent event)
 	{
+
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Notification n =
+			new Notification(
+				repeatChooser.getChosenRepeatType().toString(),
+				sdf.format(repeatChooser.getChosenDate().getTime()));
+		n.setDelayMsec(3000);
+		n.show(Page.getCurrent());
+
 		onResponseSuccess.onResponse();
 	}
 
@@ -217,8 +225,6 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 	private Label errorMessage;
 
 	private TextField tweetName;
-
-	private final int maxTweetLen;
 
 	private TweetComposeBox tweetComposeBox;
 

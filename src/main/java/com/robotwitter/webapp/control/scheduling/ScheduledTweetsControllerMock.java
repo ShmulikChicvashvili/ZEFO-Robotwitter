@@ -8,8 +8,6 @@ package com.robotwitter.webapp.control.scheduling;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ibm.icu.util.Calendar;
-
 import com.robotwitter.posting.AutomateTweetPostingPeriod;
 
 
@@ -27,14 +25,13 @@ IScheduledTweetsController
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.scheduling.IScheduledTweetsController
 	 * #addScheduledTweet(java.lang.String, java.lang.String, long,
-	 * com.ibm.icu.util.Calendar,
-	 * com.robotwitter.posting.AutomateTweetPostingPeriod) */
+	 * java.util.Calendar, com.robotwitter.posting.AutomateTweetPostingPeriod) */
 	@Override
 	public void addScheduledTweet(
 		String name,
 		String text,
 		long userId,
-		Calendar c,
+		java.util.Calendar c,
 		AutomateTweetPostingPeriod period)
 	{
 		// TODO Auto-generated method stub

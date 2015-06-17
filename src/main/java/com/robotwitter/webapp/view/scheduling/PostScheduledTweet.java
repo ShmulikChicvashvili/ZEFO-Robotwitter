@@ -7,6 +7,8 @@ package com.robotwitter.webapp.view.scheduling;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import com.vaadin.server.FontAwesome;
@@ -21,10 +23,12 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import com.robotwitter.posting.AutomateTweetPostingPeriod;
 import com.robotwitter.webapp.control.scheduling.IScheduledTweetsController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.RobotwitterCustomComponent;
 import com.robotwitter.webapp.util.tweeting.RepeatChooser;
+import com.robotwitter.webapp.util.tweeting.RepeatChooser.RepeatType;
 import com.robotwitter.webapp.util.tweeting.TweetComposeBox;
 import com.robotwitter.webapp.util.tweeting.TweetPreview;
 
@@ -66,6 +70,62 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 		this.onResponseSuccess = onResponseSuccess;
 
 		initializeLayout();
+	}
+
+
+	private boolean checkErrors(
+		String tweet,
+		RepeatType repeatType,
+		Calendar startDate)
+	{
+		if (startDate.before(new Date()))
+		{
+			setErrorMessage(messages
+				.get("PostScheduledTweet.error.date-passed"));
+			return false;
+		}
+
+		if(tweetName.getValue().isEmpty()) {
+			setErrorMessage(messages
+				.get("PostScheduledTweet.error.name-empty"));
+			return false;
+		}
+
+		List<String> tweets = schedulingController.previewTweet(tweet);
+		int maxTweetLen =
+			getUserSession()
+			.getAccountController()
+			.getActiveTwitterAccount()
+			.getCurrentMaximumTweetLength();
+		int c = 0;
+		for (String t : tweets)
+		{
+			c += t.length();
+		}
+		// Check emptiness
+		if (c == 0)
+		{
+			setErrorMessage(messages
+				.get("PostScheduledTweet.error.tweet-empty"));
+			return false;
+		}
+
+		// Validate
+		if (c > maxTweetLen)
+		{
+			setErrorMessage(messages
+				.get("PostScheduledTweet.error.tweet-too-long"));
+			return false;
+		}
+
+		return true;
+	}
+
+
+	/** Clears the displayed error message on the composer. */
+	private void clearErrorMessage()
+	{
+		errorMessage.setVisible(false);
 	}
 
 
@@ -169,18 +229,68 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 
 
 	/**
+	 * Displays an error message on the composer.
+	 *
+	 * @param error
+	 *            the error message to display
+	 */
+	private void setErrorMessage(String error)
+	{
+		// Clear any previous error message.
+		clearErrorMessage();
+
+		// Set the error message
+		errorMessage.setVisible(true);
+		errorMessage.setValue(error);
+	}
+
+
+	/**
 	 * @param event
 	 */
 	private void submitClick(ClickEvent event)
 	{
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+
+		RepeatType repeatType = repeatChooser.getChosenRepeatType();
+		Calendar startDate = repeatChooser.getChosenDate();
+
 		Notification n =
-			new Notification(
-				repeatChooser.getChosenRepeatType().toString(),
-				sdf.format(repeatChooser.getChosenDate().getTime()));
+			new Notification(repeatType.toString(), sdf.format(startDate
+				.getTime()));
 		n.setDelayMsec(3000);
 		n.show(Page.getCurrent());
+
+		if (!checkErrors(tweetComposeBox.getText(), repeatType, startDate)) { return; }
+
+		long userId =
+			getUserSession()
+			.getAccountController()
+			.getActiveTwitterAccount()
+			.getID();
+
+		AutomateTweetPostingPeriod period = null;
+		switch (repeatType)
+		{
+			case ONE_TIME:
+				period = AutomateTweetPostingPeriod.SINGLE;
+				break;
+			case DAILY:
+				period = AutomateTweetPostingPeriod.DAILY;
+				break;
+			case WEEKLY:
+				period = AutomateTweetPostingPeriod.WEEKLY;
+				break;
+		}
+		assert period != null;
+
+		schedulingController.addScheduledTweet(
+			tweetName.getValue(),
+			tweetComposeBox.getText(),
+			userId,
+			startDate,
+			period);
 
 		onResponseSuccess.onResponse();
 	}

@@ -31,7 +31,8 @@ public class RepeatChooser extends RobotwitterCustomComponent
 	public enum RepeatType
 	{
 		ONE_TIME(0),
-		WEEKLY(1);
+		DAILY(1),
+		WEEKLY(2);
 
 		@SuppressWarnings("boxing")
 		private RepeatType(int index)
@@ -69,11 +70,13 @@ public class RepeatChooser extends RobotwitterCustomComponent
 
 	public RepeatType getChosenRepeatType()
 	{
-		@SuppressWarnings("boxing")
 		Integer chosen = (Integer) repeatTypeRadio.getValue();
-		if (chosen.equals(RepeatType.ONE_TIME.index)) { return RepeatType.ONE_TIME; }
-		if (chosen.equals(RepeatType.WEEKLY.index)) { return RepeatType.WEEKLY; }
-		
+
+		for (RepeatType r : RepeatType.values())
+		{
+			if (r.index.equals(chosen)) { return r; }
+		}
+
 		assert false;
 		return RepeatType.ONE_TIME;
 	}

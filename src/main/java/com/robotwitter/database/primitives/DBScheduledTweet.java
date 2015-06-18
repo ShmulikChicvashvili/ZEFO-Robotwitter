@@ -59,6 +59,14 @@ public class DBScheduledTweet extends DatabaseType {
 		this.userId = userId;
 	}
 
+	@Override
+	public String toString() {
+		return "DBScheduledTweet [userId=" + userId + ", tweetName="
+				+ tweetName + ", tweetText=" + tweetText + ", startingDate="
+				+ startingDate + ", postingPeriod=" + postingPeriod
+				+ ", eMail=" + eMail + "]";
+	}
+
 	long userId;
 	String tweetName;
 	String tweetText;

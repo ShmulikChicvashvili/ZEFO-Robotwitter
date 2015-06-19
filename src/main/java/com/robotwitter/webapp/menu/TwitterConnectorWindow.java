@@ -14,9 +14,10 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import com.robotwitter.webapp.control.account.ITwitterConnectorController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
+import com.robotwitter.webapp.util.AbstractUI;
 import com.robotwitter.webapp.util.IFormComponent;
 import com.robotwitter.webapp.util.WindowWithDescription;
-import com.robotwitter.webapp.view.RobotwitterUI;
+import com.robotwitter.webapp.view.DesktopUI;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -31,7 +32,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public class TwitterConnectorWindow extends WindowWithDescription
 {
-	
+
 	/**
 	 * Initialises a new Twitter account connection window.
 	 *
@@ -46,23 +47,23 @@ public class TwitterConnectorWindow extends WindowWithDescription
 	{
 		this.messages = messages;
 		this.twitterConnectorController = twitterConnectorController;
-
+		
 		// Set window properties
 		setCaption(messages.get("TwitterConnectorWindow.caption"));
 		setDescription(messages.get("TwitterConnectorWindow.instructions"));
 		setIcon(FontAwesome.TWITTER);
-		
+
 		// Initialise the content
 		setContent(createTwitterLoginButton());
-		
+
 		// Reset the content whenever the window is closed
 		addCloseListener(event -> setContent(createTwitterLoginButton()));
-		
+
 		// Set styling
 		addStyleName(STYLENAME);
 	}
-	
-	
+
+
 	/**
 	 * Creates the connect component.
 	 *
@@ -76,11 +77,11 @@ public class TwitterConnectorWindow extends WindowWithDescription
 				messages,
 				twitterConnectorController,
 				this::handleSuccessfulConnect);
-		
+
 		return connectorForm;
 	}
-	
-	
+
+
 	/**
 	 * Creates the twitter login button.
 	 *
@@ -91,7 +92,7 @@ public class TwitterConnectorWindow extends WindowWithDescription
 		BrowserWindowOpener opener =
 			new BrowserWindowOpener(
 				twitterConnectorController.getConnectionURL());
-
+		
 		Button twitterLogin =
 			new Button(
 				messages.get("TwitterConnectorWindow.link.login-at-twitter"),
@@ -99,14 +100,14 @@ public class TwitterConnectorWindow extends WindowWithDescription
 					setContent(createConnectComponent());
 				});
 		twitterLogin.setSizeFull();
-
+		
 		opener.extend(twitterLogin);
-
+		
 		twitterLogin.addStyleName(TWITTER_LOGIN_STYLENAME);
 		return twitterLogin;
 	}
-
-
+	
+	
 	/**
 	 * Handles a successful attempt at a Twitter account connection.
 	 *
@@ -120,14 +121,14 @@ public class TwitterConnectorWindow extends WindowWithDescription
 	{
 		// Activate the new Twitter account
 		long id = twitterConnectorController.getID();
-		((RobotwitterUI) UI.getCurrent()).activateTwitterAccount(id);
-
+		((AbstractUI) UI.getCurrent()).activateTwitterAccount(id);
+		
 		// Create description
 		String screenname = twitterConnectorController.getScreenname();
 		String desc = messages.get("TwitterConnectorForm.notify.connected-to");
 		desc += " <b>@" + screenname + "</b>. ";
 		desc += messages.get("TwitterConnectorForm.notify.change-active");
-		
+
 		// Show notification
 		Notification notification =
 			new Notification(
@@ -140,12 +141,12 @@ public class TwitterConnectorWindow extends WindowWithDescription
 			+ ValoTheme.NOTIFICATION_TRAY);
 		notification.setDelayMsec(SUCCESS_NOTIFICATION_DELAY);
 		notification.show(Page.getCurrent());
-
+		
 		// Close the window
 		close();
-
+		
 		// If its the user's first Twitter account, navigate to Dashboard
-		RobotwitterUI ui = (RobotwitterUI) UI.getCurrent();
+		DesktopUI ui = (DesktopUI) UI.getCurrent();
 		if (ui
 			.getUserSession()
 			.getAccountController()
@@ -155,29 +156,29 @@ public class TwitterConnectorWindow extends WindowWithDescription
 			ui.getNavigator().navigateTo(DashboardView.NAME);
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * The closing delay of the successful connection notification (in
 	 * milliseconds).
 	 */
 	private static final int SUCCESS_NOTIFICATION_DELAY = 7000;
-	
+
 	/** The Twitter account connector controller. */
 	private final ITwitterConnectorController twitterConnectorController;
-	
+
 	/** The CSS class name to apply to the password retrieval form. */
 	private static final String TWITTER_LOGIN_STYLENAME =
 		"TwitterConnectorWindow-login-to-twitter";
-
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "TwitterConnectorWindow";
-
+	
 	/** The messages displayed by this view. */
 	protected IMessagesContainer messages;
-
+	
 }

@@ -1,1 +1,0 @@
-$wnd.com_robotwitter_webapp_RobotwitterWidgetset.runAsyncCallback2('Lbb(1520,1,VGd);_.uc=function P5b(){aUb((!VTb&&(VTb=new fUb),VTb),this.a.d)};AAd(Wh)(2);\n//# sourceURL=com.robotwitter.webapp.RobotwitterWidgetset-2.js\n')

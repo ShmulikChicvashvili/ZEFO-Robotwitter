@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 import com.robotwitter.webapp.menu.AbstractMenu;
 import com.robotwitter.webapp.menu.MainMenu;
+import com.robotwitter.webapp.menu.MobileMainMenu;
 
 
 
@@ -21,6 +22,7 @@ public class MenuMap extends HashMap<String, Class<? extends AbstractMenu>>
 	public MenuMap()
 	{
 		put(MainMenu.NAME, MainMenu.class);
+		put(MobileMainMenu.NAME, MobileMainMenu.class);
 	}
 
 

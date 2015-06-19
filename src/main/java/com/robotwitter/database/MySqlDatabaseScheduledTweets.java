@@ -136,7 +136,7 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 
 	private void initQueries() {
 		creationScheduledQuery = String
-				.format("CREATE TABLE %s (%s VARCHAR(255) NOT NULL, %s BIGINT NOT NULL, %s VARCHAR(255) NOT NULL, %s TEXT NOT NULL,"
+				.format("CREATE TABLE IF NOT EXISTS %s (%s VARCHAR(255) NOT NULL, %s BIGINT NOT NULL, %s VARCHAR(255) NOT NULL, %s TEXT NOT NULL,"
 						+ " %s TIMESTAMP NOT NULL, %s ENUM('%s','%s','%s','%s') NOT NULL);",
 						scheduledTweetsTable, Columns.EMAIL.toString()
 								.toLowerCase(), Columns.USER_ID.toString()
@@ -151,7 +151,7 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 						AutomateTweetPostingPeriod.MONTHLY.toString());
 
 		creationFlushingQuery = String
-				.format("CREATE TABLE %s (%s VARCHAR(255) NOT NULL, %s BIGINT NOT NULL, %s VARCHAR(255) NOT NULL, %s TEXT NOT NULL,"
+				.format("CREATE TABLE IF NOT EXISTS %s (%s VARCHAR(255) NOT NULL, %s BIGINT NOT NULL, %s VARCHAR(255) NOT NULL, %s TEXT NOT NULL,"
 						+ " %s TIMESTAMP NOT NULL, %s ENUM('%s','%s','%s','%s') NOT NULL);",
 						flushingTweetsTable, Columns.EMAIL.toString()
 								.toLowerCase(), Columns.USER_ID.toString()

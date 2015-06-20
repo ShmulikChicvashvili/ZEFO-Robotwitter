@@ -104,6 +104,11 @@ public class RepeatChooser extends RobotwitterCustomComponent
 			RepeatType.ONE_TIME.index,
 			messages.get("PostScheduledTweet.radio.one-time"));
 
+		repeatTypeRadio.addItem(RepeatType.DAILY.index);
+		repeatTypeRadio.setItemCaption(
+			RepeatType.DAILY.index,
+			messages.get("PostScheduledTweet.radio.daily"));
+
 		repeatTypeRadio.addItem(RepeatType.WEEKLY.index);
 		repeatTypeRadio.setItemCaption(
 			RepeatType.WEEKLY.index,
@@ -131,7 +136,12 @@ public class RepeatChooser extends RobotwitterCustomComponent
 		// radio button choice.
 		repeatDatesPlaceHolder.addComponent(repeatDatesLayout);
 
-		dateField.setValue(new Date());
+		// set starting time to 1 minute ahead
+		Calendar cal = Calendar.getInstance();
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		cal.roll(Calendar.MINUTE, 1);
+		dateField.setValue(cal.getTime());
 		dateField.setResolution(Resolution.MINUTE);
 	}
 

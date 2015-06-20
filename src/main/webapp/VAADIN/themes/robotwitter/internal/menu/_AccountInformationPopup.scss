@@ -39,6 +39,24 @@
 		}
 	}
 	
+	
+	/* Remove sub-menu indicator in mobile browsers */
+	.AccountInformationPopup-minimised-mobile
+	{
+		width: $height;
+		width: 16.6vw;
+		padding: 0;
+	
+		.TwitterCard .TwitterCard-image-wrapper { margin: auto; }
+		.TwitterCard::after { display: none; }
+		&:hover { background: none; }
+	}
+	
+	
+	/* Stick to the right */
+	.v-popupview-MainMenu-account { float: right; }
+	
+	
 	/* Maximised (popped-out) presentation */
 	.v-popupview-popup-MainMenu-account
 	{
@@ -76,11 +94,10 @@
 	}
 	
 	/* Small arrow on top */
-	.v-popupview-popup-MainMenu-account:after,
-	.v-popupview-popup-MainMenu-account:before
+	.AccountInformationPopup-popup:after,
+	.AccountInformationPopup-popup:before
 	{
 		bottom: 100%;
-		right: ($height * 2 / 3) + $height / 5;
 		border: solid transparent;
 		content: " ";
 		height: 0;
@@ -88,18 +105,25 @@
 		position: absolute;
 		pointer-events: none;
 	}
-	.v-popupview-popup-MainMenu-account:after
+	.AccountInformationPopup-popup:after
 	{
 		border-color: rgba(255, 255, 255, 0);
 		border-bottom-color: white;
 		border-width: 7px;
+		right: ($height * 2 / 3) + $height / 5;
 	}
-	.v-popupview-popup-MainMenu-account:before
+	.AccountInformationPopup-popup:before
 	{
 		border-color: rgba(0, 0, 0, 0);
 		border-bottom-color: rgba(0, 0, 0, 0.1);
 		border-width: 8px;
-		right: ($height * 2 / 3) + $height / 5 - 1px;
+	}
+	
+	/* Fix arrow position on mobile browsers */
+	.AccountInformationPopup-popup-mobile:after
+	{
+		right: ($height / 2) - 4px;
+		right: 7vw
 	}
 	
 	/* Manage Twitter accounts button */

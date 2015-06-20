@@ -17,7 +17,6 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.AbstractUI;
 import com.robotwitter.webapp.util.IFormComponent;
 import com.robotwitter.webapp.util.WindowWithDescription;
-import com.robotwitter.webapp.view.DesktopUI;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
@@ -146,7 +145,7 @@ public class TwitterConnectorWindow extends WindowWithDescription
 		close();
 		
 		// If its the user's first Twitter account, navigate to Dashboard
-		DesktopUI ui = (DesktopUI) UI.getCurrent();
+		AbstractUI ui = (AbstractUI) UI.getCurrent();
 		if (ui
 			.getUserSession()
 			.getAccountController()

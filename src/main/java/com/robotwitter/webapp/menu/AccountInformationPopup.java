@@ -19,7 +19,6 @@ import com.robotwitter.webapp.control.account.ITwitterAccountController;
 import com.robotwitter.webapp.control.account.ITwitterConnectorController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.util.AbstractUI;
-import com.robotwitter.webapp.view.DesktopUI;
 import com.robotwitter.webapp.view.IUserSession;
 
 
@@ -60,7 +59,19 @@ class AccountInformationPopup implements PopupView.Content
 		IAccountController controller = userSession.getAccountController();
 		
 		// Root element
-		String minimisedOpen = "<div class=\"" + MINIMISED_STYLENAME + "\">";
+		String minimisedOpen;
+		if (((AbstractUI) UI.getCurrent()).isMobile())
+		{
+			minimisedOpen =
+				"<div class=\""
+					+ MINIMISED_STYLENAME
+					+ " "
+					+ MOBILE_MINIMISED_STYLENAME
+					+ "\">";
+		} else
+		{
+			minimisedOpen = "<div class=\"" + MINIMISED_STYLENAME + "\">";
+		}
 		String minimiseClose = "</div>";
 		
 		ITwitterAccountController account =
@@ -77,7 +88,8 @@ class AccountInformationPopup implements PopupView.Content
 					messages
 							.get("AccountInformationPopup.label.click-to-connect"),
 					"http://www.austadpro.com/blog/wp-content/uploads/2011/07/anonymous-user-gravatar.png",
-					true);
+					true,
+					((AbstractUI) UI.getCurrent()).isMobile());
 		} else
 		{
 			minimiseContent =
@@ -85,7 +97,8 @@ class AccountInformationPopup implements PopupView.Content
 					account.getName(),
 					account.getScreenname(),
 					account.getImage(),
-					false);
+					false,
+					((AbstractUI) UI.getCurrent()).isMobile());
 		}
 
 		String minimiseElem = minimisedOpen + minimiseContent + minimiseClose;
@@ -97,9 +110,18 @@ class AccountInformationPopup implements PopupView.Content
 	@Override
 	public Component getPopupComponent()
 	{
-		return new VerticalLayout(
-			createTwitterAccountCards(),
-			createAccountInformation());
+		VerticalLayout popup =
+			new VerticalLayout(
+				createTwitterAccountCards(),
+				createAccountInformation());
+		
+		popup.addStyleName(POPUP_STYLENAME);
+		if (((AbstractUI) UI.getCurrent()).isMobile())
+		{
+			popup.addStyleName(MOBILE_POPUP_STYLENAME);
+		}
+		
+		return popup;
 	}
 
 
@@ -191,6 +213,7 @@ class AccountInformationPopup implements PopupView.Content
 					account.getName(),
 					account.getScreenname(),
 					account.getImage(),
+					false,
 					false));
 			card.setContentMode(ContentMode.HTML);
 			VerticalLayout cardWrapper = new VerticalLayout(card);
@@ -198,7 +221,7 @@ class AccountInformationPopup implements PopupView.Content
 			cardWrapper
 			.addLayoutClickListener(event -> {
 				if (event.getButton().compareTo(MouseButton.LEFT) != 0) { return; }
-				((DesktopUI) UI.getCurrent())
+				((AbstractUI) UI.getCurrent())
 				.activateTwitterAccount(account.getID());
 				close();
 			});
@@ -229,12 +252,30 @@ class AccountInformationPopup implements PopupView.Content
 		twitterConnectorWindow =
 			new TwitterConnectorWindow(messages, twitterConnectorController);
 	}
-
-
-
+	
+	
+	
 	/** The CSS class name to apply to the minimised presentation. */
 	private static final String MINIMISED_STYLENAME =
 		"AccountInformationPopup-minimised";
+
+	/**
+	 * The CSS class name to apply to the minimised presentation in mobile
+	 * browsers.
+	 */
+	private static final String MOBILE_MINIMISED_STYLENAME =
+		"AccountInformationPopup-minimised-mobile";
+	
+	/** The CSS class name to apply to the popup (maximised) presentation. */
+	private static final String POPUP_STYLENAME =
+		"AccountInformationPopup-popup";
+	
+	/**
+	 * The CSS class name to apply to the popup (maximised) presentation in
+	 * mobile browsers..
+	 */
+	private static final String MOBILE_POPUP_STYLENAME =
+		"AccountInformationPopup-popup-mobile";
 	
 	/** The CSS class name to apply to a card wrapper. */
 	private static final String CARD_WRAPPER_STYLENAME =

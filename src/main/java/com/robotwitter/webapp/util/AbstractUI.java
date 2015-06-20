@@ -88,6 +88,7 @@ public abstract class AbstractUI extends UI
 		if (isMainMenuShown) { return; }
 		mainMenuAndContentContainer.addComponentAsFirst(mainMenu);
 		isMainMenuShown = true;
+		mainMenu.onAttach();
 	}
 	
 	

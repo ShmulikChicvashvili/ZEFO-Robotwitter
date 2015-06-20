@@ -28,8 +28,18 @@ public abstract class AbstractMenu extends RobotwitterCustomComponent
 	}
 	
 	
-	
+	/**
+	 * Can be overridden by deriving menus; this method is called when the menu
+	 * is attached to the UI by an outside source.
+	 */
+	public void onAttach()
+	{
+		/* Do nothing */
+	};
+
+
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 }

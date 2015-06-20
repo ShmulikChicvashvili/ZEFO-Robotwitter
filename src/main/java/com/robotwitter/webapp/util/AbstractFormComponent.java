@@ -18,6 +18,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 
@@ -284,8 +285,8 @@ public abstract class AbstractFormComponent extends CustomComponent
 		emptyErrorMessages.put(identifier, emptyErrorMessage);
 		validators.put(identifier, validator);
 		
-		// Focus field if it is the first
-		if (fieldCount == 0)
+		// Focus field if it is the first, and not using mobile
+		if (fieldCount == 0 && !((AbstractUI) UI.getCurrent()).isMobile())
 		{
 			field.focus();
 		}

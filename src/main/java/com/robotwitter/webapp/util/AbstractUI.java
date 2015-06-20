@@ -17,6 +17,8 @@ import com.robotwitter.webapp.Configuration;
 import com.robotwitter.webapp.IMenuFactory;
 import com.robotwitter.webapp.control.account.IAccountController;
 import com.robotwitter.webapp.menu.AbstractMenu;
+import com.robotwitter.webapp.menu.MainMenu;
+import com.robotwitter.webapp.mobile.MobileUI;
 import com.robotwitter.webapp.view.NavigationListener;
 import com.robotwitter.webapp.view.UserSession;
 
@@ -36,16 +38,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 @SuppressFBWarnings("CD_CIRCULAR_DEPENDENCY")
 public abstract class AbstractUI extends UI
 {
-
-	/**
-	 * Instantiates a new abstract UI.
-	 *
-	 * @param mainMenuName
-	 *            the name of the main-menu to use
-	 */
-	public AbstractUI(String mainMenuName)
+	
+	/** Instantiates a new abstract UI. */
+	public AbstractUI()
 	{
-		this.mainMenuName = mainMenuName;
 		isMainMenuShown = false;
 	}
 
@@ -61,8 +57,8 @@ public abstract class AbstractUI extends UI
 		mainMenu.activateTwitterAccount(id);
 		userSession.activateTwitterAccount(id);
 	}
-	
-	
+
+
 	/** @return the current user's browsing session. */
 	public final UserSession getUserSession()
 	{
@@ -76,6 +72,13 @@ public abstract class AbstractUI extends UI
 		if (!isMainMenuShown) { return; }
 		mainMenuAndContentContainer.removeComponent(mainMenu);
 		isMainMenuShown = false;
+	}
+	
+	
+	/** @return true, if the user is browsing with a mobile phone. */
+	public final boolean isMobile()
+	{
+		return this instanceof MobileUI;
 	}
 
 
@@ -112,7 +115,7 @@ public abstract class AbstractUI extends UI
 				.getServletContext()
 				.getAttribute(Configuration.MENU_FACTORY);
 
-		mainMenu = menuFactory.create(mainMenuName);
+		mainMenu = menuFactory.create(MainMenu.NAME);
 	}
 	
 	
@@ -158,9 +161,6 @@ public abstract class AbstractUI extends UI
 	}
 
 
-
-	/** The main-menu's name. */
-	private String mainMenuName;
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

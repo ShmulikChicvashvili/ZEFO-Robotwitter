@@ -2,7 +2,6 @@
 package com.robotwitter.webapp.view;
 
 
-import com.robotwitter.webapp.menu.MainMenu;
 import com.robotwitter.webapp.util.AbstractUI;
 
 
@@ -21,16 +20,6 @@ import com.robotwitter.webapp.util.AbstractUI;
  */
 public class DesktopUI extends AbstractUI
 {
-
-	/** Instantiates a new desktop UI. */
-	public DesktopUI()
-	{
-		super(MainMenu.NAME);
-	}
-	
-	
-	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
 }

@@ -38,6 +38,11 @@ IScheduledTweetsController
 
 	}
 
+	
+	@Override
+	public List<String> breakTweet(String tweet){
+		return null;
+	};
 
 	/* (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.scheduling.IScheduledTweetsController

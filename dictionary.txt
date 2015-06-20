@@ -48,3 +48,4 @@ hashtags
 hashtag
 dussan
 tabbed
+tooltip

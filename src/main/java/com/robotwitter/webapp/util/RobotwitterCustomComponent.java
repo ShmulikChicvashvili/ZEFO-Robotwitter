@@ -2,6 +2,7 @@
 package com.robotwitter.webapp.util;
 
 
+import com.vaadin.server.Page;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.UI;
 
@@ -30,6 +31,22 @@ public class RobotwitterCustomComponent extends CustomComponent
 	}
 	
 	
+	/** @return true, if the user is browsing with a mobile phone. */
+	public static final boolean isMobile()
+	{
+		return ((AbstractUI) UI.getCurrent()).isMobile();
+	}
+
+
+	/** @return The current view's name. */
+	protected static final String getViewName()
+	{
+		String $ = Page.getCurrent().getUriFragment();
+		if ($ == null || $.length() == 0 || $.charAt(0) != '!') { return ""; }
+		return $.substring(1);
+	}
+	
+	
 	/**
 	 * Instantiates a new abstract view.
 	 *
@@ -40,8 +57,8 @@ public class RobotwitterCustomComponent extends CustomComponent
 	{
 		this.messages = messages;
 	}
-
-
+	
+	
 	/**
 	 * Activates a Twitter account.
 	 * <p>
@@ -53,8 +70,8 @@ public class RobotwitterCustomComponent extends CustomComponent
 	 */
 	public void activateTwitterAccount(@SuppressWarnings("unused") long id)
 	{/* Do nothing */}
-
-
+	
+	
 	/**
 	 * Navigates to the given view name.
 	 *
@@ -65,13 +82,13 @@ public class RobotwitterCustomComponent extends CustomComponent
 	{
 		getUI().getNavigator().navigateTo(name);
 	}
-
-
-
+	
+	
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 	/** The messages displayed by this component. */
 	protected IMessagesContainer messages;
-
+	
 }

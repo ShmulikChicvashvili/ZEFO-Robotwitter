@@ -40,6 +40,8 @@ $MainMenu-height: 50px;		/* Defined outside mixin for use in robotwitter-keyfram
 		/* Menu item */
 		.v-menubar-menuitem
 		{
+			margin: 0;
+		
 			/* Home button */
 			&:first-child
 			{
@@ -88,11 +90,36 @@ $MainMenu-height: 50px;		/* Defined outside mixin for use in robotwitter-keyfram
 	}
 	
 	
-	/* User account information */
-	.MainMenu-account
-	{	
-		height: $MainMenu-height;
+	/* Active menu item */
+	.v-menubar-menuitem-MainMenu-active-link
+	{
+		color: $robotwitter-sub-color !important;
+				
+		/* Disable hover */
+		&.v-menubar-menuitem-selected, &:hover
+		{ background: none; cursor: default; }
 	}
+	
+		
+	/* Remove text from menu items in mobile browsers */
+	.MainMenu-links-mobile .v-menubar-menuitem
+	{		
+		width: $MainMenu-height;
+		width: 16.6vw;
+		overflow: hidden;
+		padding: 0;
+		
+		.v-menubar-menuitem-caption .v-icon { margin: 0; }
+	}
+	
+	
+	/* Black background for active links in mobile browsers */
+	.MainMenu-links-mobile .v-menubar-menuitem-MainMenu-active-link
+	{ background-color: black; }
+	
+	
+	/* User account information */
+	.MainMenu-account {	 height: $MainMenu-height; }
 	
 } }
 	

@@ -8,6 +8,8 @@ import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Layout;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
@@ -97,7 +99,15 @@ public class WindowWithDescription extends Window
 		icon = new Label();
 		description.setContentMode(ContentMode.HTML);
 		icon.setContentMode(ContentMode.HTML);
-		iconAndDescWrapper = new HorizontalLayout(icon, description);
+		
+		// in mobile, use a vertical layout, in desktop, use horizontal
+		if (((AbstractUI) UI.getCurrent()).isMobile())
+		{
+			iconAndDescWrapper = new VerticalLayout(icon, description);
+		} else
+		{
+			iconAndDescWrapper = new HorizontalLayout(icon, description);
+		}
 		
 		description.setStyleName(DESCRIPTION_STYLENAME);
 		icon.setStyleName(ICON_STYLENAME);
@@ -118,25 +128,25 @@ public class WindowWithDescription extends Window
 	
 	/** The CSS class name to apply to the description label. */
 	private static final String DESCRIPTION_STYLENAME =
-		"WindowWithDescription-description"; 
+		"WindowWithDescription-description";
 
 	/** The CSS class name to apply to the content component. */
 	private static final String ICON_DESC_WRAPPER_STYLENAME =
-		"WindowWithDescription-icon-desc-wrapper"; 
-	
+		"WindowWithDescription-icon-desc-wrapper";
+
 	/** The CSS class name to apply to the icon label. */
-	private static final String ICON_STYLENAME = "WindowWithDescription-icon"; 
-	
+	private static final String ICON_STYLENAME = "WindowWithDescription-icon";
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 
 	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "WindowWithDescription"; 
+	private static final String STYLENAME = "WindowWithDescription";
 
 	/** The CSS class name to apply to the content component. */
 	private static final String WRAPPER_STYLENAME =
-		"WindowWithDescription-wrapper"; 
-	
+		"WindowWithDescription-wrapper";
+
 	/** The content. */
 	Component content;
 
@@ -147,7 +157,7 @@ public class WindowWithDescription extends Window
 	Label icon;
 
 	/** The description's and icon's wrapper. */
-	HorizontalLayout iconAndDescWrapper;
+	Layout iconAndDescWrapper;
 	
 	/** The iconAndDescWrapper's and content's wrapper. */
 	VerticalLayout wrapper;

@@ -24,4 +24,9 @@ public interface IDatabaseScheduledTweets {
 	 * will be used every time the system starts
 	 */
 	public List<DBScheduledTweet> getScheduledTweetsForInitialization();
+	
+	/*
+	 * The method will remove a scheduled tweet from the database.
+	 */
+	public SqlError removeScheduledTweet(DBScheduledTweet scheduledTweet);
 }

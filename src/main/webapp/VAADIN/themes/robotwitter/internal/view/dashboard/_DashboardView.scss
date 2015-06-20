@@ -1,0 +1,162 @@
+@import "../../common";
+@import "../../../config";
+/*----------------------------------------------------------------------------*/
+
+@mixin DashboardView { .DashboardView {
+
+	padding: 10px;
+	
+	/* Header */
+	.DashboardView-header
+	{
+		text-align: center;
+		font-size: 3.3em;
+		line-height: 1em;
+		padding-top: 15px;
+		padding-bottom: 30px;
+	}	
+	
+	
+	/* The active follower's information stats. */
+	.v-slot-DashboardView-information-stats
+	{
+		padding-bottom: 50px;
+		text-align: center;
+		
+		/* Center more stuff */
+		.v-slot-DashboardView-information-stats,
+		.v-caption,
+		.v-has-caption,
+		.v-verticallayout,
+		.v-your-stupid-fat-mother
+		{ text-align: center; }
+	
+		/* Properties captions */
+		.v-caption { color: rgba(black, 0.8); font-weight: bold; }
+		
+		/* Bio property */
+		.DashboardView-information-description
+		{
+			white-space: pre-wrap;       /* css-3 */
+			white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+			white-space: -pre-wrap;      /* Opera 4-6 */
+			white-space: -o-pre-wrap;    /* Opera 7 */
+			word-wrap: break-word;       /* Internet Explorer 5.5+ */
+			
+			width: 150px;
+			height: 75px;
+			
+			text-align: center;
+			
+			overflow-y: auto;
+			background: rgba(black, 0.05);
+			padding: 5px;
+		}
+		
+		/* A stat property */
+		.v-slot-DashboardView-information-stat
+		{
+			line-height: 1em;
+		
+			.MostInfluentialFollowers-information-stat
+			{
+				text-align: center;
+				width: 100%;
+				color: $robotwitter-main-color;
+				font-size: 1.5em;
+				font-weight: bold;
+			}
+		}
+	}
+	
+	
+	
+	/* Center some more shit */
+	.v-slot-DashboardView-accounts { text-align:center; }
+	
+	/* Other twitter accounts */
+	.DashboardView-accounts
+	{
+		$account-height: 100px;
+		
+		white-space: normal !important;
+		text-align: center;
+		max-width: 1150px;
+		padding: 0 25px 40px 25px;
+			
+		& > .v-spacing { width: 50px; }
+		
+		.DashboardView-account
+		{
+			text-align: center;
+			padding: 15px;
+		
+			/* Twitter account's picture */
+			.DashboardView-account-picture
+			{
+				width: $account-height;
+				height: $account-height;
+				
+				/* features */
+				@include robotwitter-border-radius($account-height); /* Circle */
+			}
+			
+			/* Twitter account's name and screenname */
+			.DashboardView-account-name-and-screenname
+			{
+				text-align: center;
+				
+				/* Twitter account's name */
+				.DashboardView-account-name
+				{
+					font-size: 1.5em;
+					color: $robotwitter-main-color;
+				}
+				
+				/* Twitter account's screenname */
+				.DashboardView-account-screenname
+				{
+					font-size: 1.25em;
+					line-height: 1em;
+					padding-right: 15px;
+				}
+			}
+			
+			/* Twitter account's stats */
+			.DashboardView-account-stats
+			{
+				padding: 5px 0;
+			
+				& > .v-spacing { width: 20px; }
+			
+				/* Make sure icons are next to numbers and not above */
+				.v-caption { display: inline-block; padding-right: 7px; }
+				
+				/* Stat */
+				.v-slot-DashboardView-account-stat { font-size: 1.25em; }
+				
+				/* Total followers */
+				.v-slot-DashboardView-account-total { }
+				
+				/* Gained followers */
+				.v-slot-DashboardView-account-gained { color: green; }
+				
+				/* Lost followers */
+				.v-slot-DashboardView-account-lost { color: red; }
+			}
+				
+			/* Notifications */
+			.v-slot-DashboardView-account-notifications
+			{
+				font-weight: bold;
+				
+				.v-slot:first-child { padding-right: 5px; }
+			
+				/* Make sure icons are next to numbers and not above */
+				.v-caption { display: inline-block; padding-right: 7px; }
+			}
+		}
+	}
+	
+} }
+

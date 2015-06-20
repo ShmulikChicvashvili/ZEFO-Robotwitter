@@ -263,6 +263,7 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 					follower.getName(),
 					follower.getScreenName(),
 					follower.getPicture(),
+					false,
 					false));
 			card.setContentMode(ContentMode.HTML);
 			VerticalLayout cardWrapper = new VerticalLayout(card);

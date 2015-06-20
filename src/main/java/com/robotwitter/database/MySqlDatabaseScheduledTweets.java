@@ -231,4 +231,10 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 	private String gettingScheduledQuery;
 
 	private String gettingFlushingQuery;
+
+	@Override
+	public SqlError removeScheduledTweet(DBScheduledTweet scheduledTweet) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

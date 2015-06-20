@@ -27,6 +27,10 @@ import com.robotwitter.webapp.control.tools.tweeting.Tweet;
 public class TweetingController implements ITweetingController {
 
 	/**
+	 * TESTS!!!
+	 */
+	
+	/**
 	 * @param preference
 	 */
 	@Inject
@@ -38,6 +42,7 @@ public class TweetingController implements ITweetingController {
 		String email = accountController.getEmail();
 
 		DBTweetPostingPreferences preferences = preferencesDB.get(email);
+		/* different func */
 		if (preferences == null) {
 			preference = new BasicPreference();
 			preferences = new DBTweetPostingPreferences(email, null, null, null);
@@ -68,6 +73,10 @@ public class TweetingController implements ITweetingController {
 		return preference.generateTweet(tweet);
 	}
 
+	
+	/**
+	 * Messages should be hard coded strings.
+	 */
 	/*
 	 * (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.tools.ITweetingController

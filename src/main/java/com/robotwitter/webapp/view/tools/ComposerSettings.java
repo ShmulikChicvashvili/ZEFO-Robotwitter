@@ -153,6 +153,8 @@ public class ComposerSettings extends RobotwitterCustomComponent {
 	 *
 	 * @param error
 	 *            the error message to display
+	 * @param text
+	 * 			  the text area with the error.
 	 */
 	private void setErrorMessage(String error, TextArea text)
 	{
@@ -165,7 +167,7 @@ public class ComposerSettings extends RobotwitterCustomComponent {
 		
 		// Set the error message on the field
 		text.setValidationVisible(true);
-		text.setCursorPosition(text.getValue().length());
+		text.setCursorPosition(errorMessage.getValue().length());
 		if (text.getErrorMessage() == null)
 		{
 			text.setComponentError(new UserError(error));

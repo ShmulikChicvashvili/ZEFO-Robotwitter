@@ -3,7 +3,7 @@
 /*----------------------------------------------------------------------------*/
 
 /* Size */
-$MainMenu-height: 50px;		/* Defined outside mixin for use in robotwitter-keyframes */
+$MainMenu-height: 50px;
 
 /* Push down content. Used because the menu is fixed. */
 .v-slot-MainMenu { height: $MainMenu-height; }

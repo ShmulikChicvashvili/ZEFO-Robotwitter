@@ -2,6 +2,7 @@
 package com.robotwitter.webapp.view.analysis;
 
 
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.ComponentContainer;
@@ -23,28 +24,28 @@ import com.robotwitter.webapp.util.RobotwitterCustomComponent;
  */
 public class AnalysisTabs extends RobotwitterCustomComponent
 {
-	
+
 	/** Available tabs. */
 	enum Tab
 	{
 		/** The influential followers. */
 		INFLUENTIAL_FOLLOWERS,
-		
+
 		/** The followers over time. */
 		FOLLOWERS_OVER_TIME,
-		
+
 		/** The displayed language. */
 		DISPLAYED_LANGUAGE,
-		
+
 		/** The followers followers. */
 		FOLLOWERS_FOLLOWERS,
-		
+
 		/** The followers following. */
 		FOLLOWERS_FOLLOWING
 	}
-
-
-
+	
+	
+	
 	/**
 	 * Instantiates a new AnalysisTabs.
 	 *
@@ -54,29 +55,46 @@ public class AnalysisTabs extends RobotwitterCustomComponent
 	public AnalysisTabs(IMessagesContainer messages)
 	{
 		super(messages);
-		
+
 		influentialFollowers = new Button();
 		followersOverTime = new Button();
 		displayedLanguage = new Button();
 		followersFollowers = new Button();
 		followersFollowing = new Button();
-
-		influentialFollowers.addStyleName(ValoTheme.BUTTON_BORDERLESS);
-		followersOverTime.setStyleName(ValoTheme.BUTTON_BORDERLESS);
-		displayedLanguage.setStyleName(ValoTheme.BUTTON_BORDERLESS);
-		followersFollowers.setStyleName(ValoTheme.BUTTON_BORDERLESS);
-		followersFollowing.setStyleName(ValoTheme.BUTTON_BORDERLESS);
 		
+		if (isMobile())
+		{
+			influentialFollowers
+			.addStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
+			followersOverTime.setStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
+			displayedLanguage.setStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
+			followersFollowers.setStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
+			followersFollowing.setStyleName(ValoTheme.BUTTON_ICON_ALIGN_RIGHT);
+			
+			influentialFollowers.setIcon(FontAwesome.ARROW_CIRCLE_RIGHT);
+			followersOverTime.setIcon(FontAwesome.ARROW_CIRCLE_RIGHT);
+			displayedLanguage.setIcon(FontAwesome.ARROW_CIRCLE_RIGHT);
+			followersFollowers.setIcon(FontAwesome.ARROW_CIRCLE_RIGHT);
+			followersFollowing.setIcon(FontAwesome.ARROW_CIRCLE_RIGHT);
+		} else
+		{
+			influentialFollowers.addStyleName(ValoTheme.BUTTON_BORDERLESS);
+			followersOverTime.setStyleName(ValoTheme.BUTTON_BORDERLESS);
+			displayedLanguage.setStyleName(ValoTheme.BUTTON_BORDERLESS);
+			followersFollowers.setStyleName(ValoTheme.BUTTON_BORDERLESS);
+			followersFollowing.setStyleName(ValoTheme.BUTTON_BORDERLESS);
+		}
+
 		initialiseLayout();
 	}
-
-
+	
+	
 	/** @return A new the tab-menu component. */
 	private Component createTabMenu()
 	{
-
+		
 		// tab-menu buttons
-
+		
 		influentialFollowers.setCaption(messages
 			.get("AnalysisTabs.tab.influential-followers"));
 		followersOverTime.setCaption(messages
@@ -87,22 +105,22 @@ public class AnalysisTabs extends RobotwitterCustomComponent
 			.get("AnalysisTabs.tab.followers-followers"));
 		followersFollowing.setCaption(messages
 			.get("AnalysisTabs.tab.followers-following"));
-		
-		// tab-menu buttons click-events
-		
-		influentialFollowers
-		.addClickListener(event -> activateTab(Tab.INFLUENTIAL_FOLLOWERS));
-		followersOverTime
-		.addClickListener(event -> activateTab(Tab.FOLLOWERS_OVER_TIME));
-		displayedLanguage
-		.addClickListener(event -> activateTab(Tab.DISPLAYED_LANGUAGE));
-		followersFollowers
-		.addClickListener(event -> activateTab(Tab.FOLLOWERS_FOLLOWERS));
-		followersFollowing
-			.addClickListener(event -> activateTab(Tab.FOLLOWERS_FOLLOWING));
 
-		// layout
+		// tab-menu buttons click-events
+
+		influentialFollowers
+			.addClickListener(event -> activateTab(Tab.INFLUENTIAL_FOLLOWERS));
+		followersOverTime
+			.addClickListener(event -> activateTab(Tab.FOLLOWERS_OVER_TIME));
+		displayedLanguage
+			.addClickListener(event -> activateTab(Tab.DISPLAYED_LANGUAGE));
+		followersFollowers
+			.addClickListener(event -> activateTab(Tab.FOLLOWERS_FOLLOWERS));
+		followersFollowing
+		.addClickListener(event -> activateTab(Tab.FOLLOWERS_FOLLOWING));
 		
+		// layout
+
 		VerticalLayout tabs =
 			new VerticalLayout(
 				influentialFollowers,
@@ -111,15 +129,17 @@ public class AnalysisTabs extends RobotwitterCustomComponent
 				followersFollowers,
 				followersFollowing);
 		
+		tabs.setSpacing(isMobile());
+
 		return tabs;
 	}
-
-
+	
+	
 	/** Initialises the layout. */
 	private void initialiseLayout()
 	{
 		Component tabMenu = createTabMenu();
-		
+
 		mostInfluentialFollowers = new MostInfluentialFollowers(messages);
 		followersAmountOverTimeChart =
 			new FollowersAmountOverTimeChart(messages);
@@ -129,34 +149,55 @@ public class AnalysisTabs extends RobotwitterCustomComponent
 			new FollowersFollowersAmountChart(messages);
 		followersFollowingAmountChart =
 			new FollowersFollowingAmountChart(messages);
-		
+
+		Button returnButton =
+			new Button(
+				messages.get("AnalysisTabs.mobile.button.return"),
+				event -> removeStyleName(MOBILE_ACTIVE_STYLENAME));
+		returnButton.setIcon(FontAwesome.ARROW_CIRCLE_LEFT);
+		returnButton.addStyleName(MOBILE_RETURN_STYLENAME);
+
 		componentDescription = new Label();
 		
+		VerticalLayout returnAndDesc =
+			new VerticalLayout(returnButton, componentDescription);
+		returnAndDesc.setSpacing(true);
+
 		analysisComponentContainer = new VerticalLayout();
 		analysisComponentContainer.setSizeFull();
-
-		activateTab(Tab.INFLUENTIAL_FOLLOWERS);
-
+		
+		if (!isMobile())
+		{
+			activateTab(Tab.INFLUENTIAL_FOLLOWERS);
+		}
+		
 		VerticalLayout descriptionAndContainer =
-			new VerticalLayout(componentDescription, analysisComponentContainer);
+			new VerticalLayout(isMobile()
+				? returnAndDesc
+					: componentDescription, analysisComponentContainer);
 		descriptionAndContainer.setSizeFull();
 		descriptionAndContainer.setSpacing(true);
-		
+
 		HorizontalLayout layout =
 			new HorizontalLayout(tabMenu, descriptionAndContainer);
 		layout.setSizeFull();
-		
+
 		tabMenu.addStyleName(MENU_STYLENAME);
 		componentDescription.addStyleName(DESC_STYLENAME);
 		descriptionAndContainer.addStyleName(CONTENT_STYLENAME);
 		addStyleName(STYLENAME);
-
+		
+		if (isMobile())
+		{
+			addStyleName(MOBILE_STYLENAME);
+		}
+		
 		setSizeFull();
-
+		
 		setCompositionRoot(layout);
 	}
-	
-	
+
+
 	/**
 	 * Activate a tab.
 	 *
@@ -165,14 +206,79 @@ public class AnalysisTabs extends RobotwitterCustomComponent
 	 */
 	final void activateTab(Tab tab)
 	{
+		if (isMobile())
+		{
+			activateTabInMobile(tab);
+			return;
+		}
+		
 		analysisComponentContainer.removeAllComponents();
-
+		
 		/* Remove active CSS style */
 		influentialFollowers.removeStyleName(ACTIVE_TAB_STYLENAME);
 		followersOverTime.removeStyleName(ACTIVE_TAB_STYLENAME);
 		displayedLanguage.removeStyleName(ACTIVE_TAB_STYLENAME);
 		followersFollowers.removeStyleName(ACTIVE_TAB_STYLENAME);
 		followersFollowing.removeStyleName(ACTIVE_TAB_STYLENAME);
+
+		switch (tab)
+		{
+			case INFLUENTIAL_FOLLOWERS:
+				/* Set description */
+				componentDescription.setValue(messages
+					.get("AnalysisTabs.desc.influential-followers"));
+				/* Set content */
+				analysisComponentContainer
+				.addComponent(mostInfluentialFollowers);
+				/* Set active CSS */
+				influentialFollowers.addStyleName(ACTIVE_TAB_STYLENAME);
+				break;
+			case FOLLOWERS_OVER_TIME:
+				componentDescription.setValue(messages
+					.get("AnalysisTabs.desc.followers-over-time"));
+				analysisComponentContainer
+				.addComponent(followersAmountOverTimeChart);
+				followersOverTime.addStyleName(ACTIVE_TAB_STYLENAME);
+				break;
+			case DISPLAYED_LANGUAGE:
+				componentDescription.setValue(messages
+					.get("AnalysisTabs.desc.displayed-language"));
+				analysisComponentContainer
+				.addComponent(followersDisplayedLanguageChart);
+				displayedLanguage.addStyleName(ACTIVE_TAB_STYLENAME);
+				break;
+			case FOLLOWERS_FOLLOWERS:
+				componentDescription.setValue(messages
+					.get("AnalysisTabs.desc.followers-followers"));
+				analysisComponentContainer
+				.addComponent(followersFollowersAmountChart);
+				followersFollowers.addStyleName(ACTIVE_TAB_STYLENAME);
+				break;
+			case FOLLOWERS_FOLLOWING:
+				componentDescription.setValue(messages
+					.get("AnalysisTabs.desc.followers-following"));
+				analysisComponentContainer
+				.addComponent(followersFollowingAmountChart);
+				followersFollowing.addStyleName(ACTIVE_TAB_STYLENAME);
+				break;
+			default:
+				break;
+
+		}
+	}
+
+
+	/**
+	 * Activate a tab in mobile browser.
+	 *
+	 * @param tab
+	 *            the tab
+	 */
+	final void activateTabInMobile(Tab tab)
+	{
+		addStyleName(MOBILE_ACTIVE_STYLENAME);
+		
+		analysisComponentContainer.removeAllComponents();
 		
 		switch (tab)
 		{
@@ -182,98 +288,106 @@ public class AnalysisTabs extends RobotwitterCustomComponent
 					.get("AnalysisTabs.desc.influential-followers"));
 				/* Set content */
 				analysisComponentContainer
-					.addComponent(mostInfluentialFollowers);
-				/* Set active CSS */
-				influentialFollowers.addStyleName(ACTIVE_TAB_STYLENAME);
+				.addComponent(mostInfluentialFollowers);
 				break;
 			case FOLLOWERS_OVER_TIME:
 				componentDescription.setValue(messages
 					.get("AnalysisTabs.desc.followers-over-time"));
 				analysisComponentContainer
-					.addComponent(followersAmountOverTimeChart);
-				followersOverTime.addStyleName(ACTIVE_TAB_STYLENAME);
+				.addComponent(followersAmountOverTimeChart);
 				break;
 			case DISPLAYED_LANGUAGE:
 				componentDescription.setValue(messages
 					.get("AnalysisTabs.desc.displayed-language"));
 				analysisComponentContainer
-					.addComponent(followersDisplayedLanguageChart);
-				displayedLanguage.addStyleName(ACTIVE_TAB_STYLENAME);
+				.addComponent(followersDisplayedLanguageChart);
 				break;
 			case FOLLOWERS_FOLLOWERS:
 				componentDescription.setValue(messages
 					.get("AnalysisTabs.desc.followers-followers"));
 				analysisComponentContainer
-					.addComponent(followersFollowersAmountChart);
-				followersFollowers.addStyleName(ACTIVE_TAB_STYLENAME);
+				.addComponent(followersFollowersAmountChart);
 				break;
 			case FOLLOWERS_FOLLOWING:
 				componentDescription.setValue(messages
 					.get("AnalysisTabs.desc.followers-following"));
 				analysisComponentContainer
-					.addComponent(followersFollowingAmountChart);
-				followersFollowing.addStyleName(ACTIVE_TAB_STYLENAME);
+				.addComponent(followersFollowingAmountChart);
 				break;
 			default:
 				break;
-		
+
 		}
 	}
-	
-	
-	
+
+
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
+	
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "AnalysisTabs";
-
+	
+	/** The CSS class name to apply to this component in mobile browsers. */
+	private static final String MOBILE_STYLENAME = "AnalysisTabs-mobile";
+	
 	/** The CSS class name to apply to the menu. */
 	private static final String MENU_STYLENAME = "AnalysisTabs-menu";
-	
+
 	/** The CSS class name to apply to the content wrapper. */
 	private static final String CONTENT_STYLENAME = "AnalysisTabs-content";
-
+	
 	/** The CSS class name to apply to the content's description. */
 	private static final String DESC_STYLENAME = "AnalysisTabs-desc";
-
+	
 	/** The CSS class name to apply to the active tab. */
 	private static final String ACTIVE_TAB_STYLENAME =
 		"AnalysisTabs-active-tab";
 	
+	/**
+	 * The CSS class name to apply to this component when activating a menu-
+	 * item in mobile browsers.
+	 */
+	private static final String MOBILE_ACTIVE_STYLENAME =
+		"AnalysisTabs-mobile-active";
+	
+	/** The CSS class name to apply to the return button in mobile browsers. */
+	private static final String MOBILE_RETURN_STYLENAME =
+		"AnalysisTabs-mobile-return";
+
 	/** The description of a single analysis component. */
 	Label componentDescription;
-	
+
 	/** Contains a single analysis component. */
 	ComponentContainer analysisComponentContainer;
-	
+
 	/** The most influential followers component. */
 	MostInfluentialFollowers mostInfluentialFollowers;
-	
+
 	/** The followers amount over time chart component. */
 	FollowersAmountOverTimeChart followersAmountOverTimeChart;
-	
+
 	/** The followers displayed language chart component. */
 	FollowersDisplayedLanguageChart followersDisplayedLanguageChart;
-	
+
 	/** The followers followers amount chart component. */
 	FollowersFollowersAmountChart followersFollowersAmountChart;
-	
+
 	/** The followers following amount chart component. */
 	FollowersFollowingAmountChart followersFollowingAmountChart;
-	
+
 	/** The influential followers button. */
 	private Button influentialFollowers;
-
+	
 	/** The displayed language button. */
 	private Button displayedLanguage;
-
+	
 	/** The followers over time button. */
 	private Button followersOverTime;
-
+	
 	/** The followers followers button. */
 	private Button followersFollowers;
-
+	
 	/** The followers following button. */
 	private Button followersFollowing;
 }

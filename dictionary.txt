@@ -49,3 +49,4 @@ hashtag
 dussan
 tabbed
 tooltip
+stats

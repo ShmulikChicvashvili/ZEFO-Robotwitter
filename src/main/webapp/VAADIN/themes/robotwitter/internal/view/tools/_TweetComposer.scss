@@ -198,5 +198,51 @@
 		}
 	}
 	
+	
+	/* Mobile-device fixes */
+	&.TweetComposer-mobile
+	{
+		& > .v-layout { width: 100%; }
+	
+		.TweetComposer-left {
+			width: 100% !important;
+			
+			.TweetComposer-compose-another { margin-top: 0; }
+		}
+		
+		.TweetComposer-right
+		{
+			width: 100% !important;
+			
+			.TweetComposer-preview
+			{
+				.TweetComposer-preview-tweet
+				{
+					padding: 3vw;
+					
+					.TweetComposer-preview-text
+					{
+						font-size: 4.4vw;
+						line-height: 1.3em !important;
+						width: 68vw !important;
+					}
+				}
+				
+				.v-slot-TweetComposer-preview-tweet:first-child
+				{
+					.TweetComposer-preview-tweet
+					{
+						.TweetComposer-preview-text
+						{
+							font-size: 8vw;
+							width: 86vw !important;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	
 } }
 

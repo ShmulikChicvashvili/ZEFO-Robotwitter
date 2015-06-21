@@ -85,6 +85,11 @@ public class ToolsView extends AbstractView
 		Label header = new Label(messages.get("ToolsView.label.header"));
 		TweetComposer composer =
 			new TweetComposer(messages, tweetingController);
+
+		if (isMobile())
+		{
+			composer.setSizeFull();
+		}
 		
 		Component composerPanel =
 			wrapInPanel(
@@ -92,9 +97,13 @@ public class ToolsView extends AbstractView
 				messages.get("ToolsView.caption.tweet-composer"));
 		VerticalLayout composerPanelWrapper = new VerticalLayout(composerPanel);
 		composerPanelWrapper.setSizeFull();
-		composerPanelWrapper.setComponentAlignment(
-			composerPanel,
-			Alignment.MIDDLE_CENTER);
+		
+		if (!isMobile())
+		{
+			composerPanelWrapper.setComponentAlignment(
+				composerPanel,
+				Alignment.MIDDLE_CENTER);
+		}
 
 		VerticalLayout layout =
 			new VerticalLayout(header, composerPanelWrapper);
@@ -103,6 +112,11 @@ public class ToolsView extends AbstractView
 		
 		header.addStyleName(HEADER_STYLENAME);
 		addStyleName(STYLENAME);
+		
+		if (isMobile())
+		{
+			addStyleName(MOBILE_STYLENAME);
+		}
 		
 		setCompositionRoot(layout);
 	}
@@ -117,6 +131,9 @@ public class ToolsView extends AbstractView
 
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "ToolsView";
+
+	/** The CSS class name to apply to this component in mobile browsers. */
+	private static final String MOBILE_STYLENAME = "ToolsView-mobile";
 	
 	/** The CSS class name to apply to the header component. */
 	private static final String HEADER_STYLENAME = "ToolsView-header";

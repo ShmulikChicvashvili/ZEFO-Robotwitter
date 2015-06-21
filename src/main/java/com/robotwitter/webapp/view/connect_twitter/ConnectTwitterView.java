@@ -84,6 +84,11 @@ public class ConnectTwitterView extends AbstractView
 		connect.addStyleName(CONNECT_STYLENAME);
 		addStyleName(STYLENAME);
 
+		if (isMobile())
+		{
+			addStyleName(MOBILE_STYLENAME);
+		}
+
 		setCompositionRoot(layout);
 	}
 	
@@ -92,15 +97,18 @@ public class ConnectTwitterView extends AbstractView
 	/** The view's name. */
 	public static final String NAME = "connect-twitter";
 
+	/** The CSS class name to apply to this component. */
+	private static final String STYLENAME = "ConnectTwitterView";
+
+	/** The CSS class name to apply to this component in mobile browsers. */
+	private static final String MOBILE_STYLENAME = "ConnectTwitterView-mobile";
+
 	/** The CSS class name to apply to the header. */
 	private static final String HEADER_STYLENAME = "ConnectTwitterView-header";
 
 	/** The CSS class name to apply to the connect button. */
 	private static final String CONNECT_STYLENAME =
 		"ConnectTwitterView-connect";
-
-	/** The CSS class name to apply to this component. */
-	private static final String STYLENAME = "ConnectTwitterView";
 
 	/** The Twitter account connector window. */
 	private TwitterConnectorWindow twitterConnectorWindow;

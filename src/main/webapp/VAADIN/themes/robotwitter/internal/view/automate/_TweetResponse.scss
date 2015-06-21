@@ -43,4 +43,56 @@
 	/* Button */
 	.TweetResponse-tweet-button { float: right; }
 	
+	
+	/* Mobile-device fixes */
+	&.TweetResponse-mobile
+	{
+		padding: 5px 15px 15px 15px;
+		padding: 1.3vw 4vw 4vw 4vw;
+		
+		height: 70vh;
+		overflow-y: scroll;
+		
+		.v-radiobutton { white-space: normal; }
+		
+		.TweetPreview-tweet { width: 100% !important; } 
+		
+		.TweetResponse-compose-box
+		{
+			.TweetComposer-input-textarea { width: 100% !important; }
+		}
+		
+		.TweetPreview
+		{
+			.TweetPreview-tweet
+			{
+				padding: 3vw;
+				width: 92vw !important;
+				overflow: hidden;
+				
+				.v-slot-TweetPreview-screenname { display: block; }
+				
+				.TweetPreview-text
+				{
+					font-size: 4.4vw;
+					line-height: 1.3em !important;
+					width: 68vw !important;
+				}
+			}
+			
+			.v-slot-TweetPreview-tweet:first-child
+			{
+				.TweetPreview-tweet
+				{
+					.TweetPreview-text
+					{
+						font-size: 8vw;
+						/*width: 86vw !important;*/
+					}
+				}
+			}
+		}
+	}
+	
+	
 } }

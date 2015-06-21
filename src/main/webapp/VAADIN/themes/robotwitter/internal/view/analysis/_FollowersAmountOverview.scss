@@ -12,6 +12,9 @@
 	
 	text-align: center;
 	
+	/* Center twitter account's picture */
+	.v-slot-FollowersAmountOverview-picture { text-align: center; }
+	
 	/* Twitter account's picture */
 	.FollowersAmountOverview-picture
 	{
@@ -79,6 +82,66 @@
 		.v-slot-FollowersAmountOverview-gained { margin-left: 20px; }
 	}
 	
-
+	
+	/* Mobile-device fixes */
+	&.FollowersAmountOverview-mobile
+	{
+		height: inherit;
+		
+		.FollowersAmountOverview-picture
+		{
+			width: $height;
+			height: $height;
+			width: 50vw;
+			height: 50vw;
+			@include robotwitter-border-radius($height);
+			@include robotwitter-border-radius(50vw);
+		}
+		
+		.FollowersAmountOverview-name-and-screenname
+		{
+			text-align: center;
+			font-size: 1.8em;
+			font-size: 8vw;
+			.FollowersAmountOverview-name { font-size: 1em; }
+			.FollowersAmountOverview-screenname
+			{
+				font-size: 1em;
+				text-align: center;
+				padding: 0;
+			}
+		}
+		
+		.FollowersAmountOverview-stats
+		{
+			left: 0;
+			padding: 0;
+			text-align: center;
+			font-size: 1.3em;
+			font-size: 6vw;
+			
+			.v-caption-FollowersAmountOverview-amount-component
+			{
+				display: inline-block;
+				padding-right: 5px;
+				padding-right: 2vw;
+				font-size: 1em;
+			}
+			
+			.v-slot-FollowersAmountOverview-amount-component { margin: 0; }
+			
+			.FollowersAmountOverview-amount-component
+			{
+				position: relative;
+				top: 0;
+				left: 0;
+				font-size: 1em;
+				padding-right: 5px;
+				padding-right: 2vw;
+			}
+		}
+	}
+	
+	
 } }
 

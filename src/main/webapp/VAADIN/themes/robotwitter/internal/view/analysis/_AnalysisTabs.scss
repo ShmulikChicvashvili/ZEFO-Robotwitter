@@ -64,6 +64,87 @@
 		}
 	}
 	
+	
+	/* Mobile-device fixes */
+	&.AnalysisTabs-mobile
+	{
+		padding: 0;
+		width: 100% !important;
+		min-height: 400px;
+		border-left: none !important;
+		border-right: none !important;
+		
+		.AnalysisView-tabs
+		{
+			border-left: none;
+			border-right: none;
+		}
+		
+		.v-slot-AnalysisTabs-menu { width: 100% !important; }
+		
+		.AnalysisTabs-menu
+		{
+			margin: 0;
+			padding: 0;
+			padding-top: 30px;
+			padding-top: 8vw;
+			width: 100% !important;
+			text-align: center;
+			border-right: none;
+			
+			.v-button
+			{
+				font-size: 16px;
+				font-size: 5vw;
+				height: 32px;
+				height: 10vw;
+				width: 208px;
+				width: 65vw;
+				
+				&:hover { padding: 0 13px; }
+			}
+			
+			.AnalysisTabs-active-tab { padding: 0; }
+		}
+		
+		
+		.v-slot-AnalysisTabs-content { width: 100% !important; }
+		
+		.AnalysisTabs-content
+		{
+			width: 100% !important;
+			padding: 15px;
+			padding: 4vw;
+			
+			.AnalysisTabs-mobile-return
+			{
+				font-size: 16px;
+				font-size: 5vw;
+				height: 32px;
+				height: 10vw;
+				width: 100px;
+				width: 32vw;
+			}
+			
+			.AnalysisTabs-desc
+			{
+				text-align: justify;
+				font-size: 1em;
+				font-size: 4.4vw;
+			}
+		}
+			
+		& > .v-layout
+		{
+			position: relative;
+			left: 0;
+			@include robotwitter-transition(left 0.3s ease);
+		}
+		
+		/* Menu item active */
+		&.AnalysisTabs-mobile-active > .v-layout { left: -100%; }
+	}
+	
 
 } }
 

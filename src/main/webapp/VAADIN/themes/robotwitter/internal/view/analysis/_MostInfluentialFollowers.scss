@@ -178,5 +178,76 @@
 		/* Doron Chachamovitz was here! */		
 	}
 	
+	
+	/* Mobile-device fixes */
+	&.MostInfluentialFollowers-mobile
+	{
+		.v-slot-MostInfluentialFollowers-information
+		{
+			width: initial !important;
+			margin-right: 10px;
+			margin-right: 3.2vw;
+		}
+			
+		.v-slot-MostInfluentialFollowers-information-left
+		{
+			width: initial !important;
+			text-align: center;
+			font-size: 1em;
+			font-size: 4.4vw;
+	
+			.v-slot-MostInfluentialFollowers-information-picture
+			{
+				width: 112px;
+				width: 35vw;
+				height: 112px;
+				height: 35vw;
+				@include robotwitter-border-radius(15px);
+				@include robotwitter-border-radius(4vw);
+			}
+				
+			.MostInfluentialFollowers-information-name,
+			.MostInfluentialFollowers-information-screenname
+			{
+				text-align: center;
+			}
+		}
+		
+		.v-slot-MostInfluentialFollowers-followers-list
+		{
+			width: 55% !important;
+			
+			.MostInfluentialFollowers-card-wrapper
+			{
+				padding: 0 9px;
+				padding: 0 3vw;
+				
+				& > .v-slot > .v-label { width: 100% !important; }
+				
+				.TwitterCard
+				{
+					height: 50px;
+					height: 15.6vw;
+				}
+				
+				.TwitterCard-names
+				{
+					width: 100%;
+					margin-right: 0;
+					text-align: center;
+					font-size: 4.4vw;
+				}
+				
+				.TwitterCard-image-wrapper { display: none; }
+			}
+			
+			.MostInfluentialFollowers-active-card-wrapper
+			{
+				padding-right: 18px;
+				padding-right: 6vw;
+			}
+		}
+	}
+	
 } }
 

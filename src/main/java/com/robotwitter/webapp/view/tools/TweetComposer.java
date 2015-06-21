@@ -13,6 +13,7 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.UserError;
 import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.ui.AbstractOrderedLayout;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -273,7 +274,16 @@ Button.ClickListener
 		
 		left = new VerticalLayout(tweet, errorMessage, toolbarAndSubmit);
 		VerticalLayout right = new VerticalLayout(preview);
-		HorizontalLayout layout = new HorizontalLayout(left, right);
+
+		AbstractOrderedLayout layout;
+		if (isMobile())
+		{
+			layout = new VerticalLayout(left, right);
+		} else
+		{
+			layout = new HorizontalLayout(left, right);
+		}
+
 		left.setSizeFull();
 		right.setSizeFull();
 		layout.setSizeFull();
@@ -289,10 +299,18 @@ Button.ClickListener
 		left.addStyleName(LEFT_STYLENAME);
 		right.addStyleName(RIGHT_STYLENAME);
 		addStyleName(STYLENAME);
+		
+		if (isMobile())
+		{
+			addStyleName(MOBILE_STYLENAME);
+		}
 
 		setCompositionRoot(layout);
 
-		tweet.focus();
+		if (!isMobile())
+		{
+			tweet.focus();
+		}
 	}
 	
 	
@@ -422,8 +440,27 @@ Button.ClickListener
 			+ String.valueOf(max.count));
 		
 		// resize textarea to fit text
-		String[] lines = tweetText.split("\r\n|\r|\n");
-		tweet.setRows(lines.length + 2);
+		if (isMobile())
+		{
+			int rows = tweetText.length() / 35;
+			if (rows >= 3)
+			{
+				tweet.setRows(rows + 1);
+			} else
+			{
+				tweet.setRows(3);
+			}
+		} else
+		{
+			int rows = tweetText.length() / 65;
+			if (rows >= 3)
+			{
+				tweet.setRows(rows + 1);
+			} else
+			{
+				tweet.setRows(3);
+			}
+		}
 	}
 	
 	
@@ -500,11 +537,14 @@ Button.ClickListener
 		
 		return layout;
 	}
-
-
-
+	
+	
+	
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "TweetComposer";
+
+	/** The CSS class name to apply to this component in mobile browsers. */
+	private static final String MOBILE_STYLENAME = "TweetComposer-mobile";
 	
 	/** The CSS class name to apply to Tweet input text area. */
 	private static final String TWEET_INPUT_STYLENAME =

@@ -30,6 +30,33 @@
 		/* Icon */
 		.v-icon { color: $robotwitter-main-color; }
 	}
+	
+	
+	/* Mobile-device fixes */
+	&.ConnectTwitterView-mobile
+	{
+		padding: 0;
+	
+		.ConnectTwitterView-header
+		{
+			text-align: center;
+			font-size: 2em;
+			font-size: 8.5vw;
+			padding: 0;
+			padding-top: 10px;
+			padding-top: 2.7vw;
+			margin-bottom: 15px;
+			margin-bottom: 4vw;
+		}
+		
+		.ConnectTwitterView-connect
+		{
+			font-size: 16px;
+			font-size: 5vw;
+			height: 51px;
+			height: 16vw;
+		}
+	}
 
 } }
 

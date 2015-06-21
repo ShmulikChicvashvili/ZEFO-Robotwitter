@@ -26,6 +26,46 @@
 	
 	/* Center tabs */
 	.v-slot-AnalysisView-tabs { text-align: center; }
+	
+	
+	/* Mobile-device fixes */
+	&.AnalysisView-mobile
+	{
+		padding: 0;
+	
+		.AnalysisView-header
+		{
+			text-align: center;
+			font-size: 2em;
+			font-size: 8.5vw;
+			padding: 0;
+			padding-top: 10px;
+			padding-top: 2.7vw;
+			margin-bottom: 15px;
+			margin-bottom: 4vw;		
+		}
+		
+		.AnalysisView-tabs { @include robotwitter-border-radius(0); }
+		
+		.FollowersAmountOverview
+		{
+			padding-bottom: 20px;
+			padding-bottom: 6vw;
+		}
+
+		/* add seperator */
+		.FollowersAmountOverview-name-and-screenname
+		{			
+			border-bottom-size: 3px;
+			border-bottom-style: dashed;
+			border-bottom-color: rgba(0,0,0,0.2);
+			
+			padding-bottom: 15px;
+			padding-bottom: 4vw;
+			margin-bottom: 15px;
+			margin-bottom: 4vw;
+		}
+	}
 
 } }
 

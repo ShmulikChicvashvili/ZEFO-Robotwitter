@@ -199,8 +199,16 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 			new VerticalLayout(stats, description, location, language);
 		right.setSpacing(true);
 		
-		HorizontalLayout layout = new HorizontalLayout(left, right);
-		layout.setSizeFull();
+		HorizontalLayout info;
+		if (isMobile())
+		{
+			// TODO find a way to have "right" in mobile browsers too
+			info = new HorizontalLayout(left);
+		} else
+		{
+			info = new HorizontalLayout(left, right);
+		}
+		info.setSizeFull();
 
 		picture.addStyleName(INFORMATION_PICTURE_STYLENAME);
 		name.addStyleName(INFORMATION_NAME_STYLENAME);
@@ -215,9 +223,9 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 		stats.addStyleName(INFORMATION_STATS_STYLENAME);
 		left.addStyleName(INFORMATION_LEFT_STYLENAME);
 		right.addStyleName(INFORMATION_RIGHT_STYLENAME);
-		layout.addStyleName(INFORMATION_STYLENAME);
+		info.addStyleName(INFORMATION_STYLENAME);
 
-		return layout;
+		return info;
 	}
 
 
@@ -233,6 +241,11 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 
 		followers.addStyleName(FOLLOWERS_LIST_STYLENAME);
 		addStyleName(STYLENAME);
+
+		if (isMobile())
+		{
+			addStyleName(MOBILE_STYLENAME);
+		}
 		
 		updateList();
 	}
@@ -334,6 +347,10 @@ public class MostInfluentialFollowers extends RobotwitterCustomComponent
 	
 	/** The CSS class name to apply to this component. */
 	private static final String STYLENAME = "MostInfluentialFollowers";
+	
+	/** The CSS class name to apply to this component in mobile browsers. */
+	private static final String MOBILE_STYLENAME =
+		"MostInfluentialFollowers-mobile";
 	
 	/** The CSS class name to apply to the followers list component. */
 	private static final String FOLLOWERS_LIST_STYLENAME =

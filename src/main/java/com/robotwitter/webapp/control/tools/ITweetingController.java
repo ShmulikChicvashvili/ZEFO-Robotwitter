@@ -1,11 +1,16 @@
 
+
 package com.robotwitter.webapp.control.tools;
 
 
 import java.io.Serializable;
 import java.util.List;
 
+import com.robotwitter.database.interfaces.returnValues.SqlError;
+import com.robotwitter.posting.TweetPostingPreferenceType;
+import com.robotwitter.webapp.control.tools.tweeting.Tweet;
 import com.robotwitter.webapp.control.general.Tweet;
+
 
 
 
@@ -38,8 +43,8 @@ public interface ITweetingController extends Serializable
 	 * @return the optional responses as the current user.
 	 */
 	List<String> getOptionalResponses(Tweet tweet);
-	
-	
+
+
 	/**
 	 * Preview the given Tweet.
 	 *
@@ -54,4 +59,14 @@ public interface ITweetingController extends Serializable
 	 * @return A list of Tweets that are broken down from the given Tweet
 	 */
 	List<String> previewTweet(String tweet);
+	
+	SqlError setPreference(TweetPostingPreferenceType preference);
+	
+	SqlError setPrefix(String prefix);
+	
+	SqlError setSuffix(String suffix);
+	
+	String getPrefix();
+	
+	String getSuffix();
 }

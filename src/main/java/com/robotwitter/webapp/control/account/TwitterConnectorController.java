@@ -2,8 +2,11 @@
 package com.robotwitter.webapp.control.account;
 
 
+import java.sql.Timestamp;
+
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.User;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
@@ -12,6 +15,8 @@ import com.google.inject.name.Named;
 import com.vaadin.server.VaadinServlet;
 
 import com.robotwitter.classification.TweetClassifierListener;
+import com.robotwitter.database.interfaces.IDatabaseFollowers;
+import com.robotwitter.database.primitives.DBFollower;
 import com.robotwitter.management.ITwitterTracker;
 import com.robotwitter.twitter.FollowerIdsBackfiller;
 import com.robotwitter.twitter.FollowerStoreListener;
@@ -50,17 +55,18 @@ public class TwitterConnectorController implements ITwitterConnectorController
 	public TwitterConnectorController(
 		ITwitterTracker tracker,
 		ITwitterAttacher attacher,
-		@Named("User based factory") TwitterFactory factory)
+		@Named("User based factory") TwitterFactory factory,
+		IDatabaseFollowers twitterDataDB)
 	{
 		this.attacher = attacher;
 		this.tracker = tracker;
+		this.twitterDataDB = twitterDataDB;
 
 		tf = factory;
 		twitterAccount = null;
 		id = -1;
 		screenname = null;
 	}
-
 
 	/**
 	 * Connect.
@@ -86,6 +92,7 @@ public class TwitterConnectorController implements ITwitterConnectorController
 		{
 			id = twitterAccount.getTwitter().getId();
 			screenname = twitterAccount.getTwitter().getScreenName();
+			twitterDataDB.insert(buildFollowerFromUser(twitterAccount.getTwitter().showUser(id)));
 			track();
 		} catch (IllegalStateException | TwitterException e)
 		{
@@ -103,8 +110,7 @@ public class TwitterConnectorController implements ITwitterConnectorController
 		twitterAccount = new TwitterAccount(tf);
 		return attacher.getAuthorizationURL(twitterAccount);
 	}
-
-
+	
 	@Override
 	public final long getID()
 	{
@@ -116,6 +122,34 @@ public class TwitterConnectorController implements ITwitterConnectorController
 	public final String getScreenname()
 	{
 		return screenname;
+	}
+
+
+	private DBFollower buildFollowerFromUser(User user)
+	{
+		String desc = user.getDescription();
+		if (user.getDescription() == null)
+		{
+			desc = "";
+		}
+		String location = user.getLocation();
+		if (user.getLocation() == null)
+		{
+			location = "";
+		}
+		return new DBFollower(
+			user.getId(),
+			user.getName(),
+			user.getScreenName(),
+			desc,
+			user.getFollowersCount(),
+			user.getFriendsCount(),
+			location,
+			user.getFavouritesCount(),
+			user.getLang(),
+			user.isVerified(),
+			new Timestamp(user.getCreatedAt().getTime()),
+			user.getOriginalProfileImageURL());
 	}
 
 
@@ -152,6 +186,9 @@ public class TwitterConnectorController implements ITwitterConnectorController
 		tracker.addUserTracker(userTracker);
 		tracker.startTracker(id);
 	}
+
+
+	private IDatabaseFollowers twitterDataDB;
 
 
 

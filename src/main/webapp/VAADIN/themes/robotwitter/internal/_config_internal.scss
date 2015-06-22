@@ -17,10 +17,13 @@ $robotwitter-neutral-color: hsl(hue($robotwitter-main-color), 2%, $robotwitter-l
 $robotwitter-2nd-neutral-color: hsl(hue($robotwitter-sub-color), 2%, $robotwitter-2nd-luminance);
 
 
-@mixin robotwitter-logo($width) {
-	width: $width;
-	height: 71px / 360px * $width;
+@mixin robotwitter-logo($max-width) {
+	max-width: $max-width;
+	width: 100%;
+	height: 71px / 360px * $max-width;
 	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
 	
 	@if $robotwitter-style == light {
 		background-image: url("../img/robotwitter-logo-light.png");

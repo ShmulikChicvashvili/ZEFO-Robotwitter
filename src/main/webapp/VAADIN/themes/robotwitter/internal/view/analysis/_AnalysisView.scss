@@ -26,6 +26,18 @@
 	
 	/* Center tabs */
 	.v-slot-AnalysisView-tabs { text-align: center; }
+	
+	/* Download button */
+	.v-slot-AnalysisView-button { text-align: center;}
+	.AnalysisView-button {
+		font-weight: bold;
+		background: hsl(hue($robotwitter-main-color), 20%, 90%);
+		&:hover
+			{
+				background: hsl(hue(blue), 20%, 90%);
+			}
+	}
+	
 
 } }
 

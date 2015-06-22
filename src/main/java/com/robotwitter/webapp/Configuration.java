@@ -2,6 +2,7 @@
 package com.robotwitter.webapp;
 
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
@@ -9,13 +10,21 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
+import twitter4j.ResponseList;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.User;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 
 import com.robotwitter.classification.TweetClassifierListener;
 import com.robotwitter.database.MySqlConnectionEstablisherModule;
 import com.robotwitter.database.MySqlDBModule;
+import com.robotwitter.database.interfaces.IDatabaseFollowers;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
+import com.robotwitter.database.primitives.DBFollower;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.management.EmailPasswordRetrieverModule;
 import com.robotwitter.management.RetrievalMailBuilderModule;
@@ -26,6 +35,7 @@ import com.robotwitter.twitter.FollowerIdsBackfiller;
 import com.robotwitter.twitter.FollowerStoreListener;
 import com.robotwitter.twitter.HeavyHittersListener;
 import com.robotwitter.twitter.IUserTracker;
+import com.robotwitter.twitter.TwitterAppConfiguration;
 import com.robotwitter.twitter.UserTracker;
 import com.robotwitter.twitter.UserTrackerModule;
 import com.robotwitter.webapp.control.ControllerModule;
@@ -84,6 +94,34 @@ public class Configuration implements ServletContextListener
 	}
 
 
+	private DBFollower buildFollowerFromUser(User user)
+	{
+		String desc = user.getDescription();
+		if (user.getDescription() == null)
+		{
+			desc = "";
+		}
+		String location = user.getLocation();
+		if (user.getLocation() == null)
+		{
+			location = "";
+		}
+		return new DBFollower(
+			user.getId(),
+			user.getName(),
+			user.getScreenName(),
+			desc,
+			user.getFollowersCount(),
+			user.getFriendsCount(),
+			location,
+			user.getFavouritesCount(),
+			user.getLang(),
+			user.isVerified(),
+			new Timestamp(user.getCreatedAt().getTime()),
+			user.getOriginalProfileImageURL());
+	}
+
+
 	/** Initialises the injector. */
 	private void initialiseInjector()
 	{
@@ -116,8 +154,7 @@ public class Configuration implements ServletContextListener
 	{
 		messagesProvider = new MessagesProvider(menus, views);
 	}
-
-
+	
 	/**
 	 * Created and guiced up by Itay and Shmulik. Initialises the user trackers
 	 * and starts them.
@@ -127,8 +164,33 @@ public class Configuration implements ServletContextListener
 		accountsTracker = new TwitterTracker();
 		IDatabaseTwitterAccounts accountsDB =
 			injector.getInstance(IDatabaseTwitterAccounts.class);
+		IDatabaseFollowers followersDB =
+			injector.getInstance(IDatabaseFollowers.class);
 		ArrayList<DBTwitterAccount> accounts = accountsDB.getAllAccounts();
 		if (accounts == null) { return; }
+
+		final long[] ids = new long[accounts.size()];
+		for (int i = 0; i < accounts.size(); i++)
+		{
+			ids[i] = accounts.get(i).getUserId();
+		}
+
+		ResponseList<User> userList = null;
+		try
+		{
+			final TwitterFactory tf =
+				new TwitterFactory(
+					new TwitterAppConfiguration().getAppConfiguration());
+			Twitter connector = tf.getInstance();
+			userList = connector.lookupUsers(ids);
+		} catch (final TwitterException e)
+		{
+			e.printStackTrace();
+		}
+		
+		for (User user: userList) {
+			followersDB.insert(buildFollowerFromUser(user));
+		}
 
 		for (DBTwitterAccount account : accounts)
 		{
@@ -136,7 +198,6 @@ public class Configuration implements ServletContextListener
 		}
 
 	}
-	
 	
 	/** Initialises the view factory. */
 	private void initialiseViewFactory()

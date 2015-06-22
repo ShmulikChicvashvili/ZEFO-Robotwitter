@@ -55,6 +55,18 @@ public interface ITwitterAccountController extends Serializable
 
 
 	/**
+	 * @return the csv file containing the followers of the account, in ByteArray form
+	 */
+	byte[] getExportedDatabase();
+
+
+	/**
+	 * @return the name of the temp csv file
+	 */
+	String getExportedDatabaseName();
+
+
+	/**
 	 * Gets the followers amount by displayed language.
 	 *
 	 * @return a map from a displayed language to the amount of followers our

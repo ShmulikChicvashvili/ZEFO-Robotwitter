@@ -2,6 +2,7 @@
 package com.robotwitter.webapp.util;
 
 
+import com.vaadin.server.Page;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.UI;
 
@@ -28,8 +29,24 @@ public class RobotwitterCustomComponent extends CustomComponent
 	{
 		return ((AbstractUI) UI.getCurrent()).getUserSession();
 	}
+
+
+	/** @return true, if the user is browsing with a mobile phone. */
+	public static final boolean isMobile()
+	{
+		return ((AbstractUI) UI.getCurrent()).isMobile();
+	}
 	
 	
+	/** @return The current view's name. */
+	protected static final String getViewName()
+	{
+		String $ = Page.getCurrent().getUriFragment();
+		if ($ == null || $.length() == 0 || $.charAt(0) != '!') { return ""; }
+		return $.substring(1);
+	}
+
+
 	/**
 	 * Instantiates a new abstract view.
 	 *

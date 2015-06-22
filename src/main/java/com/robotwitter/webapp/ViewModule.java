@@ -5,6 +5,8 @@ package com.robotwitter.webapp;
 import com.google.inject.AbstractModule;
 import com.google.inject.name.Names;
 
+import com.robotwitter.webapp.control.automate.CannedTweetsController;
+import com.robotwitter.webapp.control.automate.ICannedTweetsController;
 import com.robotwitter.webapp.control.login.EmailPasswordRetrievalController;
 import com.robotwitter.webapp.control.login.ILoginController;
 import com.robotwitter.webapp.control.login.IPasswordRetrievalController;
@@ -83,6 +85,8 @@ public class ViewModule extends AbstractModule
 		// Bind controllers
 		bind(ILoginController.class).to(LoginController.class);
 		bind(IRegistrationController.class).to(RegistrationController.class);
+		bind(ICannedTweetsController.class)
+			.to(CannedTweetsController.class);
 	}
 
 

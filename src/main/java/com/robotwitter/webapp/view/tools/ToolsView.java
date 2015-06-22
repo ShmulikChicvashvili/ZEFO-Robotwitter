@@ -127,11 +127,10 @@ public class ToolsView extends AbstractView
 	private static final String HEADER_STYLENAME = "ToolsView-header";
 	
 	/** The CSS class name to apply to each panel component. */
-	private static final String PANEL_STYLENAME = "AnalysisView-panel";
+	private static final String PANEL_STYLENAME = "ToolsView-panel";
 	
 	/** The CSS class name to apply to each panel title label. */
-	private static final String PANEL_TITLE_STYLENAME =
-		"AnalysisView-panel-title";
+	private static final String PANEL_TITLE_STYLENAME = "ToolsView-panel-title";
 
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

@@ -35,10 +35,10 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
  */
 public class TwitterConnectorController implements ITwitterConnectorController
 {
-	
+
 	/**
 	 * Instantiates a new twitter connector controller.
-	 * 
+	 *
 	 * @param tracker
 	 *            the tracker that gets information from twitter
 	 * @param attacher
@@ -54,14 +54,14 @@ public class TwitterConnectorController implements ITwitterConnectorController
 	{
 		this.attacher = attacher;
 		this.tracker = tracker;
-		
+
 		tf = factory;
 		twitterAccount = null;
 		id = -1;
 		screenname = null;
 	}
-	
-	
+
+
 	/**
 	 * Connect.
 	 *
@@ -81,7 +81,7 @@ public class TwitterConnectorController implements ITwitterConnectorController
 		{
 			return Status.PIN_IS_INCORRECT;
 		}
-		
+
 		try
 		{
 			id = twitterAccount.getTwitter().getId();
@@ -92,89 +92,99 @@ public class TwitterConnectorController implements ITwitterConnectorController
 			e.printStackTrace();
 			return Status.FAILURE;
 		}
-		
+
 		return Status.SUCCESS;
 	}
-	
-	
+
+
 	@Override
 	public final String getConnectionURL()
 	{
 		twitterAccount = new TwitterAccount(tf);
 		return attacher.getAuthorizationURL(twitterAccount);
 	}
-	
-	
+
+
 	@Override
 	public final long getID()
 	{
 		return id;
 	}
-	
-	
+
+
 	@Override
 	public final String getScreenname()
 	{
 		return screenname;
 	}
-	
-	
+
+
 	private void track()
 	{
 		System.out.println("trying to track " + id);
 		Injector injector =
 			(Injector) VaadinServlet
-				.getCurrent()
-				.getServletContext()
-				.getAttribute(Configuration.INJECTOR);
+			.getCurrent()
+			.getServletContext()
+			.getAttribute(Configuration.INJECTOR);
 		IUserTracker userTracker = injector.getInstance(IUserTracker.class);
-		((UserTracker) tracker).setUser(id);
-		
+		((UserTracker) userTracker).setUser(id);
+
 		HeavyHittersListener hhListener =
 			injector.getInstance(HeavyHittersListener.class);
 		hhListener.setUser(id);
 		FollowerStoreListener dbListener =
 			injector.getInstance(FollowerStoreListener.class);
 		dbListener.setUser(id);
+<<<<<<< HEAD
 		TweetClassifierListener classifier = injector.getInstance(TweetClassifierListener.class);
 		classifier.setUser(id);
 		
 		FollowerIdsBackfiller backfiller = injector.getInstance(FollowerIdsBackfiller.class);
 		backfiller.setUser(id);
 		
+=======
+		TweetClassifierListener classifier =
+			injector.getInstance(TweetClassifierListener.class);
+		classifier.setUser(id);
+
+		FollowerIdsBackfiller backfiller =
+			injector.getInstance(FollowerIdsBackfiller.class);
+		backfiller.setUser(id);
+>>>>>>> refs/heads/develop
 		
 		userTracker.addListener(dbListener);
 		userTracker.addListener(hhListener);
 		userTracker.addListener(classifier);
 		userTracker.addBackfiller(backfiller);
-		
+
 		tracker.addUserTracker(userTracker);
 		tracker.startTracker(id);
 	}
-	
-	
-	
+
+
+
 	/** The tracker. */
 	private ITwitterTracker tracker;
-	
+
 	/** The tf. */
 	private TwitterFactory tf;
-	
+
 	/** The recently connected account's ID. */
 	private long id;
-	
+
 	/** The recently connected account's screenname. */
 	private String screenname;
-	
+
 	/** The twitter account. */
 	@SuppressFBWarnings("SE_BAD_FIELD")
 	private TwitterAccount twitterAccount;
-	
+
 	/** The attacher. */
 	@SuppressFBWarnings("SE_BAD_FIELD")
 	private ITwitterAttacher attacher;
-	
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 }

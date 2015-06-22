@@ -16,8 +16,13 @@ import com.vaadin.ui.themes.ValoTheme;
 import com.robotwitter.webapp.control.account.ITwitterConnectorController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.analysis.AnalysisView;
+<<<<<<< HEAD
 import com.robotwitter.webapp.view.automate.AutoTweetView;
+=======
+import com.robotwitter.webapp.view.automate.AutomateView;
+>>>>>>> refs/heads/develop
 import com.robotwitter.webapp.view.dashboard.DashboardView;
+import com.robotwitter.webapp.view.scheduling.ScheduledViewMock;
 import com.robotwitter.webapp.view.tools.ToolsView;
 
 
@@ -112,13 +117,21 @@ public class MainMenu extends AbstractMenu
 		links.addItem(
 			messages.get("MainMenu.link.schedule"),
 			FontAwesome.CALENDAR,
+<<<<<<< HEAD
 			null).setEnabled(false);
+=======
+			item -> navigate(ScheduledViewMock.NAME));// .setEnabled(false);
+>>>>>>> refs/heads/develop
 
 		// Add automate button
 		links.addItem(
 			messages.get("MainMenu.link.automate"),
 			FontAwesome.COGS,
+<<<<<<< HEAD
 			item -> navigate(AutoTweetView.NAME));
+=======
+			item -> navigate(AutomateView.NAME));
+>>>>>>> refs/heads/develop
 
 		// Set properties and styles
 		links.setAutoOpen(true);
@@ -134,7 +147,12 @@ public class MainMenu extends AbstractMenu
 	{
 		final Component links = createLinks();
 		accountInformation = createAccountInformation();
+<<<<<<< HEAD
 		final HorizontalLayout menu = new HorizontalLayout(links, accountInformation);
+=======
+		final HorizontalLayout menu =
+			new HorizontalLayout(links, accountInformation);
+>>>>>>> refs/heads/develop
 		menu.setComponentAlignment(links, Alignment.TOP_LEFT);
 		menu.setComponentAlignment(accountInformation, Alignment.TOP_RIGHT);
 		menu.setSizeFull();

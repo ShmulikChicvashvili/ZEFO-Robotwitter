@@ -5,7 +5,10 @@ package com.robotwitter.webapp.control.tools;
 import java.io.Serializable;
 import java.util.List;
 
+import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.webapp.control.tools.tweeting.Tweet;
+import com.robotwitter.webapp.control.general.Tweet;
+
 
 
 
@@ -13,7 +16,7 @@ import com.robotwitter.webapp.control.tools.tweeting.Tweet;
 /** Tweeting tools controller. */
 public interface ITweetingController extends Serializable
 {
-
+	
 	/**
 	 * Break the given Tweet.
 	 *
@@ -28,8 +31,8 @@ public interface ITweetingController extends Serializable
 	 * @return A list of Tweets that are broken down from the given Tweet
 	 */
 	List<String> breakTweet(String tweet);
-
-
+	
+	
 	/**
 	 * Geta list of options to respond to the given tweet (as the current user).
 	 *
@@ -55,11 +58,11 @@ public interface ITweetingController extends Serializable
 	 */
 	List<String> previewTweet(String tweet);
 	
-	void setPrefix(String prefix);
+	SqlError setPrefix(String prefix);
 	
-	void setSuffix(String suffix);
+	SqlError setSuffix(String suffix);
 	
-	void getPrefix(String prefix);
+	String getPrefix();
 	
-	void getSuffix(String suffix);
+	String getSuffix();
 }

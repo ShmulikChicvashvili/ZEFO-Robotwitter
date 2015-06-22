@@ -14,6 +14,7 @@ import com.robotwitter.database.interfaces.IDatabaseHeavyHitters;
 import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
 import com.robotwitter.database.primitives.DBFollower;
 import com.robotwitter.database.primitives.DBFollowersNumber;
+import com.robotwitter.posting.ResponsePostService;
 import com.robotwitter.posting.TweetPostService;
 import com.robotwitter.twitter.TwitterAccount;
 
@@ -23,7 +24,9 @@ import com.robotwitter.twitter.TwitterAccount;
 /**
  * A simple implementation of the Twitter account controller interface.
  *
- * @author Doron Hogery
+ * @author Doron 
+ * Edited by - Shmulik Chicvashvili and Itay 'The Caliber' Khazon at 5/4/15
+ * 5:44 P.M
  */
 public class TwitterAccountController implements ITwitterAccountController
 {
@@ -258,6 +261,7 @@ public class TwitterAccountController implements ITwitterAccountController
 	}
 	
 	
+<<<<<<< HEAD
 	/* (non-Javadoc) @see com.robotwitter.webapp.control.account.ITwitterAccountController#postTweetsAsSingleResponseTweet(long, java.util.List) */
 	@Override
 	public Status postTweetsAsSingleResponseTweet(
@@ -266,6 +270,24 @@ public class TwitterAccountController implements ITwitterAccountController
 	{
 		// TODO Auto-generated method stub
 		return null;
+=======
+	/* (non-Javadoc) @see
+	 * com.robotwitter.webapp.control.account.ITwitterAccountController
+	 * #postTweetsAsSingleResponseTweet(long, java.util.List) */
+	@Override
+	public Status postTweetsAsSingleResponseTweet(
+		long originalId,
+		List<String> tweets)
+	{
+		switch (responsePostService.post(originalId, tweets))
+		{
+			case SUCCESS:
+				return Status.SUCCESS;
+				
+			default:
+				return Status.FAILURE;
+		}
+>>>>>>> refs/heads/develop
 	}
 	
 	
@@ -292,6 +314,7 @@ public class TwitterAccountController implements ITwitterAccountController
 	{
 		this.twitterAccount = twitterAccount;
 		tweetPostService = new TweetPostService(twitterAccount);
+		responsePostService = new ResponsePostService(twitterAccount);
 	}
 	
 	
@@ -391,7 +414,10 @@ public class TwitterAccountController implements ITwitterAccountController
 	}
 	
 	
+<<<<<<< HEAD
 	
+=======
+>>>>>>> refs/heads/develop
 	private void separatorsByPath(
 		int subdivision,
 		List<Integer> separators,
@@ -443,6 +469,11 @@ public class TwitterAccountController implements ITwitterAccountController
 		assert separators.size() < subdivision;
 	}
 	
+<<<<<<< HEAD
+=======
+	
+	
+>>>>>>> refs/heads/develop
 	private static final int NOFOLLOWERSINFO = -1;
 	
 	private static final int FINDFOLLOWERS = 0;
@@ -477,4 +508,9 @@ public class TwitterAccountController implements ITwitterAccountController
 	
 	private TweetPostService tweetPostService;
 	
+<<<<<<< HEAD
+=======
+	private ResponsePostService responsePostService;
+	
+>>>>>>> refs/heads/develop
 }

@@ -7,7 +7,6 @@ import com.vaadin.ui.UI;
 
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.IUserSession;
-import com.robotwitter.webapp.view.RobotwitterUI;
 
 
 
@@ -27,10 +26,10 @@ public class RobotwitterCustomComponent extends CustomComponent
 	/** @return the current user's browsing session. */
 	public static final IUserSession getUserSession()
 	{
-		return ((RobotwitterUI) UI.getCurrent()).getUserSession();
+		return ((AbstractUI) UI.getCurrent()).getUserSession();
 	}
-
-
+	
+	
 	/**
 	 * Instantiates a new abstract view.
 	 *
@@ -41,8 +40,8 @@ public class RobotwitterCustomComponent extends CustomComponent
 	{
 		this.messages = messages;
 	}
-	
-	
+
+
 	/**
 	 * Activates a Twitter account.
 	 * <p>
@@ -54,8 +53,8 @@ public class RobotwitterCustomComponent extends CustomComponent
 	 */
 	public void activateTwitterAccount(@SuppressWarnings("unused") long id)
 	{/* Do nothing */}
-	
-	
+
+
 	/**
 	 * Navigates to the given view name.
 	 *
@@ -66,13 +65,13 @@ public class RobotwitterCustomComponent extends CustomComponent
 	{
 		getUI().getNavigator().navigateTo(name);
 	}
-	
-	
-	
+
+
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 	/** The messages displayed by this component. */
 	protected IMessagesContainer messages;
-	
+
 }

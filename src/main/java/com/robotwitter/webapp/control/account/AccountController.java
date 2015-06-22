@@ -136,9 +136,9 @@ public class AccountController implements IAccountController
 	{
 		if (email == null) { return null; }
 		if (!updateTwitterAccounts()) { return null; } // FIXME: this askes
-														// twitter for the users
-														// every time... change
-														// this!
+		// twitter for the users
+		// every time... change
+		// this!
 		return twitterAccounts.values();
 	}
 
@@ -178,7 +178,7 @@ public class AccountController implements IAccountController
 					user.getId(),
 					user.getName(),
 					user.getScreenName(),
-					user.getProfileImageURL(),
+					user.getOriginalProfileImageURL(),
 					numFollowersDB,
 					heavyhitterDB,
 					followersDB);

@@ -375,7 +375,7 @@ public class FollowerStoreListener implements UserStreamListener
 			user.getLang(),
 			user.isVerified(),
 			new Timestamp(user.getCreatedAt().getTime()),
-			user.getBiggerProfileImageURL());
+			user.getOriginalProfileImageURL());
 	}
 	
 	

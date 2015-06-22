@@ -6,11 +6,16 @@ import java.util.HashMap;
 
 import com.vaadin.navigator.View;
 import com.robotwitter.webapp.view.analysis.AnalysisView;
+<<<<<<< HEAD
 import com.robotwitter.webapp.view.automate.AutoTweetView;
+=======
+import com.robotwitter.webapp.view.automate.AutomateView;
+>>>>>>> refs/heads/develop
 import com.robotwitter.webapp.view.connect_twitter.ConnectTwitterView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
 import com.robotwitter.webapp.view.login.LoginView;
 import com.robotwitter.webapp.view.registration.RegistrationView;
+import com.robotwitter.webapp.view.scheduling.ScheduledViewMock;
 import com.robotwitter.webapp.view.tools.ToolsView;
 
 
@@ -63,7 +68,13 @@ public class ViewMap extends HashMap<String, Class<? extends View>>
 		put(DashboardView.NAME, DashboardView.class);
 		put(AnalysisView.NAME, AnalysisView.class);
 		put(ToolsView.NAME, ToolsView.class);
+<<<<<<< HEAD
 		put(AutoTweetView.NAME, AutoTweetView.class);
+=======
+		put(AutomateView.NAME, AutomateView.class);
+
+		put(ScheduledViewMock.NAME, ScheduledViewMock.class);
+>>>>>>> refs/heads/develop
 	}
 
 

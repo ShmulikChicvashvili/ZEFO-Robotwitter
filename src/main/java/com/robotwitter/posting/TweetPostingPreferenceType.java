@@ -15,4 +15,5 @@ public enum TweetPostingPreferenceType
 	NUMBERED,
 	PREFIX,
 	SUFFIX
+
 }

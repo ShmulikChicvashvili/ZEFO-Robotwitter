@@ -54,5 +54,5 @@ public interface IScheduledTweetsController {
 
 	SqlError addScheduledTweet(DBScheduledTweet tweet);
 	
-	//SqlError removeScheduledTweet(List<DBScheduledTweet> tweets);
+	SqlError removeScheduledTweet(List<DBScheduledTweet> tweets);
 }

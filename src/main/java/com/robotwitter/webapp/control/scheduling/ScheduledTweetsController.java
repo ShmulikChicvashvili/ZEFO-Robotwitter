@@ -60,10 +60,17 @@ public class ScheduledTweetsController implements IScheduledTweetsController {
 		return s;
 	}
 	
-	/**@Override
+	@Override
 	public SqlError removeScheduledTweet(List<DBScheduledTweet> tweets){
-		return null; //TODO: solve this.
-	}*/
+		SqlError err=SqlError.INVALID_PARAMS;
+		for(DBScheduledTweet tweet : tweets){
+			err = dbScheduled.removeScheduledTweet(tweet);
+			if(err != SqlError.SUCCESS){
+				return err;
+			}
+		}
+		return err;
+	}
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

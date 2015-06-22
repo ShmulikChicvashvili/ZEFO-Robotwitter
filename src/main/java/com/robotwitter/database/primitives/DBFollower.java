@@ -2,6 +2,8 @@ package com.robotwitter.database.primitives;
 
 import java.sql.Timestamp;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 /**
  * @author Amir and Shmulik
  */
@@ -46,103 +48,87 @@ public class DBFollower {
 	}
 
 	/**
-	 * @return the id of the follower
-	 */
-	public long getFollowerId() {
-		return this.followerId;
-	}
-
-	/**
-	 * @return the name of the follower
-	 */
-	public String getName() {
-		return this.name;
-	}
-
-	/**
-	 * @return the screen name of the follower
-	 */
-	public String getScreenName() {
-		return this.screenName;
-	}
-
-	/**
 	 * @return the description of the follower
 	 */
 	public String getDescription() {
-		return this.description;
-	}
-
-	/**
-	 * @return the number of followers of the follower
-	 */
-	public int getFollowers() {
-		return this.followers;
-	}
-
-	/**
-	 * @return the number being followed by the follower
-	 */
-	public int getFollowing() {
-		return this.following;
-	}
-
-	/**
-	 * @return the location of the follower
-	 */
-	public String getLocation() {
-		return this.location;
+		return description;
 	}
 
 	/**
 	 * @return the number of tweets favorited by the follower
 	 */
 	public int getFavorites() {
-		return this.favorites;
+		return favorites;
 	}
 
 	/**
-	 * @return the language setting of the follower
+	 * @return the id of the follower
 	 */
-	public String getLanguage() {
-		return this.language;
+	public long getFollowerId() {
+		return followerId;
 	}
-	
+
+	/**
+	 * @return the number of followers of the follower
+	 */
+	public int getFollowers() {
+		return followers;
+	}
+
+	/**
+	 * @return the number being followed by the follower
+	 */
+	public int getFollowing() {
+		return following;
+	}
+
 	/**
 	 * @return is the follower a celebrity
 	 */
 	public boolean getIsCelebrity() {
-		return this.isCelebrity;
+		return isCelebrity;
 	}
 
 	/**
 	 * @return the date of joining Twitter
 	 */
 	public Timestamp getJoined() {
-		return this.joined;
+		return joined;
+	}
+
+	/**
+	 * @return the language setting of the follower
+	 */
+	public String getLanguage() {
+		return language;
+	}
+
+	/**
+	 * @return the location of the follower
+	 */
+	public String getLocation() {
+		return location;
 	}
 	
+	/**
+	 * @return the name of the follower
+	 */
+	public String getName() {
+		return name;
+	}
+
 	/**
 	 * @return the picture URL of the follower
 	 */
 	public String getPicture() {
-		return this.picture;
+		return picture;
 	}
-
+	
 	/**
-	 * @param name
-	 *            the name to set
+	 * @return the screen name of the follower
 	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @param screenName
-	 *            the screenName to set
-	 */
-	public void setScreenName(String screenName) {
-		this.screenName = screenName;
+	public String getScreenName() {
+		return screenName;
 	}
 
 	/**
@@ -151,6 +137,14 @@ public class DBFollower {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	/**
+	 * @param favorites
+	 *            the favorites to set
+	 */
+	public void setFavorites(int favorites) {
+		this.favorites = favorites;
 	}
 
 	/**
@@ -170,31 +164,6 @@ public class DBFollower {
 	}
 
 	/**
-	 * @param location
-	 *            the location to set
-	 */
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	/**
-	 * @param favorites
-	 *            the favorites to set
-	 */
-	public void setFavorites(int favorites) {
-		this.favorites = favorites;
-	}
-	
-	/**
-	 * @param language
-	 *            the language to set
-	 */
-	public void setLanguage(String language) {
-		this.language = language;
-	}
-	
-
-	/**
 	 * @param isCelebrity
 	 *            the isCelebrity to set
 	 */
@@ -209,7 +178,32 @@ public class DBFollower {
 	public void setJoined(Timestamp joined) {
 		this.joined = joined;
 	}
+
+	/**
+	 * @param language
+	 *            the language to set
+	 */
+	public void setLanguage(String language) {
+		this.language = language;
+	}
 	
+	/**
+	 * @param location
+	 *            the location to set
+	 */
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	
+
+	/**
+	 * @param name
+	 *            the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	/**
 	 * @param picture
 	 *            the picture URL to set
@@ -217,16 +211,30 @@ public class DBFollower {
 	public void setPicture(String picture) {
 		this.picture = picture;
 	}
+	
+	/**
+	 * @param screenName
+	 *            the screenName to set
+	 */
+	public void setScreenName(String screenName) {
+		this.screenName = screenName;
+	}
 
 	/* (non-Javadoc) @see java.lang.Object#toString() */
 	@Override
 	public String toString() {
-		return "DBFollower [name=" + name + ", screen name=" + screenName
-				+ ", description=" + description + ", followers=" + followers
-				+ ", following=" + following + ", location=" + location
-				+ ", favorites=" + favorites + ", language=" + language
-				+ ", is the follower a celebrity=" + isCelebrity
-				+ ", joined at=" + joined + ", picture URL=" + picture +"]";
+		return StringEscapeUtils.escapeCsv(((Long) followerId).toString()) + "," +
+			StringEscapeUtils.escapeCsv(name) + "," + 
+			StringEscapeUtils.escapeCsv(screenName) + "," + 
+			StringEscapeUtils.escapeCsv(description) + "," + 
+			StringEscapeUtils.escapeCsv(((Integer) followers).toString()) + "," + 
+			StringEscapeUtils.escapeCsv(((Integer) following).toString()) + "," + 
+			StringEscapeUtils.escapeCsv(location) + "," + 
+			StringEscapeUtils.escapeCsv(((Integer) favorites).toString()) + "," +
+			StringEscapeUtils.escapeCsv(language) + "," + 
+			StringEscapeUtils.escapeCsv(((Boolean) isCelebrity).toString()) + "," + 
+			StringEscapeUtils.escapeCsv(joined.toString()) + "," + 
+			StringEscapeUtils.escapeCsv(picture);
 	}
 
 	private long followerId;

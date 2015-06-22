@@ -4,7 +4,6 @@ package com.robotwitter.webapp.menu;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Component;
@@ -12,13 +11,12 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.themes.ValoTheme;
-
 import com.robotwitter.webapp.control.account.ITwitterConnectorController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.analysis.AnalysisView;
 import com.robotwitter.webapp.view.automate.AutomateView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
-import com.robotwitter.webapp.view.scheduling.ScheduledViewMock;
+import com.robotwitter.webapp.view.scheduling.ScheduleView;
 import com.robotwitter.webapp.view.tools.ToolsView;
 
 
@@ -113,7 +111,7 @@ public class MobileMainMenu extends AbstractMenu
 		links.addItem(
 			messages.get("MainMenu.link.schedule"),
 			FontAwesome.CALENDAR,
-			item -> navigate(ScheduledViewMock.NAME));// .setEnabled(false);
+			item -> navigate(ScheduleView.NAME));// .setEnabled(false);
 
 		// Add automate button
 		links.addItem(

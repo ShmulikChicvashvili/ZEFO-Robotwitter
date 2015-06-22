@@ -1,5 +1,5 @@
 
-package com.robotwitter.webapp.view;
+package com.robotwitter.webapp.util;
 
 
 import com.google.inject.Injector;
@@ -18,6 +18,9 @@ import com.robotwitter.webapp.IMenuFactory;
 import com.robotwitter.webapp.control.account.IAccountController;
 import com.robotwitter.webapp.menu.AbstractMenu;
 import com.robotwitter.webapp.menu.MainMenu;
+import com.robotwitter.webapp.mobile.MobileUI;
+import com.robotwitter.webapp.view.NavigationListener;
+import com.robotwitter.webapp.view.UserSession;
 
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
@@ -25,13 +28,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 
 /**
- * Represents the single container of all UI elements.
- * <p>
- * An instance of this class is created by the
- * {@link com.robotwitter.webapp.Servlet} when a user-connection is made, and
- * then the UI instance is available only to that user for the session (Closing
- * browser, losing connection for more than a predefined timeout, etc).
- * Basically, every user communicates with a single UI instance.
+ * Represents an abstract single container of all UI elements.
  *
  * @author Hagai Akibayov
  */
@@ -39,16 +36,16 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 // Contains circular dependency with AbstractView. Can be fix by refractoring
 // this class into an interface, but currently there's no reason to.
 @SuppressFBWarnings("CD_CIRCULAR_DEPENDENCY")
-public class RobotwitterUI extends UI
+public abstract class AbstractUI extends UI
 {
-	
-	/** Instantiates a new robotwitter UI. */
-	public RobotwitterUI()
+
+	/** Instantiates a new abstract UI. */
+	public AbstractUI()
 	{
 		isMainMenuShown = false;
 	}
-
-
+	
+	
 	/**
 	 * Activates a Twitter account.
 	 *
@@ -60,15 +57,40 @@ public class RobotwitterUI extends UI
 		mainMenu.activateTwitterAccount(id);
 		userSession.activateTwitterAccount(id);
 	}
-
-
+	
+	
 	/** @return the current user's browsing session. */
 	public final UserSession getUserSession()
 	{
 		return userSession;
 	}
+
+
+	/** Hides the main menu. */
+	public final void hideMainMenu()
+	{
+		if (!isMainMenuShown) { return; }
+		mainMenuAndContentContainer.removeComponent(mainMenu);
+		isMainMenuShown = false;
+	}
+
+
+	/** @return true, if the user is browsing with a mobile phone. */
+	public final boolean isMobile()
+	{
+		return this instanceof MobileUI;
+	}
 	
 	
+	/** Shows the main menu. */
+	public final void showMainMenu()
+	{
+		if (isMainMenuShown) { return; }
+		mainMenuAndContentContainer.addComponentAsFirst(mainMenu);
+		isMainMenuShown = true;
+	}
+
+
 	/** Initialises the layout. */
 	private void initialiseLayout()
 	{
@@ -136,24 +158,6 @@ public class RobotwitterUI extends UI
 		initialiseNavigator();
 		initialiseUserSession();
 		initialiseMainMenu();
-	}
-
-
-	/** Hides the main menu. */
-	final void hideMainMenu()
-	{
-		if (!isMainMenuShown) { return; }
-		mainMenuAndContentContainer.removeComponent(mainMenu);
-		isMainMenuShown = false;
-	}
-	
-	
-	/** Shows the main menu. */
-	final void showMainMenu()
-	{
-		if (isMainMenuShown) { return; }
-		mainMenuAndContentContainer.addComponentAsFirst(mainMenu);
-		isMainMenuShown = true;
 	}
 	
 	

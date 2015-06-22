@@ -21,18 +21,22 @@ public final class TwitterCard
 	 * @param name
 	 *            the Twitter account's name
 	 * @param screenname
-	 *            the Twitter account's screenname (eg, <code>@CocaCola</code>)
+	 *            the Twitter account's screenname
 	 * @param image
 	 *            the Twitter account's profile image URI
 	 * @param isEmpty
 	 *            is the account empty
+	 * @param isImageOnly
+	 *            use only image (without name and screenname)
+	 *
 	 * @return an HTML string representing the newly created card
 	 */
 	public static String createAsHtml(
 		String name,
 		String screenname,
 		String image,
-		boolean isEmpty)
+		boolean isEmpty,
+		boolean isImageOnly)
 
 	{		// Twitter account name element
 		String nameOpen = "<div class=\"" + TWITTER_NAME_STYLENAME + "\">";
@@ -75,7 +79,16 @@ public final class TwitterCard
 		// Root element (Twitter profile card)
 		String cardOpen = "<div class=\"" + STYLENAME + "\">";
 		String cardClose = "</div>";
-		String cardContent = namesElem + imageElem;
+		
+		String cardContent;
+		if (isImageOnly)
+		{
+			cardContent = imageElem;
+		} else
+		{
+			cardContent = namesElem + imageElem;
+		}
+		
 		String cardElem = cardOpen + cardContent + cardClose;
 
 		return cardElem;

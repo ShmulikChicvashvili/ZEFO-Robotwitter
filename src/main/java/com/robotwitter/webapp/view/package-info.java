@@ -4,7 +4,7 @@
  * This package contains classes that are instantiated once per active user.
  * This means that instances of the view package are constructed each time a
  * user makes a connection request to the server (handled by
- * {@link com.robotwitter.webapp.Servlet}).
+ * {@link com.robotwitter.webapp.DesktopServlet}).
  */
 
 package com.robotwitter.webapp.view;

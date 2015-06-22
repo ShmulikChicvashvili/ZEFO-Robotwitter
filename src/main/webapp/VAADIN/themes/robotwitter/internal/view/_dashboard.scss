@@ -1,0 +1,8 @@
+@import "dashboard/DashboardView";
+/*----------------------------------------------------------------------------*/
+
+
+@mixin robotwitter-view-dashboard
+{
+	@include DashboardView;
+}

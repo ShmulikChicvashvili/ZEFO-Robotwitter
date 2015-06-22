@@ -14,7 +14,7 @@ import com.robotwitter.posting.Preference;
 import com.robotwitter.posting.PrefixPreference;
 import com.robotwitter.posting.TweetPostingPreferenceType;
 import com.robotwitter.webapp.control.account.IAccountController;
-import com.robotwitter.webapp.control.tools.tweeting.Tweet;
+//import com.robotwitter.webapp.control.tools.tweeting.Tweet;
 import com.robotwitter.webapp.control.general.Tweet;
 
 /**
@@ -56,7 +56,7 @@ public class TweetingController implements ITweetingController {
 				preference = new NumberedPreference();
 			} else if (prefType == TweetPostingPreferenceType.PREFIX) {
 				preference = new PrefixPreference(preferences.getPrefix());
-			} else if (prefType == TweetPostingPreferenceType.SUFFIX) {
+			} else if (prefType == TweetPostingPreferenceType.POSTFIX) {
 				preference = new PostfixPreference(preferences.getPostfix());
 			}
 		}
@@ -109,14 +109,12 @@ public class TweetingController implements ITweetingController {
 	public SqlError setPreference(TweetPostingPreferenceType preference) {
 		if (!preferencesDB.isExists(accountContoller.getEmail())) {
 			DBTweetPostingPreferences postingPreferences = new DBTweetPostingPreferences(
-					accountContoller.getEmail(),
-					preference, null, null);
+					accountContoller.getEmail(), preference, null, null);
 			return preferencesDB.insert(postingPreferences);
 		}
 		DBTweetPostingPreferences postingPreferences = preferencesDB
 				.get(accountContoller.getEmail());
-		postingPreferences
-				.setPostingPreference(preference);
+		postingPreferences.setPostingPreference(preference);
 		SqlError err = preferencesDB.update(postingPreferences);
 		if (err == SqlError.DOES_NOT_EXIST) {
 			return preferencesDB.insert(postingPreferences);
@@ -134,9 +132,15 @@ public class TweetingController implements ITweetingController {
 		}
 		DBTweetPostingPreferences postingPreferences = preferencesDB
 				.get(accountContoller.getEmail());
-		postingPreferences
-				.setPostingPreference(TweetPostingPreferenceType.PREFIX);
-		postingPreferences.setPrefix(prefix);
+		if (postingPreferences == null) {
+			postingPreferences = new DBTweetPostingPreferences(
+					accountContoller.getEmail(),
+					TweetPostingPreferenceType.PREFIX, prefix, null);
+		} else {
+			postingPreferences
+					.setPostingPreference(TweetPostingPreferenceType.PREFIX);
+			postingPreferences.setPrefix(prefix);
+		}
 		SqlError err = preferencesDB.update(postingPreferences);
 		if (err == SqlError.DOES_NOT_EXIST) {
 			return preferencesDB.insert(postingPreferences);
@@ -149,17 +153,20 @@ public class TweetingController implements ITweetingController {
 		if (!preferencesDB.isExists(accountContoller.getEmail())) {
 			DBTweetPostingPreferences postingPreferences = new DBTweetPostingPreferences(
 					accountContoller.getEmail(),
-					TweetPostingPreferenceType.SUFFIX, null, suffix);
+					TweetPostingPreferenceType.POSTFIX, null, suffix);
 			return preferencesDB.insert(postingPreferences);
 		}
 		DBTweetPostingPreferences postingPreferences = preferencesDB
 				.get(accountContoller.getEmail());
 		if (postingPreferences == null) {
-			postingPreferences = new DBTweetPostingPreferences();
+			postingPreferences = new DBTweetPostingPreferences(
+					accountContoller.getEmail(),
+					TweetPostingPreferenceType.POSTFIX, null, suffix);
+		} else {
+			postingPreferences
+					.setPostingPreference(TweetPostingPreferenceType.POSTFIX);
+			postingPreferences.setPostfix(suffix);
 		}
-		postingPreferences
-				.setPostingPreference(TweetPostingPreferenceType.SUFFIX);
-		postingPreferences.setPostfix(suffix);
 		SqlError err = preferencesDB.update(postingPreferences);
 		if (err == SqlError.DOES_NOT_EXIST) {
 			return preferencesDB.insert(postingPreferences);

@@ -13,6 +13,8 @@ public interface IDatabaseScheduledTweets {
 	 * scheduled tweet
 	 */
 	public SqlError insertScheduledTweet(DBScheduledTweet scheduledTwet);
+	
+	public SqlError removeScheduledTweet(DBScheduledTweet scheduledTweet);
 
 	/*
 	 * The method which will return all the scheduled tweets that were added

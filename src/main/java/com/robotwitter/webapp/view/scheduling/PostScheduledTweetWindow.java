@@ -45,7 +45,7 @@ public class PostScheduledTweetWindow extends Window
 	}
 
 
-	/** Initialise layout. */
+	/** Initialise the layout. */
 	private void initializeLayout()
 	{
 		setCloseShortcut(KeyCode.ESCAPE, null);
@@ -71,11 +71,11 @@ public class PostScheduledTweetWindow extends Window
 
 
 
-	/** The callback on success, or null for none. */
-	private final Runnable callbackOnSuccess;
-
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
+
+	/** The callback on success, or null for none. */
+	private final Runnable callbackOnSuccess;
 
 	/** Scheduled controller. */
 	IScheduledTweetsController scheduledTweetsController;

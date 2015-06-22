@@ -6,11 +6,13 @@ import java.util.Date;
 import java.util.List;
 
 import com.google.inject.Inject;
+
 import com.robotwitter.database.interfaces.IDatabaseScheduledTweets;
 import com.robotwitter.database.primitives.DBScheduledTweet;
 import com.robotwitter.posting.AutomateTweetPostingPeriod;
 import com.robotwitter.posting.NumberedPreference;
 import com.robotwitter.posting.Preference;
+import com.robotwitter.posting.ScheduledTweetsListener;
 import com.robotwitter.database.interfaces.IDatabaseTweetPostingPreferences;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.returnValues.SqlError;
@@ -29,20 +31,15 @@ public class ScheduledTweetsController implements IScheduledTweetsController {
 		this.dbAccounts = dbAccounts;
 		this.dbPreference = dbPreference;
 		preference = new NumberedPreference();
+		ScheduledTweetsListener stl = new ScheduledTweetsListener(dbScheduled, dbAccounts, dbPreference);
+		stl.start();
 	}
 	
 	@Override
-	public final List<String> breakTweet(String tweet)
-	{
-		return preference.generateTweet(tweet);
+	public SqlError addScheduledTweet(DBScheduledTweet tweet) {
+		return  dbScheduled.insertScheduledTweet(tweet);	
 	}
 	
-	@Override
-	public final List<String> previewTweet(String tweet)
-	{
-		return breakTweet(tweet);
-	}
-
 	@Override
 	public SqlError addScheduledTweet(String name, String text, long userId,
 			Calendar c, AutomateTweetPostingPeriod period) {
@@ -55,10 +52,27 @@ public class ScheduledTweetsController implements IScheduledTweetsController {
 		SqlError s = dbScheduled.insertScheduledTweet(tweet);	
 		return s;
 	}
+
+	@Override
+	public final List<String> breakTweet(String tweet)
+	{
+		return preference.generateTweet(tweet);
+	}
 	
 	@Override
-	public SqlError addScheduledTweet(DBScheduledTweet tweet) {
-		return  dbScheduled.insertScheduledTweet(tweet);	
+	public List<DBScheduledTweet> getAllScheduledTweets() {
+		return dbScheduled.getScheduledTweets();
+	}
+	
+	@Override
+	public List<DBScheduledTweet> getInitializedScheduledTweets() {
+		return dbScheduled.getScheduledTweets();
+	}
+	
+	@Override
+	public final List<String> previewTweet(String tweet)
+	{
+		return breakTweet(tweet);
 	}
 	
 	@Override
@@ -71,16 +85,6 @@ public class ScheduledTweetsController implements IScheduledTweetsController {
 			}
 		}
 		return err;
-	}
-	
-	@Override
-	public List<DBScheduledTweet> getAllScheduledTweets() {
-		return dbScheduled.getScheduledTweets();
-	}
-	
-	@Override
-	public List<DBScheduledTweet> getInitializedScheduledTweets() {
-		return dbScheduled.getScheduledTweets();
 	}
 	
 	/** Serialisation version unique ID. */

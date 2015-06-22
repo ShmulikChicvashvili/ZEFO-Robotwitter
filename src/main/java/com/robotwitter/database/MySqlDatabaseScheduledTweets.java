@@ -42,18 +42,18 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 
 		try (Connection conn = connectionEstablisher.getConnection();
 				Statement statement = conn.createStatement()) {
-			getFromTable(gettingFlushingQuery, $, statement);
+			getFromTable(gettingScheduledQuery, $, statement);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return null;
+			return $;
 		}
 
-		try {
-			flush($);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			System.err.println("Undefined behaviour");
-		}
+//		try {
+//			flush($);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//			System.err.println("Undefined behaviour");
+//		}
 		return $;
 	}
 
@@ -85,7 +85,7 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 
 		try (Connection conn = connectionEstablisher.getConnection();
 				PreparedStatement prpdStmt = conn
-						.prepareStatement(insertionFlushingQuery)) {
+						.prepareStatement(insertionScheduledQuery)) {
 			insertToTable(scheduledTweet, prpdStmt);
 		} catch (SQLException e) {
 			if (e.getErrorCode() == insertAlreadyExists) {
@@ -100,7 +100,7 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 	@Override
 	public SqlError removeScheduledTweet(DBScheduledTweet scheduledTweet) {
 		// TODO Auto-generated method stub
-		return null;
+		return SqlError.SUCCESS;
 	}
 
 	private void flush(List<DBScheduledTweet> scheduledTweets)
@@ -117,7 +117,7 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 
 			stmt.execute(droppingQuery);
 			statement.executeUpdate(creationFlushingQuery);
-		}
+		} 
 	}
 
 	private void getFromTable(String gettingQuery,

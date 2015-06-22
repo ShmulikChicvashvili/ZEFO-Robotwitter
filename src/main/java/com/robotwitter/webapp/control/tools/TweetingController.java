@@ -117,6 +117,12 @@ public class TweetingController implements ITweetingController
 	}
 	
 	@Override
+	public SqlError setPreference(TweetPostingPreferenceType preference) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public SqlError setPrefix(String prefix){
 		DBTweetPostingPreferences postingPreferences = preferencesDB.get(accountContoller.getEmail());
 		postingPreferences.setPostingPreference(TweetPostingPreferenceType.PREFIX);
@@ -131,6 +137,9 @@ public class TweetingController implements ITweetingController
 	@Override
 	public SqlError setSuffix(String suffix){
 		DBTweetPostingPreferences postingPreferences = preferencesDB.get(accountContoller.getEmail());
+		if(postingPreferences == null){
+			postingPreferences = new DBTweetPostingPreferences();
+		}
 		postingPreferences.setPostingPreference(TweetPostingPreferenceType.SUFFIX);
 		postingPreferences.setPostfix(suffix);
 		SqlError err = preferencesDB.update(postingPreferences);

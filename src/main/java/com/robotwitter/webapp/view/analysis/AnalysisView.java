@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import com.vaadin.server.FileDownloader;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
@@ -89,6 +90,7 @@ public class AnalysisView extends AbstractView
 		AnalysisTabs tabs = new AnalysisTabs(messages);
 		
 		Button downloadButton = new Button(messages.get("AnalysisView.label.download-csv"));
+		downloadButton.setIcon(FontAwesome.DOWNLOAD);
 
         OnDemandStreamResource myResource = createDownloadResource();
         FileDownloader fileDownloader = new OnDemandDownloader(myResource);
@@ -98,6 +100,7 @@ public class AnalysisView extends AbstractView
 
 		header.addStyleName(HEADER_STYLENAME);
 		tabs.addStyleName(TABS_STYLENAME);
+		downloadButton.addStyleName(BUTTON_STYLENAME);
 		addStyleName(STYLENAME);
 
 		setCompositionRoot(layout);
@@ -116,6 +119,9 @@ public class AnalysisView extends AbstractView
 	
 	/** The CSS class name to apply to the header component. */
 	private static final String TABS_STYLENAME = "AnalysisView-tabs";
+	
+	/** The CSS class name to apply to the header component. */
+	private static final String BUTTON_STYLENAME = "AnalysisView-button";
 	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;

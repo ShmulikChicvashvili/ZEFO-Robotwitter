@@ -132,7 +132,7 @@ public class TwitterAccountController implements ITwitterAccountController
 	{
 		try
 		{
-			String fileName = "D:\\"+CSV_PREFIX+"_"+id+".csv";
+			String fileName = getExportedDatabaseName();
 			followersDB.exportToFile(id, fileName);
 			
 			File file = new File(fileName);
@@ -155,7 +155,7 @@ public class TwitterAccountController implements ITwitterAccountController
 	@Override
 	public String getExportedDatabaseName()
 	{
-		return "D:\\"+CSV_PREFIX+"_"+id+".csv";
+		return "D:\\\\"+CSV_PREFIX+"_"+id+".csv";
 	}
 	
 	

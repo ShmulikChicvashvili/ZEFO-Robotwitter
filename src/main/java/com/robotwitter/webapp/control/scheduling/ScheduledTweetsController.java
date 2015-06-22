@@ -72,6 +72,16 @@ public class ScheduledTweetsController implements IScheduledTweetsController {
 		return err;
 	}
 	
+	@Override
+	public List<DBScheduledTweet> getAllScheduledTweets() {
+		return dbScheduled.getScheduledTweets();
+	}
+	
+	@Override
+	public List<DBScheduledTweet> getInitializedScheduledTweets() {
+		return dbScheduled.getScheduledTweets();
+	}
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 	

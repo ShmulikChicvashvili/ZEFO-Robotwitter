@@ -4,7 +4,6 @@
 
 package com.robotwitter.webapp.view.scheduling;
 
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,21 +31,16 @@ import com.robotwitter.webapp.util.tweeting.RepeatChooser.RepeatType;
 import com.robotwitter.webapp.util.tweeting.TweetComposeBox;
 import com.robotwitter.webapp.util.tweeting.TweetPreview;
 
-
-
-
 /**
  * @author Eyal
  *
  */
-public class PostScheduledTweet extends RobotwitterCustomComponent
-{
+public class PostScheduledTweet extends RobotwitterCustomComponent {
 
 	/**
 	 * The Interface OnResponseSuccess.
 	 */
-	public interface OnResponseSuccess
-	{
+	public interface OnResponseSuccess {
 
 		/**
 		 * On response.
@@ -54,17 +48,13 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 		void onResponse();
 	}
 
-
-
 	/**
 	 * @param messages
 	 * @param schedulingController
 	 */
-	public PostScheduledTweet(
-		IMessagesContainer messages,
-		IScheduledTweetsController schedulingController,
-		OnResponseSuccess onResponseSuccess)
-	{
+	public PostScheduledTweet(IMessagesContainer messages,
+			IScheduledTweetsController schedulingController,
+			OnResponseSuccess onResponseSuccess) {
 		super(messages);
 		this.schedulingController = schedulingController;
 		this.onResponseSuccess = onResponseSuccess;
@@ -72,76 +62,58 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 		initializeLayout();
 	}
 
-
-	private boolean checkErrors(
-		String tweet,
-		RepeatType repeatType,
-		Calendar startDate)
-	{
-		if (startDate.before(new Date()))
-		{
+	private boolean checkErrors(String tweet, RepeatType repeatType,
+			Calendar startDate) {
+		if (startDate.before(new Date())) {
 			setErrorMessage(messages
-				.get("PostScheduledTweet.error.date-passed"));
+					.get("PostScheduledTweet.error.date-passed"));
 			return false;
 		}
 
-		if(tweetName.getValue().isEmpty()) {
-			setErrorMessage(messages
-				.get("PostScheduledTweet.error.name-empty"));
+		if (tweetName.getValue().isEmpty()) {
+			setErrorMessage(messages.get("PostScheduledTweet.error.name-empty"));
 			return false;
 		}
 
 		List<String> tweets = schedulingController.previewTweet(tweet);
-		int maxTweetLen =
-			getUserSession()
-			.getAccountController()
-			.getActiveTwitterAccount()
-			.getCurrentMaximumTweetLength();
+		int maxTweetLen = getUserSession().getAccountController()
+				.getActiveTwitterAccount().getCurrentMaximumTweetLength();
 		int c = 0;
-		for (String t : tweets)
-		{
+		for (String t : tweets) {
 			c += t.length();
 		}
 		// Check emptiness
-		if (c == 0)
-		{
+		if (c == 0) {
 			setErrorMessage(messages
-				.get("PostScheduledTweet.error.tweet-empty"));
+					.get("PostScheduledTweet.error.tweet-empty"));
 			return false;
 		}
 
 		// Validate
-		if (c > maxTweetLen)
-		{
+		if (c > maxTweetLen) {
 			setErrorMessage(messages
-				.get("PostScheduledTweet.error.tweet-too-long"));
+					.get("PostScheduledTweet.error.tweet-too-long"));
 			return false;
 		}
 
 		return true;
 	}
 
-
 	/** Clears the displayed error message on the composer. */
-	private void clearErrorMessage()
-	{
+	private void clearErrorMessage() {
 		errorMessage.setVisible(false);
 	}
-
 
 	/**
 	 *
 	 */
-	private void initializeErrorMessage()
-	{
+	private void initializeErrorMessage() {
 		errorMessage = new Label();
 		errorMessage.setVisible(false);
 		errorMessage.setStyleName(ERROR_STYLENAME);
 	}
 
-
-	private void initializeLayout()
-	{
+	private void initializeLayout() {
 		final Layout tweetNameLayout = initializeTweetNameLayout();
 		initializeTweetComposeBox();
 		initializeRepeatLayout();
@@ -150,13 +122,8 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 
 		initializePreviewLayout();
 
-		final VerticalLayout left =
-			new VerticalLayout(
-				tweetNameLayout,
-				tweetComposeBox,
-				repeatChooser,
-				submit,
-				errorMessage);
+		final VerticalLayout left = new VerticalLayout(tweetNameLayout,
+				tweetComposeBox, repeatChooser, submit, errorMessage);
 
 		final HorizontalLayout layout = new HorizontalLayout(left, preview);
 		layout.setSpacing(true);
@@ -164,33 +131,26 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 		setCompositionRoot(layout);
 	}
 
-
 	/**
 	 *
 	 */
-	private void initializePreviewLayout()
-	{
+	private void initializePreviewLayout() {
 		preview = new TweetPreview();
 		preview.updatePreview(new ArrayList<>());
 	}
 
-
 	/**
 	 *
 	 */
-	private void initializeRepeatLayout()
-	{
+	private void initializeRepeatLayout() {
 		repeatChooser = new RepeatChooser(messages);
 	}
-
 
 	/**
 	 * @return
 	 */
-	private Button initializeSubmitButton()
-	{
-		final Button submit =
-			new Button(
+	private Button initializeSubmitButton() {
+		final Button submit = new Button(
 				messages.get("PostScheduledTweet.button.tweet"),
 				event -> submitClick(event));
 		submit.setIcon(FontAwesome.PAPER_PLANE);
@@ -199,34 +159,27 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 		return submit;
 	}
 
-
 	/**
 	 *
 	 */
-	private void initializeTweetComposeBox()
-	{
-		tweetComposeBox =
-			new TweetComposeBox(
-				messages,
+	private void initializeTweetComposeBox() {
+		tweetComposeBox = new TweetComposeBox(messages,
 				event -> tweetComposeTextChanged(event.getText()));
 		tweetComposeBox.addStyleName(COMPOSE_BOX_STYLENAME);
 		tweetComposeBox.setSizeFull();
 	}
 
-
 	/**
 	 * @return
 	 */
-	private Layout initializeTweetNameLayout()
-	{
+	private Layout initializeTweetNameLayout() {
 		tweetName = new TextField();
-		final Label tweetNameLabel =
-			new Label(messages.get("PostScheduledTweet.label.tweet-name"));
-		final Layout tweetNameLayout =
-			new HorizontalLayout(tweetNameLabel, tweetName);
+		final Label tweetNameLabel = new Label(
+				messages.get("PostScheduledTweet.label.tweet-name"));
+		final Layout tweetNameLayout = new HorizontalLayout(tweetNameLabel,
+				tweetName);
 		return tweetNameLayout;
 	}
-
 
 	/**
 	 * Displays an error message on the composer.
@@ -234,8 +187,7 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 	 * @param error
 	 *            the error message to display
 	 */
-	private void setErrorMessage(String error)
-	{
+	private void setErrorMessage(String error) {
 		// Clear any previous error message.
 		clearErrorMessage();
 
@@ -244,76 +196,62 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 		errorMessage.setValue(error);
 	}
 
-
 	/**
 	 * @param event
 	 */
-	private void submitClick(ClickEvent event)
-	{
+	private void submitClick(ClickEvent event) {
 
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 		RepeatType repeatType = repeatChooser.getChosenRepeatType();
 		Calendar startDate = repeatChooser.getChosenDate();
 
-		Notification n =
-			new Notification(repeatType.toString(), sdf.format(startDate
-				.getTime()));
+		Notification n = new Notification(repeatType.toString(),
+				sdf.format(startDate.getTime()));
 		n.setDelayMsec(3000);
 		n.show(Page.getCurrent());
 
-		if (!checkErrors(tweetComposeBox.getText(), repeatType, startDate)) { return; }
+		if (!checkErrors(tweetComposeBox.getText(), repeatType, startDate)) {
+			return;
+		}
 
-		long userId =
-			getUserSession()
-			.getAccountController()
-			.getActiveTwitterAccount()
-			.getID();
+		long userId = getUserSession().getAccountController()
+				.getActiveTwitterAccount().getID();
 
 		AutomateTweetPostingPeriod period = null;
-		switch (repeatType)
-		{
-			case ONE_TIME:
-				period = AutomateTweetPostingPeriod.SINGLE;
-				break;
-			case DAILY:
-				period = AutomateTweetPostingPeriod.DAILY;
-				break;
-			case WEEKLY:
-				period = AutomateTweetPostingPeriod.WEEKLY;
-				break;
+		switch (repeatType) {
+		case ONE_TIME:
+			period = AutomateTweetPostingPeriod.SINGLE;
+			break;
+		case DAILY:
+			period = AutomateTweetPostingPeriod.DAILY;
+			break;
+		case WEEKLY:
+			period = AutomateTweetPostingPeriod.WEEKLY;
+			break;
 		}
 		assert period != null;
 
-		schedulingController.addScheduledTweet(
-			tweetName.getValue(),
-			tweetComposeBox.getText(),
-			userId,
-			startDate,
-			period);
+		schedulingController.addScheduledTweet(tweetName.getValue(),
+				tweetComposeBox.getText(), userId, startDate, period);
 
 		onResponseSuccess.onResponse();
 	}
 
-
 	/**
 	 * @param text
 	 */
-	private void tweetComposeTextChanged(String text)
-	{
+	private void tweetComposeTextChanged(String text) {
 		final List<String> tweets = schedulingController.previewTweet(text);
 
 		preview.updatePreview(tweets);
 
 		int c = 0;
-		for (final String s : tweets)
-		{
+		for (final String s : tweets) {
 			c += s.length();
 		}
 		tweetComposeBox.updateTweetLength(c);
 	}
-
-
 
 	/**
 	 *
@@ -324,12 +262,10 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 	private static final String ERROR_STYLENAME = "PostScheduledTweet-error";
 
 	/** The CSS class name to apply to the Tweet button. */
-	private static final String TWEET_BUTTON_STYLENAME =
-		"PostScheduledTweet-tweet-button";
+	private static final String TWEET_BUTTON_STYLENAME = "PostScheduledTweet-tweet-button";
 
 	/** The CSS class name to apply to the compose box. */
-	private static final String COMPOSE_BOX_STYLENAME =
-		"PostScheduledTweet-compose-box";
+	private static final String COMPOSE_BOX_STYLENAME = "PostScheduledTweet-compose-box";
 
 	/** The error message of a failed tweeting attempt. */
 	private Label errorMessage;

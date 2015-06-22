@@ -2,6 +2,9 @@
 package com.robotwitter.webapp.control.account;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -120,6 +123,39 @@ public class TwitterAccountController implements ITwitterAccountController
 	public int getCurrentMaximumTweetLength()
 	{
 		return 15 * 140;
+	}
+	
+	
+	/* (non-Javadoc) @see com.robotwitter.webapp.control.account.ITwitterAccountController#getExportedDatabase() */
+	@Override
+	public byte[] getExportedDatabase()
+	{
+		try
+		{
+			String fileName = getExportedDatabaseName();
+			followersDB.exportToFile(id, fileName);
+			
+			File file = new File(fileName);
+			FileInputStream fileInputStream;
+			fileInputStream = new FileInputStream(file);
+			
+			byte[] $ = new byte[(int) file.length()];
+			fileInputStream.read($);
+			file.delete();
+			return $;
+		} catch (IOException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			return null;
+		}
+	}
+
+	/* (non-Javadoc) @see com.robotwitter.webapp.control.account.ITwitterAccountController#getExportedDatabaseName() */
+	@Override
+	public String getExportedDatabaseName()
+	{
+		return "D:\\\\"+CSV_PREFIX+"_"+id+".csv";
 	}
 	
 	
@@ -403,6 +439,7 @@ public class TwitterAccountController implements ITwitterAccountController
 	}
 	
 	
+	
 	private void separatorsByPath(
 		int subdivision,
 		List<Integer> separators,
@@ -454,7 +491,7 @@ public class TwitterAccountController implements ITwitterAccountController
 		assert separators.size() < subdivision;
 	}
 	
-	
+	private static final String CSV_PREFIX = "followers_information";
 	
 	private static final int NOFOLLOWERSINFO = -1;
 	
@@ -489,7 +526,10 @@ public class TwitterAccountController implements ITwitterAccountController
 	private final IDatabaseFollowers followersDB;
 	
 	private TweetPostService tweetPostService;
-	
+
 	private ResponsePostService responsePostService;
+
+
+	private String csvPath;
 	
 }

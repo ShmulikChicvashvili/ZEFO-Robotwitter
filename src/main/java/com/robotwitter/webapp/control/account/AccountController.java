@@ -7,11 +7,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import twitter4j.ResponseList;
 import twitter4j.Twitter;
-import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.User;
 import twitter4j.auth.AccessToken;
 
 import com.google.inject.Inject;
@@ -21,6 +18,7 @@ import com.robotwitter.database.interfaces.IDatabaseHeavyHitters;
 import com.robotwitter.database.interfaces.IDatabaseNumFollowers;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
 import com.robotwitter.database.interfaces.IDatabaseUsers;
+import com.robotwitter.database.primitives.DBFollower;
 import com.robotwitter.database.primitives.DBTwitterAccount;
 import com.robotwitter.twitter.TwitterAccount;
 import com.robotwitter.twitter.TwitterAppConfiguration;
@@ -136,9 +134,9 @@ public class AccountController implements IAccountController
 	{
 		if (email == null) { return null; }
 		if (!updateTwitterAccounts()) { return null; } // FIXME: this askes
-														// twitter for the users
-														// every time... change
-														// this!
+		// twitter for the users
+		// every time... change
+		// this!
 		return twitterAccounts.values();
 	}
 
@@ -156,29 +154,19 @@ public class AccountController implements IAccountController
 
 		if (attachedAccounts == null) { return true; }
 
-		final long[] ids = new long[attachedAccounts.size()];
-		for (int i = 0; i < attachedAccounts.size(); i++)
-		{
-			ids[i] = attachedAccounts.get(i).getUserId();
+		ArrayList<DBFollower> userList = new ArrayList<DBFollower>();
+		for (DBTwitterAccount account : attachedAccounts) {
+			userList.add(followersDB.get(account.getUserId()));
 		}
-
-		ResponseList<User> userList = null;
-		try
-		{
-			userList = appConnector.lookupUsers(ids);
-		} catch (final TwitterException e)
-		{
-			e.printStackTrace();
-			return false;
-		}
-		for (final User user : userList)
+		
+		for (final DBFollower user : userList)
 		{
 			final TwitterAccountController currAccount =
 				new TwitterAccountController(
-					user.getId(),
+					user.getFollowerId(),
 					user.getName(),
 					user.getScreenName(),
-					user.getProfileImageURL(),
+					user.getPicture(),
 					numFollowersDB,
 					heavyhitterDB,
 					followersDB);
@@ -188,7 +176,7 @@ public class AccountController implements IAccountController
 			final TwitterAccount userAccount = new TwitterAccount(tf);
 			final Twitter connector = tf.getInstance();
 			final DBTwitterAccount account =
-				twitterAccountsDB.get(user.getId());
+				twitterAccountsDB.get(user.getFollowerId());
 			connector.setOAuthAccessToken(new AccessToken(
 				account.getToken(),
 				account.getPrivateToken()));

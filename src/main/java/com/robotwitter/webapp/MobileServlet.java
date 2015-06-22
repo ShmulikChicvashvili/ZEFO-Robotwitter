@@ -8,7 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.VaadinServlet;
 
-import com.robotwitter.webapp.view.RobotwitterUI;
+import com.robotwitter.webapp.mobile.MobileUI;
 
 
 
@@ -20,19 +20,19 @@ import com.robotwitter.webapp.view.RobotwitterUI;
  * then becomes available widely throughout the entire application as the
  * application's HTTP request-handler.
  * <p>
- * The initial UI provided to the user is the {@link RobotwitterUI}, which
- * manages the view navigation inside the application.
+ * The initial UI provided to the user is the {@link MobileUI}, which manages
+ * the view navigation inside the application.
  */
 @WebServlet(
-	value = { "/*" },
+	value = { "/mobile/*" },
 	asyncSupported = true,
 	initParams = { @WebInitParam(
 		name = "widgetset",
 		value = "com.robotwitter.webapp.RobotwitterWidgetset") })
-@VaadinServletConfiguration(productionMode = false, ui = RobotwitterUI.class)
-public class Servlet extends VaadinServlet
+@VaadinServletConfiguration(productionMode = false, ui = MobileUI.class)
+public class MobileServlet extends VaadinServlet
 {
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-	
+
 }

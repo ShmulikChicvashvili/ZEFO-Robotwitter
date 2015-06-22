@@ -23,7 +23,7 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
  */
 public class TweetResponseWindow extends Window
 {
-	
+
 	/**
 	 * Instantiates a new tweet response window.
 	 *
@@ -33,62 +33,75 @@ public class TweetResponseWindow extends Window
 	 *            A controller used for tweeting
 	 * @param cannedController
 	 *            the canned controller
+	 * @param originalTweet
+	 *            the original tweet
+	 * @param callbackOnSuccess
+	 *            the callback to use on success, or null for none
 	 */
 	public TweetResponseWindow(
 		IMessagesContainer messages,
 		ITweetingController tweetingController,
 		ICannedTweetsController cannedController,
-		Tweet originalTweet)
+		Tweet originalTweet,
+		Runnable callbackOnSuccess)
 	{
 		this.messages = messages;
 		this.tweetingController = tweetingController;
 		this.cannedController = cannedController;
 		this.originalTweet = originalTweet;
-		
+		this.callbackOnSuccess = callbackOnSuccess;
+
 		initializeLayout();
 	}
 	
 	
-	/**
-	 * Initialize layout.
-	 */
+	/** Initialise layout. */
 	private void initializeLayout()
 	{
 		setCloseShortcut(KeyCode.ESCAPE, null);
 		setModal(true);
 		center();
 		setResizable(false);
-		
+
 		setCaption(messages.get("TweetResponseWindow.caption")
 			+ "@"
 			+ originalTweet.getScreenName());
-		
+
 		Component content =
 			new TweetResponse(
 				messages,
 				cannedController,
 				originalTweet,
-				() -> close());
-		
+				() -> {
+					close();
+					if (callbackOnSuccess != null)
+					{
+						callbackOnSuccess.run();
+					}
+				});
+
 		setContent(content);
-		
+
 		center();
 	}
 	
 	
 	
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = 1L;
+	/** The callback on success, or null for none. */
+	private Runnable callbackOnSuccess;
 	
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1L;
+
 	/** Canned controller. */
 	private ICannedTweetsController cannedController;
-	
+
 	/** The messages displayed by this view. */
 	protected IMessagesContainer messages;
-	
+
+	/** The tweeting controller. */
 	ITweetingController tweetingController;
-	
+
+	/** The original tweet. */
 	private Tweet originalTweet;
 }

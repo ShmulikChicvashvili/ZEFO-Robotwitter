@@ -22,9 +22,9 @@ public class MenuMap extends HashMap<String, Class<? extends AbstractMenu>>
 	{
 		put(MainMenu.NAME, MainMenu.class);
 	}
-
-
-
+	
+	
+	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 }

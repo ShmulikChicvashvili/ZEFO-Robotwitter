@@ -1,3 +1,4 @@
+@import "analysis/AnalysisTabs";
 @import "analysis/FollowersAmountOverview";
 @import "analysis/MostInfluentialFollowers";
 @import "analysis/AnalysisView";
@@ -6,6 +7,7 @@
 
 @mixin robotwitter-view-analysis
 {
+	@include AnalysisTabs;
 	@include FollowersAmountOverview;
 	@include MostInfluentialFollowers;
 	@include AnalysisView;

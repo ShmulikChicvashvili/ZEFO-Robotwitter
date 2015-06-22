@@ -1,5 +1,7 @@
 package com.robotwitter.database.interfaces;
 
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 
 import com.robotwitter.database.interfaces.returnValues.SqlError;
@@ -44,6 +46,17 @@ public interface IDatabaseFollowers {
 	public SqlError deleteUserFollowersLinks(long followedId);
 
 	/**
+	 * @param userId 
+	 * 			the user whose followers we want
+	 * @param path 
+	 * 			the path of the file we want to write the data to
+	 * @return Returns the status code.
+	 * @throws UnsupportedEncodingException 
+	 * @throws FileNotFoundException 
+	 */
+	public SqlError exportToFile(long userId, String path) throws FileNotFoundException, UnsupportedEncodingException;
+
+	/**
 	 * @param followerId
 	 *            The id of the follower to get
 	 * @return The follower associated with this Id
@@ -63,13 +76,6 @@ public interface IDatabaseFollowers {
 	 * @return The followers associated with this specific screen name
 	 */
 	public ArrayList<DBFollower> getByScreenName(String screenName);
-
-	/**
-	 * @param userId
-	 *            The id of the user you want to get it's followers ids
-	 * @return The ids of the followers of this user
-	 */
-	public ArrayList<Long> getFollowersId(long userId);
 	
 	/**
 	 * @param userId
@@ -78,6 +84,13 @@ public interface IDatabaseFollowers {
 	 */
 	public ArrayList<DBFollower> getFollowers(long userId);
 	
+	/**
+	 * @param userId
+	 *            The id of the user you want to get it's followers ids
+	 * @return The ids of the followers of this user
+	 */
+	public ArrayList<Long> getFollowersId(long userId);
+
 	/**
 	 * @param follower
 	 *            The follower you want to insert into the database
@@ -118,7 +131,7 @@ public interface IDatabaseFollowers {
 	 * @return whether a follower with this name exists
 	 */
 	public boolean isExistsByName(String name);
-
+	
 	/**
 	 * @param ScreenName
 	 *            The screen name of the follower to check

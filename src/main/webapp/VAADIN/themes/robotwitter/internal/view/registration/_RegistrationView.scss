@@ -3,7 +3,7 @@
 /*----------------------------------------------------------------------------*/
 
 /* Size */
-$RegistrationView-width: 360px;	/* Defined outside mixin for use in robotwitter-keyframes */
+$RegistrationView-max-width: 390px;
 
 @mixin RegistrationView { .RegistrationView {
 	
@@ -13,20 +13,24 @@ $RegistrationView-width: 360px;	/* Defined outside mixin for use in robotwitter-
 	/* Wrapper */
 	.RegistrationView-wrapper
 	{
+		/* Pad */
+		padding: 0 15px;
+		
 		/* Centre horizontally */
 		display: block;
 		margin: auto;
 		text-align: center;
 		
 		/* Size */
-		margin-top: $RegistrationView-width / 15;
+		margin-top: $RegistrationView-max-width / 15;
+		margin-top: 1vw;
 	}
 	
 	/* Title */
 	.RegistrationView-title
 	{
 		display: inline;
-		font-size: $RegistrationView-width / 248px * 2em;
+		font-size: $RegistrationView-max-width / 267px * 2em;
 		font-weight: 500;
 	}
 	
@@ -36,9 +40,10 @@ $RegistrationView-width: 360px;	/* Defined outside mixin for use in robotwitter-
 		display: inline-block;
 		
 		/* Size */
-		width: $RegistrationView-width !important;
-		padding: $RegistrationView-width / 12;
-		padding-top: $RegistrationView-width / 12 * (2 / 3);
+		max-width: $RegistrationView-max-width !important;
+		width: 100%;
+		padding: $RegistrationView-max-width / 12;
+		padding-top: $RegistrationView-max-width / 12 * (2 / 3);
 		
 		/* Colour */
 		background-color: $robotwitter-neutral-color;

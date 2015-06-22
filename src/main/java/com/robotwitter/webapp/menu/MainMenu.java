@@ -2,14 +2,18 @@
 package com.robotwitter.webapp.menu;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.Alignment;
+import com.vaadin.server.Resource;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.MenuBar;
+import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.PopupView;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -18,6 +22,7 @@ import com.robotwitter.webapp.messages.IMessagesContainer;
 import com.robotwitter.webapp.view.analysis.AnalysisView;
 import com.robotwitter.webapp.view.automate.AutomateView;
 import com.robotwitter.webapp.view.dashboard.DashboardView;
+import com.robotwitter.webapp.view.scheduling.ScheduleView;
 import com.robotwitter.webapp.view.tools.ToolsView;
 
 
@@ -49,9 +54,13 @@ public class MainMenu extends AbstractMenu
 		ITwitterConnectorController twitterConnectorController)
 	{
 		super(messages);
+
 		accountInfoPopup =
 			new AccountInformationPopup(messages, twitterConnectorController);
+		menuItems = new HashMap<>();
+
 		setCompositionRoot(createMenu());
+
 		setStyleName(STYLENAME);
 	}
 
@@ -64,13 +73,58 @@ public class MainMenu extends AbstractMenu
 
 
 	/**
+	 * Activate a link and navigate to its view.
+	 *
+	 * @param name
+	 *            the name of the link's view
+	 * @param link
+	 *            the link to activate
+	 */
+	private void activateLink(String name, MenuItem link)
+	{
+		menuItems.forEach((n, item) -> item.setStyleName(""));
+		link.setStyleName(ACTIVE_LINK_STYLENAME);
+		navigate(name);
+	}
+
+
+	/**
+	 * Adds the link to the given menu.
+	 *
+	 * @param links
+	 *            the links
+	 * @param viewName
+	 *            the view name to link to
+	 * @param text
+	 *            the text to show
+	 * @param icon
+	 *            the icon of the link, or null for none
+	 */
+	private MenuItem addLink(
+		MenuBar links,
+		String viewName,
+		String text,
+		Resource icon)
+	{
+		menuItems.put(
+			viewName,
+			links.addItem(
+				isMobile() ? "" : text,
+					icon,
+					item -> activateLink(viewName, item)));
+
+		return menuItems.get(viewName);
+	}
+
+
+	/**
 	 * Creates the account information component.
 	 *
 	 * @return the newly created account information component
 	 */
 	private Component createAccountInformation()
 	{
-		PopupView account = new PopupView(accountInfoPopup);
+		final PopupView account = new PopupView(accountInfoPopup);
 		accountInfoPopup.setOwner(account);
 
 		// Set properties and styles
@@ -91,40 +145,55 @@ public class MainMenu extends AbstractMenu
 		MenuBar links = new MenuBar();
 
 		// Add home button
-		links.addItem(
+		addLink(
+			links,
+			DashboardView.NAME,
 			messages.get("MainMenu.link.home"),
-			null,
-			item -> navigate(DashboardView.NAME));
+			null);
 
 		// Add analyse button
-		links.addItem(
+		addLink(
+			links,
+			AnalysisView.NAME,
 			messages.get("MainMenu.link.analyse"),
-			FontAwesome.BAR_CHART_O,
-			item -> navigate(AnalysisView.NAME));
+			FontAwesome.BAR_CHART_O);
 
 		// Add tools button
-		links.addItem(
+		addLink(
+			links,
+			ToolsView.NAME,
 			messages.get("MainMenu.link.tools"),
-			FontAwesome.WRENCH,
-			item -> navigate(ToolsView.NAME));
-		
+			FontAwesome.WRENCH);
+
 		// Add schedule button
-		links.addItem(
-			messages.get("MainMenu.link.schedule"),
-			FontAwesome.CALENDAR,
-			null).setEnabled(false);
-		
+		MenuItem scheduleLink =
+			addLink(
+				links,
+				ScheduleView.NAME,
+				messages.get("MainMenu.link.schedule"),
+				FontAwesome.CALENDAR);
+		scheduleLink.setEnabled(false);
+		// item -> navigate(ScheduleView.NAME));// .setEnabled(false);
+
 		// Add automate button
-		links.addItem(
+		addLink(
+			links,
+			AutomateView.NAME,
 			messages.get("MainMenu.link.automate"),
-			FontAwesome.COGS,
-			item -> navigate(AutomateView.NAME));
-		
+			FontAwesome.COGS);
+
+		setInitialActiveLink();
+
 		// Set properties and styles
 		links.setAutoOpen(true);
 		links.addStyleName(ValoTheme.MENUBAR_BORDERLESS);
 		links.addStyleName(LINKS_STYLENAME);
-		
+
+		if (isMobile())
+		{
+			links.addStyleName(MOBILE_LINKS_STYLENAME);
+		}
+
 		return links;
 	}
 
@@ -132,13 +201,35 @@ public class MainMenu extends AbstractMenu
 	/** @return a newly created main menu component. */
 	private Component createMenu()
 	{
-		Component links = createLinks();
+		final Component links = createLinks();
 		accountInformation = createAccountInformation();
-		HorizontalLayout menu = new HorizontalLayout(links, accountInformation);
-		menu.setComponentAlignment(links, Alignment.TOP_LEFT);
-		menu.setComponentAlignment(accountInformation, Alignment.TOP_RIGHT);
-		menu.setSizeFull();
+		final HorizontalLayout menu =
+			new HorizontalLayout(links, accountInformation);
+
+		if (!isMobile())
+		{
+			menu.setSizeFull();
+		}
+
 		return menu;
+	}
+
+
+	/** Sets the initial active link. */
+	private void setInitialActiveLink()
+	{
+		try
+		{
+			MenuItem item = menuItems.get(getViewName());
+			if (item != null)
+			{
+				item.setStyleName(ACTIVE_LINK_STYLENAME);
+			}
+
+		} catch (IndexOutOfBoundsException e)
+		{
+			System.err.println("Unknown view name: " + getViewName());
+		}
 	}
 
 
@@ -152,6 +243,16 @@ public class MainMenu extends AbstractMenu
 	/** The CSS class name to apply to the navigation links component. */
 	private static final String LINKS_STYLENAME = "MainMenu-links";
 
+	/** The CSS class name to apply to the active link. */
+	private static final String ACTIVE_LINK_STYLENAME = "MainMenu-active-link";
+
+	/**
+	 * The CSS class name to apply to the navigation links component when
+	 * browsing in mobile.
+	 */
+	private static final String MOBILE_LINKS_STYLENAME =
+		"MainMenu-links-mobile";
+
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
 
@@ -163,4 +264,7 @@ public class MainMenu extends AbstractMenu
 
 	/** The account information component. */
 	Component accountInformation;
+
+	/** The menu's items. */
+	Map<String, MenuItem> menuItems;
 }

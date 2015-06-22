@@ -96,6 +96,12 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 		}
 		return SqlError.SUCCESS;
 	}
+	
+	@Override
+	public SqlError removeScheduledTweet(DBScheduledTweet scheduledTweet) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	private void flush(List<DBScheduledTweet> scheduledTweets)
 			throws SQLException {

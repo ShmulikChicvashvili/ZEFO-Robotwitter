@@ -91,7 +91,7 @@ public class MySqlDatabaseTweetPostingPreferences extends AbstractMySqlDatabase
 		}
 		return SqlError.SUCCESS;
 	}
-	
+
 	
 	/* (non-Javadoc) @see
 	 * com.robotwitter.database.interfaces.IDatabaseTweetPostingPreferences

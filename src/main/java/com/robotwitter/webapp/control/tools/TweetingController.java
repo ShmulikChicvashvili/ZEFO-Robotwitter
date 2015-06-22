@@ -1,6 +1,5 @@
 package com.robotwitter.webapp.control.tools;
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,10 +17,6 @@ import com.robotwitter.webapp.control.account.IAccountController;
 import com.robotwitter.webapp.control.tools.tweeting.Tweet;
 import com.robotwitter.webapp.control.general.Tweet;
 
-
-
-
-
 /**
  * Implementation of the tweeting controller interface.
  *
@@ -32,10 +27,8 @@ import com.robotwitter.webapp.control.general.Tweet;
  *         EDITED by Amir Drutin 04/05/15
  */
 
-public class TweetingController implements ITweetingController
-{
+public class TweetingController implements ITweetingController {
 
-	
 	/**
 	 * @param preference
 	 */
@@ -74,13 +67,10 @@ public class TweetingController implements ITweetingController
 		return preferencesDB.get(email).getPostingPreference();
 	}
 
-	
-
 	@Override
 	public final List<String> breakTweet(String tweet) {
 		return preference.generateTweet(tweet);
 	}
-
 
 	/**
 	 * Messages should be hard coded strings.
@@ -92,87 +82,113 @@ public class TweetingController implements ITweetingController
 	 * (com.robotwitter.webapp.control.tools.tweeting.Tweet)
 	 */
 
-	
-	/* (non-Javadoc) @see
+	/*
+	 * (non-Javadoc) @see
 	 * com.robotwitter.webapp.control.tools.ITweetingController
 	 * #getOptionalResponses
-	 * (com.robotwitter.webapp.control.tools.tweeting.Tweet) */
+	 * (com.robotwitter.webapp.control.tools.tweeting.Tweet)
+	 */
 	@Override
-	public List<String> getOptionalResponses(Tweet tweet)
-	{
+	public List<String> getOptionalResponses(Tweet tweet) {
 		// TODO Auto-generated method stub
 		List<String> responses = new ArrayList<>();
 		responses
-			.add("Hi, we are sorry you feel this way. We are doing the best to be helpful.");
+				.add("Hi, we are sorry you feel this way. We are doing the best to be helpful.");
 		responses
-			.add("Hey, thank you for your response we will do our best to improve!");
+				.add("Hey, thank you for your response we will do our best to improve!");
 		responses.add("FUCK OFF YA' CHUBBY COON, YA' WRINKLY BITCH!!");
-		
+
 		return responses;
 	}
-	
-	public final List<String> previewTweet(String tweet)
-	{
+
+	public final List<String> previewTweet(String tweet) {
 		return breakTweet(tweet);
 	}
-	
+
 	@Override
 	public SqlError setPreference(TweetPostingPreferenceType preference) {
-		// TODO Auto-generated method stub
-		return null;
+		if (!preferencesDB.isExists(accountContoller.getEmail())) {
+			DBTweetPostingPreferences postingPreferences = new DBTweetPostingPreferences(
+					accountContoller.getEmail(),
+					preference, null, null);
+			return preferencesDB.insert(postingPreferences);
+		}
+		DBTweetPostingPreferences postingPreferences = preferencesDB
+				.get(accountContoller.getEmail());
+		postingPreferences
+				.setPostingPreference(preference);
+		SqlError err = preferencesDB.update(postingPreferences);
+		if (err == SqlError.DOES_NOT_EXIST) {
+			return preferencesDB.insert(postingPreferences);
+		}
+		return err;
 	}
-	
+
 	@Override
-	public SqlError setPrefix(String prefix){
-		DBTweetPostingPreferences postingPreferences = preferencesDB.get(accountContoller.getEmail());
-		postingPreferences.setPostingPreference(TweetPostingPreferenceType.PREFIX);
+	public SqlError setPrefix(String prefix) {
+		if (!preferencesDB.isExists(accountContoller.getEmail())) {
+			DBTweetPostingPreferences postingPreferences = new DBTweetPostingPreferences(
+					accountContoller.getEmail(),
+					TweetPostingPreferenceType.PREFIX, prefix, null);
+			return preferencesDB.insert(postingPreferences);
+		}
+		DBTweetPostingPreferences postingPreferences = preferencesDB
+				.get(accountContoller.getEmail());
+		postingPreferences
+				.setPostingPreference(TweetPostingPreferenceType.PREFIX);
 		postingPreferences.setPrefix(prefix);
 		SqlError err = preferencesDB.update(postingPreferences);
-		if(err == SqlError.DOES_NOT_EXIST){
+		if (err == SqlError.DOES_NOT_EXIST) {
 			return preferencesDB.insert(postingPreferences);
-		};
+		}
 		return err;
 	}
 
 	@Override
-	public SqlError setSuffix(String suffix){
-		DBTweetPostingPreferences postingPreferences = preferencesDB.get(accountContoller.getEmail());
-		if(postingPreferences == null){
+	public SqlError setSuffix(String suffix) {
+		if (!preferencesDB.isExists(accountContoller.getEmail())) {
+			DBTweetPostingPreferences postingPreferences = new DBTweetPostingPreferences(
+					accountContoller.getEmail(),
+					TweetPostingPreferenceType.SUFFIX, null, suffix);
+			return preferencesDB.insert(postingPreferences);
+		}
+		DBTweetPostingPreferences postingPreferences = preferencesDB
+				.get(accountContoller.getEmail());
+		if (postingPreferences == null) {
 			postingPreferences = new DBTweetPostingPreferences();
 		}
-		postingPreferences.setPostingPreference(TweetPostingPreferenceType.SUFFIX);
+		postingPreferences
+				.setPostingPreference(TweetPostingPreferenceType.SUFFIX);
 		postingPreferences.setPostfix(suffix);
 		SqlError err = preferencesDB.update(postingPreferences);
-		if(err == SqlError.DOES_NOT_EXIST){
+		if (err == SqlError.DOES_NOT_EXIST) {
 			return preferencesDB.insert(postingPreferences);
-		};
+		}
 		return err;
 	}
-	
 
 	@Override
-	public String getPrefix(){
-		DBTweetPostingPreferences postingPreferences = preferencesDB.get(accountContoller.getEmail());
-		if(postingPreferences != null){
+	public String getPrefix() {
+		DBTweetPostingPreferences postingPreferences = preferencesDB
+				.get(accountContoller.getEmail());
+		if (postingPreferences != null) {
 			return "";
 		}
 		return postingPreferences.getPrefix();
 	}
 
 	@Override
-	public String getSuffix(){
-		DBTweetPostingPreferences postingPreferences = preferencesDB.get(accountContoller.getEmail());
-		if(postingPreferences != null){
+	public String getSuffix() {
+		DBTweetPostingPreferences postingPreferences = preferencesDB
+				.get(accountContoller.getEmail());
+		if (postingPreferences != null) {
 			return "";
 		}
 		return postingPreferences.getPostfix();
 	}
 
-
-	
 	/** Serialisation version unique ID. */
 	private static final long serialVersionUID = 1L;
-
 
 	IDatabaseTweetPostingPreferences preferencesDB;
 

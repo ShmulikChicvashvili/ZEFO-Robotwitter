@@ -84,8 +84,6 @@ public class ComposerSettings extends RobotwitterCustomComponent {
 		
 	}
 	
-	private SqlError updatePreference()
-	
 	private void initialiseSelect(){
 		HashMap<TweetPostingPreferenceType, String> preferences = new HashMap<TweetPostingPreferenceType, String>();
 		preferences.put(TweetPostingPreferenceType.BASIC,
@@ -109,7 +107,7 @@ public class ComposerSettings extends RobotwitterCustomComponent {
 		select.addItemClickListener(new ItemClickEvent.ItemClickListener(){
 			@Override
             public void itemClick(ItemClickEvent event) {
-               select.getValue()
+				tweetingController.setPreference(select.getValue());
             }
 		}
 	}

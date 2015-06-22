@@ -272,7 +272,7 @@ public class TweetClassifierListener implements UserStreamListener
 		{
 			location = "";
 		}
-		// bla bla
+		// bla bla. this wont work
 		return new DBFollower(
 			user.getId(),
 			user.getName(),

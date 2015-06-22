@@ -14,6 +14,7 @@ import com.vaadin.client.ui.VFilterSelect.Select;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Button;
@@ -124,14 +125,10 @@ public class ScheduleView extends AbstractView {
 		updateListSelect();
 	}
 
-	private Object previewButtonClick() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	protected Button createDeleteButton() {
 		final Button deleteButton = new Button(
 				"ScheduleView.caption.new-button", event -> deleteButtonClick());
+		deleteButton.setIcon(FontAwesome.MINUS);
 		return deleteButton;
 	}
 
@@ -141,13 +138,15 @@ public class ScheduleView extends AbstractView {
 						new PostScheduledTweetWindow(messages,
 								new ScheduledTweetsController(dbScheduled,
 										dbAccounts, dbPreference), null)));
+		newButton.setIcon(FontAwesome.PLUS);
 		return newButton;
 	}
 
 	protected Button createPreviewButton() {
-		final Button previewButton = new Button(
-				"ScheduleView.caption.preview-button",
-				event -> previewButtonClick());
+		Button previewButton = new Button(
+				"ScheduleView.caption.preview-button", event -> getUI()
+						.addWindow(new SchedulePreviewWindow(messages)));
+		previewButton.setIcon(FontAwesome.EYE);
 		return previewButton;
 	}
 

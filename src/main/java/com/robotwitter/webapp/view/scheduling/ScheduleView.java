@@ -5,25 +5,22 @@
 package com.robotwitter.webapp.view.scheduling;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import com.vaadin.client.ui.VFilterSelect.Select;
-import com.vaadin.event.ItemClickEvent;
+
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.AbstractSelect;
-import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.ListSelect;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
+
 import com.robotwitter.database.interfaces.IDatabaseScheduledTweets;
 import com.robotwitter.database.interfaces.IDatabaseTweetPostingPreferences;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
@@ -37,19 +34,6 @@ import com.robotwitter.webapp.view.AbstractView;
  *
  */
 public class ScheduleView extends AbstractView {
-	@Inject
-	public ScheduleView(@Named(NAME) IMessagesContainer messages,
-			IDatabaseScheduledTweets dbScheduled,
-			IDatabaseTwitterAccounts dbAccounts,
-			IDatabaseTweetPostingPreferences dbPreference) {
-		super(messages, messages.get("ScheduleView.page.title"));
-		this.dbAccounts = dbAccounts;
-		this.dbPreference = dbPreference;
-		this.dbScheduled = dbScheduled;
-		scheduledController = new ScheduledTweetsController(dbScheduled,
-				dbAccounts, dbPreference);
-	}
-
 	/**
 	 * Wrap the given component in a panel.
 	 *
@@ -65,6 +49,19 @@ public class ScheduleView extends AbstractView {
 		VerticalLayout panel = new VerticalLayout(titleLabel, component);
 		panel.setWidthUndefined();
 		return panel;
+	}
+
+	@Inject
+	public ScheduleView(@Named(NAME) IMessagesContainer messages,
+			IDatabaseScheduledTweets dbScheduled,
+			IDatabaseTwitterAccounts dbAccounts,
+			IDatabaseTweetPostingPreferences dbPreference) {
+		super(messages, messages.get("ScheduleView.page.title"));
+		this.dbAccounts = dbAccounts;
+		this.dbPreference = dbPreference;
+		this.dbScheduled = dbScheduled;
+		scheduledController = new ScheduledTweetsController(dbScheduled,
+				dbAccounts, dbPreference);
 	}
 
 	/*
@@ -85,6 +82,23 @@ public class ScheduleView extends AbstractView {
 		return true;
 	}
 
+	private void deleteButtonClick() {
+		scheduledController.removeScheduledTweet(selectedTweet);
+		updateListSelect();
+	}
+
+	private void updateListSelect() {
+		scheduledTweets = dbScheduled.getScheduledTweets();
+		viewSelect = createListSelect();
+	}
+
+	protected Button createDeleteButton() {
+		final Button deleteButton = new Button(
+				"ScheduleView.caption.new-button", event -> deleteButtonClick());
+		deleteButton.setIcon(FontAwesome.MINUS);
+		return deleteButton;
+	}
+
 	protected ListSelect createListSelect() {
 		HashMap<DBScheduledTweet, String> hashedTweets = new HashMap<DBScheduledTweet, String>();
 
@@ -99,12 +113,11 @@ public class ScheduleView extends AbstractView {
 		select.setRows(10);
 		select.setItemCaptionMode(AbstractSelect.ITEM_CAPTION_MODE_EXPLICIT);
 
-		for (Iterator<DBScheduledTweet> i = hashedTweets.keySet().iterator(); i
-				.hasNext();) {
-			DBScheduledTweet key = i.next();
-			select.addItem(key);
-			select.setItemCaption(key, hashedTweets.get(key));
-		}
+		for (DBScheduledTweet key : hashedTweets.keySet())
+		{
+select.addItem(key);
+select.setItemCaption(key, hashedTweets.get(key));
+}
 		// selectedTweet = (DBScheduledTweet) select.getValue();
 		select.addValueChangeListener(new Property.ValueChangeListener() {
 			@Override
@@ -113,23 +126,6 @@ public class ScheduleView extends AbstractView {
 			}
 		});
 		return select;
-	}
-
-	private void updateListSelect() {
-		scheduledTweets = dbScheduled.getScheduledTweets();
-		viewSelect = createListSelect();
-	}
-
-	private void deleteButtonClick() {
-		scheduledController.removeScheduledTweet(selectedTweet);
-		updateListSelect();
-	}
-
-	protected Button createDeleteButton() {
-		final Button deleteButton = new Button(
-				"ScheduleView.caption.new-button", event -> deleteButtonClick());
-		deleteButton.setIcon(FontAwesome.MINUS);
-		return deleteButton;
 	}
 
 	protected Button createNewButton() {
@@ -181,7 +177,7 @@ public class ScheduleView extends AbstractView {
 	}
 
 	/** The view's name. */
-	public static final String NAME = "Schedule";
+	public static final String NAME = "schedule";
 
 	private List<DBScheduledTweet> scheduledTweets;
 

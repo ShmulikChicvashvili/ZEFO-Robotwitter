@@ -9,6 +9,7 @@ import com.google.inject.Inject;
 import com.robotwitter.database.interfaces.IDatabaseScheduledTweets;
 import com.robotwitter.database.primitives.DBScheduledTweet;
 import com.robotwitter.posting.AutomateTweetPostingPeriod;
+import com.robotwitter.posting.NumberedPreference;
 import com.robotwitter.posting.Preference;
 import com.robotwitter.database.interfaces.IDatabaseTweetPostingPreferences;
 import com.robotwitter.database.interfaces.IDatabaseTwitterAccounts;
@@ -27,6 +28,7 @@ public class ScheduledTweetsController implements IScheduledTweetsController {
 		this.dbScheduled = dbScheduled;
 		this.dbAccounts = dbAccounts;
 		this.dbPreference = dbPreference;
+		preference = new NumberedPreference();
 	}
 	
 	@Override

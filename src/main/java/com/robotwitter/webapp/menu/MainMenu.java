@@ -100,7 +100,7 @@ public class MainMenu extends AbstractMenu
 	 * @param icon
 	 *            the icon of the link, or null for none
 	 */
-	private void addLink(
+	private MenuItem addLink(
 		MenuBar links,
 		String viewName,
 		String text,
@@ -110,8 +110,10 @@ public class MainMenu extends AbstractMenu
 			viewName,
 			links.addItem(
 				isMobile() ? "" : text,
-				icon,
-				item -> activateLink(viewName, item)));
+					icon,
+					item -> activateLink(viewName, item)));
+
+		return menuItems.get(viewName);
 	}
 
 
@@ -164,12 +166,14 @@ public class MainMenu extends AbstractMenu
 			FontAwesome.WRENCH);
 
 		// Add schedule button
-		addLink(
-			links,
-			ScheduleView.NAME,
-			messages.get("MainMenu.link.schedule"),
-			FontAwesome.CALENDAR);
-//			item -> navigate(ScheduleView.NAME));// .setEnabled(false);
+		MenuItem scheduleLink =
+			addLink(
+				links,
+				ScheduleView.NAME,
+				messages.get("MainMenu.link.schedule"),
+				FontAwesome.CALENDAR);
+		scheduleLink.setEnabled(false);
+		// item -> navigate(ScheduleView.NAME));// .setEnabled(false);
 
 		// Add automate button
 		addLink(
@@ -192,8 +196,8 @@ public class MainMenu extends AbstractMenu
 
 		return links;
 	}
-	
-	
+
+
 	/** @return a newly created main menu component. */
 	private Component createMenu()
 	{
@@ -209,8 +213,8 @@ public class MainMenu extends AbstractMenu
 
 		return menu;
 	}
-	
-	
+
+
 	/** Sets the initial active link. */
 	private void setInitialActiveLink()
 	{
@@ -260,7 +264,7 @@ public class MainMenu extends AbstractMenu
 
 	/** The account information component. */
 	Component accountInformation;
-	
+
 	/** The menu's items. */
 	Map<String, MenuItem> menuItems;
 }

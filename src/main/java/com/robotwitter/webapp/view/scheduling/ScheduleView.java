@@ -5,6 +5,7 @@
 package com.robotwitter.webapp.view.scheduling;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -142,8 +143,13 @@ public class ScheduleView extends AbstractView
 			select.setItemCaption(key, hashedTweets.get(key));
 		}
 		// selectedTweet = (DBScheduledTweet) select.getValue();
-		select.addValueChangeListener(event -> selectedTweet =
-			(List<DBScheduledTweet>) select.getValue());
+		select
+		.addValueChangeListener(event -> {
+			selectedTweet = new ArrayList<>();
+			selectedTweet.add(
+				/* (List<DBScheduledTweet>) */(DBScheduledTweet) select
+				.getValue());
+		});
 		return select;
 	}
 

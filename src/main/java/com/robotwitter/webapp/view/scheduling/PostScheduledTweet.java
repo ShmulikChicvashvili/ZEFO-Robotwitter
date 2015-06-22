@@ -23,6 +23,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.posting.AutomateTweetPostingPeriod;
 import com.robotwitter.webapp.control.scheduling.IScheduledTweetsController;
 import com.robotwitter.webapp.messages.IMessagesContainer;
@@ -279,24 +280,35 @@ public class PostScheduledTweet extends RobotwitterCustomComponent
 		}
 		assert period != null;
 
-		schedulingController.addScheduledTweet(
-			tweetName.getValue(),
-			tweetComposeBox.getText(),
-			userId,
-			startDate,
-			period);
+		SqlError status =
+			schedulingController.addScheduledTweet(
+				tweetName.getValue(),
+				tweetComposeBox.getText(),
+				userId,
+				startDate,
+				period);
 
-		Notification notification =
-			new Notification(
-				messages.get("PostScheduledTweet.notify.success.title"),
-				messages.get("PostScheduledTweet.notify.success.content"),
-				Notification.Type.TRAY_NOTIFICATION);
-		notification.setStyleName(ValoTheme.NOTIFICATION_SUCCESS
-			+ ' '
-			+ ValoTheme.NOTIFICATION_TRAY);
-		notification.setIcon(FontAwesome.TWITTER);
-		notification.show(UI.getCurrent().getPage());
-		onResponseSuccess.onResponse();
+		switch (status)
+		{
+			case SUCCESS:
+				Notification notification =
+				new Notification(
+					messages.get("PostScheduledTweet.notify.success.title"),
+					messages
+					.get("PostScheduledTweet.notify.success.content"),
+					Notification.Type.TRAY_NOTIFICATION);
+				notification.setStyleName(ValoTheme.NOTIFICATION_SUCCESS
+					+ ' '
+					+ ValoTheme.NOTIFICATION_TRAY);
+				notification.setIcon(FontAwesome.TWITTER);
+				notification.show(UI.getCurrent().getPage());
+
+				onResponseSuccess.onResponse();
+				return;
+			default:
+				setErrorMessage(messages.get("PostScheduledTweet.error.unknown"));
+		}
+
 	}
 
 

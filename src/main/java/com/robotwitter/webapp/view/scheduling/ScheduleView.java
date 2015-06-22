@@ -149,6 +149,13 @@ public class ScheduleView extends AbstractView {
 		previewButton.setIcon(FontAwesome.EYE);
 		return previewButton;
 	}
+	
+	protected Button createRefreshButton() {
+		Button refreshButton = new Button(
+				"ScheduleView.caption.refresh-button", event -> updateListSelect());
+		refreshButton.setIcon(FontAwesome.REFRESH);
+		return refreshButton;
+	}
 
 	/* (non-Javadoc) @see com.robotwitter.webapp.view.AbstractView#initialise() */
 	@Override
@@ -160,7 +167,7 @@ public class ScheduleView extends AbstractView {
 		VerticalLayout selectPanel = new VerticalLayout(viewSelect,
 				selectCaption);
 		HorizontalLayout buttons = new HorizontalLayout(createDeleteButton(),
-				createPreviewButton(), createNewButton());
+				createPreviewButton(), createNewButton(), createRefreshButton());
 		VerticalLayout layout = new VerticalLayout(header, selectPanel, buttons);
 		setCompositionRoot(layout);
 		/**

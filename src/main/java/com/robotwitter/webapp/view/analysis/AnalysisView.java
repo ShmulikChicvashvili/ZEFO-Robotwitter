@@ -7,13 +7,11 @@ import java.io.InputStream;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
 import com.vaadin.server.FileDownloader;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
-
 import com.robotwitter.webapp.control.tools.OnDemandDownloader;
 import com.robotwitter.webapp.control.tools.OnDemandDownloader.OnDemandStreamResource;
 import com.robotwitter.webapp.messages.IMessagesContainer;

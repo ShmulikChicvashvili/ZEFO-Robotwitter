@@ -19,7 +19,7 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 		implements IDatabaseScheduledTweets {
 
 	private enum Columns {
-		EMAIL, USER_ID, TWEET_NAME, TWEET_TEXT, STARTING_DATE, REPEAT_RATE;
+		ID, EMAIL, USER_ID, TWEET_NAME, TWEET_TEXT, STARTING_DATE, REPEAT_RATE;
 	}
 
 	@Inject
@@ -99,7 +99,13 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 	
 	@Override
 	public SqlError removeScheduledTweet(DBScheduledTweet scheduledTweet) {
-		// TODO Auto-generated method stub
+		try(Connection conn = connectionEstablisher.getConnection();
+				PreparedStatement dltStmt = conn.prepareStatement(deletingQuery)){
+			dltStmt.setInt(1, scheduledTweet.getKey());
+			dltStmt.executeUpdate();
+		} catch (SQLException e) {
+			return SqlError.FAILURE;
+		}
 		return SqlError.SUCCESS;
 	}
 
@@ -125,7 +131,7 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 			throws SQLException {
 		resultSet = statement.executeQuery(gettingQuery);
 		while (resultSet.next()) {
-			$.add(new DBScheduledTweet(resultSet.getString(Columns.EMAIL
+			DBScheduledTweet st = new DBScheduledTweet(resultSet.getString(Columns.EMAIL
 					.toString().toLowerCase()), resultSet
 					.getLong(Columns.USER_ID.toString().toLowerCase()),
 					resultSet.getString(Columns.TWEET_NAME.toString()
@@ -135,16 +141,18 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 							.getTimestamp(Columns.STARTING_DATE.toString()
 									.toLowerCase()), AutomateTweetPostingPeriod
 							.valueOf(resultSet.getString(Columns.REPEAT_RATE
-									.toString().toLowerCase()))));
+									.toString().toLowerCase())));
+			st.setKey(resultSet.getInt(Columns.ID.toString().toLowerCase()));
+			$.add(st);
 		}
 		resultSet.close();
 	}
 
 	private void initQueries() {
 		creationScheduledQuery = String
-				.format("CREATE TABLE IF NOT EXISTS %s (%s VARCHAR(255) NOT NULL, %s BIGINT NOT NULL, %s VARCHAR(255) NOT NULL, %s TEXT NOT NULL,"
+				.format("CREATE TABLE IF NOT EXISTS %s (%s MEDIUMINT NOT NULL AUTO_INCREMENT, %s VARCHAR(255) NOT NULL, %s BIGINT NOT NULL, %s VARCHAR(255) NOT NULL, %s TEXT NOT NULL,"
 						+ " %s TIMESTAMP NOT NULL, %s ENUM('%s','%s','%s','%s') NOT NULL);",
-						scheduledTweetsTable, Columns.EMAIL.toString()
+						scheduledTweetsTable, Columns.ID.toString().toLowerCase(),Columns.EMAIL.toString()
 								.toLowerCase(), Columns.USER_ID.toString()
 								.toLowerCase(), Columns.TWEET_NAME.toString()
 								.toLowerCase(), Columns.TWEET_TEXT.toString()
@@ -198,6 +206,8 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 
 		gettingFlushingQuery = String.format("SELECT * FROM %s",
 				flushingTweetsTable);
+		
+		deletingQuery = String.format("DELETE FROM %s WHERE %s = ?", scheduledTweetsTable, Columns.ID.toString().toLowerCase());
 	}
 
 	private void insertToTable(DBScheduledTweet scheduledTweet,
@@ -237,4 +247,6 @@ public class MySqlDatabaseScheduledTweets extends AbstractMySqlDatabase
 	private String gettingScheduledQuery;
 
 	private String gettingFlushingQuery;
+	
+	private String deletingQuery;
 }

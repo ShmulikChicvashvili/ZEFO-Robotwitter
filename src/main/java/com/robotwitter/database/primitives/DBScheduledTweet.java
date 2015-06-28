@@ -17,6 +17,7 @@ public class DBScheduledTweet extends DatabaseType {
 		this.tweetText = tweetText;
 		this.startingDate = startingDate;
 		this.postingPeriod = postingPeriod;
+		key = null;
 	}
 
 	public String getTweetName() {
@@ -59,6 +60,14 @@ public class DBScheduledTweet extends DatabaseType {
 		this.userId = userId;
 	}
 
+	public Integer getKey() {
+		return key;
+	}
+
+	public void setKey(Integer key) {
+		this.key = key;
+	}
+
 	@Override
 	public String toString() {
 		return "DBScheduledTweet [userId=" + userId + ", tweetName="
@@ -72,4 +81,5 @@ public class DBScheduledTweet extends DatabaseType {
 	String tweetText;
 	Timestamp startingDate;
 	AutomateTweetPostingPeriod postingPeriod;
+	Integer key;
 }

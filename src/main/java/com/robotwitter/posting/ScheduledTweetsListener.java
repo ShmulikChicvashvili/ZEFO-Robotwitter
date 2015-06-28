@@ -24,14 +24,19 @@ public class ScheduledTweetsListener extends Thread {
 
 	@Override
 	public void run() {
+		int lastIndexRunned = 0;
 		List<DBScheduledTweet> scheduledTweets = scheduledTweetsDB
 				.getScheduledTweetsForInitialization();
 
 		runTasks(scheduledTweets);
-
+		
+		lastIndexRunned = scheduledTweets.size();
 		while (!isInterrupted() || true) {
 			scheduledTweets = scheduledTweetsDB.getScheduledTweets();
-			runTasks(scheduledTweets);
+			if(scheduledTweets.size() > lastIndexRunned) {
+				runTasks(scheduledTweets.subList(lastIndexRunned, scheduledTweets.size()-1));
+			}
+			lastIndexRunned = scheduledTweets.size();
 		}
 	}
 

@@ -46,7 +46,7 @@ public class ScheduleView extends AbstractView
 		this.dbPreference = dbPreference;
 		this.scheduledController = scheduledController;
 
-		updateListSelect();
+		getUserSession().observeActiveTwitterAccount(this);
 	}
 
 
@@ -96,7 +96,11 @@ public class ScheduleView extends AbstractView
 		List<String> tweets =
 			scheduledController.previewTweet(selectedTweet.getTweetText());
 		tweetPreview.updatePreview(tweets);
-		getUI().addWindow(new SchedulePreviewWindow(messages, tweetPreview));
+		getUI().addWindow(
+			new SchedulePreviewWindow(
+				messages,
+				scheduledController,
+				selectedTweet));
 	}
 
 
@@ -104,7 +108,17 @@ public class ScheduleView extends AbstractView
 	{
 		// scheduledTweets = dbScheduled.getScheduledTweets();
 		// TODO get by id
-		scheduledTweets = scheduledController.getAllScheduledTweets();
+		long userId =
+			getUserSession()
+			.getAccountController()
+			.getActiveTwitterAccount()
+			.getID();
+		scheduledTweets = scheduledController.getAllScheduledTweets(userId);
+		scheduledTweetsMap = new HashMap<>();
+		for (DBScheduledTweet tweet : scheduledTweets)
+		{
+			scheduledTweetsMap.put(tweet.getKey(), tweet);
+		}
 
 		selectPanel.removeComponent(viewSelect);
 		viewSelect = createListSelect();
@@ -126,14 +140,6 @@ public class ScheduleView extends AbstractView
 
 	protected ListSelect createListSelect()
 	{
-		HashMap<DBScheduledTweet, String> hashedTweets =
-			new HashMap<DBScheduledTweet, String>();
-
-		for (DBScheduledTweet tweet : scheduledTweets)
-		{
-			hashedTweets.put(tweet, tweet.getTweetName());
-		}
-
 		ListSelect select =
 			new ListSelect(messages.get("ScheduleView.caption.select-list"));
 		select.setNullSelectionAllowed(false);
@@ -142,14 +148,19 @@ public class ScheduleView extends AbstractView
 		select.setRows(10);
 		select.setItemCaptionMode(AbstractSelect.ITEM_CAPTION_MODE_EXPLICIT);
 
-		for (DBScheduledTweet key : hashedTweets.keySet())
+		for (DBScheduledTweet tweet : scheduledTweets)
 		{
-			select.addItem(key);
-			select.setItemCaption(key, hashedTweets.get(key));
+			select.addItem(tweet.getKey());
+			select.setItemCaption(tweet.getKey(), tweet.getTweetName());
 		}
 		// selectedTweet = (DBScheduledTweet) select.getValue();
 		select.addValueChangeListener(event -> {
-			selectedTweet = (DBScheduledTweet) select.getValue();
+			if (select.getValue() == null)
+			{
+				selectedTweet = null;
+				return;
+			}
+			selectedTweet = scheduledTweetsMap.get(select.getValue());
 			System.out.println(select.getValue());
 		});
 		return select;
@@ -165,7 +176,7 @@ public class ScheduleView extends AbstractView
 					new PostScheduledTweetWindow(
 						messages,
 						scheduledController,
-						null)));
+						() -> updateListSelect())));
 		newButton.setIcon(FontAwesome.PLUS);
 		return newButton;
 	}
@@ -219,6 +230,8 @@ public class ScheduleView extends AbstractView
 		 *
 		 * setCompositionRoot(button);
 		 */
+
+		updateListSelect();
 	}
 
 

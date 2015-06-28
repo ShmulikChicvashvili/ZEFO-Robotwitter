@@ -82,18 +82,18 @@ public class ScheduledTweetsController implements IScheduledTweetsController
 
 
 	@Override
-	public List<DBScheduledTweet> getAllScheduledTweets()
+	public List<DBScheduledTweet> getAllScheduledTweets(long userId)
 	{
-		return dbScheduled.getScheduledTweets();
+		return dbScheduled.getScheduledTweets(userId);
 	}
 
 
-	@Override
-	public List<DBScheduledTweet> getInitializedScheduledTweets()
-	{
-		return dbScheduled.getScheduledTweets();
-	}
-
+	//
+	// @Override
+	// public List<DBScheduledTweet> getInitializedScheduledTweets()
+	// {
+	// return dbScheduled.getScheduledTweets();
+	// }
 
 	@Override
 	public final List<String> previewTweet(String tweet)

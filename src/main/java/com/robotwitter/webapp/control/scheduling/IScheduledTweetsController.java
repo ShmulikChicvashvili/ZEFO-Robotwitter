@@ -37,9 +37,9 @@ public interface IScheduledTweetsController {
 	 */
 	List<String> breakTweet(String tweet);
 	
-	List<DBScheduledTweet> getAllScheduledTweets();
+	List<DBScheduledTweet> getAllScheduledTweets(long userId);
 
-	List<DBScheduledTweet> getInitializedScheduledTweets();
+	//	List<DBScheduledTweet> getInitializedScheduledTweets();
 	
 	/**
 	 * Preview the given Tweet.

@@ -166,13 +166,12 @@ public class MainMenu extends AbstractMenu
 			FontAwesome.WRENCH);
 
 		// Add schedule button
-		MenuItem scheduleLink =
-			addLink(
-				links,
-				ScheduleView.NAME,
-				messages.get("MainMenu.link.schedule"),
-				FontAwesome.CALENDAR);
-		scheduleLink.setEnabled(false);
+		addLink(
+			links,
+			ScheduleView.NAME,
+			messages.get("MainMenu.link.schedule"),
+			FontAwesome.CALENDAR);
+
 		// item -> navigate(ScheduleView.NAME));// .setEnabled(false);
 
 		// Add automate button

@@ -7,10 +7,8 @@ package com.robotwitter.webapp.control.scheduling;
 import java.util.Calendar;
 import java.util.List;
 
-import com.robotwitter.webapp.control.general.Tweet;
 import com.robotwitter.database.interfaces.returnValues.SqlError;
 import com.robotwitter.database.primitives.DBScheduledTweet;
-import com.robotwitter.management.ITwitterTracker.Status;
 import com.robotwitter.posting.AutomateTweetPostingPeriod;
 
 /**
@@ -18,7 +16,12 @@ import com.robotwitter.posting.AutomateTweetPostingPeriod;
  *
  */
 public interface IScheduledTweetsController {
-
+	
+	SqlError addScheduledTweet(DBScheduledTweet tweet);
+	
+	SqlError addScheduledTweet(String name, String text, long userId,
+		Calendar c, AutomateTweetPostingPeriod period);
+	
 	/**
 	 * Break the given Tweet.
 	 *
@@ -33,7 +36,11 @@ public interface IScheduledTweetsController {
 	 * @return A list of Tweets that are broken down from the given Tweet
 	 */
 	List<String> breakTweet(String tweet);
+	
+	List<DBScheduledTweet> getAllScheduledTweets();
 
+	List<DBScheduledTweet> getInitializedScheduledTweets();
+	
 	/**
 	 * Preview the given Tweet.
 	 *
@@ -49,14 +56,5 @@ public interface IScheduledTweetsController {
 	 */
 	List<String> previewTweet(String tweet);
 
-	SqlError addScheduledTweet(String name, String text, long userId,
-			Calendar c, AutomateTweetPostingPeriod period);
-
-	SqlError addScheduledTweet(DBScheduledTweet tweet);
-	
-	SqlError removeScheduledTweet(List<DBScheduledTweet> tweets);
-
-	List<DBScheduledTweet> getAllScheduledTweets();
-	
-	List<DBScheduledTweet> getInitializedScheduledTweets();
+	SqlError removeScheduledTweet(DBScheduledTweet tweet);
 }

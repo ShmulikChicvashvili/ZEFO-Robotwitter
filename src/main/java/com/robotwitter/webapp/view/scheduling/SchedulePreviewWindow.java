@@ -1,12 +1,18 @@
+
 package com.robotwitter.webapp.view.scheduling;
 
-import com.robotwitter.webapp.control.scheduling.IScheduledTweetsController;
-import com.robotwitter.webapp.messages.IMessagesContainer;
+
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.Window;
 
-public class SchedulePreviewWindow extends Window{
+import com.robotwitter.webapp.messages.IMessagesContainer;
+import com.robotwitter.webapp.util.tweeting.TweetPreview;
+
+
+
+
+public class SchedulePreviewWindow extends Window
+{
 	/**
 	 * Instantiates a new tweet response window.
 	 *
@@ -18,30 +24,34 @@ public class SchedulePreviewWindow extends Window{
 	 *            the callback to use on success, or null for none
 	 */
 	public SchedulePreviewWindow(
-		IMessagesContainer messages)
+		IMessagesContainer messages,
+		TweetPreview tweetPreview)
 	{
 		this.messages = messages;
+		this.tweetPreview = tweetPreview;
 		initializeLayout();
 	}
 	
-
+	
 	/** Initialise layout. */
 	private void initializeLayout()
 	{
 		setCloseShortcut(KeyCode.ESCAPE, null);
-		setModal(false);
+		setModal(true);
 		center();
 		setResizable(false);
-
+		
 		setCaption(messages.get("SchedulePreview.page.title"));
-
-		final Component content =
-			new SchedulePreview(messages);
-
-		setContent(content);
+		
+		setContent(tweetPreview);
+		
+		center();
 	}
+	
+	
 	
 	/** The messages displayed by this view. */
 	protected IMessagesContainer messages;
 	
+	private TweetPreview tweetPreview;
 }
